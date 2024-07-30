@@ -7,25 +7,12 @@ import userIcon from "../../public/assets/img/images.png";
 import logo from "../../public/assets/img/logo.png";
 import { FaBell, FaSignOutAlt, FaUser, FaUsers } from "react-icons/fa";
 export default function Navbar() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const [loader, setLoader] = useState(true);
-  const [type, setType] = useState("all");
   const [showMenu, setShowMenu] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState(null);
-
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-
-  const toggleUserMenu = () => {
-    setIsUserMenuOpen(!isUserMenuOpen);
-  };
 
   const isLinkActive = (path) => {
     return pathname === path;
@@ -52,6 +39,10 @@ export default function Navbar() {
       document.removeEventListener("click", handleOutsideClick);
     };
   }, []);
+
+  const toggleDropdownLogout = () => {
+    setShowDropdown(!showDropdown);
+  };
 
   const showModal = () => {
     setShowMenu(!showMenu);
@@ -106,9 +97,6 @@ export default function Navbar() {
                     <div className="flex justify-end items-center">
                       <div className={``} style={{ color: "#07224D" }}>
                         name
-                        {/* {capitalizeFirstLetter(userInfo?.first_name) +
-                            " " +
-                            capitalizeFirstLetter(userInfo?.last_name)} */}
                       </div>
                       <div className={`ml-1`} onClick={toggleDropdown}>
                         <svg
@@ -141,7 +129,7 @@ export default function Navbar() {
                 </div>
                 {showDropdown && (
                   <div
-                    className="absolute right-0 mt-[65px] z-10 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                    className="absolute right-0 mt-[66px] z-10 w-48 origin-top-right rounded-md bg-surface-100 py-1 shadow-lg ring-opacity-5 focus:outline-none"
                     role="menu"
                     aria-orientation="vertical"
                     aria-labelledby="user-menu-button"

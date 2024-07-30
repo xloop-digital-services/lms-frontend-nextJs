@@ -6,16 +6,12 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import {
   FaBars,
-  FaBook,
   FaBookOpen,
   FaCalendar,
-  FaFileAlt,
   FaHome,
-  FaSignInAlt,
   FaSignOutAlt,
   FaTasks,
   FaUser,
-  FaUsersCog,
 } from "react-icons/fa";
 
 function SideBar() {
