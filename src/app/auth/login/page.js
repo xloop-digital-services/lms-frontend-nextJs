@@ -1,18 +1,46 @@
 "use client"
 import React, { useState } from 'react'
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import logo from '../../../../public/assets/img/logo.png'
 import { IoEyeSharp } from "react-icons/io5";
 import { BsEyeSlashFill } from "react-icons/bs";
 import Image from 'next/image';
+import axios from "axios";
 
 export default function Page() {
+  const router = useRouter()
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const API = 'https://xb1kkjgb-8000.euw.devtunnels.ms/'
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword)
+  }
+
+  const LogInpUser = async (event) => {
+    event.preventDefault()
+    try{
+    const response = await axios.post(`${API}/api/login/`, {
+      email,  
+      password,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.data.status_code === 200) {
+      console.log('res', response)
+      router.push("/dashboard");
+    }
+  } catch (error) {
+    console.log('error araha he')
+    console.error(error)
+  }
+
   }
 
   return (
@@ -29,7 +57,7 @@ export default function Page() {
             <h1 className='font-exo font-bold text-xl text-center'> Login </h1>
             <p className='text-[#8A8A95] text-sm text-center'>Please enter your login information</p>
           </div>
-          <form className='mt-5 '>
+          <form className='mt-5 ' onSubmit={LogInpUser}>
             
             <div className='space-y-2'>
               <label for="email" class="block text-sm font-medium leading-5  text-gray-700">Email</label>

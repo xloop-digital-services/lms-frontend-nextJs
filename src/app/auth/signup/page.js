@@ -7,6 +7,7 @@ import { BsEyeSlashFill } from "react-icons/bs";
 import Image from 'next/image';
 import axios from "axios";
 
+
 export default function Page() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -14,7 +15,7 @@ export default function Page() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const API = 'https://80n6nqm0-3001.inc1.devtunnels.ms/'
+  const API = 'https://xb1kkjgb-8000.euw.devtunnels.ms/'
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword)
@@ -40,6 +41,7 @@ export default function Page() {
 
     if (response.status === 200) {
       console.log('res', response)
+      router.push("/auth/login");
     }
   } catch (error) {
     console.log('error araha he')
