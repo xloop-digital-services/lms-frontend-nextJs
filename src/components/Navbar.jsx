@@ -57,7 +57,7 @@ export default function Navbar() {
       <nav className="fixed w-screen bg-surface-100 z-10">
         <div className="mx-auto px-2 sm:px-6 lg:px-8">
           <div className="relative flex h-20 items-center justify-between">
-            <div className="flex justify start ">
+            <div className="flex justify start ml-4">
               <Link href="/dashboard" passHref>
                 <Image
                   src={logo}

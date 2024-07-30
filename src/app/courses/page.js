@@ -3,6 +3,8 @@ import React from 'react'
 
 export default function page() {
   return (
-    <div> This is courses page</div>
+    <>
+    </>
+    // <div> This is courses page</div>
   )
 }
