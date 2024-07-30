@@ -1,8 +1,20 @@
-"use client"
-import React from 'react'
+"use client";
+import MainCourseCard from "@/components/MainCourseCard";
+import React from "react";
 
 export default function page() {
   return (
-    <div> This is courses page</div>
-  )
+    <>
+      <div className="flex flex-col"
+       
+      >
+        <MainCourseCard />
+        <MainCourseCard />
+        <MainCourseCard />
+        <MainCourseCard />
+        <MainCourseCard />
+        <MainCourseCard />
+      </div>
+    </>
+  );
 }
