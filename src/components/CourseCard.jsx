@@ -6,10 +6,10 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 
 const CourseCard = ({ image, category, title, progress, avatars, extraCount}) => {
     return (
-        <div className='w-[300px] group bg-transparent h-auto'>
-            <div className='rounded-xl border group-hover:cursor-pointer group-hover:shadow-lg group-hover:shadow-gray-300'>
-                <Image src={image} alt="here you go" className='p-3 w-full ' width={30}/>
-                <div className='space-y-3 text-sm px-3 pt-2'>
+        <div className='w-[350px] group bg-transparent h-auto'>
+            <div className='rounded-xl border border-blue-100 group-hover:cursor-pointer group-hover:border-2 group-hover:border-blue-300'>
+                <Image src={image} alt="here you go" className='p-4 w-full rounded-xl' />
+                <div className='space-y-3 text-sm px-4 pt-2'>
                     <div className='flex bg-[#EBF6FF] w-fit py-[9px] px-5 rounded-lg items-center space-x-2'>
                         <p className='bg-[#03A1D8] w-2 h-2 rounded-full'></p>
                         <p className='text-[#03A1D8] uppercase text-[12px] font-semibold'>{category}</p>
@@ -29,13 +29,13 @@ const CourseCard = ({ image, category, title, progress, avatars, extraCount}) =>
                                         width={30}
                                         className="border-2 border-white dark:border-gray-800 rounded-full h-8 w-8 -mr-2"
                                         src={avatars}
-                                        // alt={`Avatar ${index}`}
+                                        alt={`Avatar `}
                                     />
                                 {/* ))} */}
                                 {extraCount && (
                                     <span
                                         className="flex items-center justify-center bg-[#EBF6FF] ml-2 dark:bg-gray-800 text-sm text-[#03A1D8] dark:text-white font-semibold border-2 border-gray-200 dark:border-gray-700 rounded-full p-1">
-                                        +{extraCount - (avatars.length)}
+                                        +{extraCount}
                                     </span>
                                 )}
                             </div>

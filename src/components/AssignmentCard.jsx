@@ -49,14 +49,13 @@ const AssignmentCard = ({
                   className="border-2 border-white dark:border-gray-800 rounded-full h-8 w-8 -mr-2"
                   src={avatars}
                   alt="people"
-                //   alt={`Avatar ${index}`}
                   width={10}
                   height={10}
                 />
                 {/* ))} */}
                 {extraCount && (
                   <span className="flex items-center justify-center bg-[#EBF6FF] ml-2 dark:bg-gray-800 text-sm text-[#03A1D8] dark:text-white font-semibold border-2 border-gray-200 dark:border-gray-700 rounded-full p-1">
-                    +{extraCount - avatars.length}
+                    +{extraCount}
                   </span>
                 )}
               </div>
