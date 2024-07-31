@@ -19,10 +19,10 @@ export default function page() {
         <div className="mt-5">
           <form>
             <div className="grid gap-y-5">
-              <div>
-                <label for="email" className="block text-sm font-bold ml-1 mb-2 dark:text-white">Email address</label>
+              <div className='space-y-3'>
+                <label for="email" className="block text-sm leading-5 text-gray-700">Email address</label>
                 <div className="relative">
-                  <input type="email" id="email" name="email" className="py-3 px-4 block w-full outline-none border-2 border-dark-200 rounded-md text-sm focus:border-[#03A1D8] focus:ring-[#03A1D8] shadow-sm" required aria-describedby="email-error" />
+                  <input type="email" id="email" name="email" className="py-3 px-4 block w-full outline-none border border-dark-200 rounded-md text-sm focus:border-blue-300 focus:ring-[#03A1D8] shadow-sm" required aria-describedby="email-error" />
                 </div>
                 <p className="hidden text-xs text-red-600 mt-2" id="email-error">Please include a valid email address so we can get back to you</p>
               </div>
