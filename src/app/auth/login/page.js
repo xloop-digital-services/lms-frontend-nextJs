@@ -1,6 +1,6 @@
 "use client"
-import React, { useState } from 'react'
 import { useRouter } from 'next/router';
+import React, { useState } from 'react'
 import Link from 'next/link';
 import logo from '../../../../public/assets/img/logo.png'
 import { IoEyeSharp } from "react-icons/io5";
@@ -9,39 +9,41 @@ import Image from 'next/image';
 import axios from "axios";
 
 export default function Page() {
-  const router = useRouter()
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const API = 'https://xb1kkjgb-8000.euw.devtunnels.ms/'
+  // const router = useRouter();
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword)
   }
 
   const LogInpUser = async (event) => {
-    event.preventDefault()
-    try{
-    const response = await axios.post(`${API}/api/login/`, {
-      email,  
-      password,
-    },
-    {
-      headers: {
-        "Content-Type": "application/json",
+    event.preventDefault();
+    try {
+      const response = await axios.post(`${API}/api/login/`, {
+        email,
+        password,
       },
-    });
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    if (response.data.status_code === 200) {
-      console.log('res', response)
-      router.push("/dashboard");
+      console.log('API response:', response);
+
+      if (response.data.status_code === 200) {
+        console.log('Login successful, navigating to dashboard');
+        router.push('/dashboard');
+      } else {
+        console.log('Login failed, status code:', response.data.status_code);
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
     }
-  } catch (error) {
-    console.log('error araha he')
-    console.error(error)
-  }
-
-  }
+  };
 
   return (
     <div class="min-h-screen bg-[#F2F6FF] flex flex-col justify-center py-12 sm:px-6 lg:px-8 px-6 font-inter">
@@ -79,7 +81,7 @@ export default function Page() {
               <div className='flex justify-between items-center'>
               <label for="password" class="block text-sm font-medium leading-5 text-gray-700">Password</label>
               <div class="text-sm leading-5">
-                <Link href="#"
+                <Link href="/auth/reset-password"
                   class="font-medium text-[#03A1D8] hover:text-[#03A1D8] focus:outline-none focus:underline transition ease-in-out duration-150">
                   Forgot your password?
                 </Link>
