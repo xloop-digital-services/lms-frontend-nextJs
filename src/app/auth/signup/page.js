@@ -1,11 +1,13 @@
 "use client";
 import React, { useState } from "react";
+import { useRouter } from 'next/navigation'
 import Link from "next/link";
 import logo from "../../../../public/assets/img/logo.png";
 import { IoEyeSharp } from "react-icons/io5";
 import { BsEyeSlashFill } from "react-icons/bs";
 import Image from "next/image";
 import axios from "axios";
+
 
 export default function Page() {
   const [firstName, setFirstName] = useState("");
@@ -16,7 +18,8 @@ export default function Page() {
   const [showPassword, setShowPassword] = useState(false);
   const [city, setCity] = useState("");
   const [contact, setContact] = useState("");
-  const API = "https://80n6nqm0-3001.inc1.devtunnels.ms/";
+  const API = process.env.NEXT_PUBLIC_BACKEND_URL
+  const router = useRouter();
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -47,6 +50,7 @@ export default function Page() {
   
         if (response.status === 200) {
           console.log("res", response);
+          router.push("/auth/login");
         }
       } else {
 
@@ -66,12 +70,10 @@ export default function Page() {
           </h2> */}
       </div>
       <div className=" mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-surface-100  py-8 px-4 shadow sm:rounded-xl sm:px-6">
-          <div className="space-y-2">
-            <h1 className="font-exo font-bold text-xl text-center"> SignUp </h1>
-            <p className="text-[#8A8A95] text-sm text-center">
-              Please enter your information
-            </p>
+        <div className="bg-surface-100  py-6 px-4 shadow sm:rounded-xl sm:px-6">
+          <div className='space-y-2'>
+            <h1 className='font-exo font-bold text-xl text-center'> SignUp </h1>
+            <p className='text-[#8A8A95] text-sm text-center'>Please enter your information</p>
           </div>
           <form className="mt-7 space-y-5" onSubmit={SignUpUser}>
             <div className="sm:flex gap-4 space-y-5 sm:space-y-0">
