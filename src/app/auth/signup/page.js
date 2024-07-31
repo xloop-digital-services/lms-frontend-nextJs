@@ -65,7 +65,7 @@ export default function Page() {
     <div className="min-h-screen bg-[#F2F6FF] flex flex-col justify-center py-12 sm:px-6 lg:px-8 px-6 font-inter">
       <div className="sm:mx-auto sm:w-full sm:max-w-md flex justify-center items-center space-x-4 pr-4">
         <Image className=" h-[75px] w-auto" src={logo} alt="Workflow" />
-        {/* <h2 className="text-center text-3xl font-exo leading-9 font-extrabold text-gray-900">
+        {/* <h2 className="text-center text-3xl font-exo leading-9 font-extrabold text-dark-900">
             Learning Management 
           </h2> */}
       </div>
@@ -80,7 +80,7 @@ export default function Page() {
               <div className="space-y-2">
                 <label
                   for="firstName"
-                  className="block text-sm font-medium leading-5  text-gray-700"
+                  className="block text-sm font-medium leading-5  text-dark-700"
                 >
                   First Name
                 </label>
@@ -93,14 +93,14 @@ export default function Page() {
                     required
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    className="appearance-none block w-full p-3 border border-dark-300 rounded-lg placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                    className="appearance-none block w-full p-3 border border-dark-300 rounded-lg placeholder-dark-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                   />
                 </div>
               </div>
               <div className="space-y-2">
                 <label
                   for="lastName"
-                  className="block text-sm font-medium leading-5  text-gray-700"
+                  className="block text-sm font-medium leading-5  text-dark-700"
                 >
                   Last Name
                 </label>
@@ -113,7 +113,7 @@ export default function Page() {
                     required
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    className="appearance-none block w-full p-3 border border-dark-300 rounded-lg placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                    className="appearance-none block w-full p-3 border border-dark-300 rounded-lg placeholder-dark-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                   />
                 </div>
               </div>
@@ -121,7 +121,7 @@ export default function Page() {
             <div className="space-y-2">
               <label
                 for="email"
-                className="block text-sm font-medium leading-5  text-gray-700"
+                className="block text-sm font-medium leading-5  text-dark-700"
               >
                 Email
               </label>
@@ -134,7 +134,7 @@ export default function Page() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none block w-full p-3 border border-dark-300 rounded-lg placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                  className="appearance-none block w-full p-3 border border-dark-300 rounded-lg placeholder-dark-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                 />
               </div>
             </div>
@@ -143,7 +143,7 @@ export default function Page() {
               <div className="flex justify-between items-center">
                 <label
                   for="password"
-                  className="block text-sm font-medium leading-5 text-gray-700"
+                  className="block text-sm font-medium leading-5 text-dark-700"
                 >
                   Password
                 </label>
@@ -157,7 +157,7 @@ export default function Page() {
                   placeholder="password (8 or more characters)"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-dark-300 rounded-lg placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                  className="appearance-none block w-full px-3 py-2 border border-dark-300 rounded-lg placeholder-dark-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                 />
                 <div
                   className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-[#b0b0c0] hover:text-[#686870]"
@@ -176,7 +176,7 @@ export default function Page() {
               <div className="flex justify-between items-center">
                 <label
                   for="password"
-                  className="block text-sm font-medium leading-5 text-gray-700"
+                  className="block text-sm font-medium leading-5 text-dark-700"
                 >
                   Confirm Password
                 </label>
@@ -190,7 +190,7 @@ export default function Page() {
                   value={confirmPassword}
                   placeholder="confirm password"
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-dark-300 rounded-lg placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                  className="appearance-none block w-full px-3 py-2 border border-dark-300 rounded-lg placeholder-dark-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                 />
                 <div
                   className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-[#b0b0c0] hover:text-[#686870]"
@@ -207,7 +207,7 @@ export default function Page() {
             <div className="space-y-2">
               <label
                 for="lastName"
-                className="block text-sm font-medium leading-5  text-gray-700"
+                className="block text-sm font-medium leading-5  text-dark-700"
               >
                 City
               </label>
@@ -220,14 +220,14 @@ export default function Page() {
                   required
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  className="appearance-none block w-full p-3 border border-dark-300 rounded-lg placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                  className="appearance-none block w-full p-3 border border-dark-300 rounded-lg placeholder-dark-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                 />
               </div>
             </div>
             <div className="space-y-2">
               <label
                 for="lastName"
-                className="block text-sm font-medium leading-5  text-gray-700"
+                className="block text-sm font-medium leading-5  text-dark-700"
               >
                 Contact
               </label>
@@ -242,7 +242,7 @@ export default function Page() {
                   required
                   value={contact}
                   onChange={(e) => setContact(e.target.value)}
-                  className="appearance-none block w-full p-3 border border-dark-300 rounded-lg placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                  className="appearance-none block w-full p-3 border border-dark-300 rounded-lg placeholder-dark-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                 />
               </div>
             </div>
@@ -251,7 +251,7 @@ export default function Page() {
               <span className="block w-full rounded-lg shadow-sm">
                 <button
                   type="submit"
-                  className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
+                  className="w-full flex justify-center py-3 px-4 text-sm font-medium rounded-lg text-surface-100 bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
                 >
                   Sign Up
                 </button>
@@ -261,7 +261,7 @@ export default function Page() {
           <div className="text-[#8A8A95] text-sm text-center mt-3 space-y-3">
             <p>
               Already have an account?
-              <span className="text-[#03A1D8] pl-1 hover:text-[#2799bf] cursor-pointer hover:font-medium">
+              <span className="text-[#03A1D8] decoration-1 hover:underline font-medium pl-1 cursor-pointer">
                 <Link href="/auth/login"> Login </Link>
               </span>
             </p>

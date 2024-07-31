@@ -6,10 +6,10 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 
 const CourseCard = ({ image, category, title, progress, avatars, extraCount}) => {
     return (
-        <div className='w-[350px] group bg-transparent h-auto'>
+        <div className='w-[350px] group bg-transparent '>
             <div className='rounded-xl border border-blue-100 group-hover:cursor-pointer group-hover:border-2 group-hover:border-blue-300'>
                 <Image src={image} alt="here you go" className='p-4 w-full rounded-xl' />
-                <div className='space-y-3 text-sm px-4 pt-2'>
+                <div className='space-y-3 text-sm px-4 pt-[6px]'>
                     <div className='flex bg-[#EBF6FF] w-fit py-[9px] px-5 rounded-lg items-center space-x-2'>
                         <p className='bg-[#03A1D8] w-2 h-2 rounded-full'></p>
                         <p className='text-[#03A1D8] uppercase text-[12px] font-semibold'>{category}</p>

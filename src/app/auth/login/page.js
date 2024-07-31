@@ -49,7 +49,7 @@ export default function Page() {
     <div class="min-h-screen bg-[#F2F6FF] flex flex-col justify-center py-12 sm:px-6 lg:px-8 px-6 font-inter">
       <div class="sm:mx-auto sm:w-full sm:max-w-md flex justify-center items-center space-x-6 pr-4">
         <Image class=" h-[75px] w-auto" src={logo} alt="Workflow" />
-          {/* <h2 class=" text-3xl font-exo leading-9 font-extrabold text-gray-900">
+          {/* <h2 class=" text-3xl font-exo leading-9 font-extrabold text-dark-900">
             Learning Management 
           </h2> */}
       </div>
@@ -62,7 +62,7 @@ export default function Page() {
           <form className='mt-5 ' onSubmit={LogInpUser}>
             
             <div className='space-y-2'>
-              <label for="email" class="block text-sm font-medium leading-5  text-gray-700">Email</label>
+              <label for="email" class="block text-sm font-medium leading-5  text-dark-700">Email</label>
               <div class="mt-1 relative rounded-lg ">
                 <input 
                 id="email" 
@@ -72,14 +72,14 @@ export default function Page() {
                 required 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)} 
-                class="appearance-none block w-full p-3 border border-dark-300 rounded-lg placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5" />
+                class="appearance-none block w-full p-3 border border-dark-300 rounded-lg placeholder-dark-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5" />
                
               </div>
             </div>
 
             <div className='space-y-2 mt-6'>
               <div className='flex justify-between items-center'>
-              <label for="password" class="block text-sm font-medium leading-5 text-gray-700">Password</label>
+              <label for="password" class="block text-sm font-medium leading-5 text-dark-700">Password</label>
               <div class="text-sm leading-5">
                 <Link href="/auth/reset-password"
                   class="font-medium text-[#03A1D8] hover:text-[#3092b2] focus:outline-none focus:underline transition ease-in-out duration-150">
@@ -95,7 +95,7 @@ export default function Page() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)} 
-                class="appearance-none block w-full p-3 border border-dark-300 rounded-lg placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5" />
+                class="appearance-none block w-full p-3 border border-dark-300 rounded-lg placeholder-dark-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5" />
                 <div class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-[#b0b0c0] hover:text-[#686870]" onClick={handleShowPassword}>
                   {showPassword ? <BsEyeSlashFill size={20} /> : <IoEyeSharp size={20}/>}
                 </div>

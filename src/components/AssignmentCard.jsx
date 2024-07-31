@@ -12,9 +12,9 @@ const AssignmentCard = ({
   extraCount,
 }) => {
   return (
-    <div className="w-[370px] group bg-transparent h-auto ">
-      <div className="rounded-xl border group-hover:cursor-pointer group-hover:shadow-lg group-hover:shadow-gray-300">
-        <div className="space-y-3 text-sm px-3 pt-2">
+    <div className="w-[370px] group bg-transparent pb-4 ">
+      <div className="rounded-xl border border-blue-100 group-hover:cursor-pointer group-hover:shadow-lg group-hover:shadow-dark-300">
+        <div className="space-y-3 text-sm p-3">
           <div className="flex justify-between items-center">
             <div className="flex bg-[#EBF6FF] w-fit py-[9px] px-5 rounded-lg items-center space-x-2">
               <p className="bg-[#03A1D8] w-2 h-2 rounded-full"></p>
@@ -41,12 +41,12 @@ const AssignmentCard = ({
           <div className="w-full h-[2px] bg-[#D7E3F1] "></div>
 
           <div className="flex justify-between items-center">
-            <div className="flex pb-3 pt-2">
+            <div className="flex ">
               <div className="flex justify-end mr-2">
                 {/* {avatars.map((avatar, index) => ( */}
                 <Image
                 //   key={index}
-                  className="border-2 border-white dark:border-gray-800 rounded-full h-8 w-8 -mr-2"
+                  className="border-2 border-white dark:border-dark-800 rounded-full h-8 w-8 -mr-2"
                   src={avatars}
                   alt="people"
                   width={10}
@@ -54,7 +54,7 @@ const AssignmentCard = ({
                 />
                 {/* ))} */}
                 {extraCount && (
-                  <span className="flex items-center justify-center bg-[#EBF6FF] ml-2 dark:bg-gray-800 text-sm text-[#03A1D8] dark:text-white font-semibold border-2 border-gray-200 dark:border-gray-700 rounded-full p-1">
+                  <span className="flex items-center justify-center bg-[#EBF6FF] ml-2 dark:bg-dark-800 text-[12px] text-[#03A1D8] dark:text-white font-semibold border border-dark-200 dark:border-dark-700 rounded-full p-1">
                     +{extraCount}
                   </span>
                 )}
