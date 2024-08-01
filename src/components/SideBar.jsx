@@ -115,16 +115,16 @@ function SideBar() {
           </div>
         </nav>
       </div>
-      <div className="h-screen bg-surface-100 w-16">
+      {/* <div className="h-screen bg-surface-100 w-16"> */}
         <button
-          className={`absolute bg-surface-100 text-blue-500 px-4 py-4 max-md:px-2 max-md:py-2 focus:outline-none mt-20  ${
+          className={`absolute  text-blue-500 px-4 py-4 max-md:px-2 max-md:py-2 focus:outline-none mt-4  ${
             isSidebarOpen && "hidden"
           } z-50`}
           onClick={toggleSidebar}
         >
           <FaBars size={24} />
         </button>
-        
+{/*         
         <div className="flex flex-col justify-between lg:h-[100%] h-[100%] overflow-y-auto ">
           <div className=" pt-40 rounded bg-surface-100 flex flex-col">
             <Link
@@ -195,7 +195,7 @@ function SideBar() {
             </Link>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 }
