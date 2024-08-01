@@ -26,7 +26,7 @@ export default function Page() {
   const SignUpUser = async (event) => {
     event.preventDefault()
     try{
-    const response = await axios.post(`${API}/api/create/`, {
+    const response = await axios.post(`${API}/create/`, {
       email,
       first_name : firstName,
       last_name: lastName,

@@ -22,7 +22,7 @@ export default function Page() {
   const LogInpUser = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post(`${API}/api/login/`, {
+      const response = await axios.post(`${API}/login/`, {
         email,
         password,
       },
