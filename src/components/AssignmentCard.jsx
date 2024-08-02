@@ -12,7 +12,7 @@ const AssignmentCard = ({
   extraCount,
 }) => {
   return (
-    <div className="w-[370px] group bg-transparent pb-4 ">
+    <div className="w-[360px] mx-auto group bg-transparent pb-4 ">
       <div className="rounded-xl border border-blue-100 group-hover:cursor-pointer group-hover:shadow-lg group-hover:shadow-dark-300">
         <div className="space-y-3 text-sm p-3">
           <div className="flex justify-between items-center">

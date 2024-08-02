@@ -24,9 +24,9 @@ export default function page() {
           width: isSidebarOpen ? "86%" : "100%",
         }}
       >
-        <div className="bg-[#ffffff]  p-2  mx-5 rounded-xl space-y-4  ">
+        <div className="bg-[#ffffff]  p-5  mx-5 rounded-xl space-y-4  ">
           <div className="flex justify-between items-center">
-            <h1 className="text-xl font-bold pl-3 pt-3 font-exo"> Courses</h1>
+            <h1 className="text-xl font-bold  font-exo"> Courses</h1>
             <div className="group px-3">
               <p className="text-[#03A1D8] underline flex items-center group-hover:cursor-pointer">
                 Show All
@@ -39,7 +39,7 @@ export default function page() {
               </p>
             </div>
           </div>
-          <div className="flex space-x-4 px-3 pb-3 ">
+          <div className="flex gap-3 mx-auto flex-wrap">
             <CourseCard
               image={image1}
               category="Backend"
@@ -72,7 +72,7 @@ export default function page() {
               avatars={avatars}
               extraCount={20}
             />
-            {
+            {/* {
               !isSidebarOpen && 
               <CourseCard
               image={image1}
@@ -82,10 +82,10 @@ export default function page() {
               avatars={avatars}
               extraCount={20}
             />
-            }
+            } */}
           </div>
         </div>
-        <div className="flex gap-4 mx-5">
+        <div className="flex gap-4 mx-5 lg:flex-row flex-col-reverse ">
           <div className="bg-[#ffffff] p-2  rounded-xl grow">
             <div>
               <h1 className="text-xl font-bold px-3 py-4 font-exo">
@@ -96,13 +96,13 @@ export default function page() {
               <Calender />
             </div>
           </div>
-          <div className="bg-[#ffffff] p-2 rounded-xl overflow-hidden h-[360px] w-fit">
+          <div className="bg-[#ffffff] p-2 rounded-xl overflow-hidden h-[360px] lg:w-fit ">
             <div>
               <h1 className="text-xl font-bold px-3 py-4 font-exo">
                 Assignment Progress
               </h1>
             </div>
-            <div className="p-2 pt-0 flex flex-col resize-none overflow-y-auto h-[300px] scrollbar-webkit ">
+            <div className="p-2 pt-0 flex lg:flex-col gap-2 lg:flex-nowrap flex-wrap resize-none overflow-y-auto h-[300px] scrollbar-webkit ">
               <AssignmentCard
                 category="Backend"
                 title="Beginner's Guide to Becoming a Professional Backend Developer"
