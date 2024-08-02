@@ -24,7 +24,7 @@ function SideBar() {
   return (
     <>
       <div
-        className={`fixed border border-solid border-dark-100 left-0 w-80 bg-surface-100 py-5 transition-transform mt-20 max-md:mt-36 ${
+        className={`fixed border border-solid border-dark-100 left-0 w-80 bg-surface-100 py-5 transition-transform mt-20 ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -115,22 +115,16 @@ function SideBar() {
           </div>
         </nav>
       </div>
-      <div
-        className={`fixed  h-screen bg-surface-100 w-16" ${
-          isSidebarOpen && "hidden"
-        }`
-        
-      }
-      >
+      {/* <div className="h-screen bg-surface-100 w-16"> */}
         <button
-          className={`fixed absolute bg-surface-100 text-blue-500 px-4 py-4 max-md:px-2 max-md:py-2 focus:outline-none mt-20  ${
+          className={`absolute  text-blue-500 px-4 py-4 max-md:px-2 max-md:py-2 focus:outline-none mt-4  ${
             isSidebarOpen && "hidden"
           } z-50`}
           onClick={toggleSidebar}
         >
           <FaBars size={24} />
         </button>
-
+{/*         
         <div className="flex flex-col justify-between lg:h-[100%] h-[100%] overflow-y-auto ">
           <div className=" pt-40 rounded bg-surface-100 flex flex-col">
             <Link
@@ -153,6 +147,7 @@ function SideBar() {
               }`}
             >
               <FaBookOpen size={24} />
+             
             </Link>
             <Link
               href="/assignment"
@@ -200,7 +195,7 @@ function SideBar() {
             </Link>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 }
