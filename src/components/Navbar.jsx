@@ -6,12 +6,14 @@ import { usePathname, useRouter } from "next/navigation";
 import userIcon from "../../public/assets/img/images.png";
 import logo from "../../public/assets/img/logo.png";
 import { FaBell, FaSignOutAlt, FaUser, FaUsers } from "react-icons/fa";
+import Notifications from "./Notifications";
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const [loader, setLoader] = useState(true);
   const [showMenu, setShowMenu] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showNotification, setShowNotifications] = useState(false);
   const dropdownRef = useRef(null);
 
   const isLinkActive = (path) => {
@@ -26,6 +28,13 @@ export default function Navbar() {
     setShowDropdown(false);
   };
 
+  const toggleNotifications = () => {
+    setShowNotifications(!showNotification);
+  };
+
+  const closeNotifications = () => {
+    setShowNotifications(false);
+  };
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -42,14 +51,6 @@ export default function Navbar() {
 
   const toggleDropdownLogout = () => {
     setShowDropdown(!showDropdown);
-  };
-
-  const showModal = () => {
-    setShowMenu(!showMenu);
-  };
-  const handleIconClick = (name) => {
-    setSearch(name);
-    setIsOpen(false);
   };
 
   return (
@@ -70,13 +71,46 @@ export default function Navbar() {
               </Link>
             </div>
 
-            <div className="absolute inset-y-0 right-0 flex justify-center items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-              {/* {loader ? (
+            {/* {loader ? (
                 <CircularProgress />
               ) : ( */}
-              <div className="flex justify-center items-center">
-                <FaBell size={24} />
+            <div className="flex justify-center items-center">
+              <div className="absolute inset-y-0 right-0 flex justify-center items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                <div className="flex items-center" ref={dropdownRef}>
+                  <button
+                    type="button"
+                    className="relative flex text-sm focus:outline-none "
+                    id="user-menu-button"
+                    aria-expanded="false"
+                    aria-haspopup="true"
+                    onClick={toggleNotifications}
+                  >
+                    <FaBell size={24} />
+                  </button>
+                </div>
               </div>
+              {showNotification && (
+                <div
+                  className="absolute border border-dark-100 right-0 mx-16 mt-[420px] z-10 w-80 origin-top-right rounded-md bg-surface-100 py-1 shadow-lg ring-opacity-5 focus:outline-none"
+                  role="menu"
+                  aria-orientation="vertical"
+                  aria-labelledby="user-menu-button"
+                  tabIndex="-1"
+                >
+                  <Notifications />
+                </div>
+              )}
+              <button
+                type="button"
+                className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                id="user-menu-button"
+                aria-expanded="false"
+                aria-haspopup="true"
+              >
+                <span className="absolute -inset-1.5"></span>
+                <span className="sr-only">Open user menu</span>
+              </button>
+
               <div className="relative ml-3 flex ">
                 <div
                   className="flex items-center"

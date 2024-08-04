@@ -13,17 +13,15 @@ export default function page() {
 
   return (
     <>
-      <div
-        className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-44 font-inter ${
-          isSidebarOpen
-            ? "translate-x-64 pl-16"
-            : "translate-x-0 pl-10 pr-4"
-        }`}
-        style={{
-          // paddingBottom: "20px",
-          width: isSidebarOpen ? "86%" : "100%",
-        }}
-      >
+       <div
+      className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-20 font-inter ${
+        isSidebarOpen ? "translate-x-64 pl-20 " : "translate-x-0 pl-10 pr-4"
+      }`}
+      style={{
+        // paddingBottom: "20px",
+        width: isSidebarOpen ? "84%" : "100%",
+      }}
+    >
         <div className="bg-[#ffffff]  p-5  mx-5 rounded-xl space-y-4  ">
           <div className="flex justify-between items-center">
             <h1 className="text-xl font-bold  font-exo"> Courses</h1>

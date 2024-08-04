@@ -63,6 +63,28 @@ function SideBar() {
                   Courses
                 </Link>
                 <Link
+                  href="/attendance"
+                  className={`p-4  flex gap-4 mt-2 rounded-xl  ${
+                    isLinkActive("/attendance")
+                      ? "text-blue-300 bg-blue-600"
+                      : "text-dark-600"
+                  }`}
+                >
+                  <FaTasks size={24} />
+                  Attendance
+                </Link>
+                <Link
+                  href="/quiz"
+                  className={`p-4  flex gap-4 mt-2 rounded-xl  ${
+                    isLinkActive("/quiz")
+                      ? "text-blue-300 bg-blue-600"
+                      : "text-dark-600"
+                  }`}
+                >
+                  <FaTasks size={24} />
+                  Quiz
+                </Link>
+                <Link
                   href="/assignment"
                   className={`p-4  flex gap-4 mt-2 rounded-xl  ${
                     isLinkActive("/assignment")
@@ -73,6 +95,40 @@ function SideBar() {
                   <FaTasks size={24} />
                   Assignment
                 </Link>
+                <Link
+                  href="/project"
+                  className={`p-4  flex gap-4 mt-2 rounded-xl  ${
+                    isLinkActive("/project")
+                      ? "text-blue-300 bg-blue-600"
+                      : "text-dark-600"
+                  }`}
+                >
+                  <FaTasks size={24} />
+                  Project
+                </Link>
+                <Link
+                  href="/exam"
+                  className={`p-4 flex gap-4 mt-2 rounded-xl  ${
+                    isLinkActive("/exam")
+                      ? "text-blue-300 bg-blue-600"
+                      : "text-dark-600"
+                  }`}
+                >
+                  <FaTasks size={24} />
+                  Exam
+                </Link>
+                <Link
+                  href="/grading"
+                  className={`p-4 flex gap-4 mt-2 rounded-xl  ${
+                    isLinkActive("/grading")
+                      ? "text-blue-300 bg-blue-600"
+                      : "text-dark-600"
+                  }`}
+                >
+                  <FaTasks size={24} />
+                  Grading
+                </Link>
+
 
                 <Link
                   href="/calendar"

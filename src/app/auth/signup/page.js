@@ -1,13 +1,12 @@
 "use client";
 import React, { useState } from "react";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import logo from "../../../../public/assets/img/logo.png";
 import { IoEyeSharp } from "react-icons/io5";
 import { BsEyeSlashFill } from "react-icons/bs";
 import Image from "next/image";
 import axios from "axios";
-
 
 export default function Page() {
   const [firstName, setFirstName] = useState("");
@@ -18,18 +17,28 @@ export default function Page() {
   const [showPassword, setShowPassword] = useState(false);
   const [city, setCity] = useState("");
   const [contact, setContact] = useState("");
-  const API = process.env.NEXT_PUBLIC_BACKEND_URL
+  const API = process.env.NEXT_PUBLIC_BACKEND_URL;
   const router = useRouter();
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
+  const formatContactInput = (value) => {
+    const numericValue = value.replace(/[^0-9]/g, "");
+    const formattedValue = numericValue.replace(/(\d{4})(\d{1,7})?/, "$1-$2");
+    return formattedValue.slice(0, 12);
+  };
+
+  const cities = [
+    "Karachi", "Lahore", "Islamabad", "Faisalabad", "Rawalpindi",
+    "Gujranwala", "Peshawar", "Multan", "Quetta", "Sialkot"
+  ];
+
   const SignUpUser = async (event) => {
     event.preventDefault();
     try {
-      if( password === confirmPassword){
-
+      if (password === confirmPassword) {
         const response = await axios.post(
           `${API}/api/create/`,
           {
@@ -47,13 +56,12 @@ export default function Page() {
             // withCredentials: true, // Add this line if your backend requires credentials
           }
         );
-  
+
         if (response.status === 200) {
           console.log("res", response);
           router.push("/auth/login");
         }
       } else {
-
       }
     } catch (error) {
       console.log("error araha he");
@@ -71,9 +79,11 @@ export default function Page() {
       </div>
       <div className=" mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-surface-100  py-6 px-4 shadow sm:rounded-xl sm:px-6">
-          <div className='space-y-2'>
-            <h1 className='font-exo font-bold text-xl text-center'> SignUp </h1>
-            <p className='text-[#8A8A95] text-sm text-center'>Please enter your information</p>
+          <div className="space-y-2">
+            <h1 className="font-exo font-bold text-xl text-center"> SignUp </h1>
+            <p className="text-[#8A8A95] text-sm text-center">
+              Please enter your information
+            </p>
           </div>
           <form className="mt-7 space-y-5" onSubmit={SignUpUser}>
             <div className="sm:flex gap-4 space-y-5 sm:space-y-0">
@@ -205,25 +215,30 @@ export default function Page() {
               </div>
             </div>
             <div className="space-y-2">
-              <label
-                for="lastName"
-                className="block text-sm font-medium leading-5  text-dark-700"
-              >
-                City
-              </label>
-              <div className="mt-1 relative rounded-lg ">
-                <input
-                  id="city"
-                  name="city"
-                  placeholder="city name"
-                  type="text"
-                  required
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                  className="appearance-none block w-full p-3 border border-dark-300 rounded-lg placeholder-dark-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                />
-              </div>
-            </div>
+      <label
+        htmlFor="city"
+        className="block text-sm font-medium leading-5 text-dark-700"
+      >
+        City
+      </label>
+      <div className="mt-1 relative rounded-lg">
+        <select
+          id="city"
+          name="city"
+          required
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+          className="appearance-none block w-full p-3 border border-dark-300 rounded-lg placeholder-dark-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+        >
+          <option value="" disabled>Select a city</option>
+          {cities.map((cityName) => (
+            <option key={cityName} value={cityName}>
+              {cityName}
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
             <div className="space-y-2">
               <label
                 for="lastName"
@@ -235,13 +250,16 @@ export default function Page() {
                 <input
                   id="contact"
                   name="contact"
-                  placeholder="####-#######"
-                  type="text"
-                  inputMode="numeric"
-                  pattern="[0-9]*"
+                  placeholder="XXXX - XXXXXXX"
+                  // inputMode="numeric"
+                  type="tel"
+                  pattern="[0-9]{4}-[0-9]{7}"
                   required
                   value={contact}
                   onChange={(e) => setContact(e.target.value)}
+                  onInput={(e) => {
+                    e.target.value = formatContactInput(e.target.value);
+                  }}
                   className="appearance-none block w-full p-3 border border-dark-300 rounded-lg placeholder-dark-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                 />
               </div>
