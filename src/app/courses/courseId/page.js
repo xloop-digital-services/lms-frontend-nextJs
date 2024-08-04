@@ -65,19 +65,19 @@ export default function page({}) {
           </div>
 
           <div className="flex gap-2 max-md:flex-col">
-            <div className="flex bg-dark-700 w-fit py-[9px] px-5 rounded-lg items-center space-x-2 max-md:mt-2 ">
+            <div className="flex bg-dark-800 w-fit py-[9px] px-5 rounded-lg items-center space-x-2 max-md:mt-2 ">
               <p className=" uppercase text-[12px] ">User Experience (UX)</p>
             </div>
-            <div className="flex bg-dark-700 w-fit py-[9px] px-5 rounded-lg items-center space-x-2 max-md:mt-2 ">
+            <div className="flex bg-dark-800 w-fit py-[9px] px-5 rounded-lg items-center space-x-2 max-md:mt-2 ">
               <p className=" uppercase text-[12px] ">Prototype</p>
             </div>
-            <div className="flex bg-dark-700 w-fit py-[9px] px-5 rounded-lg items-center space-x-2 max-md:mt-2 ">
+            <div className="flex bg-dark-800 w-fit py-[9px] px-5 rounded-lg items-center space-x-2 max-md:mt-2 ">
               <p className=" uppercase text-[12px] ">Wireframe</p>
             </div>
-            <div className="flex bg-dark-700 w-fit py-[9px] px-5 rounded-lg items-center space-x-2 max-md:mt-2 ">
+            <div className="flex bg-dark-800 w-fit py-[9px] px-5 rounded-lg items-center space-x-2 max-md:mt-2 ">
               <p className=" uppercase text-[12px] ">UX Research</p>
             </div>
-            <div className="flex bg-dark-700 w-fit py-[9px] px-5 rounded-lg items-center space-x-2 max-md:mt-2 ">
+            <div className="flex bg-dark-800 w-fit py-[9px] px-5 rounded-lg items-center space-x-2 max-md:mt-2 ">
               <p className="uppercase text-[12px] ">
                 User Experience Design(UXD)
               </p>
