@@ -24,7 +24,7 @@ function SideBar() {
   return (
     <>
       <div
-        className={`fixed border border-solid border-dark-100 left-0 w-80 bg-surface-100 py-5 transition-transform mt-20 max-md:mt-36 ${
+        className={`fixed border border-solid border-dark-100 left-0 w-80 bg-surface-100 py-5 transition-transform mt-20 ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
