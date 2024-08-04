@@ -41,7 +41,7 @@ function SideBar() {
               <div className=" py-4 rounded bg-surface-100 flex flex-col">
                 <Link
                   href="/dashboard"
-                  className={`p-4 flex gap-4 rounded-xl border-dark-300 ${
+                  className={`p-4 flex gap-4 rounded-xl border-dark-300  hover:text-blue-300 ${
                     isLinkActive("/dashboard")
                       ? "text-blue-300 bg-blue-600 "
                       : "text-dark-600"
@@ -53,7 +53,7 @@ function SideBar() {
 
                 <Link
                   href="/courses"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl  ${
+                  className={`p-4  flex gap-4 mt-2 rounded-xl hover:text-blue-300 ${
                     isLinkActive("/courses")
                       ? "text-blue-300 bg-blue-600"
                       : "text-dark-600"
@@ -64,7 +64,7 @@ function SideBar() {
                 </Link>
                 <Link
                   href="/attendance"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl  ${
+                  className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300  ${
                     isLinkActive("/attendance")
                       ? "text-blue-300 bg-blue-600"
                       : "text-dark-600"
@@ -75,7 +75,7 @@ function SideBar() {
                 </Link>
                 <Link
                   href="/quiz"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl  ${
+                  className={`p-4  flex gap-4 mt-2 rounded-xl hover:text-blue-300 ${
                     isLinkActive("/quiz")
                       ? "text-blue-300 bg-blue-600"
                       : "text-dark-600"
@@ -86,7 +86,7 @@ function SideBar() {
                 </Link>
                 <Link
                   href="/assignment"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl  ${
+                  className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
                     isLinkActive("/assignment")
                       ? "text-blue-300 bg-blue-600"
                       : "text-dark-600"
@@ -97,7 +97,7 @@ function SideBar() {
                 </Link>
                 <Link
                   href="/project"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl  ${
+                  className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
                     isLinkActive("/project")
                       ? "text-blue-300 bg-blue-600"
                       : "text-dark-600"
@@ -108,7 +108,7 @@ function SideBar() {
                 </Link>
                 <Link
                   href="/exam"
-                  className={`p-4 flex gap-4 mt-2 rounded-xl  ${
+                  className={`p-4 flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
                     isLinkActive("/exam")
                       ? "text-blue-300 bg-blue-600"
                       : "text-dark-600"
@@ -119,7 +119,7 @@ function SideBar() {
                 </Link>
                 <Link
                   href="/grading"
-                  className={`p-4 flex gap-4 mt-2 rounded-xl  ${
+                  className={`p-4 flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
                     isLinkActive("/grading")
                       ? "text-blue-300 bg-blue-600"
                       : "text-dark-600"
@@ -132,7 +132,7 @@ function SideBar() {
 
                 <Link
                   href="/calendar"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl  ${
+                  className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
                     isLinkActive("/calendar")
                       ? "text-blue-300 bg-blue-600"
                       : "text-dark-600"
@@ -145,7 +145,7 @@ function SideBar() {
               <div className="flex flex-col">
                 <Link
                   href="/user/profile"
-                  className={`p-4 flex gap-4 border rounded-xl border-dark-300 ${
+                  className={`p-4 flex gap-4 border rounded-xl border-dark-300  hover:text-blue-300 ${
                     isLinkActive("/user/profile")
                       ? "text-blue-300 bg-blue-600"
                       : "text-dark-600"
@@ -157,7 +157,7 @@ function SideBar() {
 
                 <Link
                   href="/auth/login"
-                  className={`p-4 flex gap-4 mt-2 border rounded-xl border-dark-300 ${
+                  className={`p-4 flex gap-4 mt-2 border rounded-xl border-dark-300  hover:text-blue-300 ${
                     isLinkActive("/auth/login")
                       ? "text-blue-300 bg-blue-600"
                       : "text-dark-600"

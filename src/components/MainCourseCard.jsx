@@ -12,12 +12,13 @@ export default function MainCourseCard({
   courseDesc,
   progress,
   durationOfCourse,
+  route
 }) {
   const { isSidebarOpen } = useSidebar();
   return (
     <>
       <div className="w-full bg-surface-100 p-8 rounded-xl  ">
-        <div className="border border-dark-300 rounded-xl p-10 flex max-md:flex-col">
+        <div className="border border-dark-300 rounded-xl p-10 flex max-md:flex-col hover:border-blue-300">
           <div className="w-100 mr-4">
             <Image
               src={courseImg}
@@ -56,7 +57,7 @@ export default function MainCourseCard({
                 <p className="text-blue-300"> {durationOfCourse}</p>
               </div>
 
-              <Link href="/courses/courseId">
+              <Link href={`${route}`}>
                 <FaChevronCircleRight  size={24} fill="#03A1D8"/>
               </Link>
             </div>
