@@ -24,6 +24,7 @@ export default function page() {
           courseDesc="Beginner's Guide to Becoming a Professional Backend Developer "
           progress="30%"
           durationOfCourse="6 Months"
+           route="courses/courseId"
         />
         <MainCourseCard
           courseImg={courseImg}
@@ -31,6 +32,7 @@ export default function page() {
           courseDesc="Beginner's Guide to Becoming a Professional Backend Developer "
           progress="50%"
           durationOfCourse="3 Months"
+          route="courses/courseId"
         />
       </div>
     </>
