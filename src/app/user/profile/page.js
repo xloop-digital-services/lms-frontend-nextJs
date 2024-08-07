@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSidebar } from "@/providers/useSidebar";
 import {
   FaEnvelope,
@@ -14,6 +14,7 @@ import {
   FaUnlock,
   FaUser,
 } from "react-icons/fa";
+import { getUserProfile } from "@/api/route";
 
 function Profile() {
   const { isSidebarOpen } = useSidebar();
@@ -26,6 +27,32 @@ function Profile() {
   const [isDisabled, setIsDisable] = useState(true);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const response = await getUserProfile();
+        if (response.status === 200) {
+          console.log("Fetched user data:", response.data);
+          setUser(response.data);
+          console.log(user, "user");
+          // console.log(response.data.response.city, "city")
+        } else {
+          console.error("Failed to fetch user, status:", response.status);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    }
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      console.log(user);
+    }
+  });
 
   const handleEnabled = () => {
     setIsDisable(false);
@@ -33,7 +60,6 @@ function Profile() {
 
   const handleDisabled = () => {
     setIsDisable(true);
-    // Reset to initial state if needed
     setFirstName("");
     setLastName("");
     setEmail("");
@@ -47,7 +73,6 @@ function Profile() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Logic for form submission
 
     const userData = {
       email: email,
@@ -56,30 +81,6 @@ function Profile() {
       city: city,
       dob: dob,
     };
-
-    // updateUserProfile(userData)
-    //   .then((updatedProfile) => {
-    //     Swal.fire({
-    //       icon: "success",
-    //       title: "Updated Successfully",
-    //       timer: 2000,
-    //       showConfirmButton: false,
-    //       text: "You have updated your profile",
-    //     });
-    //     setIsDisable(true);
-    //     setUserInfo({ ...userInfo, ...userData });
-    //   })
-    //   .catch((error) => {
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "Something went wrong",
-    //       timer: 2000,
-    //       showConfirmButton: false,
-    //       text: error,
-    //     });
-    //     console.error("Error updating user profile:", error);
-    //     setIsDisable(true);
-    //   });
   };
 
   return (
@@ -102,13 +103,13 @@ function Profile() {
             <div className="flex flex-col lg:flex-row lg:px-8 px-4 lg:h-48 h-50">
               <div className="flex flex-col lg:flex-row w-full justify-center items-center lg:justify-start ">
                 <div className="ml-2 mb-1 mt-4 relative block w-48 h-48 rounded-full bg-blue-400 border-0">
-                  {/* Placeholder for profile picture */}
+                  {/* profile picture here */}
                 </div>
 
                 <div className="flex lg:flex-col flex-row lg:w-[50%] w-[100%] lg:ml-8 lg:justify-center lg:items-center mt-4">
                   <div className="flex flex-col w-full mb-8">
                     <h2 className="font-medium text-2xl">Name</h2>
-                    <p>{`${firstName} ${lastName}`}</p>
+                    <p>{`${user?.response?.first_name} ${user?.response?.last_name}`}</p>
                   </div>
                   <div className="flex flex-col w-full">
                     <h2 className="font-medium text-xl">Email Address</h2>
@@ -155,7 +156,7 @@ function Profile() {
                       <input
                         id="first-name"
                         disabled={isDisabled}
-                        value={firstName}
+                        value={user?.response?.first_name}
                         onChange={(e) => setFirstName(e.target.value)}
                         name="first-name"
                         type="text"
@@ -179,7 +180,7 @@ function Profile() {
                     <input
                       id="last-name"
                       disabled={isDisabled}
-                      value={lastName}
+                      value={user?.response?.last_name}
                       onChange={(e) => setLastName(e.target.value)}
                       name="last-name"
                       type="text"
@@ -204,7 +205,7 @@ function Profile() {
                         id="email"
                         disabled={isDisabled}
                         readOnly
-                        value={email}
+                        value={user?.response?.email}
                         onChange={(e) => setEmail(e.target.value)}
                         name="email"
                         type="email"
@@ -228,7 +229,7 @@ function Profile() {
                     <input
                       id="contact"
                       disabled={isDisabled}
-                      value={contactNumber}
+                      value={user?.response?.contact}
                       onChange={(e) => setContactNumber(e.target.value)}
                       name="contact"
                       type="tel"
@@ -278,7 +279,7 @@ function Profile() {
                       id="city"
                       name="city"
                       disabled={isDisabled}
-                      value={city}
+                      value={user?.response?.city}
                       onChange={(e) => setCity(e.target.value)}
                       type="text"
                       placeholder="Enter your city"

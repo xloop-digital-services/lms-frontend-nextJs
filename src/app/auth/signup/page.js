@@ -40,7 +40,7 @@ export default function Page() {
     try {
       if (password === confirmPassword) {
         const response = await axios.post(
-          `${API}/api/create/`,
+          `${API}/create/`,
           {
             email,
             first_name: firstName,
@@ -253,13 +253,13 @@ export default function Page() {
                   placeholder="XXXX - XXXXXXX"
                   // inputMode="numeric"
                   type="tel"
-                  pattern="[0-9]{4}-[0-9]{7}"
+                  // pattern="[0-9]{4}-[0-9]{7}"
                   required
                   value={contact}
                   onChange={(e) => setContact(e.target.value)}
-                  onInput={(e) => {
-                    e.target.value = formatContactInput(e.target.value);
-                  }}
+                  // onInput={(e) => {
+                  //   e.target.value = formatContactInput(e.target.value);
+                  // }}
                   className="appearance-none block w-full p-3 border border-dark-300 rounded-lg placeholder-dark-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                 />
               </div>

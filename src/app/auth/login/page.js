@@ -7,6 +7,9 @@ import { IoEyeSharp } from "react-icons/io5";
 import { BsEyeSlashFill } from "react-icons/bs";
 import Image from "next/image";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { storeToken } from "@/components/storeToken";
 
 export default function Page() {
   const [email, setEmail] = useState("");
@@ -23,7 +26,7 @@ export default function Page() {
     event.preventDefault();
     try {
       const response = await axios.post(
-        `${API}/api/login/`,
+        `${API}/login/`,
         {
           email,
           password,
@@ -36,20 +39,78 @@ export default function Page() {
       );
 
       console.log("API response:", response);
+      // Swal.fire({
+      //   icon: "success",
+      //   title: "Login Successful",
+      //   timer: 2000,
+      //   showConfirmButton: false,
+      //   text: "Redirecting......",
+      // }).then(() => {
+      //   storeToken(response.data.token, response.data.data);
+      //   if (response.data.data.is_subscribed) {
+      //     router.push("/dashboard");
+      //   } else {
+      //     router.push("/auth/subscription");
+      //   }
+      //   // localStorage.setItem("access_token",response.data.token.access)
+      //   // localStorage.setItem("refresh_token",response.data.token.refresh)
+      // });
+    //   if (response.data.status_code === 200) {
 
-      if (response.data.status_code === 200) {
-        console.log("Login successful, navigating to dashboard");
-        router.push("/dashboard");
-      } else {
-        console.log("Login failed, status code:", response.data.status_code);
-      }
-    } catch (error) {
-      console.error("Error during login:", error);
+    //     console.log("Login successful, navigating to dashboard");
+    //     router.push("/dashboard");
+    //   } else {
+    //     console.log("Login failed, status code:", response.data.status_code);
+    //   }
+    // } catch (error) {
+    //   console.error("Error during login:", error);
+    // }
+
+
+    if (response.data.status_code === 200) {
+      toast.success("Login Successful! Redirecting...", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        onClose: () => {
+          storeToken(response.data.response.token, response.data);
+          router.push("/dashboard");
+        },
+      });
+    // }).then(() => {
+    //     storeToken(response.data.token.access, response.data.token.refresh);
+    } else {
+      toast.error("Login failed. Please check your credentials.",  {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
-  };
+  } catch (error) {
+    console.error("Error during login:", error);
+    toast.error("An error occurred during login. Please try again.", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  }
+};
 
   return (
     <div class="min-h-screen bg-[#F2F6FF] flex flex-col justify-center py-12 sm:px-6 lg:px-8 px-6 font-inter">
+       <ToastContainer />
       <div class="sm:mx-auto sm:w-full sm:max-w-md flex justify-center items-center space-x-6 pr-4">
         <Image class=" h-[75px] w-auto" src={logo} alt="Workflow" />
         {/* <h2 class=" text-3xl font-exo leading-9 font-extrabold text-dark-900">
