@@ -13,7 +13,7 @@ const CourseCard = ({
   extraCount,
 }) => {
   return (
-    <div className="w-[350px] lg:mx-0 mx-auto group bg-transparent ">
+    <div className="w-[330px] lg:mx-0 mx-auto group bg-transparent ">
       <div className="rounded-xl border border-blue-100 group-hover:cursor-pointer group-hover:border-2 group-hover:border-blue-300">
         <Image
           src={image}

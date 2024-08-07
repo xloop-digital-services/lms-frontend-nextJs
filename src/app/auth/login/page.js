@@ -38,7 +38,10 @@ export default function Page() {
       console.log("API response:", response);
 
       if (response.data.status_code === 200) {
-        console.log("Login successful, navigating to dashboard");
+        localStorage.clear()
+        localStorage.setItem('access-token', response.data.response.token.access)
+        localStorage.setItem('refresh-token', response.data.response.token.refresh)
+        alert("Login successful, navigating to dashboard");
         router.push("/dashboard");
       } else {
         console.log("Login failed, status code:", response.data.status_code);

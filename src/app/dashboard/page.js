@@ -37,7 +37,7 @@ export default function page() {
               </p>
             </div>
           </div>
-          <div className="flex gap-3 mx-auto flex-wrap">
+          <div className="flex space-x-4 mx-auto flex-wrap">
             <CourseCard
               image={image1}
               category="Backend"
