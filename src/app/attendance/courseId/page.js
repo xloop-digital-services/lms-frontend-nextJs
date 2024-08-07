@@ -4,7 +4,7 @@ import TopPart from "@/components/TopPart";
 import React from "react";
 import { FaFile, FaFilePdf } from "react-icons/fa";
 import { useSidebar } from "@/providers/useSidebar";
-import StudentAttendence from "@/components/Student/StudentAttendence";
+import StudentAttendence from "@/components/StudentAttendence";
 
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
