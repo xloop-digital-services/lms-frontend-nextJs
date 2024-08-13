@@ -9,6 +9,7 @@ import { FaBell, FaSignOutAlt, FaUser, FaUsers } from "react-icons/fa";
 import Notifications from "./Notifications";
 import { getUserProfile } from "@/api/route";
 import { CircularProgress } from "@mui/material";
+import { useAuth } from "@/providers/AuthContext";
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
@@ -18,6 +19,7 @@ export default function Navbar() {
   const [showNotification, setShowNotifications] = useState(false);
   const dropdownRef = useRef(null);
   const [user, setUser] = useState({});
+  const {logOutUser} = useAuth();
 
   useEffect(() => {
     async function fetchUser() {
@@ -83,6 +85,13 @@ export default function Navbar() {
     setShowDropdown(!showDropdown);
   };
 
+  const getFirstWord = (name) =>{
+    if(!name) return '';
+    return name.split('')[0];
+  }
+
+  const firstWord = getFirstWord(user?.response?.first_name) 
+
   return (
     <>
       <nav className="fixed w-screen bg-surface-100 z-10">
@@ -147,15 +156,16 @@ export default function Navbar() {
                     onClick={toggleDropdown}
                     ref={dropdownRef}
                   >
-                    <div className="w-[50px] h-[50px] rounded-full mr-2">
-                      <Image
+                    <div className="w-[50px] h-[50px] rounded-full mr-2 flex justify-center items-center text-surface-100 bg-blue-300">
+                      {firstWord}
+                      {/* <Image
                         src={userIcon}
                         alt="Profile"
                         width={100}
                         height={100}
                         className={`w-full h-full rounded-3xl `}
                         style={{ objectFit: "cover" }}
-                      />
+                      /> */}
                     </div>
                     <div>
                       <div className="flex justify-end items-center">
@@ -223,7 +233,7 @@ export default function Navbar() {
                         href="/auth/login"
                         passHref
                         className="flex items-center px-4 py-2 text-[#07224D] hover:bg-gray-200"
-                        onClick={toggleDropdownLogout}
+                        onClick={logOutUser}
                       >
                         <FaSignOutAlt size={17} className="mr-2" />
                         Logout

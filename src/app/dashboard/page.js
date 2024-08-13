@@ -2,31 +2,58 @@
 import AssignmentCard from "@/components/AssignmentCard";
 import CourseCard from "@/components/CourseCard";
 import { useSidebar } from "@/providers/useSidebar";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import image1 from "/public/assets/img/course-image.png";
 import avatars from "/public/assets/img/images.png";
 import { MdArrowRightAlt } from "react-icons/md";
 import Calender from "@/components/Calender";
+import Link from "next/link";
+import { useGroup } from "@/providers/useGroup";
+import { useAuth } from "@/providers/AuthContext";
+import { getAllCourses } from "@/api/route";
 
-export default function page() {
+export default function Page() {
   const { isSidebarOpen } = useSidebar();
+  const { userData } = useAuth();
+  const [courses, setCourses] = useState([]);
 
+  const isStudent = userData?.Group === "student";
+
+  async function fetchCourses() {
+    const response = await getAllCourses();
+    try {
+      if (response.status === 200) {
+        setCourses(response.data);
+        console.log(courses);
+      } else {
+        console.error("Failed to fetch user, status:", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+  useEffect(() => {
+    fetchCourses();
+  }, []);
   return (
     <>
-       <div
-      className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-20 font-inter ${
-        isSidebarOpen ? "translate-x-64 pl-20 " : "translate-x-0 pl-10 pr-4"
-      }`}
-      style={{
-        // paddingBottom: "20px",
-        width: isSidebarOpen ? "84%" : "100%",
-      }}
-    >
-        <div className="bg-[#ffffff]  p-5  mx-5 rounded-xl space-y-4  ">
+      <div
+        className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-20 font-inter ${
+          isSidebarOpen ? "translate-x-64 pl-20 " : "translate-x-0 pl-10 pr-4"
+        }`}
+        style={{
+          // paddingBottom: "20px",
+          width: isSidebarOpen ? "84%" : "100%",
+        }}
+      >
+        <div className="bg-[#ffffff] p-5  mx-5 rounded-xl space-y-4  ">
           <div className="flex justify-between items-center">
-            <h1 className="text-xl font-bold  font-exo"> Courses</h1>
+            <h1 className="text-xl font-bold font-exo"> Courses</h1>
             <div className="group px-3">
-              <p className="text-[#03A1D8] underline flex items-center group-hover:cursor-pointer">
+              <Link
+                href="/courses"
+                className="text-[#03A1D8] underline flex items-center group-hover:cursor-pointer"
+              >
                 Show All
                 <span>
                   <MdArrowRightAlt
@@ -34,53 +61,25 @@ export default function page() {
                     size={25}
                   />
                 </span>
-              </p>
+              </Link>
             </div>
           </div>
-          <div className="flex gap-3 mx-auto flex-wrap">
-            <CourseCard
-              image={image1}
-              category="Backend"
-              title="Beginner's Guide to Becoming a Professional Backend Developer"
-              progress="50%"
-              avatars={avatars}
-              extraCount={50}
-            />
-            <CourseCard
-              image={image1}
-              category="Backend"
-              title="Beginner's Guide to Becoming a Professional Backend Developer"
-              progress="50%"
-              avatars={avatars}
-              extraCount={50}
-            />
-            <CourseCard
-              image={image1}
-              category="Backend"
-              title="Beginner's Guide to Becoming a Professional Backend Developer"
-              progress="50%"
-              avatars={avatars}
-              extraCount={50}
-            />
-            <CourseCard
-              image={image1}
-              category="Frontend"
-              title="Advanced Techniques in Frontend Development"
-              progress="75%"
-              avatars={avatars}
-              extraCount={20}
-            />
-            {/* {
-              !isSidebarOpen && 
-              <CourseCard
-              image={image1}
-              category="Frontend Tech"
-              title="Advanced Techniques in Frontend Development"
-              progress="15%"
-              avatars={avatars}
-              extraCount={20}
-            />
-            } */}
+          <div className="flex space-x-4 mx-auto flex-wrap">
+            {isStudent &&
+              courses?.data?.map((course) => {
+                return (
+                  <CourseCard
+                    id={course.id}
+                    key={course.id}
+                    image={image1}
+                    courseName={course.name}
+                    courseDesc={course.short_description}
+                    // progress="50%"
+                    // avatars={avatars}
+                    extraCount={50}
+                  />
+                );
+              })}
           </div>
         </div>
         <div className="flex gap-4 mx-5 lg:flex-row flex-col-reverse ">

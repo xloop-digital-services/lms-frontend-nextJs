@@ -3,17 +3,10 @@ import Navbar from "@/components/Navbar";
 import { SidebarProvider } from "@/providers/useSidebar";
 import SideBar from "@/components/SideBar";
 import { GroupProvider } from "@/providers/useGroup";
-import { AuthProvider } from "@/providers/AuthContext";
-export default function UserLayout({ children }) {
+export default function AuthLayout({ children }) {
   return (
     <>
-      <SidebarProvider>
-        <div>
-          <Navbar />
-        </div>
-        <SideBar />
-        {children}
-      </SidebarProvider>
+      {children}
     </>
   );
 }

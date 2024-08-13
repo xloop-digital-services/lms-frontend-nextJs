@@ -3,18 +3,13 @@ import React, { useEffect, useState } from "react";
 import { useSidebar } from "@/providers/useSidebar";
 import {
   FaEnvelope,
-  FaLocationArrow,
-  FaLockOpen,
-  FaMailBulk,
-  FaMap,
   FaMapPin,
-  FaPhone,
   FaPhoneAlt,
-  FaSearchLocation,
   FaUnlock,
   FaUser,
 } from "react-icons/fa";
-import { getUserProfile } from "@/api/route";
+import { getUserProfile, updateUserProfile } from "@/api/route";
+import { toast } from "react-toastify";
 
 function Profile() {
   const { isSidebarOpen } = useSidebar();
@@ -25,6 +20,7 @@ function Profile() {
   const [dob, setDob] = useState("");
   const [city, setCity] = useState("");
   const [isDisabled, setIsDisable] = useState(true);
+  const [isDisabledPass, setIsDisablePass] = useState(true);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [user, setUser] = useState({});
@@ -35,9 +31,14 @@ function Profile() {
         const response = await getUserProfile();
         if (response.status === 200) {
           console.log("Fetched user data:", response.data);
-          setUser(response.data);
-          console.log(user, "user");
-          // console.log(response.data.response.city, "city")
+          const userData = response.data.response;
+          setUser(userData);
+          setFirstName(userData.first_name || "");
+          setLastName(userData.last_name || "");
+          setEmail(userData.email || "");
+          setContactNumber(userData.contact || "");
+          setDob(userData.dob || "");
+          setCity(userData.city || "");
         } else {
           console.error("Failed to fetch user, status:", response.status);
         }
@@ -48,40 +49,79 @@ function Profile() {
     fetchUser();
   }, []);
 
-  useEffect(() => {
-    if (user) {
-      console.log(user);
-    }
-  });
-
-  const handleEnabled = () => {
-    setIsDisable(false);
+  const handleEnabledPass = () => setIsDisablePass(false);
+  const handleDisabledPass = () => {
+    setIsDisablePass(true);
+    setPassword("");
+    setConfirmPassword("");
   };
 
+  const handleEnabled = () => setIsDisable(false);
   const handleDisabled = () => {
     setIsDisable(true);
-    setFirstName("");
-    setLastName("");
-    setEmail("");
-    setDob("");
-    setCity("");
+    setFirstName(user?.first_name || "");
+    setLastName(user?.last_name || "");
+    setEmail(user?.email || "");
+    setContactNumber(user?.contact || "");
+    setDob(user?.dob || "");
+    setCity(user?.city || "");
   };
 
-  const handleChangePassword = () => {
-    setIsChangePasswordModalOpen(true);
-  };
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-
     const userData = {
-      email: email,
       first_name: firstName,
       last_name: lastName,
-      city: city,
-      dob: dob,
+      contact: contactNumber,
+      dob,
+      email,
+      city,
     };
+
+    try {
+      const response = await updateUserProfile(userData);
+      if (response.status === 200) {
+        toast.success("Profile updated successfully!", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        setUser(userData);
+        setIsDisable(true);
+      } else {
+        toast.error(
+          `Profile update failed. Please check your details. ${
+            response.data?.message || ""
+          }`,
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          }
+        );
+      }
+    } catch (error) {
+      toast.error(`Error updating profile: ${error.message}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
   };
+
+  const getFirstWord = (name) => (name ? name[0] : "");
 
   return (
     <>
@@ -97,66 +137,52 @@ function Profile() {
         }}
       >
         <div className="lg:pt-12 pb-8 lg:pl-12 lg:pr-12 rounded-xl bg-surface-100 w-full">
-          <div
-          //  className="rounded-xl text-blue-500"
-          >
-            <div className="flex flex-col lg:flex-row lg:px-8 px-4 lg:h-48 h-50">
-              <div className="flex flex-col lg:flex-row w-full justify-center items-center lg:justify-start ">
-                <div className="ml-2 mb-1 mt-4 relative block w-48 h-48 rounded-full bg-blue-400 border-0">
-                  {/* profile picture here */}
-                </div>
+          <div className="flex flex-col lg:flex-row lg:px-8 px-4 lg:h-48 h-50">
+            <div className="flex flex-col lg:flex-row w-full justify-center items-center lg:justify-start">
+              <div className="ml-2 mb-1 mt-4 relative block w-48 h-48 rounded-full bg-blue-300 border-0 flex font-extrabold text-5xl text-surface-100 justify-center items-center">
+                {getFirstWord(user?.first_name)}
+              </div>
 
-                <div className="flex lg:flex-col flex-row lg:w-[50%] w-[100%] lg:ml-8 lg:justify-center lg:items-center mt-4">
-                  <div className="flex flex-col w-full mb-8">
-                    <h2 className="font-medium text-2xl">Name</h2>
-                    <p>{`${user?.response?.first_name} ${user?.response?.last_name}`}</p>
-                  </div>
-                  <div className="flex flex-col w-full">
-                    <h2 className="font-medium text-xl">Email Address</h2>
-                    <p>{email}</p>
-                  </div>
+              <div className="flex lg:flex-col flex-row lg:w-[50%] w-[100%] lg:ml-8 lg:justify-center lg:items-center mt-4">
+                <div className="flex flex-col w-full mb-8">
+                  <h2 className="font-medium text-2xl">Name</h2>
+                  <p>{`${user?.first_name} ${user?.last_name}`}</p>
+                </div>
+                <div className="flex flex-col w-full">
+                  <h2 className="font-medium text-xl">Email Address</h2>
+                  <p>{email}</p>
                 </div>
               </div>
-              <div className="flex lg:flex-col flex-row lg:w-[20%] lg:justify-center justify-around gap-4 items-center">
-                <button
-                  onClick={handleEnabled}
-                  className="flex w-full h-14 items-center justify-center rounded-lg bg-blue-300 py-1.5 text-sm font-semibold leading-6 text-base text-surface-100 shadow-sm outline-blue-300 focus:outline-blue-300 focus-visible:outline mb-4"
-                >
-                  Edit profile
-                </button>
-                <button
-                  onClick={handleChangePassword}
-                  className="flex w-full h-14 items-center justify-center rounded-lg bg-blue-300 py-1.5 text-sm font-semibold leading-6 text-base text-surface-100 shadow-sm outline-blue-300 focus:outline-blue-300 focus-visible:outline mb-4"
-                >
-                  Change Password
-                </button>
-              </div>
+            </div>
+            <div className="flex lg:flex-col flex-row lg:w-[20%] lg:justify-center justify-around gap-4 items-center">
+              <button
+                onClick={handleEnabled}
+                className="flex w-full h-14 items-center justify-center rounded-lg bg-blue-300 py-1.5 text-sm font-semibold leading-6 text-base text-surface-100 shadow-sm outline-blue-300 focus:outline-blue-300 focus-visible:outline mb-4"
+              >
+                Edit profile
+              </button>
+              <button
+                onClick={handleEnabledPass}
+                className="flex w-full h-14 items-center justify-center rounded-lg bg-blue-300 py-1.5 text-sm font-semibold leading-6 text-base text-surface-100 shadow-sm outline-blue-300 focus:outline-blue-300 focus-visible:outline mb-4"
+              >
+                Change Password
+              </button>
             </div>
           </div>
 
           <div className="lg:px-16 px-4 pt-8 pb-0 mt-4 rounded-xl">
-            <form
-              onSubmit={handleSubmit}
-              className="space-y-6"
-              action="#"
-              method="POST"
-            >
+            <form onSubmit={handleSubmit} className="space-y-6">
               <h2 className="text-lg font-bold block leading-6">Basic Info</h2>
               <div className="flex sm:flex-row flex-col lg:w-[100%]">
                 <div className="mb-4 sm:mb-0 lg:w-[50%] md:w-[50%]">
-                  <label
-                    htmlFor="first-name"
-                    // className="text-lg block text-sm font-medium leading-6"
-                  >
-                    First Name
-                  </label>
+                  <label htmlFor="first-name">First Name</label>
                   <div className="mt-2 sm:pr-4">
                     <div className="relative flex items-center">
                       <FaUser className="absolute left-3  text-dark-600 mt-2" />
                       <input
                         id="first-name"
                         disabled={isDisabled}
-                        value={user?.response?.first_name}
+                        value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
                         name="first-name"
                         type="text"
@@ -168,19 +194,14 @@ function Profile() {
                 </div>
                 <div className="lg:w-[50%] md:w-[50%]">
                   <div className="flex items-center justify-between">
-                    <label
-                      htmlFor="last-name"
-                      // className="text-lg block text-sm font-medium leading-6"
-                    >
-                      Last Name
-                    </label>
+                    <label htmlFor="last-name">Last Name</label>
                   </div>
                   <div className="relative flex items-center mt-2">
                     <FaUser className="absolute left-3 text-dark-600 mt-2 " />
                     <input
                       id="last-name"
                       disabled={isDisabled}
-                      value={user?.response?.last_name}
+                      value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
                       name="last-name"
                       type="text"
@@ -192,49 +213,33 @@ function Profile() {
               </div>
               <div className="flex sm:flex-row flex-col lg:w-[100%]">
                 <div className="mb-4 sm:mb-0 lg:w-[50%] md:w-[50%]">
-                  <label
-                    htmlFor="email"
-                    // className="text-lg block text-sm font-medium leading-6"
-                  >
-                    Email
-                  </label>
-                  <div className="mt-2 sm:pr-4">
-                    <div className="relative flex items-center">
-                      <FaEnvelope className="absolute left-3  text-dark-600 mt-2" />
-                      <input
-                        id="email"
-                        disabled={isDisabled}
-                        readOnly
-                        value={user?.response?.email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        name="email"
-                        type="email"
-                        placeholder="Enter your email"
-                        className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 text-blue-500 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 pl-10 sm:text-sm sm:leading-6"
-                      />
-                    </div>
+                  <label htmlFor="email">Email address</label>
+                  <div className="relative flex items-center mt-2 sm:pr-4">
+                    <FaEnvelope className="absolute left-3 text-dark-600 mt-2 " />
+                    <input
+                      id="email"
+                      disabled
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      name="email"
+                      type="email"
+                      placeholder="Enter your email address"
+                      className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 text-blue-500 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 pl-10 sm:text-sm sm:leading-6"
+                    />
                   </div>
                 </div>
                 <div className="lg:w-[50%] md:w-[50%]">
-                  <div className="flex items-center justify-between">
-                    <label
-                      htmlFor="contact"
-                      // className="text-lg block text-sm font-medium leading-6"
-                    >
-                      Contact Number
-                    </label>
-                  </div>
+                  <label htmlFor="contact">Contact Number</label>
                   <div className="relative flex items-center mt-2">
                     <FaPhoneAlt className="absolute left-3 text-dark-600 mt-2 " />
                     <input
                       id="contact"
                       disabled={isDisabled}
-                      value={user?.response?.contact}
+                      value={contactNumber}
                       onChange={(e) => setContactNumber(e.target.value)}
                       name="contact"
                       type="tel"
-                      pattern="[0-9]{4}-[0-9]{7}"
-                      placeholder="Enter your Contact Number in this format XXXX-XXXXXXX"
+                      placeholder="Enter your contact number"
                       className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 text-blue-500 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 pl-10 sm:text-sm sm:leading-6"
                     />
                   </div>
@@ -242,45 +247,29 @@ function Profile() {
               </div>
               <div className="flex sm:flex-row flex-col lg:w-[100%]">
                 <div className="mb-4 sm:mb-0 lg:w-[50%] md:w-[50%]">
-                  <div className="flex items-center justify-between">
-                    <label
-                      htmlFor="dob"
-                      // className="text-lg block text-sm font-medium leading-6"
-                    >
-                      Date of Birth
-                    </label>
-                  </div>
-                  <div className="mt-2 sm:pr-4">
-                    <div className="relative flex items-center">
-                      <FaEnvelope className="absolute left-3  text-dark-600 mt-2" />
-                      <input
-                        id="dob"
-                        name="dob"
-                        disabled={isDisabled}
-                        value={dob}
-                        onChange={(e) => setDob(e.target.value)}
-                        type="date"
-                        placeholder="Enter your Date of Birth"
-                        className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 text-blue-500 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 pl-10 sm:text-sm sm:leading-6"
-                      />
-                    </div>
+                  <label htmlFor="dob">Date of Birth</label>
+                  <div className="relative flex items-center mt-2 sm:pr-4">
+                    <input
+                      id="dob"
+                      disabled
+                      value={dob}
+                      onChange={(e) => setDob(e.target.value)}
+                      name="dob"
+                      type="date"
+                      className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 text-blue-500 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                    />
                   </div>
                 </div>
-                <div className="lg:w-[50%]">
-                  <label
-                    htmlFor="city"
-                    // className="text-lg block text-sm font-medium leading-6"
-                  >
-                    City of Residence
-                  </label>
+                <div className="lg:w-[50%] md:w-[50%]">
+                  <label htmlFor="city">City</label>
                   <div className="relative flex items-center mt-2">
-                    <FaMapPin className="absolute left-3 text-dark-600 mt-2 " />
+                    <FaMapPin className="absolute left-3 text-dark-600 mt-2" />
                     <input
                       id="city"
-                      name="city"
-                      disabled={isDisabled}
-                      value={user?.response?.city}
+                      disabled
+                      value={city}
                       onChange={(e) => setCity(e.target.value)}
+                      name="city"
                       type="text"
                       placeholder="Enter your city"
                       className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 text-blue-500 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 pl-10 sm:text-sm sm:leading-6"
@@ -289,66 +278,80 @@ function Profile() {
                 </div>
               </div>
 
-              <h2 className="text-lg font-bold block leading-6">
-                Change Password
-              </h2>
-              <div className="flex sm:flex-row flex-col lg:w-[100%]">
-                <div className="mb-4 sm:mb-0 lg:w-[50%] md:w-[50%]">
-                  <label htmlFor="new-password">New Password</label>
-                  <div className="mt-2 sm:pr-4">
-                    <div className="relative flex items-center">
-                      <FaUnlock className="absolute left-3 text-dark-600" />
-                      <input
-                        id="new-password"
-                        name="new-password"
-                        type="password"
-                        disabled={isDisabled}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        autoComplete="new-password"
-                        placeholder="Enter your New Password"
-                        // required
-                        className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 text-blue-500 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 pl-10 sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="lg:w-[50%] md:w-[50%]">
-                  <label htmlFor="confirm-password">Confirm Password</label>
-                  <div className="relative flex items-center mt-2">
-                    <FaUnlock className="absolute left-3 text-dark-600 mt-2" />
-                    <input
-                      id="confirm-password"
-                      name="confirm-password"
-                      type="password"
-                      disabled={isDisabled}
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      autoComplete="new-password"
-                      placeholder="Confirm your New Password"
-                      className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 text-blue-500 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 pl-10 sm:text-sm sm:leading-6"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="mb-4 sm:mb-0 lg:w-[60%] flex mt-8 ">
+              <div className="flex justify-end">
                 <button
                   type="button"
-                  onClick={(e) => handleDisabled()}
-                  disabled={isDisabled}
-                  className="flex w-full h-14 mr-4 items-center justify-center rounded-lg bg-surface-100 border border-3 border-dark-400 text-base py-1.5 text-sm font-semibold leading-6 text-dark-400 outline-dark-400 focus:outline-dark-400 shadow-sm focus-visible:outline focus-visible:outline-2 mb-4 "
+                  className="bg-surface-100 rounded-md px-4 py-2 mr-2 border border-blue-300 text-blue-300"
+                  onClick={handleDisabled}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  disabled={isDisabled}
-                  className="flex w-full h-14 items-center justify-center rounded-lg bg-blue-300 py-4 text-sm font-semibold leading-6 text-base text-surface-100 shadow-sm outline-blue-300 focus:outline-blue-300 focus-visible:outline mb-4 "
+                  className="bg-blue-300 text-surface-100 rounded-md px-4 py-2 border border-blue-300 "
                 >
                   Save Changes
                 </button>
               </div>
             </form>
+            {!isDisabledPass && (
+              <form
+                onSubmit={handleSubmit}
+                className="space-y-6 mt-8 pt-8 pb-0 rounded-xl bg-gray-100"
+              >
+                <h2 className="text-lg font-bold block leading-6">
+                  Change Password
+                </h2>
+                <div className="flex sm:flex-row flex-col lg:w-[100%]">
+                  <div className="mb-4 sm:mb-0 lg:w-[50%] md:w-[50%]">
+                    <label htmlFor="password">New Password</label>
+                    <div className="relative flex items-center mt-2 sm:pr-4">
+                      <FaUnlock className="absolute left-3 text-dark-600 mt-2" />
+                      <input
+                        id="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        name="password"
+                        type="password"
+                        placeholder="Enter your new password"
+                        className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 text-blue-500 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 pl-10 sm:text-sm sm:leading-6"
+                      />
+                    </div>
+                  </div>
+                  <div className="lg:w-[50%] md:w-[50%]">
+                    <label htmlFor="confirm-password">Confirm Password</label>
+                    <div className="relative flex items-center mt-2">
+                      <FaUnlock className="absolute left-3 text-dark-600 mt-2" />
+                      <input
+                        id="confirm-password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        name="confirm-password"
+                        type="password"
+                        placeholder="Confirm your new password"
+                        className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 text-blue-500 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 pl-10 sm:text-sm sm:leading-6"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-end">
+                  <button
+                    type="button"
+                    className="bg-surface-100 rounded-md px-4 py-2 mr-2 border border-blue-300 text-blue-300"
+                    onClick={handleDisabledPass}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="bg-blue-300 text-surface-100 rounded-md px-4 py-2 border border-blue-300 "
+                  >
+                    Change Password
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       </div>

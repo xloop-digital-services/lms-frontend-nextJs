@@ -3,7 +3,12 @@ import { useSidebar } from "@/providers/useSidebar";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { FaArrowAltCircleRight, FaArrowRight, FaChevronCircleRight } from "react-icons/fa";
+import {
+  FaArrowAltCircleRight,
+  FaArrowRight,
+  FaChevronCircleRight,
+} from "react-icons/fa";
+import Progress from "./Progress";
 
 export default function MainCourseCard({
   courseImg,
@@ -12,13 +17,12 @@ export default function MainCourseCard({
   courseDesc,
   progress,
   durationOfCourse,
-  route
+  route,
 }) {
-  const { isSidebarOpen } = useSidebar();
   return (
     <>
-      <div className="w-full bg-surface-100 p-8 rounded-xl  ">
-        <div className="border border-dark-300 rounded-xl p-10 flex max-md:flex-col hover:border-blue-300">
+      <div className="w-full bg-surface-100 p-8 rounded-xl">
+        <div className="border border-2 border-dark-300 rounded-xl p-10 flex max-md:flex-col hover:border-blue-300">
           <div className="w-100 mr-4">
             <Image
               src={courseImg}
@@ -40,25 +44,23 @@ export default function MainCourseCard({
 
               <div className="flex justify-between mt-4 mb-4">
                 <p clcassName="">{courseDesc}</p>
-                <p>{progress}</p>
+                {progress ? <p className="text-blue-300">50</p> : null}
               </div>
 
-              <div className="bg-[#EBF6FF] w-full h-2 rounded-xl">
-                <div
-                  className="bg-[#03A1D8] w-[120px] h-2 rounded-xl"
-                  style={{ width: progress }}
-                ></div>
-              </div>
+              {progress ? <Progress progress={progress} /> : null}
             </div>
 
-            <div className="flex max-md:flex-col justify-between">
+            <div className="flex max-md:mt-4 justify-between">
               <div className="flex">
                 <p className=""> Duration: &nbsp; </p>
-                <p className="text-blue-300"> {durationOfCourse}</p>
+                <p className="text-blue-300">
+                  {" "}
+                  {durationOfCourse} Credit hours
+                </p>
               </div>
 
               <Link href={`${route}`}>
-                <FaChevronCircleRight  size={24} fill="#03A1D8"/>
+                <FaChevronCircleRight size={24} fill="#03A1D8" />
               </Link>
             </div>
           </div>

@@ -9,6 +9,7 @@ import Image from "next/image";
 import axios from "axios";
 
 export default function Page() {
+  
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");

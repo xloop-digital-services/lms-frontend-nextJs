@@ -13,6 +13,20 @@ body{
     font-family: "Exo", sans-serif;
   }
   
-  .font-inter{
+.font-inter{
     font-family: "Inter", sans-serif;
+}
+
+.backDropOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    /* height: 100%; */
+    background: linear-gradient(to right, #e6f8ff,#d8e9ffb3) ;
+    /* background-color: #; */
+    backdrop-filter: blur(2px);
+    z-index: 999;
   }
+  
+ 

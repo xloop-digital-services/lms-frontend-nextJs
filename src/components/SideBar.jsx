@@ -8,6 +8,9 @@ import {
   FaBars,
   FaBookOpen,
   FaCalendar,
+  FaClipboard,
+  FaClipboardCheck,
+  FaClipboardList,
   FaHome,
   FaSignOutAlt,
   FaTasks,
@@ -70,7 +73,7 @@ function SideBar() {
                       : "text-dark-600"
                   }`}
                 >
-                  <FaTasks size={24} />
+                  <FaClipboard size={24} />
                   Attendance
                 </Link>
                 <Link
@@ -81,7 +84,7 @@ function SideBar() {
                       : "text-dark-600"
                   }`}
                 >
-                  <FaTasks size={24} />
+                  <FaClipboardList size={24} />
                   Quiz
                 </Link>
                 <Link
@@ -125,10 +128,9 @@ function SideBar() {
                       : "text-dark-600"
                   }`}
                 >
-                  <FaTasks size={24} />
+                   <FaClipboardCheck size={24} />
                   Grading
                 </Link>
-
 
                 <Link
                   href="/calendar"
@@ -172,15 +174,15 @@ function SideBar() {
         </nav>
       </div>
       {/* <div className="h-screen bg-surface-100 w-16"> */}
-        <button
-          className={`absolute  text-blue-500 px-4 py-4 max-md:px-2 max-md:py-2 focus:outline-none mt-4  ${
-            isSidebarOpen && "hidden"
-          } z-50`}
-          onClick={toggleSidebar}
-        >
-          <FaBars size={24} />
-        </button>
-{/*         
+      <button
+        className={`absolute  text-blue-500 px-4 py-4 max-md:px-2 max-md:py-2 focus:outline-none mt-4  ${
+          isSidebarOpen && "hidden"
+        } z-50`}
+        onClick={toggleSidebar}
+      >
+        <FaBars size={24} />
+      </button>
+      {/*         
         <div className="flex flex-col justify-between lg:h-[100%] h-[100%] overflow-y-auto ">
           <div className=" pt-40 rounded bg-surface-100 flex flex-col">
             <Link
