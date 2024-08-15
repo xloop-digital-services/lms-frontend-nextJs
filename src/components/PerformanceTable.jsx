@@ -1,5 +1,4 @@
 import React from 'react'
-
 const PerformanceTable = () => {
     return (
         <div className="flex flex-col ">
@@ -165,7 +164,7 @@ const PerformanceTable = () => {
                     </tbody>
                   </table>
                 </div>
-                <div className="py-1 px-4">
+                {/* <div className="py-1 px-4">
                   <nav className="flex items-center space-x-1">
                     <button
                       type="button"
@@ -201,12 +200,11 @@ const PerformanceTable = () => {
                       <span aria-hidden="true">»</span>
                     </button>
                   </nav>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
         </div>
       );
 }
-
 export default PerformanceTable

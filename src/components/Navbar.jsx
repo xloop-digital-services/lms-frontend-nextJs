@@ -19,7 +19,7 @@ export default function Navbar() {
   const [showNotification, setShowNotifications] = useState(false);
   const dropdownRef = useRef(null);
   const [user, setUser] = useState({});
-  const {logOutUser} = useAuth();
+  const { logOutUser } = useAuth();
 
   useEffect(() => {
     async function fetchUser() {
@@ -28,7 +28,7 @@ export default function Navbar() {
         setLoader(true);
         if (response.status === 200) {
           console.log("Fetched user data:", response.data);
-          setLoader(false)
+          setLoader(false);
           setUser(response.data);
           console.log(user, "user");
           // console.log(response.data.response.city, "city")
@@ -85,12 +85,12 @@ export default function Navbar() {
     setShowDropdown(!showDropdown);
   };
 
-  const getFirstWord = (name) =>{
-    if(!name) return '';
-    return name.split('')[0];
-  }
+  const getFirstWord = (name) => {
+    if (!name) return "";
+    return name.split("")[0];
+  };
 
-  const firstWord = getFirstWord(user?.response?.first_name) 
+  const firstWord = getFirstWord(user?.response?.first_name);
 
   return (
     <>
@@ -219,7 +219,7 @@ export default function Navbar() {
                         Your Profile
                       </Link>
 
-                      <Link
+                      {/* <Link
                         href="/user/management"
                         passHref
                         className="flex items-center px-4 py-2 text-[#07224D] hover:bg-gray-200"
@@ -227,7 +227,7 @@ export default function Navbar() {
                       >
                         <FaUsers size={17} className="mr-2" />
                         Manage Users
-                      </Link>
+                      </Link> */}
 
                       <Link
                         href="/auth/login"

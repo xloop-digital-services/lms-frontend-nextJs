@@ -7,9 +7,9 @@ import { IoEyeSharp } from "react-icons/io5";
 import { BsEyeSlashFill } from "react-icons/bs";
 import Image from "next/image";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function Page() {
-  
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -32,8 +32,16 @@ export default function Page() {
   };
 
   const cities = [
-    "Karachi", "Lahore", "Islamabad", "Faisalabad", "Rawalpindi",
-    "Gujranwala", "Peshawar", "Multan", "Quetta", "Sialkot"
+    "Karachi",
+    "Lahore",
+    "Islamabad",
+    "Faisalabad",
+    "Rawalpindi",
+    "Gujranwala",
+    "Peshawar",
+    "Multan",
+    "Quetta",
+    "Sialkot",
   ];
 
   const SignUpUser = async (event) => {
@@ -61,12 +69,42 @@ export default function Page() {
         if (response.status === 200) {
           console.log("res", response);
           router.push("/auth/login");
+
+          storeToken(response.data.response.token, response.data);
+
+          router.push("/dashboard");
+          toast.success("Signup Successful!", {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
         }
       } else {
+        oast.error("Signup failed", error, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     } catch (error) {
-      console.log("error araha he");
-      console.error(error);
+      console.error("Error during login:", error);
+      toast.error("An error occurred during login. Please try again.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 
@@ -216,30 +254,32 @@ export default function Page() {
               </div>
             </div>
             <div className="space-y-2">
-      <label
-        htmlFor="city"
-        className="block text-sm font-medium leading-5 text-dark-700"
-      >
-        City
-      </label>
-      <div className="mt-1 relative rounded-lg">
-        <select
-          id="city"
-          name="city"
-          required
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-          className="appearance-none block w-full p-3 border border-dark-300 rounded-lg placeholder-dark-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-        >
-          <option value="" disabled>Select a city</option>
-          {cities.map((cityName) => (
-            <option key={cityName} value={cityName}>
-              {cityName}
-            </option>
-          ))}
-        </select>
-      </div>
-    </div>
+              <label
+                htmlFor="city"
+                className="block text-sm font-medium leading-5 text-dark-700"
+              >
+                City
+              </label>
+              <div className="mt-1 relative rounded-lg">
+                <select
+                  id="city"
+                  name="city"
+                  required
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  className="appearance-none block w-full p-3 border border-dark-300 rounded-lg placeholder-dark-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                >
+                  <option value="" disabled>
+                    Select a city
+                  </option>
+                  {cities.map((cityName) => (
+                    <option key={cityName} value={cityName}>
+                      {cityName}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
             <div className="space-y-2">
               <label
                 for="lastName"

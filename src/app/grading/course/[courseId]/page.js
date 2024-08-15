@@ -1,15 +1,24 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react"; // Ensure useState is imported
-import TopPart from "@/components/CourseHead";
 import { IoIosArrowDown } from "react-icons/io"; // Import the icon
 import PerformanceTable from "@/components/PerformanceTable";
 import { useSidebar } from "@/providers/useSidebar";
+import StudentMarksTable from "@/components/StudentMarksTable";
+import CourseHead from "@/components/CourseHead";
+import { getOverallProgress } from "@/api/route";
+import { useAuth } from "@/providers/AuthContext";
 
-export default function Page() {
+export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
-  const [selectedOption, setSelectedOption] = useState("Hammad Siddiqui"); // Initialize state
-  const [isOpen, setIsOpen] = useState(false); // Initialize another state
-  const dropdownRef = useRef(null); // Reference for the dropdown div
+  const [selectedOption, setSelectedOption] = useState("Hammad Siddiqui");
+  const [isOpen, setIsOpen] = useState(false);
+  const [openSection, setOpenSection] = useState(null);
+  const [progress, setProgress] = useState({});
+  const [loader, setLoader] = useState(true);
+  const dropdownRef = useRef(null);
+  const courseId = params.courseId;
+  const { userData } = useAuth();
+  const userId = userData?.user?.id;
 
   const toggleOpen = () => {
     setIsOpen(!isOpen);
@@ -20,7 +29,56 @@ export default function Page() {
     setIsOpen(false);
   };
 
-  const options = ['Hammad Siddiqui', 'Javeria Lodhi', 'Sarah Patel', 'Hira Fatima']; // Define your options
+  async function fetchOverallProgress() {
+    const response = await getOverallProgress(courseId, userId);
+    // setLoader(true);
+    try {
+      if (response.status === 200) {
+        setProgress(response.data);
+        // setLoader(false);
+        console.log(progress);
+      } else {
+        console.error("Failed to fetch courses", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
+  useEffect(() => {
+    fetchOverallProgress();
+  }, []);
+  const options = [
+    "Hammad Siddiqui",
+    "Javeria Lodhi",
+    "Sarah Patel",
+    "Hira Fatima",
+  ]; // Define your options
+
+  async function fetchPendingAssignments() {
+    const response = await getPendingAssignments(2, userId);
+    setLoader(true);
+    try {
+      if (response.status === 200) {
+        setAssignments(response.data);
+        setLoader(false);
+        console.log(assignments);
+      } else {
+        console.error(
+          "Failed to fetch pending assignments, status:",
+          response.status
+        );
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
+  // useEffect(())
+
+  const handleToggleSection = (section) => {
+    setOpenSection(openSection === section ? null : section);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -47,9 +105,13 @@ export default function Page() {
       }}
     >
       <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4">
-        <TopPart />
+        <CourseHead
+          id={courseId}
+          rating="Top Instructor"
+          instructorName="Maaz"
+        />
         <div>
-          <div className='flex justify-between items-center'>
+          {/* <div className='flex justify-between items-center'>
             <p className='text-[18px] font-semibold'>{selectedOption}</p>
             <div className="group relative inline-block w-64" ref={dropdownRef}>
               <button
@@ -60,7 +122,7 @@ export default function Page() {
                 <span className=''><IoIosArrowDown /></span>
               </button>
 
-              {/* {isOpen && (
+              {isOpen && (
                 <div className="absolute z-10 w-full mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out">
                   {options.map((option, index) => (
                     <div
@@ -74,29 +136,112 @@ export default function Page() {
                     </div>
                   ))}
                 </div>
-              )} */}
+              )}
+            </div>
+          </div> */}
+          <div className="my-5 space-y-3">
+            <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
+              <div
+                className=" flex justify-between items-center "
+                onClick={() => handleToggleSection("Quiz")}
+              >
+                <p className="text-[17px] font-semibold font-exo">Quiz</p>
+                <span className="">
+                  <IoIosArrowDown />
+                </span>
+              </div>
+              <div
+                className={`transition-container ${
+                  openSection === "Quiz" ? "max-height-full" : "max-height-0"
+                }`}
+              >
+                {openSection === "Quiz" && (
+                  <div className="mt-2">
+                    <StudentMarksTable field={openSection} />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
+              <div
+                className=" flex justify-between items-center "
+                onClick={() => handleToggleSection("Assignment")}
+              >
+                <p className="text-[17px] font-semibold font-exo">Assignment</p>
+                <span className="">
+                  <IoIosArrowDown />
+                </span>
+              </div>
+              <div
+                className={`transition-container ${
+                  openSection === "Assignment"
+                    ? "max-height-full"
+                    : "max-height-0"
+                }`}
+              >
+                {openSection === "Assignment" && (
+                  <div className="mt-2">
+                    <StudentMarksTable field={openSection} />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
+              <div
+                className=" flex justify-between items-center "
+                onClick={() => handleToggleSection("Project")}
+              >
+                <p className="text-[17px] font-semibold font-exo">Project</p>
+                <span className="">
+                  <IoIosArrowDown />
+                </span>
+              </div>
+              <div
+                className={`transition-container ${
+                  openSection === "Project" ? "max-height-full" : "max-height-0"
+                }`}
+              >
+                {openSection === "Project" && (
+                  <div className="mt-2">
+                    <StudentMarksTable field={openSection} />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
+              <div
+                className=" flex justify-between items-center "
+                onClick={() => handleToggleSection("Exam")}
+              >
+                <p className="text-[17px] font-semibold font-exo">Exam</p>
+                <span className="">
+                  <IoIosArrowDown />
+                </span>
+              </div>
+              <div
+                className={`transition-container ${
+                  openSection === "Exam" ? "max-height-full" : "max-height-0"
+                }`}
+              >
+                {openSection === "Exam" && (
+                  <div className="mt-2">
+                    <StudentMarksTable field={openSection} />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-          <div className="my-5 space-y-3">
-          <div className="border border-dark-300 w-full p-4 rounded-lg flex justify-between items-center">
-            <p className="text-[17px] font-semibold font-exo">Quiz</p>
-            <span className=''><IoIosArrowDown /></span>
-          </div>
-          <div className="border border-dark-300 w-full p-4 rounded-lg flex justify-between items-center">
-            <p className="text-[17px] font-semibold font-exo">Assignments</p>
-            <span className=''><IoIosArrowDown /></span>
-          </div>
-          <div className="border border-dark-300 w-full p-4 rounded-lg flex justify-between items-center">
-            <p className="text-[17px] font-semibold font-exo">Projects</p>
-            <span className=''><IoIosArrowDown /></span>
-          </div>
-          <div className="border border-dark-300 w-full p-4 rounded-lg flex justify-between items-center">
-            <p className="text-[17px] font-semibold font-exo">Exam</p>
-            <span className=''><IoIosArrowDown /></span>
-          </div>
-          </div>
-          <div>
-            <div className="font-semibold font-exo py-3">Student Performance Overview</div>
+          <div
+            className={`transition-container ${
+              openSection !== null ? "max-height-0" : "max-height-full"
+            }`}
+          >
+            <div className={`font-semibold font-exo py-3 `}>
+              Student Performance Overview
+            </div>
             <PerformanceTable />
           </div>
         </div>
