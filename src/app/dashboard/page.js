@@ -13,6 +13,8 @@ import { useAuth } from "@/providers/AuthContext";
 import { getAllCourses, getPendingAssignments } from "@/api/route";
 import { formatDateTime } from "@/components/StudentDataStructure";
 import { CircularProgress } from "@mui/material";
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
 
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
@@ -80,7 +82,7 @@ export default function Page() {
             width: isSidebarOpen ? "84%" : "100%",
           }}
         >
-          <div className="bg-[#ffffff] p-5  mx-5 rounded-xl space-y-4  ">
+          <div className="bg-[#ffffff] p-5 rounded-xl ">
             <div className="flex justify-between items-center">
               <h1 className="text-xl font-bold font-exo"> Courses</h1>
               <div className="group px-3">
@@ -98,7 +100,7 @@ export default function Page() {
                 </Link>
               </div>
             </div>
-            <div className="flex space-x-4 mx-auto flex-wrap">
+            <div className="flex space-x-4 flex-wrap ">
               {isStudent &&
                 courses?.data?.map((course) => {
                   return (
@@ -116,15 +118,22 @@ export default function Page() {
                 })}
             </div>
           </div>
-          <div className="flex gap-4 mx-5 lg:flex-row flex-col-reverse ">
+          <div className="flex gap-4 lg:flex-row flex-col-reverse ">
             <div className="bg-[#ffffff] p-2  rounded-xl grow">
               <div>
                 <h1 className="text-xl font-bold px-3 py-4 font-exo">
                   Weeks Activity
                 </h1>
               </div>
-              <div>
-                <Calender />
+              <div className="h-80 overflow-y-scroll scrollbar-webkit p-4">
+                <FullCalendar
+                  plugins={[dayGridPlugin]}
+                  initialView="dayGridMonth"
+                  events={[
+                    { title: 'Assignment Submission', date: '2024-08-22' },
+                    { title: 'Mobile Application Development', date: '2024-08-10' }
+                  ]}
+                />
               </div>
             </div>
             <div className="bg-[#ffffff] p-2 rounded-xl overflow-hidden h-[360px] lg:w-fit ">
@@ -139,6 +148,7 @@ export default function Page() {
                   return (
                     <AssignmentCard
                       key={assignment.id}
+                      id={assignment.id}
                       category={assignment.course_name}
                       title={assignment?.question}
                       content={assignment?.description}

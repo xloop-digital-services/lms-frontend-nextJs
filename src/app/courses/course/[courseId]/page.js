@@ -1,5 +1,10 @@
 "use client";
-import { getCourseById, getModuleByCourseId } from "@/api/route";
+import {
+  getCourseById,
+  getModuleByCourseId,
+  getProgressForCourse,
+  getProgressForQuiz,
+} from "@/api/route";
 import CourseHead from "@/components/CourseHead";
 import { useSidebar } from "@/providers/useSidebar";
 import { CircularProgress } from "@mui/material";
@@ -15,7 +20,8 @@ export default function Page({ params }) {
   const [modules, setModules] = useState([]);
   const [downloadStatus, setDownloadStatus] = useState("");
   const [loader, setLoader] = useState(true);
-  console.log(courseId);
+  const [courseProgress, setCourseProgress] = useState({});
+  // console.log(courseId);
 
   async function fetchCoursesById() {
     const response = await getCourseById(courseId);
@@ -32,6 +38,23 @@ export default function Page({ params }) {
       console.log("error", error);
     }
   }
+
+  async function fetchCourseProgress() {
+    const response = await getProgressForCourse(courseId);
+    setLoader(true);
+    try {
+      if (response.status === 200) {
+        setCourseProgress(response?.data?.data);
+        setLoader(false);
+        console.log(courseProgress);
+      } else {
+        console.error("Failed to fetch user, status:", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+  // console.log(courseProgress?.data?.progress_percentage)
 
   async function fetchModules() {
     const response = await getModuleByCourseId(courseId);
@@ -52,6 +75,7 @@ export default function Page({ params }) {
   useEffect(() => {
     fetchCoursesById();
     fetchModules();
+    fetchCourseProgress();
   }, []);
 
   const downloadFile = async (filePath) => {
@@ -95,6 +119,7 @@ export default function Page({ params }) {
               id={courseId}
               rating="Top Instructor"
               instructorName="Maaz"
+              progress={courseProgress?.progress_percentage}
             />
 
             <div className="flex flex-col">

@@ -3,12 +3,13 @@ import React, { useEffect, useState } from "react";
 import { useSidebar } from "@/providers/useSidebar";
 import StudentDataStructure from "@/components/StudentDataStructure";
 import CourseHead from "@/components/CourseHead";
-import { getAssignmentsByCourseId } from "@/api/route";
+import { getAssignmentsByCourseId, getProgressForAssignment } from "@/api/route";
 
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
   const [assignments, setAssignments] = useState([]);
   const courseId = params.courseId;
+  const [assignmentProgress, setAssignmentProgress] = useState({});
 
   console.log(courseId);
 
@@ -25,9 +26,24 @@ export default function Page({ params }) {
       console.log("error", error);
     }
   }
-
+  async function fetchAssignmentProgress() {
+    const response = await getProgressForAssignment(courseId);
+    // setLoader(true);
+    try {
+      if (response.status === 200) {
+        setAssignmentProgress(response?.data?.data);
+        // setLoader(false);
+        console.log(assignmentProgress);
+      } else {
+        console.error("Failed to fetch user, status:", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
   useEffect(() => {
     fetchAssignments();
+    fetchAssignmentProgress();
   }, []);
 
   return (
@@ -45,6 +61,7 @@ export default function Page({ params }) {
           id={courseId}
           rating="Top Instructor"
           instructorName="Maaz"
+          progress={assignmentProgress?.progress_percentage}
         />
         {/* {assignments?.map((assignment, index) => {
           return ( */}

@@ -1,10 +1,11 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CoursePage from "@/components/CoursePage";
-import { CircularProgress } from "@mui/material";
 
 export default function Page() {
   const [loader, setLoader] = useState(true);
+
+  // console.log(courseProgress?.data?.progress_percentage)
   return (
     <>
       {/* {loader ? (
@@ -12,7 +13,10 @@ export default function Page() {
           <CircularProgress />
         </div>
       ) : ( */}
-        <CoursePage path="courses" />
+      <CoursePage
+        path="courses"
+
+      />
       {/* )} */}
     </>
   );

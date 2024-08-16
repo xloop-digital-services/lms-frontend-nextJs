@@ -3,13 +3,13 @@ import React, { useEffect, useState } from "react";
 import { useSidebar } from "@/providers/useSidebar";
 import StudentDataStructure from "@/components/StudentDataStructure";
 import CourseHead from "@/components/CourseHead";
-import { getQuizByCourseId } from "@/api/route";
+import { getProgressForQuiz, getQuizByCourseId } from "@/api/route";
 
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
   const [quizzes, setQuizzes] = useState([]);
   const courseId = params.courseId;
-
+  const [quizProgress, setQuizProgress] = useState({});
   console.log(courseId);
 
   async function fetchQuizzes() {
@@ -26,8 +26,25 @@ export default function Page({ params }) {
     }
   }
 
+  async function fetchQuizProgress() {
+    const response = await getProgressForQuiz(courseId);
+    // setLoader(true);
+    try {
+      if (response.status === 200) {
+        setQuizProgress(response?.data?.data);
+        // setLoader(false);
+        console.log(quizProgress);
+      } else {
+        console.error("Failed to fetch user, status:", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
   useEffect(() => {
     fetchQuizzes();
+    fetchQuizProgress();
   }, []);
 
   return (
@@ -45,6 +62,7 @@ export default function Page({ params }) {
           id={courseId}
           rating="Top Instructor"
           instructorName="Maaz"
+          progress={quizProgress?.progress_percentage}
         />
         {/* {quizzes?.map((quiz, index) => { */}
         {/* return ( */}

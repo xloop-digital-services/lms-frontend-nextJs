@@ -1,7 +1,8 @@
 import { getCourseById } from "@/api/route";
 import React, { useEffect, useState } from "react";
+import Progress from "./Progress";
 
-const CourseHead = ({ rating, instructorName, id }) => {
+const CourseHead = ({ rating, instructorName, id, progress }) => {
   const [courseData, setCourseData] = useState([]);
 
   async function fetchCoursesById() {
@@ -46,12 +47,7 @@ const CourseHead = ({ rating, instructorName, id }) => {
         </div>
         <p className="ml-2 flex items-center"> Instructor: {instructorName}</p>
       </div>
-      <div className="bg-[#EBF6FF] w-full h-2 rounded-xl">
-        <div
-          className="bg-[#03A1D8] w-[120px] h-2 rounded-xl"
-          style={{ width: "50%" }}
-        ></div>
-      </div>
+      <Progress progress={progress}/>
       <hr className="my-8 text-dark-200"></hr>
     </div>
   );

@@ -29,4 +29,18 @@ body{
     z-index: 999;
   }
   
- 
+  :root {
+    --fc-page-bg-color: #fff;
+    --fc-small-font-size: .85em;
+    --fc-border-color:#C0C0CF;
+    --fc-daygrid-event-dot-width: 5px;
+    --fc-small-font-size: .85em;
+    --fc-page-bg-color: #fff;
+    --fc-neutral-text-color: #03A1D8;
+    --fc-button-bg-color: #03A1D8;
+    --fc-button-border-color: #fcfcfc;
+    --fc-button-active-bg-color: #03A1D8;
+    --fc-button-active-border-color: #fff;
+    --fc-button-hover-bg-color: #03A1D8;
+    --fc-button-hover-border-color: #ffff;
+  }

@@ -5,20 +5,31 @@ import PerformanceTable from "@/components/PerformanceTable";
 import { useSidebar } from "@/providers/useSidebar";
 import StudentMarksTable from "@/components/StudentMarksTable";
 import CourseHead from "@/components/CourseHead";
-import { getOverallProgress } from "@/api/route";
+import {
+  getAssignmentProgress,
+  getExamProgress,
+  getOverallProgress,
+  getProjectProgress,
+  getQuizProgress,
+} from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
 
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
-  const [selectedOption, setSelectedOption] = useState("Hammad Siddiqui");
+  // const [selectedOption, setSelectedOption] = useState("Hammad Siddiqui");
   const [isOpen, setIsOpen] = useState(false);
   const [openSection, setOpenSection] = useState(null);
   const [progress, setProgress] = useState({});
+  const [assignment, setAssignment] = useState([]);
+  const [quiz, setQuiz] = useState([]);
+  const [project, setProject] = useState([]);
+  const [exam, setExam] = useState([]);
   const [loader, setLoader] = useState(true);
   const dropdownRef = useRef(null);
   const courseId = params.courseId;
   const { userData } = useAuth();
-  const userId = userData?.user?.id;
+  const userId = userData?.User?.id;
+  const regId = userData?.user_data?.registration_id;
 
   const toggleOpen = () => {
     setIsOpen(!isOpen);
@@ -37,6 +48,74 @@ export default function Page({ params }) {
         setProgress(response.data);
         // setLoader(false);
         console.log(progress);
+        console.log(response.data);
+      } else {
+        console.error("Failed to fetch courses", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
+  async function fetchAssignmentProgress() {
+    const response = await getAssignmentProgress(courseId, regId);
+    // setLoader(true);
+    try {
+      if (response.status === 200) {
+        setAssignment(response.data);
+        // setLoader(false);
+        console.log(assignment);
+        console.log(response.data);
+      } else {
+        console.error("Failed to fetch courses", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
+  async function fetchQuizProgress() {
+    const response = await getQuizProgress(courseId, regId);
+    // setLoader(true);
+    try {
+      if (response.status === 200) {
+        setQuiz(response.data);
+        // setLoader(false);
+        console.log(quiz);
+        console.log(response.data);
+      } else {
+        console.error("Failed to fetch courses", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
+  async function fetchProjectProgress() {
+    const response = await getProjectProgress(courseId, regId);
+    // setLoader(true);
+    try {
+      if (response.status === 200) {
+        setProject(response.data);
+        // setLoader(false);
+        console.log(project);
+        console.log(response.data);
+      } else {
+        console.error("Failed to fetch courses", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+  async function fetchExamProgress() {
+    const response = await getExamProgress(courseId, regId);
+    // setLoader(true);
+    try {
+      if (response.status === 200) {
+        setExam(response.data);
+        // setLoader(false);
+        console.log(exam);
+        console.log(response.data);
       } else {
         console.error("Failed to fetch courses", response.status);
       }
@@ -47,34 +126,20 @@ export default function Page({ params }) {
 
   useEffect(() => {
     fetchOverallProgress();
+    fetchAssignmentProgress();
+    fetchQuizProgress();
+    fetchProjectProgress();
+    fetchExamProgress();
   }, []);
+
+  // console.log(exam?.data)
+
   const options = [
     "Hammad Siddiqui",
     "Javeria Lodhi",
     "Sarah Patel",
     "Hira Fatima",
-  ]; // Define your options
-
-  async function fetchPendingAssignments() {
-    const response = await getPendingAssignments(2, userId);
-    setLoader(true);
-    try {
-      if (response.status === 200) {
-        setAssignments(response.data);
-        setLoader(false);
-        console.log(assignments);
-      } else {
-        console.error(
-          "Failed to fetch pending assignments, status:",
-          response.status
-        );
-      }
-    } catch (error) {
-      console.log("error", error);
-    }
-  }
-
-  // useEffect(())
+  ];
 
   const handleToggleSection = (section) => {
     setOpenSection(openSection === section ? null : section);
@@ -157,7 +222,11 @@ export default function Page({ params }) {
               >
                 {openSection === "Quiz" && (
                   <div className="mt-2">
-                    <StudentMarksTable field={openSection} />
+                 <StudentMarksTable
+                      key={quiz.id}
+                      field={openSection}
+                      assessments={quiz?.data}
+                    />
                   </div>
                 )}
               </div>
@@ -182,7 +251,11 @@ export default function Page({ params }) {
               >
                 {openSection === "Assignment" && (
                   <div className="mt-2">
-                    <StudentMarksTable field={openSection} />
+                     <StudentMarksTable
+                      key={assignment.id}
+                      field={openSection}
+                      assessments={assignment?.data}
+                    />
                   </div>
                 )}
               </div>
@@ -205,7 +278,11 @@ export default function Page({ params }) {
               >
                 {openSection === "Project" && (
                   <div className="mt-2">
-                    <StudentMarksTable field={openSection} />
+                   <StudentMarksTable
+                      key={project.id}
+                      field={openSection}
+                      assessments={project?.data}
+                    />
                   </div>
                 )}
               </div>
@@ -228,7 +305,11 @@ export default function Page({ params }) {
               >
                 {openSection === "Exam" && (
                   <div className="mt-2">
-                    <StudentMarksTable field={openSection} />
+                    <StudentMarksTable
+                      key={exam.id}
+                      field={openSection}
+                      assessments={exam?.data}
+                    />
                   </div>
                 )}
               </div>
@@ -242,7 +323,20 @@ export default function Page({ params }) {
             <div className={`font-semibold font-exo py-3 `}>
               Student Performance Overview
             </div>
-            <PerformanceTable />
+            <PerformanceTable
+              assignmentScore={progress?.assignments?.grades}
+              assignmentWeightage={progress?.assignments?.weightage}
+              assignmentWeightedScore={progress?.assignments?.percentage}
+              quizWeightage={progress?.quizzes?.weightage}
+              quizScore={progress?.quizzes?.grades}
+              quizWeightedScore={progress?.quizzes?.percentage}
+              projectWeightage={progress?.projects?.weightage}
+              projectScore={progress?.projects?.grades}
+              projectWeightedScore={progress?.projects?.percentage}
+              examsWeightage={progress?.exams?.weightage}
+              examsScore={progress?.exams?.grades}
+              examsWeightedScore={progress?.exams?.percentage}
+            />
           </div>
         </div>
       </div>

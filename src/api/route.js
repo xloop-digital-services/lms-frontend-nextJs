@@ -125,12 +125,11 @@ export const getExamByCourseId = async (id) => {
   }
 };
 
-//get grades
-
-export const getAssignmentProgress = async (courseId, userId) => {
+//get assignment Progress(grading)
+export const getAssignmentProgress = async (courseId, regId) => {
   try {
     const response = await axiosInstance.get(
-      `/course/assignments/${courseId}/student/${userId}/`
+      `/course/assignments/${courseId}/student/${regId}/`
     );
     return response;
   } catch (error) {
@@ -138,11 +137,96 @@ export const getAssignmentProgress = async (courseId, userId) => {
   }
 };
 
-//get progress by courseId
+//get quizzes Progress (grading)
+export const getQuizProgress = async (courseId, regId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/course/quizzes/${courseId}/student/${regId}/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//get project Progress (grading)
+export const getProjectProgress = async (courseId, regId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/course/projects/${courseId}/student/${regId}/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//get exam Progress (grading)
+export const getExamProgress = async (courseId, regId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/course/exams/${courseId}/student/${regId}/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//get progress by courseId (grading)
 export const getOverallProgress = async (courseId, userId) => {
   try {
     const response = await axiosInstance.get(
       `/course/assignments/${courseId}/course/${userId}/total_score/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//get student attendance
+export const getStudentAttendance = async (courseId, regId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/attendance/course/${courseId}/user/${regId}/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//get overall course progress percentage
+export const getProgressForCourse = async (courseId) => {
+  try {
+    const response = await axiosInstance.get(
+      `course/course/${courseId}/course-progress/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//get course quiz percentage
+export const getProgressForQuiz = async (courseId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/course/courses/${courseId}/quiz-progress/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+//get overall assignment progress percentage
+export const getProgressForAssignment = async (courseId) => {
+  try {
+    const response = await axiosInstance.get(
+      `course/courses/${courseId}/assignment-progress/`
     );
     return response;
   } catch (error) {
