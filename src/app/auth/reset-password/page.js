@@ -2,30 +2,18 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+import { resetPassword } from "@/api/route";
 
 export default function Page() {
   const [email, setEmail] = useState("");
-  const API = process.env.NEXT_PUBLIC_BACKEND_URL;
-  const Token = localStorage.getItem("access-token");
+  // const API = process.env.NEXT_PUBLIC_BACKEND_URL;
+  // const Token = Cookies.get("access-token");
   const router = useRouter();
 
-  const handleResetPassword = async (event) => {
-    event.preventDefault();
+  async function handleResetPassword() {
     try {
-      const response = await axios.post(
-        `${API}/reset-password-email/`,
-        {
-          email,
-        },
-        {
-          headers: {
-            Authorization: `Berear ${Token}`,
-            "Content-Type": "application/json",
-          },
-          // withCredentials: true, // Add this line if your backend requires credentials
-        }
-      );
-
+    const response = await resetPassword(email);
       if (response.data.status_code === 200) {
         toast.success(response.data.message, {
           position: "top-right",
@@ -36,28 +24,24 @@ export default function Page() {
           draggable: true,
           progress: undefined,
           onClose: () => {
-            setEmail('')
+            setEmail("");
             router.push("/auth/login");
           },
         });
       } else {
-        toast.error(
-          "Wrong Email.",
-          response.data.message,
-          {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          }
-        );
+        toast.error("Wrong Email.", response.data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     } catch (error) {
       console.error("Error during login:", error);
-      toast.error("An error occurred during login. Please try again.", {
+      toast.error("An error occurred during login.", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -67,7 +51,7 @@ export default function Page() {
         progress: undefined,
       });
     }
-  };
+  }
 
   return (
     <div className="w-full  max-w-lg mx-auto p-6 mt-[10%] font-inter">
@@ -115,7 +99,8 @@ export default function Page() {
                     className="hidden text-xs text-[#ca0f0f] mt-2"
                     id="email-error"
                   >
-                    Please include a valid email address so we can get back to you
+                    Please include a valid email address so we can get back to
+                    you
                   </p>
                 </div>
                 <button

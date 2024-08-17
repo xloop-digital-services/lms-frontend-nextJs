@@ -20,7 +20,7 @@ export function AuthProvider({ children }) {
   const API = process.env.NEXT_PUBLIC_BACKEND_URL;
 
   useEffect(() => {
-    const storedUserData = localStorage.getItem("userData");
+    const storedUserData = Cookies.get("userData");
     if (storedUserData) {
       setUserData(JSON.parse(storedUserData));
     }
@@ -29,9 +29,9 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     if (userData) {
-      localStorage.setItem("userData", JSON.stringify(userData));
+      Cookies.set("userData", JSON.stringify(userData));
       const group = userData?.Group;
-      localStorage.setItem("userGroup", group);
+      Cookies.set("userGroup", group);
     }
   }, [userData]);
 
@@ -90,11 +90,11 @@ export function AuthProvider({ children }) {
   const logOutUser = () => {
     console.log("Logging out user...");
     setUserData(null);
-    localStorage.removeItem("userData");
-    localStorage.removeItem("userGroup");
+    Cookies.remove("userData");
+    Cookies.remove("userGroup");
     Cookies.remove("access_token");
     Cookies.remove("refresh_token");
-    router.push("/login"); 
+    router.push("/login");
   };
 
   return (
@@ -110,7 +110,7 @@ export function AuthProvider({ children }) {
         logOutUser,
         userData,
         loading,
-        handleShowPassword
+        handleShowPassword,
       }}
     >
       {children}
