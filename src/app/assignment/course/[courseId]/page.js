@@ -18,7 +18,6 @@ export default function Page({ params }) {
     try {
       if (response.status === 200) {
         setAssignments(response?.data?.data);
-        console.log(assignments);
       } else {
         console.error("Failed to fetch user, status:", response.status);
       }
@@ -45,7 +44,8 @@ export default function Page({ params }) {
     fetchAssignments();
     fetchAssignmentProgress();
   }, []);
-
+  
+  console.log('assignments here',assignments);
   return (
     <div
       className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-20 font-inter ${

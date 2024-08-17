@@ -233,3 +233,75 @@ export const getProgressForAssignment = async (courseId) => {
     throw error;
   }
 };
+
+//upload assignments
+export const uploadAssignment = async (assignment) => {
+  try {
+    const response = await axiosInstance.post(
+      '/course/submissions/', assignment,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    )
+    return response
+  } catch (error) {
+    throw error
+    
+  }
+}
+
+//upload Quiz
+export const uploadQuiz = async (quiz) => {
+  try {
+    const response = await axiosInstance.post(
+      '/course/quiz_submissions/', quiz,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    )
+    return response
+  } catch (error) {
+    throw error
+    
+  }
+}
+
+//upload project
+export const uploadProject = async (project) => {
+  try {
+    const response = await axiosInstance.post(
+      '/course/project_submissions/', project,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    )
+    return response
+  } catch (error) {
+    throw error
+    
+  }
+}
+
+//upload exam
+export const uploadExam = async (exam) => {
+  try {
+    const response = await axiosInstance.post(
+      '/course/exam_submissions/', exam,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    )
+    return response
+  } catch (error) {
+    throw error
+    
+  }
+}

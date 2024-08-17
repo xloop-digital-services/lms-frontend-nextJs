@@ -23,7 +23,7 @@ export default function MainCourseCard({
     <>
     <Link href={route}>
       <div className="w-full bg-surface-100 p-8 rounded-xl">
-        <div className="border border-2 border-dark-300 rounded-xl p-10 flex max-md:flex-col hover:border-blue-300">
+        <div className="border border-dark-300 rounded-xl p-10 flex max-md:flex-col hover:border-blue-300">
           <div className="w-100 mr-4">
             <Image
               src={courseImg}

@@ -3,7 +3,6 @@ import { LiaFileDownloadSolid } from "react-icons/lia";
 import { MdRemoveRedEye } from "react-icons/md";
 import { LuUpload } from "react-icons/lu";
 import UplaodingFile from "./Modal/UplaodingFile";
-// import UplaodingFile from '../Modal/UplaodingFile';
 
 export function formatDateTime(apiDateTime) {
   const dateObject = new Date(apiDateTime);
@@ -36,12 +35,15 @@ const StudentDataStructure = ({
   remarks,
 }) => {
   const [uploadFile, setUploadFile] = useState(false);
+  const [iD, setId] = useState('')
 
-  const handleFileUpload = () => {
-    setUploadFile(true);
+  const handleFileUpload = (id) => {
+    console.log(field,'id',id)
+    setId(id)
+    setUploadFile(!uploadFile);
+
   };
 
-  // console.log(quizzes)
   return (
     <div>
       <div className="flex flex-col ">
@@ -132,7 +134,7 @@ const StudentDataStructure = ({
                               <MdRemoveRedEye size={23} />{" "}
                             </div>
                             <div>
-                              <LuUpload size={23} onClick={handleFileUpload} />
+                              <LuUpload size={23} onClick={()=>handleFileUpload(quiz?.id)}  className="hover:cursor-pointer" title="upload"/>
                             </div>
                             <div>
                               {" "}
@@ -187,7 +189,7 @@ const StudentDataStructure = ({
         </div>
       </div>
       {uploadFile && (
-        <UplaodingFile field={field} setUploadFile={setUploadFile} />
+        <UplaodingFile field={field} setUploadFile={setUploadFile} assignmentID={iD} />
       )}
     </div>
   );

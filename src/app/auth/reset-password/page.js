@@ -68,11 +68,6 @@ export default function Page() {
       });
     }
   };
-    } catch (error) {
-      console.log("An Error is Occuring");
-      console.log(error);
-    }
-  };
 
   return (
     <div className="w-full  max-w-lg mx-auto p-6 mt-[10%] font-inter">

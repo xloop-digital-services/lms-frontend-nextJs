@@ -66,9 +66,11 @@ export default function Page({ params }) {
         console.log(modules);
       } else {
         console.error("Failed to fetch user, status:", response.status);
+        setLoader(false);
       }
     } catch (error) {
       console.log("error", error);
+      setLoader(false);
     }
   }
 
@@ -80,23 +82,6 @@ export default function Page({ params }) {
 
   const downloadFile = async (filePath) => {
     console.log("file", filePath);
-    try {
-      // const response = await axios.get(`home/lms/src${filePath}`);
-      // console.log(response);
-      new JsFileDownloader({
-        url: filePath,
-      })
-        .then(() => {
-          console.log("file downloaded");
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    } catch (error) {
-      console.error("Error downloading file:", error);
-      console.error("Error details:", error.response || error.message);
-      setDownloadStatus("Error downloading");
-    }
   };
 
   return (
@@ -176,15 +161,17 @@ export default function Page({ params }) {
                         {module.description}
                       </p>
                       {module?.files?.map((file) => (
-                        <div className="flex items-center gap-2" key={file.id}>
-                          <FaFilePdf size={16} fill="#03A1D8" />
+                        <div className="flex items-center gap-2 group " key={file.id}>
+                          <a href={file.file} className="group-hover:cursor-pointer flex justify-center items-center space-x-2" download> 
+                          <FaFilePdf size={16} fill="#03A1D8" className="group-hover:cursor-pointer"/>
                           <button
                             onClick={() => downloadFile(file.file)}
                             download
-                            className="flex items-center text-blue-300 my-4 cursor-pointer"
+                            className="flex items-center text-blue-300 my-4 group-hover:cursor-pointer"
                           >
                             {file.file.split("/").pop()}
                           </button>
+                          </a>
                           <p>{downloadStatus}</p>
                         </div>
                       ))}
