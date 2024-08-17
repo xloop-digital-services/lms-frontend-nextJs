@@ -11,12 +11,15 @@ export default function CoursePage({ path, progress }) {
   const { userData } = useAuth();
   const isStudent = userData?.Group === "student";
   const [courses, setCourses] = useState([]);
+  // const [courseId, setCourseId] = useState();
 
   async function fetchCourses() {
     const response = await getAllCourses();
     try {
       if (response.status === 200) {
-        setCourses(response.data);;
+        setCourses(response.data?.data);
+        // setCourseId(response?.data?.id)
+        // console.log(response?.data?.data?.[0]?.id)
       } else {
         console.error("Failed to fetch user, status:", response.status);
       }
@@ -27,24 +30,27 @@ export default function CoursePage({ path, progress }) {
 
   // const [courseProgress, setCourseProgress] = useState({});
 
-  // async function fetchCourseProgress() {
+  // async function fetchCourseProgress(courseId) {
   //   const response = await getProgressForCourse(courseId);
   //   setLoader(true);
   //   try {
+  //     const response = await getProgressForCourse(courseId);
   //     if (response.status === 200) {
-  //       setCourseProgress(response?.data?.data);
-  //       setLoader(false);
-  //       console.log(courseProgress);
+  //       setCourseProgress(response.data?.data);
   //     } else {
-  //       console.error("Failed to fetch user, status:", response.status);
+  //       console.error(
+  //         "Failed to fetch course progress, status:",
+  //         response.status
+  //       );
   //     }
   //   } catch (error) {
-  //     console.log("error", error);
+  //     console.log("Error fetching course progress:", error);
   //   }
   // }
 
   useEffect(() => {
     fetchCourses();
+
     // fetchCourseProgress();
   }, []);
 
@@ -59,7 +65,7 @@ export default function CoursePage({ path, progress }) {
         }}
       >
         <h2 className="text-xl font-bold">Courses</h2>
-        {courses?.data?.map((course) => {
+        {courses?.map((course) => {
           return (
             <MainCourseCard
               key={course.id}

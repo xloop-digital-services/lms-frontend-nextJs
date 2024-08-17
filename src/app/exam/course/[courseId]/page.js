@@ -10,7 +10,7 @@ export default function Page({ params }) {
   const [exam, setExam] = useState([]);
   const courseId = params.courseId;
 
-  console.log(courseId);
+  // console.log(courseId);
 
   async function fetchExam() {
     const response = await getExamByCourseId(courseId);

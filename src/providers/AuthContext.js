@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import { storeToken } from "@/components/storeToken";
 import "react-toastify/dist/ReactToastify.css";
+import Cookies from "js-cookie";
 
 const AuthContext = createContext(null);
 
@@ -91,6 +92,8 @@ export function AuthProvider({ children }) {
     setUserData(null);
     localStorage.removeItem("userData");
     localStorage.removeItem("userGroup");
+    Cookies.remove("access_token");
+    Cookies.remove("refresh_token");
     router.push("/login"); 
   };
 

@@ -23,6 +23,8 @@ const CourseHead = ({ rating, instructorName, id, progress }) => {
     fetchCoursesById();
   }, []);
 
+  // console.log(progress);
+
   return (
     <div className=" ">
       <div className="flex flex-col">
@@ -47,7 +49,8 @@ const CourseHead = ({ rating, instructorName, id, progress }) => {
         </div>
         <p className="ml-2 flex items-center"> Instructor: {instructorName}</p>
       </div>
-      <Progress progress={progress}/>
+      {progress ? <Progress progress={progress} /> : null}
+
       <hr className="my-8 text-dark-200"></hr>
     </div>
   );

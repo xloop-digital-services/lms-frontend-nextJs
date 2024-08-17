@@ -10,7 +10,7 @@ export default function Page({ params }) {
   const [project, setProject] = useState([]);
   const courseId = params.courseId;
 
-  console.log(courseId);
+  // console.log(courseId);
 
   async function fetchProject() {
     const response = await getProjectByCourseId(courseId);

@@ -11,14 +11,18 @@ import {
   FaClipboard,
   FaClipboardCheck,
   FaClipboardList,
+  FaFile,
   FaHome,
+  FaLaptopCode,
   FaSignOutAlt,
   FaTasks,
   FaUser,
 } from "react-icons/fa";
+import { useAuth } from "@/providers/AuthContext";
 
 function SideBar() {
   const { isSidebarOpen, toggleSidebar } = useSidebar();
+  const { logOutUser} = useAuth();
   const pathname = usePathname();
   const isLinkActive = (path) => {
     return pathname === path;
@@ -106,7 +110,7 @@ function SideBar() {
                       : "text-dark-600"
                   }`}
                 >
-                  <FaTasks size={24} />
+                  <FaLaptopCode size={24} />
                   Project
                 </Link>
                 <Link
@@ -117,7 +121,7 @@ function SideBar() {
                       : "text-dark-600"
                   }`}
                 >
-                  <FaTasks size={24} />
+                  <FaFile size={24} />
                   Exam
                 </Link>
                 <Link
@@ -159,6 +163,7 @@ function SideBar() {
 
                 <Link
                   href="/auth/login"
+                  onClick={logOutUser}
                   className={`p-4 flex gap-4 mt-2 border rounded-xl border-dark-300  hover:text-blue-300 ${
                     isLinkActive("/auth/login")
                       ? "text-blue-300 bg-blue-600"

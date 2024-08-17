@@ -10,9 +10,18 @@ import { useSidebar } from "@/providers/useSidebar";
 import { CircularProgress } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { FaFile, FaFilePdf } from "react-icons/fa";
+import { FaFile, FaFileDownload, FaFilePdf } from "react-icons/fa";
 import JsFileDownloader from "js-file-downloader";
 
+export const downloadFile = async (filePath) => {
+  const link = document.createElement("a");
+  link.href = filePath;
+  link.download = filePath.split("/").pop();
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  // console.log("file", link);
+};
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
   const courseId = params.courseId;
@@ -54,7 +63,9 @@ export default function Page({ params }) {
       console.log("error", error);
     }
   }
-  // console.log(courseProgress?.data?.progress_percentage)
+  console.log(courseProgress?.progress_percentage);
+
+  console.log(courseProgress);
 
   async function fetchModules() {
     const response = await getModuleByCourseId(courseId);
@@ -79,10 +90,6 @@ export default function Page({ params }) {
     fetchModules();
     fetchCourseProgress();
   }, []);
-
-  const downloadFile = async (filePath) => {
-    console.log("file", filePath);
-  };
 
   return (
     <>
@@ -161,16 +168,27 @@ export default function Page({ params }) {
                         {module.description}
                       </p>
                       {module?.files?.map((file) => (
-                        <div className="flex items-center gap-2 group " key={file.id}>
-                          <a href={file.file} className="group-hover:cursor-pointer flex justify-center items-center space-x-2" download> 
-                          <FaFilePdf size={16} fill="#03A1D8" className="group-hover:cursor-pointer"/>
-                          <button
-                            onClick={() => downloadFile(file.file)}
+                        <div
+                          className="flex items-center gap-2 group "
+                          key={file.id}
+                        >
+                          <a
+                            href={file.file}
+                            className="group-hover:cursor-pointer flex justify-center items-center space-x-2"
                             download
-                            className="flex items-center text-blue-300 my-4 group-hover:cursor-pointer"
                           >
-                            {file.file.split("/").pop()}
-                          </button>
+                            <FaFileDownload
+                              size={20}
+                              fill="#03A1D8"
+                              className="group-hover:cursor-pointer"
+                            />
+                            <button
+                              onClick={() => downloadFile(file.file)}
+                              download
+                              className="flex items-center text-blue-300 my-4 group-hover:cursor-pointer"
+                            >
+                              {file.file.split("/").pop()}
+                            </button>
                           </a>
                           <p>{downloadStatus}</p>
                         </div>

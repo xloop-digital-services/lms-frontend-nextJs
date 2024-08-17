@@ -19,6 +19,8 @@ export default function MainCourseCard({
   durationOfCourse,
   route,
 }) {
+
+  
   return (
     <>
     <Link href={route}>
