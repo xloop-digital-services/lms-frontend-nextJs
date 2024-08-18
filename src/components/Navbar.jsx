@@ -116,7 +116,7 @@ export default function Navbar() {
               <div className="flex justify-center items-center">
                 <div className="absolute inset-y-0 right-0 flex justify-center items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                   <div className="flex items-center" ref={dropdownRef}>
-                    <button
+                    {/* <button
                       type="button"
                       className="relative flex text-sm focus:outline-none "
                       id="user-menu-button"
@@ -125,10 +125,10 @@ export default function Navbar() {
                       onClick={toggleNotifications}
                     >
                       <FaBell size={24} />
-                    </button>
+                    </button> */}
                   </div>
                 </div>
-                {showNotification && (
+                {/* {showNotification && (
                   <div
                     className="absolute border border-dark-100 right-0 mx-16 mt-[420px] z-10 w-80 origin-top-right rounded-md bg-surface-100 py-1 shadow-lg ring-opacity-5 focus:outline-none"
                     role="menu"
@@ -138,7 +138,7 @@ export default function Navbar() {
                   >
                     <Notifications />
                   </div>
-                )}
+                )} */}
                 <button
                   type="button"
                   className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"

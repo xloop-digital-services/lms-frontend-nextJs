@@ -46,29 +46,37 @@ const StudentAttendence = ({ attendance }) => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-dark-200 dark:divide-gray-700">
-                  {attendance?.map((att, index) => {
-                    return (
-                      <tr key={index} className="">
-                        {/* <td className="py-3 ps-4">
+                  {attendance && attendance.length > 0 ? (
+                    attendance?.map((att, index) => {
+                      return (
+                        <tr key={index} className="">
+                          {/* <td className="py-3 ps-4">
                        <div className="flex items-center h-5">
                         <input id="hs-table-pagination-checkbox-1" type="checkbox" className="border-gray-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:Present:bg-blue-500 dark:Checked:border-blue-500 dark:focus:ring-offset-gray-800" />
                         <label for="hs-table-pagination-checkbox-1" className="sr-only">Checkbox</label>
                       </div> 
                     </td> */}
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
-                          {`Session ${att.session}`}
-                        </td>
-                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                          {att.date}
-                        </td>
-                        <td className="px-12 py-2 whitespace-nowrap flex w-full justify-end text-sm text-surface-100 dark:text-gray-200 ">
-                          <p className="bg-[#18A07A] w-[90px] text-center px-4 py-2 text-[12px] rounded-lg">
-                            {att.status}
-                          </p>
-                        </td>
-                      </tr>
-                    );
-                  })}
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
+                            {`Session ${att.session}`}
+                          </td>
+                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                            {att.date}
+                          </td>
+                          <td className="px-12 py-2 whitespace-nowrap flex w-full justify-end text-sm text-surface-100 dark:text-gray-200 ">
+                            <p className="bg-[#18A07A] w-[90px] text-center px-4 py-2 text-[12px] rounded-lg">
+                              {att.status}
+                            </p>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  ) : (
+                    <tr>
+                    <td colSpan="3" className="text-center py-4">
+                      No data found
+                    </td>
+                  </tr>
+                  )}
                 </tbody>
               </table>
             </div>

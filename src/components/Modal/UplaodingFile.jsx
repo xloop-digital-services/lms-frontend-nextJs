@@ -1,18 +1,29 @@
 import React, { useState } from "react";
 import { IoClose } from "react-icons/io5";
-import { uploadAssignment, uploadExam, uploadProject, uploadQuiz } from "@/api/route";
+import {
+  uploadAssignment,
+  uploadExam,
+  uploadProject,
+  uploadQuiz,
+} from "@/api/route";
 import { toast } from "react-toastify";
 
-
 const UploadingFile = ({ field, setUploadFile, assignmentID }) => {
-
-  const [comment, setComment] = useState('')
-  const [fileUploaded, setFileUploaded] = useState(null); 
+  const [comment, setComment] = useState("");
+  const [fileUploaded, setFileUploaded] = useState(null);
   const [file, setFile] = useState(null);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [isDragOver, setIsDragOver] = useState(false);
 
-  const supportedFormats = [".pdf", ".doc", ".docx", ".ppt", ".pptx", ".txt", ".zip"];
+  const supportedFormats = [
+    ".pdf",
+    ".doc",
+    ".docx",
+    ".ppt",
+    ".pptx",
+    ".txt",
+    ".zip",
+  ];
 
   const handleBrowse = (event) => {
     const selectedFile = event.target.files[0];
@@ -28,18 +39,17 @@ const UploadingFile = ({ field, setUploadFile, assignmentID }) => {
 
   const handleFileSelection = (file) => {
     if (file) {
-      const fileExtension = file.name.split('.').pop().toLowerCase();
+      const fileExtension = file.name.split(".").pop().toLowerCase();
       if (supportedFormats.includes(`.${fileExtension}`)) {
-        setFile(file)
+        setFile(file);
         setFileUploaded(file.name);
-        setError(''); // Clear any previous error
+        setError(""); // Clear any previous error
       } else {
-        setError('This file format is not supported.');
+        setError("This file format is not supported.");
         setFileUploaded(null);
       }
     }
   };
-
 
   const handleDragOver = (event) => {
     event.preventDefault();
@@ -54,101 +64,100 @@ const UploadingFile = ({ field, setUploadFile, assignmentID }) => {
     if (file) {
       const formData = new FormData();
       formData.append("quiz_submitted_file", file);
-      formData.append('comments', comment)
-      formData.append('quiz', assignmentID)
+      formData.append("comments", comment);
+      formData.append("quiz", assignmentID);
       try {
         const response = await uploadQuiz(formData);
-        console.log('file uploaded', response)
-        if(response.status === 201){
-          toast.success('Quiz has been submitted')
-          setComment('')
-          setUploadFile(false)
+        console.log("file uploaded", response);
+        if (response.status === 201) {
+          toast.success("Quiz has been submitted");
+          setComment("");
+          setUploadFile(false);
         }
       } catch (error) {
-        toast.error(error.response.data.message)
-        console.log('error is occuring:', error)
+        toast.error(error.response.data.message);
+        console.log("Error occurred:", error);
       }
     }
-  }
+  };
 
   const handleUploadExam = async () => {
     if (file) {
       const formData = new FormData();
       formData.append("exam_submitted_file", file);
-      formData.append('comments', comment)
-      formData.append('exam', assignmentID)
+      formData.append("comments", comment);
+      formData.append("exam", assignmentID);
       try {
         const response = await uploadExam(formData);
-        console.log('file uploaded', response)
-        if(response.status === 201){
-          toast.success('Exam has been submitted')
-          setComment('')
-          setUploadFile(false)
+        console.log("file uploaded", response);
+        if (response.status === 201) {
+          toast.success("Exam has been submitted");
+          setComment("");
+          setUploadFile(false);
         }
       } catch (error) {
-        toast.error(error.response.data.message)
-        console.log('error is occuring:', error)
+        toast.error(error.response.data.message);
+        console.log("Error occurred:", error);
       }
     }
-  }
+  };
 
   const handleUploadProject = async () => {
     if (file) {
       const formData = new FormData();
       formData.append("project_submitted_file", file);
-      formData.append('comments', comment)
-      formData.append('project', assignmentID)
+      formData.append("comments", comment);
+      formData.append("project", assignmentID);
       try {
         const response = await uploadProject(formData);
-        console.log('file uploaded', response)
-        if(response.status === 201){
-          toast.success('Project has been submitted')
-          setComment('')
-          setUploadFile(false)
+        console.log("file uploaded", response);
+        if (response.status === 201) {
+          toast.success("Project has been submitted");
+          setComment("");
+          setUploadFile(false);
         }
       } catch (error) {
-        toast.error(error.response.data.message)
-        console.log('error is occuring:', error)
+        toast.error(error.response.data.message);
+        console.log("Error occurred:", error);
       }
     }
-  }
+  };
 
   const handleUploadAssignment = async () => {
     if (file) {
       const formData = new FormData();
       formData.append("submitted_file", file);
-      formData.append('comments', comment)
-      formData.append('assignment', assignmentID)
+      formData.append("comments", comment);
+      formData.append("assignment", assignmentID);
       try {
         const response = await uploadAssignment(formData);
-        console.log('file uploaded', response)
-        if(response.status === 201){
-          toast.success('Assignment has been submitted')
-          setComment('')
-          setUploadFile(false)
+        console.log("file uploaded", response);
+        if (response.status === 201) {
+          toast.success("Assignment has been submitted");
+          setComment("");
+          setUploadFile(false);
         }
       } catch (error) {
-        toast.error(error.response.data.message)
-        console.log('error is occuring:', error)
+        toast.error(error.response.data.message);
+        console.log("Error occurred:", error);
       }
     }
   };
 
   const handleUploadation = () => {
-    if(field === 'Quiz'){
-      handleUploadQuiz()
+    if (field === "Quiz") {
+      handleUploadQuiz();
     }
-    if(field === 'Assignment'){
-      handleUploadAssignment()
+    if (field === "Assignment") {
+      handleUploadAssignment();
     }
-    if(field === 'Project'){
-      handleUploadProject()
+    if (field === "Project") {
+      handleUploadProject();
     }
-    if(field === 'Exam'){
-      handleUploadExam()
+    if (field === "Exam") {
+      handleUploadExam();
     }
-  }
-
+  };
 
   return (
     <div className="backDropOverlay h-screen flex justify-center items-center">
@@ -176,8 +185,10 @@ const UploadingFile = ({ field, setUploadFile, assignmentID }) => {
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
           >
-            <div 
-            className={`${isDragOver ? 'bg-blue-100' : ''} bg-[#EBF6FF] space-y-1 flex flex-col justify-center items-center p-4 border border-dashed border-blue-300 rounded-lg`}
+            <div
+              className={`${
+                isDragOver ? "bg-blue-100" : ""
+              } bg-[#EBF6FF] space-y-1 flex flex-col justify-center items-center p-4 border border-dashed border-blue-300 rounded-lg`}
             >
               <input
                 type="file"
@@ -224,7 +235,6 @@ const UploadingFile = ({ field, setUploadFile, assignmentID }) => {
                 placeholder="regarding assignment or note"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                required
               />
             </div>
             <div className="flex w-full justify-center items-center">
