@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import { resetPassword } from "@/api/route";
+import logo from "../../../../public/assets/img/logo.png";
+import Image from "next/image";
 
 export default function Page() {
   const [email, setEmail] = useState("");
@@ -56,17 +58,18 @@ export default function Page() {
     }
   };
 
- 
-
   return (
-    <div className="w-full max-w-lg mx-auto p-6 mt-[10%] font-inter">
+    <div className="w-full max-w-lg mx-auto p-6 mt-[10%] font-inter flex flex-col justify-center ">
+      <div className="flex items-center justify-center">
+        <Image src={logo} alt="Workflow" />
+      </div>
       <div className="mt-7 bg-surface-100 rounded-xl shadow-lg ">
         <div className="p-4 sm:p-7">
           <div className="text-center">
-            <h1 className="block text-2xl font-bold text-[#282323] dark:text-white font-exo">
+            <h1 className="block text-2xl font-bold text-[#282323]">
               Forgot password?
             </h1>
-            <p className="mt-2 text-sm text-dark-600 dark:text-dark-400">
+            <p className="mt-2 text-sm text-dark-600">
               Remember your password?
               <a
                 className="text-[#03A1D8] decoration-1 hover:underline font-medium pl-1 cursor-pointer"
@@ -104,7 +107,8 @@ export default function Page() {
                     className="hidden text-xs text-[#ca0f0f] mt-2"
                     id="email-error"
                   >
-                    Please include a valid email address so we can get back to you
+                    Please include a valid email address so we can get back to
+                    you
                   </p>
                 </div>
                 <button

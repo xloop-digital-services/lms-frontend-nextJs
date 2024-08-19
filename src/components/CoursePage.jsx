@@ -3,56 +3,48 @@ import MainCourseCard from "@/components/MainCourseCard";
 import { useSidebar } from "@/providers/useSidebar";
 import React, { useContext, useEffect, useState } from "react";
 import courseImg from "/public/assets/img/course-image.png";
-import { getAllCourses, getCourses, getProgressForCourse } from "@/api/route";
+import {
+  getCourseByProgId,
+  getCourses,
+  getProgressForCourse,
+} from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
+import { CircularProgress } from "@mui/material";
 
 export default function CoursePage({ path, progress }) {
   const { isSidebarOpen } = useSidebar();
   const { userData } = useAuth();
   const isStudent = userData?.Group === "student";
   const [courses, setCourses] = useState([]);
+  const progId = userData?.session?.program;
+  const [loader, setLoader] = useState(true);
+  // console.log(progId)
   // const [courseId, setCourseId] = useState();
-
-  async function fetchCourses() {
-    const response = await getAllCourses();
-    try {
-      if (response.status === 200) {
-        setCourses(response.data?.data);
-        // setCourseId(response?.data?.id)
-        // console.log(response?.data?.data?.[0]?.id)
-      } else {
-        console.error("Failed to fetch user, status:", response.status);
-      }
-    } catch (error) {
-      console.log("error", error);
-    }
-  }
-
-  // const [courseProgress, setCourseProgress] = useState({});
-
-  // async function fetchCourseProgress(courseId) {
-  //   const response = await getProgressForCourse(courseId);
-  //   setLoader(true);
-  //   try {
-  //     const response = await getProgressForCourse(courseId);
-  //     if (response.status === 200) {
-  //       setCourseProgress(response.data?.data);
-  //     } else {
-  //       console.error(
-  //         "Failed to fetch course progress, status:",
-  //         response.status
-  //       );
-  //     }
-  //   } catch (error) {
-  //     console.log("Error fetching course progress:", error);
-  //   }
-  // }
-
   useEffect(() => {
-    fetchCourses();
+    if (!progId) return;
+    async function fetchCourses() {
+      const response = await getCourseByProgId(progId);
+      setLoader(true);
+      try {
+        if (response.status === 200) {
+          setCourses(response.data?.data);
+          setLoader(false);
+          // setCourseId(response?.data?.id)
+          // console.log(response?.data?.data?.[0]?.id)
+        } else {
+          console.error("Failed to fetch user, status:", response.status);
+        }
+      } catch (error) {
+        console.log("error", error);
+      }
+    }
 
-    // fetchCourseProgress();
-  }, []);
+    fetchCourses();
+  }, [progId]);
+
+  if (loader) {
+    <CircularProgress />;
+  }
 
   return (
     <>
@@ -64,20 +56,28 @@ export default function CoursePage({ path, progress }) {
           width: isSidebarOpen ? "84%" : "100%",
         }}
       >
-        <h2 className="text-xl font-bold">Courses</h2>
-        {courses?.map((course) => {
-          return (
-            <MainCourseCard
-              key={course.id}
-              courseImg={courseImg}
-              courseName={course.name}
-              courseDesc={course.short_description}
-              // progress={courseProgress?.progress_percentage}
-              durationOfCourse={course.credit_hours}
-              route={`${path}/course/${course.id}`}
-            />
-          );
-        })}
+        {loader ? (
+          <div className="flex h-screen justify-center items-center">
+            <CircularProgress />
+          </div>
+        ) : (
+          <>
+            <h2 className="text-xl font-bold">Courses</h2>
+            {courses?.map((course) => {
+              return (
+                <MainCourseCard
+                  key={course.id}
+                  courseImg={courseImg}
+                  courseName={course.name}
+                  courseDesc={course.short_description}
+                  // progress={courseProgress?.progress_percentage}
+                  durationOfCourse={course.credit_hours}
+                  route={`${path}/course/${course.id}`}
+                />
+              );
+            })}
+          </>
+        )}
       </div>
     </>
   );

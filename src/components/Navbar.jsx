@@ -29,7 +29,8 @@ export default function Navbar() {
         if (response.status === 200) {
           console.log("Fetched user data:", response.data);
           setLoader(false);
-          setUser(response.data);
+          setUser(response.data.response);
+          console.log(response.data.response)
           console.log(user, "user");
           // console.log(response.data.response.city, "city")
         } else {
@@ -170,7 +171,8 @@ export default function Navbar() {
                     <div>
                       <div className="flex justify-end items-center">
                         <div className={``} style={{ color: "#07224D" }}>
-                          <p>{`${user?.response?.first_name} ${user?.response?.last_name}`}</p>
+                          <p className="text-md">{`${user?.first_name} ${user?.last_name}`}</p>
+                          <p className="text-xs uppercase">{user?.registration_id}</p>
                         </div>
                         <div className={`ml-1`} onClick={toggleDropdown}>
                           <svg

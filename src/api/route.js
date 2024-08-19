@@ -21,21 +21,21 @@ const API = process.env.NEXT_PUBLIC_BACKEND_URL;
 //   }
 // };
 
-//get user profile api
-export const getUserProfile = async () => {
+//reset password
+export const resetPassword = async (email) => {
   try {
-    const response = await axiosInstance.get(`/user-profile/`);
+    const response = await axiosInstance.post(`/reset-password-email/`, email);
     return response;
   } catch (error) {
     throw error;
   }
 };
 
-//reset password
-export const resetPassword = async (email) => {
+//get user profile api
+export const getUserProfile = async () => {
   try {
-    const response = await axiosInstance.post(`/reset-password-email/`, email);
-    return response
+    const response = await axiosInstance.get(`/user-profile/`);
+    return response;
   } catch (error) {
     throw error;
   }
@@ -51,10 +51,30 @@ export const updateUserProfile = async (user) => {
   }
 };
 
+export const changePassword = async (data) => {
+  try {
+    const response = await axiosInstance.post(`/change-password/`, data);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 //get all courses
 export const getAllCourses = async () => {
   try {
     const response = await axiosInstance.get(`/course/courses/`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+//get course by program Id
+export const getCourseByProgId = async (progId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/course/programs/${progId}/courses/`
+    );
     return response;
   } catch (error) {
     throw error;
@@ -74,13 +94,7 @@ export const getCourseById = async (id) => {
 // get module by course_id
 export const getModuleByCourseId = async (id) => {
   try {
-    const response = await axiosInstance.get(
-      `/course/courses/${id}/modules/`
-      //   {
-      //   responseType: 'json',
-      //     'Content-Type': 'application/json',
-      // }
-    );
+    const response = await axiosInstance.get(`/course/courses/${id}/modules/`);
     return response;
   } catch (error) {
     throw error;
@@ -190,10 +204,10 @@ export const getExamProgress = async (courseId, regId) => {
 };
 
 //get progress by courseId (grading)
-export const getOverallProgress = async (courseId, userId) => {
+export const getOverallProgress = async (courseId, regId) => {
   try {
     const response = await axiosInstance.get(
-      `/course/assignments/${courseId}/course/${userId}/total_score/`
+      `/course/assignments/${courseId}/course/${regId}/total_score/`
     );
     return response;
   } catch (error) {

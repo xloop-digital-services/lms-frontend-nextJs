@@ -21,7 +21,9 @@ export default function Page() {
   return (
     <div className="min-h-screen bg-[#F2F6FF] flex flex-col justify-center py-12 sm:px-6 lg:px-8 px-6 font-inter">
       <div className="sm:mx-auto sm:w-full sm:max-w-md flex justify-center items-center space-x-6 pr-4">
-        <Image className="h-[75px] w-auto" src={logo} alt="Workflow" />
+        <div className="flex items-center justify-center">
+          <Image src={logo} alt="Workflow" />
+        </div>
       </div>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-surface-100 py-8 px-4 shadow sm:rounded-xl sm:px-10">
@@ -43,7 +45,7 @@ export default function Page() {
                 <input
                   id="email"
                   name="email"
-                  placeholder="user@example.com"
+                  placeholder="Enter your email"
                   type="email"
                   required
                   value={email}
@@ -75,6 +77,7 @@ export default function Page() {
                   id="password"
                   name="password"
                   type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -85,9 +88,9 @@ export default function Page() {
                   onClick={handleShowPassword}
                 >
                   {showPassword ? (
-                    <BsEyeSlashFill size={20} />
-                  ) : (
                     <IoEyeSharp size={20} />
+                  ) : (
+                    <BsEyeSlashFill size={20} />
                   )}
                 </div>
               </div>

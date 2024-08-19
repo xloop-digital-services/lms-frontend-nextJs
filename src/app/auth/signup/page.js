@@ -111,7 +111,9 @@ export default function Page() {
   return (
     <div className="min-h-screen bg-[#F2F6FF] flex flex-col justify-center py-12 sm:px-6 lg:px-8 px-6 font-inter">
       <div className="sm:mx-auto sm:w-full sm:max-w-md flex justify-center items-center space-x-4 pr-4">
-        <Image className=" h-[75px] w-auto" src={logo} alt="Workflow" />
+        <div className="flex items-center justify-center">
+          <Image src={logo} alt="Workflow" />
+        </div>
         {/* <h2 className="text-center text-3xl font-exo leading-9 font-extrabold text-dark-900">
             Learning Management 
           </h2> */}
@@ -137,7 +139,7 @@ export default function Page() {
                   <input
                     id="firstName"
                     name="firstName"
-                    placeholder="first name"
+                    placeholder="Enter your First Name"
                     type="text"
                     required
                     value={firstName}
@@ -157,7 +159,7 @@ export default function Page() {
                   <input
                     id="lastName"
                     name="lastName"
-                    placeholder="last name"
+                    placeholder="Enter your Last Name"
                     type="text"
                     required
                     value={lastName}
@@ -206,16 +208,16 @@ export default function Page() {
                   placeholder="password (8 or more characters)"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-dark-300 rounded-lg placeholder-dark-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                  className="appearance-none block w-full p-3 border border-dark-300 rounded-lg placeholder-dark-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                 />
                 <div
                   className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-[#b0b0c0] hover:text-[#686870]"
                   onClick={handleShowPassword}
                 >
                   {showPassword ? (
-                    <BsEyeSlashFill size={20} />
-                  ) : (
                     <IoEyeSharp size={20} />
+                  ) : (
+                    <BsEyeSlashFill size={20} />
                   )}
                 </div>
               </div>
@@ -239,7 +241,7 @@ export default function Page() {
                   value={confirmPassword}
                   placeholder="confirm password"
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-dark-300 rounded-lg placeholder-dark-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                  className="appearance-none block w-full p-3 border border-dark-300 rounded-lg placeholder-dark-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                 />
                 <div
                   className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-[#b0b0c0] hover:text-[#686870]"
@@ -267,13 +269,13 @@ export default function Page() {
                   required
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  className="appearance-none block w-full p-3 border border-dark-300 rounded-lg placeholder-dark-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                  className="appearance-none bg-surface-100 block w-full p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                 >
                   <option value="" disabled>
                     Select a city
                   </option>
                   {cities.map((cityName) => (
-                    <option key={cityName} value={cityName}>
+                    <option className="bg-surface-100" key={cityName} value={cityName}>
                       {cityName}
                     </option>
                   ))}
@@ -292,15 +294,15 @@ export default function Page() {
                   id="contact"
                   name="contact"
                   placeholder="XXXX - XXXXXXX"
-                  // inputMode="numeric"
+                  inputMode="numeric"
                   type="tel"
-                  // pattern="[0-9]{4}-[0-9]{7}"
+                  pattern="[0-9]{4}-[0-9]{7}"
                   required
                   value={contact}
                   onChange={(e) => setContact(e.target.value)}
-                  // onInput={(e) => {
-                  //   e.target.value = formatContactInput(e.target.value);
-                  // }}
+                  onInput={(e) => {
+                    e.target.value = formatContactInput(e.target.value);
+                  }}
                   className="appearance-none block w-full p-3 border border-dark-300 rounded-lg placeholder-dark-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                 />
               </div>

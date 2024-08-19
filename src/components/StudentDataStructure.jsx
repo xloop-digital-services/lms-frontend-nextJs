@@ -72,114 +72,111 @@ const StudentDataStructure = ({
                     </th> */}
                       <th
                         scope="col"
-                        className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[23%]"
+                        className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[23%]"
                       >
                         {assessment}
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[23%]"
+                        className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[23%]"
                       >
                         Status
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[23%]"
+                        className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[23%]"
                       >
                         Created Date
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[23%]"
+                        className="px-6 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[23%]"
                       >
                         Due Date
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[23%]"
+                        className="px-6 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[23%]"
                       >
                         Remarks
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[23%]"
+                        className="px-6 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[23%]"
                       >
                         Action
                       </th>
                     </tr>
                   </thead>
-                  {quizzes?.map((quiz, index) => {
-                    return (
-                      <tbody
-                        key={index}
-                        className="divide-y divide-dark-200 dark:divide-gray-700"
-                      >
-                        <tr>
-                          {/* <td className="py-3 ps-4">
-                       <div className="flex items-center h-5">
-                        <input id="hs-table-pagination-checkbox-1" type="checkbox" className="border-gray-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" />
-                        <label for="hs-table-pagination-checkbox-1" className="sr-only">Checkbox</label>
-                      </div> 
-                    </td> */}
 
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
-                            {`${field} ${index + 1}`}
-                          </td>
-                          <td className="px-6 py-2 whitespace-nowrap text-sm text-surface-100 dark:text-gray-200 ">
-                            <p className="bg-[#18A07A] w-[90px] text-center px-4 py-2 text-[12px] rounded-lg">
-                              {quiz?.status === 1 ? "Active" : "Inactive"}
-                            </p>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                            {formatDateTime(quiz?.created_at)}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                            {formatDateTime(quiz?.due_date)}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                            {quiz?.remarks || "-"}
-                          </td>
-                          <td className="px-5 py-3 whitespace-nowrap text-end text-sm text-[#03A1D8] font-medium flex space-x-4">
-                            {/* <div>
-                              <MdRemoveRedEye size={23} />{" "}
-                            </div> */}
-                            <div>
-                              <LuUpload
-                                size={23}
-                                onClick={() => handleFileUpload(quiz?.id)}
-                                className="hover:cursor-pointer"
-                                title="upload"
-                              />
-                            </div>
-                            <div
-                            // className="flex items-center gap-2 group "
-                            // key={file.id}
-                            >
-                              <a
-                                href={quiz.content}
-                                className="group-hover:cursor-pointer flex justify-center items-center"
-                                download
-                              >
-                                <FaFileDownload
-                                  size={20}
-                                  fill="#03A1D8"
-                                  className="group-hover:cursor-pointer"
+                  <tbody className="divide-y divide-dark-200 dark:divide-gray-700">
+                    {quizzes && quizzes.length > 0 ? (
+                      quizzes?.map((quiz, index) => {
+                        return (
+                          <tr key={index}>
+                            <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800 ">
+                              {quiz.question || quiz.title}
+                            </td>
+                            <td className="px-6 py-2 flex justify-center items-center  text-center whitespace-nowrap text-sm text-surface-100 ">
+                              <p className="bg-[#18A07A] w-[90px] text-center px-4 py-2 text-[12px] rounded-lg">
+                                {quiz?.status === 1 ? "Active" : "Inactive"}
+                              </p>
+                            </td>
+                            <td className="px-6 py-4  text-center whitespace-nowrap text-sm text-gray-800">
+                              {formatDateTime(quiz?.created_at)}
+                            </td>
+                            <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                              {formatDateTime(quiz?.due_date)}
+                            </td>
+                            <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm text-gray-800">
+                              {quiz?.remarks || "-"}
+                            </td>
+                            <td className="px-5 py-4 flex justify-center items-center text-center whitespace-nowrap text-sm text-[#03A1D8] font-medium space-x-4">
+                              {/* <div>
+                                  <MdRemoveRedEye size={23} />{" "}
+                                </div> */}
+                              <div>
+                                <LuUpload
+                                  size={23}
+                                  onClick={() => handleFileUpload(quiz?.id)}
+                                  className="hover:cursor-pointer"
+                                  title="upload"
                                 />
-                                <button
-                                  onClick={() => downloadFile(quiz.content)}
+                              </div>
+                              <div
+                              // className="flex items-center gap-2 group "
+                              // key={file.id}
+                              >
+                                <a
+                                  href={quiz.content}
+                                  className="group-hover:cursor-pointer flex justify-center items-center"
                                   download
-                                  className="flex items-center text-blue-300 group-hover:cursor-pointer"
                                 >
-                                  {/* {quiz.content.split("/").pop()} */}
-                                </button>
-                              </a>
-                              {/* <p>{downloadStatus}</p> */}
-                            </div>
-                          </td>
-                        </tr>
-                      </tbody>
-                    );
-                  })}
+                                  <FaFileDownload
+                                    size={20}
+                                    fill="#03A1D8"
+                                    className="group-hover:cursor-pointer"
+                                  />
+                                  <button
+                                    onClick={() => downloadFile(quiz.content)}
+                                    download
+                                    className="flex items-center text-blue-300 group-hover:cursor-pointer"
+                                  >
+                                    {/* {quiz.content.split("/").pop()} */}
+                                  </button>
+                                </a>
+                                {/* <p>{downloadStatus}</p> */}
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    ) : (
+                      <td colSpan="3" className="text-center py-4">
+                        No data found
+                      </td>
+                    )}
+                  </tbody>
                 </table>
               </div>
               <div className="py-1 px-4">

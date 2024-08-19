@@ -44,25 +44,25 @@ const PerformanceTable = ({
                     </th> */}
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[28%]"
+                      className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[28%]"
                     >
                       Component
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[28%]"
+                      className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[28%]"
                     >
                       Weightage
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[28%]"
+                      className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[28%]"
                     >
                       Score
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[28%]"
+                      className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[28%]"
                     >
                       Weighted Score %
                     </th>
@@ -76,16 +76,16 @@ const PerformanceTable = ({
                         <label for="hs-table-pagination-checkbox-1" className="sr-only">Checkbox</label>
                       </div> 
                     </td> */}
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
+                    <td className="px-6 py-4 text-center whitespace-nowrap text-sm font-medium text-gray-800 ">
                       Assignments
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                    <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
                       {assignmentWeightage}%
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                    <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
                       {assignmentScore}
                     </td>
-                    <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-100 dark:text-gray-200 ">
+                    <td className="px-6 py-2 text-center whitespace-nowrap text-sm text-gray-100  ">
                       {assignmentWeightedScore}
                     </td>
                   </tr>
@@ -97,16 +97,16 @@ const PerformanceTable = ({
                         <label for="hs-table-pagination-checkbox-2" className="sr-only">Checkbox</label>
                       </div>
                     </td> */}
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
+                    <td className="px-6 py-4 text-center whitespace-nowrap text-sm font-medium text-gray-800 ">
                       Quizzes
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                    <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
                       {quizWeightage}%
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                    <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
                       {quizScore}
                     </td>
-                    <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-100 dark:text-gray-200 ">
+                    <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
                       {quizWeightedScore}
                     </td>
                   </tr>
@@ -118,16 +118,16 @@ const PerformanceTable = ({
                         <label for="hs-table-pagination-checkbox-3" className="sr-only">Checkbox</label>
                       </div>
                     </td> */}
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 text-center">
                       Projects
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                    <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-800 ">
                       {projectWeightage}%
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                    <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-800 ">
                       {projectScore}
                     </td>
-                    <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-100 dark:text-gray-200 ">
+                    <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-800 ">
                       {projectWeightedScore}
                     </td>
                   </tr>
@@ -139,16 +139,16 @@ const PerformanceTable = ({
                         <label for="hs-table-pagination-checkbox-4" className="sr-only">Checkbox</label>
                       </div>
                     </td> */}
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 text-center">
                       Exam
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
                       {examsWeightage}%
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
                       {examsScore}
                     </td>
-                    <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-100 dark:text-gray-200 ">
+                    <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-100 text-center ">
                       {examsWeightedScore}
                     </td>
                   </tr>
@@ -160,29 +160,24 @@ const PerformanceTable = ({
                         <label for="hs-table-pagination-checkbox-5" className="sr-only">Checkbox</label>
                       </div>
                     </td> */}
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-800 dark:text-gray-200">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-800 text-center">
                       Total
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-800 dark:text-gray-200">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-800 text-center">
                       {assignmentWeightage +
                         quizWeightage +
                         examsWeightage +
                         projectWeightage}
                       %
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-800 dark:text-gray-200">
-                      {(assignmentScore +
-                        quizScore +
-                        examsScore +
-                        projectScore) /
-                        4}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-800 text-center">
+                      {assignmentScore + quizScore + examsScore + projectScore}
                     </td>
-                    <td className="px-6 py-2 whitespace-nowrap text-sm font-bold text-gray-100 dark:text-gray-200 ">
-                      {(assignmentScore +
-                        quizScore +
-                        examsScore +
-                        projectScore) /
-                        4}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-100 text-center ">
+                      {assignmentWeightedScore +
+                        quizWeightedScore +
+                        examsWeightedScore +
+                        projectWeightedScore}
                     </td>
                   </tr>
                 </tbody>

@@ -30,7 +30,7 @@ export default function Page({ params }) {
   const { userData } = useAuth();
   const userId = userData?.User?.id;
   const regId = userData?.user_data?.registration_id;
-
+  console.log(regId);
   const toggleOpen = () => {
     setIsOpen(!isOpen);
   };
@@ -40,99 +40,100 @@ export default function Page({ params }) {
     setIsOpen(false);
   };
 
-  async function fetchOverallProgress() {
-    const response = await getOverallProgress(courseId, userId);
-    // setLoader(true);
-    try {
-      if (response.status === 200) {
-        setProgress(response.data);
-        // setLoader(false);
-        console.log(progress);
-        console.log(response.data);
-      } else {
-        console.error("Failed to fetch courses", response.status);
-      }
-    } catch (error) {
-      console.log("error", error);
-    }
-  }
-
-  async function fetchAssignmentProgress() {
-    const response = await getAssignmentProgress(courseId, regId);
-    // setLoader(true);
-    try {
-      if (response.status === 200) {
-        setAssignment(response.data);
-        // setLoader(false);
-        console.log(assignment);
-        console.log(response.data);
-      } else {
-        console.error("Failed to fetch courses", response.status);
-      }
-    } catch (error) {
-      console.log("error", error);
-    }
-  }
-
-  async function fetchQuizProgress() {
-    const response = await getQuizProgress(courseId, regId);
-    // setLoader(true);
-    try {
-      if (response.status === 200) {
-        setQuiz(response.data);
-        // setLoader(false);
-        console.log(quiz);
-        console.log(response.data);
-      } else {
-        console.error("Failed to fetch courses", response.status);
-      }
-    } catch (error) {
-      console.log("error", error);
-    }
-  }
-
-  async function fetchProjectProgress() {
-    const response = await getProjectProgress(courseId, regId);
-    // setLoader(true);
-    try {
-      if (response.status === 200) {
-        setProject(response.data);
-        // setLoader(false);
-        console.log(project);
-        console.log(response.data);
-      } else {
-        console.error("Failed to fetch courses", response.status);
-      }
-    } catch (error) {
-      console.log("error", error);
-    }
-  }
-  async function fetchExamProgress() {
-    const response = await getExamProgress(courseId, regId);
-    // setLoader(true);
-    try {
-      if (response.status === 200) {
-        setExam(response.data);
-        // setLoader(false);
-        console.log(exam);
-        console.log(response.data);
-      } else {
-        console.error("Failed to fetch courses", response.status);
-      }
-    } catch (error) {
-      console.log("error", error);
-    }
-  }
-
   useEffect(() => {
+    if (!regId) return;
+    async function fetchOverallProgress() {
+      const response = await getOverallProgress(courseId, regId);
+      // setLoader(true);
+      try {
+        if (response.status === 200) {
+          setProgress(response.data);
+          // setLoader(false);
+          // console.log(progress);
+          // console.log(response.data);
+        } else {
+          console.error("Failed to fetch courses", response.status);
+        }
+      } catch (error) {
+        console.log("error", error);
+      }
+    }
+    if (!regId) return;
+    async function fetchAssignmentProgress() {
+      const response = await getAssignmentProgress(courseId, regId);
+      // setLoader(true);
+      try {
+        if (response.status === 200) {
+          setAssignment(response.data);
+          // setLoader(false);
+          // console.log(assignment);
+          // console.log(response.data);
+        } else {
+          console.error("Failed to fetch courses", response.status);
+        }
+      } catch (error) {
+        console.log("error", error);
+      }
+    }
+
+    async function fetchQuizProgress() {
+      const response = await getQuizProgress(courseId, regId);
+      // setLoader(true);
+      try {
+        if (response.status === 200) {
+          setQuiz(response.data);
+          // setLoader(false);
+          // console.log(quiz);
+          // console.log(response.data);
+        } else {
+          console.error("Failed to fetch courses", response.status);
+        }
+      } catch (error) {
+        console.log("error", error);
+      }
+    }
+
+    async function fetchProjectProgress() {
+      const response = await getProjectProgress(courseId, regId);
+      // setLoader(true);
+      try {
+        if (response.status === 200) {
+          setProject(response.data);
+          // setLoader(false);
+          // console.log(project);
+          // console.log(response.data);
+        } else {
+          console.error("Failed to fetch courses", response.status);
+        }
+      } catch (error) {
+        console.log("error", error);
+      }
+    }
+
+    if (!regId) return;
+    async function fetchExamProgress() {
+      const response = await getExamProgress(courseId, regId);
+      // setLoader(true);
+      try {
+        if (response.status === 200) {
+          setExam(response.data);
+          // setLoader(false);
+          // console.log(exam);
+          // console.log(response.data);
+        } else {
+          console.error("Failed to fetch courses", response.status);
+        }
+      } catch (error) {
+        console.log("error", error);
+      }
+    }
+
     fetchOverallProgress();
     fetchAssignmentProgress();
     fetchQuizProgress();
     fetchProjectProgress();
     fetchExamProgress();
-  }, []);
-
-  // console.log(exam?.data)
+  }, [regId]);
 
   const options = [
     "Hammad Siddiqui",
@@ -176,6 +177,8 @@ export default function Page({ params }) {
           instructorName="Maaz"
         />
         <div>
+          {/* NOTIFICATION CODE */}
+
           {/* <div className='flex justify-between items-center'>
             <p className='text-[18px] font-semibold'>{selectedOption}</p>
             <div className="group relative inline-block w-64" ref={dropdownRef}>
@@ -222,7 +225,7 @@ export default function Page({ params }) {
               >
                 {openSection === "Quiz" && (
                   <div className="mt-2">
-                 <StudentMarksTable
+                    <StudentMarksTable
                       key={quiz.id}
                       field={openSection}
                       assessments={quiz?.data}
@@ -251,7 +254,7 @@ export default function Page({ params }) {
               >
                 {openSection === "Assignment" && (
                   <div className="mt-2">
-                     <StudentMarksTable
+                    <StudentMarksTable
                       key={assignment.id}
                       field={openSection}
                       assessments={assignment?.data}
@@ -278,7 +281,7 @@ export default function Page({ params }) {
               >
                 {openSection === "Project" && (
                   <div className="mt-2">
-                   <StudentMarksTable
+                    <StudentMarksTable
                       key={project.id}
                       field={openSection}
                       assessments={project?.data}
@@ -323,20 +326,24 @@ export default function Page({ params }) {
             <div className={`font-semibold font-exo py-3 `}>
               Student Performance Overview
             </div>
-            <PerformanceTable
-              assignmentScore={progress?.assignments?.grades}
-              assignmentWeightage={progress?.assignments?.weightage}
-              assignmentWeightedScore={progress?.assignments?.percentage}
-              quizWeightage={progress?.quizzes?.weightage}
-              quizScore={progress?.quizzes?.grades}
-              quizWeightedScore={progress?.quizzes?.percentage}
-              projectWeightage={progress?.projects?.weightage}
-              projectScore={progress?.projects?.grades}
-              projectWeightedScore={progress?.projects?.percentage}
-              examsWeightage={progress?.exams?.weightage}
-              examsScore={progress?.exams?.grades}
-              examsWeightedScore={progress?.exams?.percentage}
-            />
+            {progress ? (
+              <PerformanceTable
+                assignmentScore={progress?.assignments?.grades}
+                assignmentWeightage={progress?.assignments?.weightage}
+                assignmentWeightedScore={progress?.assignments?.percentage}
+                quizWeightage={progress?.quizzes?.weightage}
+                quizScore={progress?.quizzes?.grades}
+                quizWeightedScore={progress?.quizzes?.percentage}
+                projectWeightage={progress?.projects?.weightage}
+                projectScore={progress?.projects?.grades}
+                projectWeightedScore={progress?.projects?.percentage}
+                examsWeightage={progress?.exams?.weightage}
+                examsScore={progress?.exams?.grades}
+                examsWeightedScore={progress?.exams?.percentage}
+              />
+            ) : (
+              <p>Loading...</p>
+            )}
           </div>
         </div>
       </div>

@@ -10,7 +10,7 @@ import Calender from "@/components/Calender";
 import Link from "next/link";
 import { useGroup } from "@/providers/useGroup";
 import { useAuth } from "@/providers/AuthContext";
-import { getAllCourses, getPendingAssignments } from "@/api/route";
+import { getCourseByProgId, getPendingAssignments } from "@/api/route";
 import { formatDateTime } from "@/components/StudentDataStructure";
 import { CircularProgress } from "@mui/material";
 import FullCalendar from "@fullcalendar/react";
@@ -24,27 +24,33 @@ export default function Page() {
   const [loader, setLoader] = useState(true);
 
   const isStudent = userData?.Group === "student";
+  const progId = userData?.session?.program;
   const userId = userData?.user?.id;
-  console.log(userId);
+  // console.log(userId);
+  console.log(progId);
 
-  async function fetchCourses() {
-    const response = await getAllCourses();
-    setLoader(true);
-    try {
-      if (response.status === 200) {
-        setCourses(response.data);
-        setLoader(false);
-        console.log(courses);
-      } else {
-        console.error("Failed to fetch courses", response.status);
+  useEffect(() => {
+    async function fetchCourses() {
+      const response = await getCourseByProgId(progId);
+      setLoader(true);
+      try {
+        if (response.status === 200) {
+          setCourses(response.data);
+          setLoader(false);
+          console.log(courses);
+        } else {
+          console.error("Failed to fetch courses", response.status);
+        }
+      } catch (error) {
+        console.log("error", error);
       }
-    } catch (error) {
-      console.log("error", error);
     }
-  }
+
+    fetchCourses();
+  }, [progId]);
 
   async function fetchPendingAssignments() {
-    const response = await getPendingAssignments(2, userId);
+    const response = await getPendingAssignments(progId, userId);
     setLoader(true);
     try {
       if (response.status === 200) {
@@ -62,7 +68,6 @@ export default function Page() {
     }
   }
   useEffect(() => {
-    fetchCourses();
     fetchPendingAssignments();
   }, []);
 
@@ -130,8 +135,11 @@ export default function Page() {
                   plugins={[dayGridPlugin]}
                   initialView="dayGridMonth"
                   events={[
-                    { title: 'Assignment Submission', date: '2024-08-22' },
-                    { title: 'Mobile Application Development', date: '2024-08-10' }
+                    { title: "Assignment Submission", date: "2024-08-22" },
+                    {
+                      title: "Mobile Application Development",
+                      date: "2024-08-10",
+                    },
                   ]}
                 />
               </div>
