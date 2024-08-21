@@ -69,12 +69,6 @@ const StudentDataStructure = ({
                 <table className="min-w-full divide-y divide-dark-300 dark:divide-gray-700">
                   <thead className="bg-dark-100 dark:bg-gray-700">
                     <tr>
-                      {/* <th scope="col" className="py-3 px-4 pe-0">
-                      <div className="flex items-center h-5">
-                        <input id="hs-table-pagination-checkbox-all" type="checkbox" className="border-gray-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" />
-                        <label for="hs-table-pagination-checkbox-all" className="sr-only">Checkbox</label>
-                      </div> 
-                    </th> */}
                       <th
                         scope="col"
                         className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[23%]"

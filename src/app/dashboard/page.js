@@ -161,7 +161,7 @@ export default function Page() {
               </div>
             </div>
 
-            <div className="flex flex-wrap mx-2 w-[30%] flex-col h-screen overflow-y-auto bg-[#ffffff] p-2 rounded-xl lg:w-fit scrollbar-webkit ">
+            <div className="flex mx-2 w-[30%] flex-col h-screen overflow-y-auto bg-[#ffffff] p-2 rounded-xl lg:w-fit scrollbar-webkit ">
               <div>
                 <h1 className="text-xl font-bold px-3 py-4 font-exo">
                   Recent Activities
