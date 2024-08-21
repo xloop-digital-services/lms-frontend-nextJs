@@ -26,10 +26,12 @@ export default function Page() {
   const isStudent = userData?.Group === "student";
   const progId = userData?.session?.program;
   const userId = userData?.user?.id;
+  const regId = userData?.user_data?.registration_id;
   // console.log(userId);
   console.log(progId);
 
   useEffect(() => {
+    if (!progId) return;
     async function fetchCourses() {
       const response = await getCourseByProgId(progId);
       setLoader(true);
@@ -50,7 +52,7 @@ export default function Page() {
   }, [progId]);
 
   async function fetchPendingAssignments() {
-    const response = await getPendingAssignments(progId, userId);
+    const response = await getPendingAssignments(progId, regId);
     setLoader(true);
     try {
       if (response.status === 200) {
@@ -68,8 +70,9 @@ export default function Page() {
     }
   }
   useEffect(() => {
+    if (!regId && !progId) return;
     fetchPendingAssignments();
-  }, []);
+  }, [regId]);
 
   return (
     <>
@@ -87,80 +90,95 @@ export default function Page() {
             width: isSidebarOpen ? "84%" : "100%",
           }}
         >
-          <div className="bg-[#ffffff] p-5 rounded-xl ">
-            <div className="flex justify-between items-center">
-              <h1 className="text-xl font-bold font-exo"> Courses</h1>
-              <div className="group px-3">
-                <Link
-                  href="/courses"
-                  className="text-[#03A1D8] underline flex items-center group-hover:cursor-pointer"
-                >
-                  Show All
-                  <span>
-                    <MdArrowRightAlt
-                      className="ml-2 group-hover:cursor-pointer"
-                      size={25}
-                    />
-                  </span>
-                </Link>
+          <div className="flex w-[100%] max-md:flex-col">
+            <div className="flex-col mx-2 w-[70%] flex-wrap">
+              <div className="w-full">
+                {" "}
+                <div className="bg-[#ffffff] p-5 rounded-xl mb-2">
+                  <div className="flex justify-between items-center">
+                    <h1 className="text-xl font-bold font-exo"> Courses</h1>
+                    <div className="group px-3">
+                      <Link
+                        href="/courses"
+                        className="text-[#03A1D8] underline flex items-center group-hover:cursor-pointer"
+                      >
+                        Show All
+                        <span>
+                          <MdArrowRightAlt
+                            className="ml-2 group-hover:cursor-pointer"
+                            size={25}
+                          />
+                        </span>
+                      </Link>
+                    </div>
+                  </div>
+                  <div className="flex space-x-4 flex-wrap ">
+                    {isStudent &&
+                      courses?.data?.map((course) => {
+                        return (
+                          <CourseCard
+                            id={course.id}
+                            key={course.id}
+                            image={image1}
+                            courseName={course.name}
+                            courseDesc={course.short_description}
+                            // progress="50%"
+                            // avatars={avatars}
+                            extraCount={50}
+                          />
+                        );
+                      })}
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div className=" w-full mt-2 h-[520px] flex gap-4 lg:flex-row flex-col-reverse  max-md:w-full">
+                  <div className="bg-[#ffffff] p-2  rounded-xl grow">
+                    <div>
+                      <h1 className="text-xl font-bold px-3 py-4 font-exo">
+                        Weeks Activity
+                      </h1>
+                    </div>
+                    <div className="h-[420px] overflow-y-scroll scrollbar-webkit p-4">
+                      <FullCalendar
+                        height={500}
+                        plugins={[dayGridPlugin]}
+                        initialView="dayGridMonth"
+                        events={[
+                          {
+                            title: "Assignment Submission",
+                            date: "2024-08-22",
+                          },
+                          {
+                            title: "Mobile Application Development",
+                            date: "2024-08-10",
+                          },
+                        ]}
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="flex space-x-4 flex-wrap ">
-              {isStudent &&
-                courses?.data?.map((course) => {
-                  return (
-                    <CourseCard
-                      id={course.id}
-                      key={course.id}
-                      image={image1}
-                      courseName={course.name}
-                      courseDesc={course.short_description}
-                      // progress="50%"
-                      // avatars={avatars}
-                      extraCount={50}
-                    />
-                  );
-                })}
-            </div>
-          </div>
-          <div className="flex gap-4 lg:flex-row flex-col-reverse ">
-            <div className="bg-[#ffffff] p-2  rounded-xl grow">
+
+            <div className="flex flex-wrap mx-2 w-[30%] flex-col h-screen overflow-y-auto bg-[#ffffff] p-2 rounded-xl lg:w-fit scrollbar-webkit ">
               <div>
                 <h1 className="text-xl font-bold px-3 py-4 font-exo">
-                  Weeks Activity
-                </h1>
-              </div>
-              <div className="h-80 overflow-y-scroll scrollbar-webkit p-4">
-                <FullCalendar
-                  plugins={[dayGridPlugin]}
-                  initialView="dayGridMonth"
-                  events={[
-                    { title: "Assignment Submission", date: "2024-08-22" },
-                    {
-                      title: "Mobile Application Development",
-                      date: "2024-08-10",
-                    },
-                  ]}
-                />
-              </div>
-            </div>
-            <div className="bg-[#ffffff] p-2 rounded-xl overflow-hidden h-[360px] lg:w-fit ">
-              <div>
-                <h1 className="text-xl font-bold px-3 py-4 font-exo">
-                  Assignment Progress
+                  Recent Activities
                 </h1>
               </div>
 
-              <div className="p-2 pt-0 flex lg:flex-col gap-2 lg:flex-nowrap flex-wrap resize-none overflow-y-auto h-[300px] scrollbar-webkit ">
-                {assignments?.data?.map((assignment) => {
+              <div className="p-2 pt-0 flex lg:flex-col gap-2 lg:flex-nowrap flex-wrap resize-none ">
+                {assignments?.data?.items?.map((assignment) => {
                   return (
                     <AssignmentCard
                       key={assignment.id}
                       id={assignment.id}
                       category={assignment.course_name}
-                      title={assignment?.question}
+                      title={assignment?.question || assignment?.title}
                       content={assignment?.description}
                       priority={formatDateTime(assignment?.due_date)}
+                      type={assignment.type}
                       // avatars={avatars}
                       // extraCount={50}
                     />

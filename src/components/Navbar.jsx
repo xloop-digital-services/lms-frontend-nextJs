@@ -87,11 +87,13 @@ export default function Navbar() {
   };
 
   const getFirstWord = (name) => {
-    if (!name) return "";
+    if (!name) return;
     return name.split("")[0];
   };
 
-  const firstWord = getFirstWord(user?.response?.first_name);
+  const firstWord = getFirstWord(user?.first_name);
+  console.log(firstWord)
+
 
   return (
     <>

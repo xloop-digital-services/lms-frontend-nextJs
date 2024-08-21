@@ -14,7 +14,7 @@ const UploadingFile = ({ field, setUploadFile, assignmentID }) => {
   const [file, setFile] = useState(null);
   const [error, setError] = useState("");
   const [isDragOver, setIsDragOver] = useState(false);
-
+  // console.log(assignmentID);
   const supportedFormats = [
     ".pdf",
     ".doc",

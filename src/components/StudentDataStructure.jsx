@@ -3,7 +3,12 @@ import { LiaFileDownloadSolid } from "react-icons/lia";
 import { MdRemoveRedEye } from "react-icons/md";
 import { LuUpload } from "react-icons/lu";
 import UplaodingFile from "./Modal/UplaodingFile";
-import { FaFileDownload, FaFilePdf, FaRegFilePdf } from "react-icons/fa";
+import {
+  FaFileDownload,
+  FaFilePdf,
+  FaInfoCircle,
+  FaRegFilePdf,
+} from "react-icons/fa";
 import { downloadFile } from "@/app/courses/course/[courseId]/page";
 
 export function formatDateTime(apiDateTime) {
@@ -94,17 +99,18 @@ const StudentDataStructure = ({
                       >
                         Due Date
                       </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[23%]"
-                      >
-                        Remarks
-                      </th>
+
                       <th
                         scope="col"
                         className="px-6 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[23%]"
                       >
                         Action
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[23%]"
+                      >
+                        Submission Date
                       </th>
                     </tr>
                   </thead>
@@ -118,8 +124,16 @@ const StudentDataStructure = ({
                               {quiz.question || quiz.title}
                             </td>
                             <td className="px-6 py-2 flex justify-center items-center  text-center whitespace-nowrap text-sm text-surface-100 ">
-                              <p className="bg-[#18A07A] w-[90px] text-center px-4 py-2 text-[12px] rounded-lg">
-                                {quiz?.status === 1 ? "Active" : "Inactive"}
+                              <p
+                                className={`w-[110px] text-center px-4 py-2 text-[12px] rounded-lg ${
+                                  quiz?.submission_status === "Submitted"
+                                    ? "bg-mix-300 w-110px]"
+                                    : quiz?.submission_status === "Pending"
+                                    ? "bg-mix-500 text-[#fff] w-[110px]"
+                                    : "bg-mix-200 w-110px]"
+                                }`}
+                              >
+                                {quiz?.submission_status}
                               </p>
                             </td>
                             <td className="px-6 py-4  text-center whitespace-nowrap text-sm text-gray-800">
@@ -128,9 +142,8 @@ const StudentDataStructure = ({
                             <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
                               {formatDateTime(quiz?.due_date)}
                             </td>
-                            <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm text-gray-800">
-                              {quiz?.remarks || "-"}
-                            </td>
+
+                            {}
                             <td className="px-5 py-4 flex justify-center items-center text-center whitespace-nowrap text-sm text-[#03A1D8] font-medium space-x-4">
                               {/* <div>
                                   <MdRemoveRedEye size={23} />{" "}
@@ -138,9 +151,23 @@ const StudentDataStructure = ({
                               <div>
                                 <LuUpload
                                   size={23}
-                                  onClick={() => handleFileUpload(quiz?.id)}
-                                  className="hover:cursor-pointer"
+                                  onClick={
+                                    quiz?.status !== "Submitted"
+                                      ? () => handleFileUpload(quiz?.id)
+                                      : undefined
+                                  }
+                                  className={`${
+                                    quiz?.status === "Submitted"
+                                      ? "cursor-not-allowed opacity-50"
+                                      : "cursor-pointer hover:opacity-80"
+                                  }`}
                                   title="upload"
+                                  style={{
+                                    pointerEvents:
+                                      quiz?.status === "Submitted"
+                                        ? "none"
+                                        : "auto",
+                                  }}
                                 />
                               </div>
                               <div
@@ -168,53 +195,23 @@ const StudentDataStructure = ({
                                 {/* <p>{downloadStatus}</p> */}
                               </div>
                             </td>
+                            <td className="px-6 py-4  text-center whitespace-nowrap text-sm text-gray-800">
+                              {quiz?.submitted_at
+                                ? formatDateTime(quiz?.submitted_at)
+                                : "-"}
+                            </td>
                           </tr>
                         );
                       })
                     ) : (
-                      <td colSpan="3" className="text-center py-4">
-                        No data found
-                      </td>
+                      <tr>
+                        <td colSpan="6" className="text-center py-4">
+                          No data found
+                        </td>
+                      </tr>
                     )}
                   </tbody>
                 </table>
-              </div>
-              <div className="py-1 px-4">
-                <nav className="flex items-center space-x-1">
-                  <button
-                    type="button"
-                    className="p-2.5 inline-flex items-center gap-x-2 text-sm rounded-full text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-surface-100 dark:hover:bg-white/10 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                  >
-                    <span aria-hidden="true">«</span>
-                    <span className="sr-only">Previous</span>
-                  </button>
-                  <button
-                    type="button"
-                    className="min-w-[40px] flex justify-center items-center text-gray-800 hover:bg-gray-100 py-2.5 text-sm rounded-full disabled:opacity-50 disabled:pointer-events-none dark:text-surface-100 dark:hover:bg-white/10"
-                    aria-current="page"
-                  >
-                    1
-                  </button>
-                  <button
-                    type="button"
-                    className="min-w-[40px] flex justify-center items-center text-gray-800 hover:bg-gray-100 py-2.5 text-sm rounded-full disabled:opacity-50 disabled:pointer-events-none dark:text-surface-100 dark:hover:bg-white/10"
-                  >
-                    2
-                  </button>
-                  <button
-                    type="button"
-                    className="min-w-[40px] flex justify-center items-center text-gray-800 hover:bg-gray-100 py-2.5 text-sm rounded-full disabled:opacity-50 disabled:pointer-events-none dark:text-surface-100 dark:hover:bg-white/10"
-                  >
-                    3
-                  </button>
-                  <button
-                    type="button"
-                    className="p-2.5 inline-flex items-center gap-x-2 text-sm rounded-full text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-surface-100 dark:hover:bg-white/10 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                  >
-                    <span className="sr-only">Next</span>
-                    <span aria-hidden="true">»</span>
-                  </button>
-                </nav>
               </div>
             </div>
           </div>

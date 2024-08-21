@@ -10,29 +10,31 @@ export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
   const courseId = params.courseId;
   const [attendance, setAttendance] = useState([]);
-  const {userData} = useAuth();
+  const { userData } = useAuth();
   const regId = userData?.user_data?.registration_id;
 
-  async function fetchAttendance() {
-    const response = await getStudentAttendance(courseId, regId);
-    // setLoader(true);
-    try {
-      if (response.status === 200) {
-        setAttendance(response.data);
-        // setLoader(false);
-        console.log(attendance);
-        console.log(response.data);
-      } else {
-        console.error("Failed to fetch courses", response.status);
-      }
-    } catch (error) {
-      console.log("error", error);
-    }
-  }
 
-  useEffect(()=>{
+  useEffect(() => {
+    if (!regId) return;
+    async function fetchAttendance() {
+      const response = await getStudentAttendance(courseId, regId);
+      // setLoader(true);
+      try {
+        if (response.status === 200) {
+          setAttendance(response.data);
+          // setLoader(false);
+          console.log(attendance);
+          console.log(response.data);
+        } else {
+          console.error("Failed to fetch courses", response.status);
+        }
+      } catch (error) {
+        console.log("error", error);
+      }
+    }
+
     fetchAttendance();
-  },[])
+  }, [regId]);
   return (
     <div
       className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-20 font-inter ${

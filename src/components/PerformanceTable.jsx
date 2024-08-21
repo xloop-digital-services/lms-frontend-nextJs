@@ -13,11 +13,6 @@ const PerformanceTable = ({
   examsScore,
   examsWeightedScore,
 }) => {
-  function calculateScore(a, b, c, d) {
-    score = sum(a, b, c, d);
-  }
-
-  function calculateTotalPercentage(a, b, c, d) {}
   return (
     <div className="flex flex-col ">
       <div className="-m-1.5 overflow-x-auto">

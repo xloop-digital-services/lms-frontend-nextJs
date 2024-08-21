@@ -44,6 +44,7 @@ export default function Page({ params }) {
           id={courseId}
           rating="Top Instructor"
           instructorName="Maaz"
+          haveStatus={true}
         />
 
         <h2 className="text-xl font-bold mb-4">Exam instructions</h2>

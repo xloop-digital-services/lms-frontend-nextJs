@@ -1,4 +1,5 @@
 import React from "react";
+import { formatDateTime } from "./StudentDataStructure";
 
 const StudentAttendence = ({ attendance }) => {
   return (
@@ -27,9 +28,15 @@ const StudentAttendence = ({ attendance }) => {
                     </th> */}
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[30%]"
+                      className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[30%]"
                     >
                       Module
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-4 pr-12 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[30%]"
+                    >
+                      Day
                     </th>
                     <th
                       scope="col"
@@ -39,25 +46,42 @@ const StudentAttendence = ({ attendance }) => {
                     </th>
                     <th
                       scope="col"
-                      className="px-4 pr-[82px] py-4 text-end text-xs font-medium text-gray-500 uppercase w-[30%]"
+                      className="px-4 pr-[82px] py-4 text-center text-xs font-medium text-gray-500 uppercase w-[30%]"
                     >
                       Mark
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-dark-200 dark:divide-gray-700">
+                <tbody className="divide-y divide-dark-200">
                   {attendance && attendance.length > 0 ? (
                     attendance?.map((att, index) => {
                       return (
                         <tr key={index}>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
+                          {/* <td className="py-3 ps-4">
+                       <div className="flex items-center h-5">
+                        <input id="hs-table-pagination-checkbox-1" type="checkbox" className="border-gray-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:Present:bg-blue-500 dark:Checked:border-blue-500 dark:focus:ring-offset-gray-800" />
+                        <label for="hs-table-pagination-checkbox-1" className="sr-only">Checkbox</label>
+                      </div> 
+                    </td> */}
+                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm font-medium text-gray-800">
                             {`Session ${att.session}`}
                           </td>
-                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                            {att.date}
+                          <td className="px-6 py-4 text-center text-wrap whitespace-nowrap text-sm text-gray-800">
+                            {att.day}
                           </td>
-                          <td className="px-12 py-2 whitespace-nowrap flex w-full justify-end text-sm text-surface-100 dark:text-gray-200 ">
-                            <p className="bg-[#18A07A] w-[90px] text-center px-4 py-2 text-[12px] rounded-lg">
+                          <td className="px-6 py-4 text-center text-wrap whitespace-nowrap text-sm text-gray-800">
+                            {formatDateTime(att.date)}
+                          </td>
+                          <td className="px-12 py-4 whitespace-nowrap flex w-full text-center justify-center items-center text-sm text-surface-100">
+                            <p
+                              className={`w-[110px] text-center px-4 py-2 text-[12px] rounded-lg ${
+                                att?.status === "Present"
+                                  ? "bg-mix-300 w-110px]"
+                                  : att?.status === "Late"
+                                  ? "bg-mix-500 text-[#fff] w-[110px]"
+                                  : "bg-mix-200 w-110px]"
+                              }`}
+                            >
                               {att.status}
                             </p>
                           </td>
@@ -73,43 +97,6 @@ const StudentAttendence = ({ attendance }) => {
                   )}
                 </tbody>
               </table>
-            </div>
-            <div className="py-1 px-4">
-              <nav className="flex items-center space-x-1">
-                <button
-                  type="button"
-                  className="p-2.5 inline-flex items-center gap-x-2 text-sm rounded-full text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-surface-100 dark:hover:bg-white/10 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                >
-                  <span aria-hidden="true">«</span>
-                  <span className="sr-only">Previous</span>
-                </button>
-                <button
-                  type="button"
-                  className="min-w-[40px] flex justify-center items-center text-gray-800 hover:bg-gray-100 py-2.5 text-sm rounded-full disabled:opacity-50 disabled:pointer-events-none dark:text-surface-100 dark:hover:bg-white/10"
-                  aria-current="page"
-                >
-                  1
-                </button>
-                <button
-                  type="button"
-                  className="min-w-[40px] flex justify-center items-center text-gray-800 hover:bg-gray-100 py-2.5 text-sm rounded-full disabled:opacity-50 disabled:pointer-events-none dark:text-surface-100 dark:hover:bg-white/10"
-                >
-                  2
-                </button>
-                <button
-                  type="button"
-                  className="min-w-[40px] flex justify-center items-center text-gray-800 hover:bg-gray-100 py-2.5 text-sm rounded-full disabled:opacity-50 disabled:pointer-events-none dark:text-surface-100 dark:hover:bg-white/10"
-                >
-                  3
-                </button>
-                <button
-                  type="button"
-                  className="p-2.5 inline-flex items-center gap-x-2 text-sm rounded-full text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-surface-100 dark:hover:bg-white/10 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                >
-                  <span className="sr-only">Next</span>
-                  <span aria-hidden="true">»</span>
-                </button>
-              </nav>
             </div>
           </div>
         </div>

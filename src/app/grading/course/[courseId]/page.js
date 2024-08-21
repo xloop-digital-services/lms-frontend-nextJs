@@ -175,6 +175,7 @@ export default function Page({ params }) {
           id={courseId}
           rating="Top Instructor"
           instructorName="Maaz"
+          haveStatus={true}
         />
         <div>
           {/* NOTIFICATION CODE */}

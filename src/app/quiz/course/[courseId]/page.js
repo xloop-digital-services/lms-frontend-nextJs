@@ -4,6 +4,7 @@ import { useSidebar } from "@/providers/useSidebar";
 import StudentDataStructure from "@/components/StudentDataStructure";
 import CourseHead from "@/components/CourseHead";
 import { getProgressForQuiz, getQuizByCourseId } from "@/api/route";
+import StatusSummary from "@/components/StatusSummary";
 
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
@@ -43,6 +44,7 @@ export default function Page({ params }) {
   }
 
   useEffect(() => {
+    if (!courseId) return;
     fetchQuizzes();
     fetchQuizProgress();
   }, []);
@@ -63,27 +65,16 @@ export default function Page({ params }) {
           rating="Top Instructor"
           instructorName="Maaz"
           progress={quizProgress?.progress_percentage}
+          haveStatus={true}
         />
-        {/* {quizzes?.map((quiz, index) => { */}
-        {/* return ( */}
+        
+
         <StudentDataStructure
           quizzes={quizzes}
           key={quizzes.id}
           field={"Quiz"}
           assessment="Quiz"
-          // assessmentNumber={`Quiz `}
-          // status={quizzes.status === "1" ? "Active" : "Inactive"}
-          // dueDate={quizzes.due_date}
-          // remarks="-"
-          // remarks={assignments.submissions
-          //   ?.map((submission) =>
-          //     submission.grading.map((grade) => grade.feedback)
-          //   )
-          //   .reduce((acc, feedbackArray) => acc.concat(feedbackArray), [])
-          //   .join(", ")}
         />
-        {/* ); */}
-        {/* })} */}
       </div>
     </div>
   );

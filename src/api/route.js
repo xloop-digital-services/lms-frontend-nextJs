@@ -114,10 +114,10 @@ export const getAssignmentsByCourseId = async (id) => {
 };
 
 //get pending assignment by courseId and registration id
-export const getPendingAssignments = async (progId, userId) => {
+export const getPendingAssignments = async (progId, regId) => {
   try {
     const response = await axiosInstance.get(
-      `course/programs/${progId}/students/${userId}/pending-assignments/`
+      `course/programs/${progId}/students/${regId}/pending-assignments/`
     );
     return response;
   } catch (error) {

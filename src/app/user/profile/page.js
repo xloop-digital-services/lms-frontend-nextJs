@@ -245,8 +245,8 @@ function Profile() {
                   <p>{`${user?.first_name} ${user?.last_name}`}</p>
                 </div>
                 <div className="flex flex-col w-full">
-                  <h2 className="font-medium text-xl">Email Address</h2>
-                  <p>{email}</p>
+                  <h2 className="font-medium text-xl">Registration ID</h2>
+                  <p className=" uppercase">{user?.registration_id}</p>
                 </div>
               </div>
             </div>
