@@ -144,11 +144,11 @@ export default function Page() {
               </div>
 
               <div className="p-2 pt-0 flex lg:flex-col gap-2 lg:flex-nowrap flex-wrap resize-none overflow-y-auto h-[300px] scrollbar-webkit ">
-                {assignments?.data?.map((assignment) => {
+                {assignments?.data?.items?.map((assignment) => {
                   return (
                     <AssignmentCard
                       key={assignment.id}
-                      id={assignment.id}
+                      id={assignment.course_id}
                       category={assignment.course_name}
                       title={assignment?.question}
                       content={assignment?.description}

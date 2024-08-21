@@ -4,6 +4,7 @@ import { useSidebar } from "@/providers/useSidebar";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
+import { IoIosArrowDown } from "react-icons/io";
 import {
   FaBars,
   FaBookOpen,
@@ -17,15 +18,23 @@ import {
   FaSignOutAlt,
   FaTasks,
   FaUser,
+  FaListAlt,
 } from "react-icons/fa";
+
 import { useAuth } from "@/providers/AuthContext";
 
 function SideBar() {
   const { isSidebarOpen, toggleSidebar } = useSidebar();
-  const { logOutUser} = useAuth();
+  const { logOutUser, userData } = useAuth();
+  const isAdmin = userData?.Group === "admin";
   const pathname = usePathname();
   const isLinkActive = (path) => {
     return pathname === path;
+  };
+  const [isOpen, setIsOpen] = useState(false);
+
+  const ToggleOptions = () => {
+    setIsOpen(!isOpen);
   };
 
   return (
@@ -36,7 +45,7 @@ function SideBar() {
         }`}
       >
         <button
-          className={`cursor-pointer px-4 max-md:px-2 max-md:py-2 `}
+          className={`cursor-pointer pl-4 max-md:pl-2 max-md:py-2 `}
           onClick={toggleSidebar}
         >
           <FaBars size={24} />
@@ -58,6 +67,20 @@ function SideBar() {
                   Dashboard
                 </Link>
 
+                <div className={`${isAdmin && "hidden"}`}>
+                  <Link
+                    href="/program"
+                    className={`p-4 flex gap-4 rounded-xl border-dark-300  hover:text-blue-300 ${
+                      isLinkActive("/program")
+                        ? "text-blue-300 bg-blue-600 "
+                        : "text-dark-600"
+                    }`}
+                  >
+                    <FaBookOpen size={24} />
+                    Program
+                  </Link>
+                </div>
+
                 <Link
                   href="/courses"
                   className={`p-4  flex gap-4 mt-2 rounded-xl hover:text-blue-300 ${
@@ -69,73 +92,75 @@ function SideBar() {
                   <FaBookOpen size={24} />
                   Courses
                 </Link>
-                <Link
-                  href="/attendance"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300  ${
-                    isLinkActive("/attendance")
-                      ? "text-blue-300 bg-blue-600"
-                      : "text-dark-600"
-                  }`}
-                >
-                  <FaClipboard size={24} />
-                  Attendance
-                </Link>
-                <Link
-                  href="/quiz"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl hover:text-blue-300 ${
-                    isLinkActive("/quiz")
-                      ? "text-blue-300 bg-blue-600"
-                      : "text-dark-600"
-                  }`}
-                >
-                  <FaClipboardList size={24} />
-                  Quiz
-                </Link>
-                <Link
-                  href="/assignment"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
-                    isLinkActive("/assignment")
-                      ? "text-blue-300 bg-blue-600"
-                      : "text-dark-600"
-                  }`}
-                >
-                  <FaTasks size={24} />
-                  Assignment
-                </Link>
-                <Link
-                  href="/project"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
-                    isLinkActive("/project")
-                      ? "text-blue-300 bg-blue-600"
-                      : "text-dark-600"
-                  }`}
-                >
-                  <FaLaptopCode size={24} />
-                  Project
-                </Link>
-                <Link
-                  href="/exam"
-                  className={`p-4 flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
-                    isLinkActive("/exam")
-                      ? "text-blue-300 bg-blue-600"
-                      : "text-dark-600"
-                  }`}
-                >
-                  <FaFile size={24} />
-                  Exam
-                </Link>
-                <Link
-                  href="/grading"
-                  className={`p-4 flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
-                    isLinkActive("/grading")
-                      ? "text-blue-300 bg-blue-600"
-                      : "text-dark-600"
-                  }`}
-                >
-                   <FaClipboardCheck size={24} />
-                  Grading
-                </Link>
 
+                <div className={`${isAdmin && "hidden"}`}>
+                  <Link
+                    href="/attendance"
+                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300  ${
+                      isLinkActive("/attendance")
+                        ? "text-blue-300 bg-blue-600"
+                        : "text-dark-600"
+                    }`}
+                  >
+                    <FaClipboard size={24} />
+                    Attendance
+                  </Link>
+                  <Link
+                    href="/quiz"
+                    className={`p-4  flex gap-4 mt-2 rounded-xl hover:text-blue-300 ${
+                      isLinkActive("/quiz")
+                        ? "text-blue-300 bg-blue-600"
+                        : "text-dark-600"
+                    }`}
+                  >
+                    <FaClipboardList size={24} />
+                    Quiz
+                  </Link>
+                  <Link
+                    href="/assignment"
+                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
+                      isLinkActive("/assignment")
+                        ? "text-blue-300 bg-blue-600"
+                        : "text-dark-600"
+                    }`}
+                  >
+                    <FaTasks size={24} />
+                    Assignment
+                  </Link>
+                  <Link
+                    href="/project"
+                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
+                      isLinkActive("/project")
+                        ? "text-blue-300 bg-blue-600"
+                        : "text-dark-600"
+                    }`}
+                  >
+                    <FaLaptopCode size={24} />
+                    Project
+                  </Link>
+                  <Link
+                    href="/exam"
+                    className={`p-4 flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
+                      isLinkActive("/exam")
+                        ? "text-blue-300 bg-blue-600"
+                        : "text-dark-600"
+                    }`}
+                  >
+                    <FaFile size={24} />
+                    Exam
+                  </Link>
+                  <Link
+                    href="/grading"
+                    className={`p-4 flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
+                      isLinkActive("/grading")
+                        ? "text-blue-300 bg-blue-600"
+                        : "text-dark-600"
+                    }`}
+                  >
+                    <FaClipboardCheck size={24} />
+                    Grading
+                  </Link>
+                </div>
                 <Link
                   href="/calendar"
                   className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
@@ -147,6 +172,86 @@ function SideBar() {
                   <FaCalendar size={24} />
                   Calendar
                 </Link>
+                <div className={`${!isAdmin && "hidden"}`}>
+                  <Link
+                    href="/user-management"
+                    className={`p-4 flex flex-col gap-4 mt-2 rounded-xl hover:text-blue-300 ${
+                      isLinkActive("/user-management") ||
+                      isLinkActive("/user-management/approved") ||
+                      isLinkActive("/user-management/shortlist")
+                        ? "text-blue-300 bg-blue-600"
+                        : "text-dark-600"
+                    }`}
+                  >
+                    <div
+                      className={`flex items-center justify-between w-full ${
+                        isOpen && "border-b border-dark-300 pb-2"
+                      }`}
+                      onClick={ToggleOptions}
+                    >
+                      <div className="flex gap-4">
+                        <FaListAlt size={24} />
+                        <p className={`flex-grow text-center ${isLinkActive("/user-management") && 'font-semibold'}`}>User Management</p>
+                      </div>
+                      <div
+                        className="group-hover:cursor-pointer"
+                        onClick={ToggleOptions}
+                      >
+                        <IoIosArrowDown size={22} />
+                      </div>
+                    </div>
+
+                    {isOpen && (
+                      <div>
+                        <ul className="flex flex-col list-disc pl-9 space-y-2">
+                          <li>
+                            <Link href="/user-management/approved" className={`${isLinkActive("/user-management/approved") && 'font-semibold'}`}>
+                              Approved users
+                            </Link>
+                          </li>
+                          <li>
+                            <Link href="/user-management/shortlist" className={`${isLinkActive("/user-management/shortlist") && 'font-semibold'}`}>
+                              Shortlist users
+                            </Link>
+                          </li>
+                        </ul>
+                      </div>
+                    )}
+                  </Link>
+                  <Link
+                    href="/session"
+                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
+                      isLinkActive("/session")
+                        ? "text-blue-300 bg-blue-600"
+                        : "text-dark-600"
+                    }`}
+                  >
+                    <FaListAlt size={24} />
+                    Session
+                  </Link>
+                  <Link
+                    href="/batch"
+                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
+                      isLinkActive("/batch")
+                        ? "text-blue-300 bg-blue-600"
+                        : "text-dark-600"
+                    }`}
+                  >
+                    <FaListAlt size={24} />
+                    Batch
+                  </Link>
+                  <Link
+                    href="/location"
+                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
+                      isLinkActive("/location")
+                        ? "text-blue-300 bg-blue-600"
+                        : "text-dark-600"
+                    }`}
+                  >
+                    <FaListAlt size={24} />
+                    Location
+                  </Link>
+                </div>
               </div>
               <div className="flex flex-col">
                 <Link
