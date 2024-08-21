@@ -83,7 +83,9 @@ export default function Page() {
       ) : (
         <div
           className={`flex-1 transition-transform pt-[97px] space-y-4 max-md:pt-32 font-inter ${
-            isSidebarOpen ? "translate-x-64 pl-20 " : "translate-x-0 pl-10 pr-10"
+            isSidebarOpen
+              ? "translate-x-64 pl-20 "
+              : "translate-x-0 pl-10 pr-10"
           }`}
           style={{
             // paddingBottom: "20px",
@@ -96,7 +98,10 @@ export default function Page() {
                 {" "}
                 <div className="bg-[#ffffff] p-4 rounded-xl mb-2">
                   <div className="flex justify-between items-center">
-                    <h1 className="text-xl font-bold font-exo mx-2 "> Courses</h1>
+                    <h1 className="text-xl font-bold font-exo mx-2 ">
+                      {" "}
+                      Courses
+                    </h1>
                     <div className="group px-3">
                       <Link
                         href="/courses"
@@ -139,10 +144,10 @@ export default function Page() {
                         Weeks Activity
                       </h1>
                     </div>
-                    <div className="h-[380px] px-4">
+                    <div className="px-4">
                       <FullCalendar
                         // className="overflow-y-clip"
-                        height={300}
+                        height={320}
                         plugins={[dayGridPlugin]}
                         initialView="dayGridMonth"
                         events={[
@@ -170,30 +175,29 @@ export default function Page() {
               </div>
 
               <div className="p-2 pt-0 flex lg:flex-col gap-2 lg:flex-nowrap flex-wrap max-md:flex-nowrap max-md:flex-col resize-none ">
-                {/* {assignments?.data?.items && assignments?.data?.items > 0 ? ( */}
-                {
-                  assignments?.data?.items?.map((assignment) => {
+                {assignments?.data?.items &&
+                assignments?.data?.items.length > 0 ? (
+                  assignments.data.items.map((assignment) => {
                     return (
                       <AssignmentCard
                         key={assignment.id}
                         id={assignment.course_id}
                         category={assignment.course_name}
-                        title={assignment?.question || assignment?.title}
-                        content={assignment?.description}
-                        priority={formatDateTime(assignment?.due_date)}
+                        title={assignment.question || assignment.title}
+                        content={assignment.description}
+                        priority={formatDateTime(assignment.due_date)}
                         type={assignment.type}
                         // avatars={avatars}
                         // extraCount={50}
                       />
                     );
                   })
-                  // ) : (
-                  //   <p className="flex h-96 w-[400px] justify-center items-center ">
-                  //     No Upcoming Activities
-                  //   </p>
+                ) : (
+                  <p className="flex h-96 w-[400px] justify-center items-center">
+                    No Upcoming Activities
+                  </p>
+                )}
 
-                  // )
-                }
                 {/* Add more AssignmentCard components as needed */}
               </div>
             </div>

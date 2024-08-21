@@ -3,7 +3,10 @@ import React, { useEffect, useState } from "react";
 import { useSidebar } from "@/providers/useSidebar";
 import StudentDataStructure from "@/components/StudentDataStructure";
 import CourseHead from "@/components/CourseHead";
-import { getAssignmentsByCourseId, getProgressForAssignment } from "@/api/route";
+import {
+  getAssignmentsByCourseId,
+  getProgressForAssignment,
+} from "@/api/route";
 
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
@@ -44,8 +47,8 @@ export default function Page({ params }) {
     fetchAssignments();
     fetchAssignmentProgress();
   }, []);
-  
-  console.log('assignments here',assignments);
+
+  console.log("assignments here", assignments);
   return (
     <div
       className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-20 font-inter ${
@@ -62,27 +65,16 @@ export default function Page({ params }) {
           rating="Top Instructor"
           instructorName="Maaz"
           progress={assignmentProgress?.progress_percentage}
+          haveStatus={true}
         />
-        {/* {assignments?.map((assignment, index) => {
-          return ( */}
+
         <StudentDataStructure
           quizzes={assignments}
           key={assignments.id}
           field={"Assignment"}
           assessment="Assignments"
-          // assessmentNumber={`Assignment `}
-          // status={assignment.status === "1" ? "Active" : "Inctive"}
-          // dueDate={assignment.due_date}
-          // remarks="-"
-          // remarks={assignments.submissions
-          //   ?.map((submission) =>
-          //     submission.grading.map((grade) => grade.feedback)
-          //   )
-          //   .reduce((acc, feedbackArray) => acc.concat(feedbackArray), [])
-          //   .join(", ")}
         />
-        {/* );
-        })} */}
+      
       </div>
     </div>
   );

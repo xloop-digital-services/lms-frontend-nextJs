@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useSidebar } from "@/providers/useSidebar";
 import StudentDataStructure from "@/components/StudentDataStructure";
 import CourseHead from "@/components/CourseHead";
-import {  getProjectByCourseId } from "@/api/route";
+import { getProjectByCourseId } from "@/api/route";
 
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
@@ -54,16 +54,6 @@ export default function Page({ params }) {
           key={project.id}
           field={"Project"}
           assessment="Project"
-          // assessmentNumber={`Assignment `}
-          // status={assignment.status === "1" ? "Active" : "Inctive"}
-          // dueDate={assignment.due_date}
-          // remarks="-"
-          // remarks={assignments.submissions
-          //   ?.map((submission) =>
-          //     submission.grading.map((grade) => grade.feedback)
-          //   )
-          //   .reduce((acc, feedbackArray) => acc.concat(feedbackArray), [])
-          //   .join(", ")}
         />
         {/* );
         })} */}
