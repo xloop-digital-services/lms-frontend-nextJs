@@ -17,8 +17,8 @@ const CourseCard = ({
 }) => {
   return (
     <Link href={`/courses/course/${id}`}>
-      <div className="w-[330px] lg:mx-0 mx-auto group bg-transparent max-md:w-full f ">
-        <div className="rounded-xl h-92 p-2 border border-blue-100 group-hover:cursor-pointer group-hover:border-2 group-hover:border-blue-300 my-4">
+      <div className="w-[330px] lg:mx-0 mx-auto group bg-transparent max-md:w-full ">
+        <div className="h-[340px] max-md:h-auto mx-2 my-2 rounded-xl h-92 p-2 border border-blue-100 group-hover:cursor-pointer group-hover:border-2 group-hover:border-blue-300">
           <Image
             src={image}
             alt="here you go"
@@ -27,12 +27,12 @@ const CourseCard = ({
           <div className="space-y-3 text-sm px-4 pt-[6px]">
             <div className="flex bg-[#EBF6FF] w-fit py-[9px] px-5 rounded-lg items-center space-x-2">
               <p className="bg-[#03A1D8] w-2 h-2 rounded-full"></p>
-              <p className="text-[#03A1D8] uppercase text-[12px] font-semibold">
+              <p className="text-[#03A1D8] h-4 uppercase text-[12px] font-semibold line-clamp-1">
                 {courseName}
               </p>
             </div>
             <div>
-              <p>{courseDesc}</p>
+              <p className="line-clamp-2">{courseDesc}</p>
             </div>
 
             {progress ? <Progress progress={progress} /> : null}

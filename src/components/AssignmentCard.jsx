@@ -7,7 +7,7 @@ import Link from "next/link";
 const AssignmentCard = ({ id, category, content, title, priority, type }) => {
   return (
     <Link href={`/${type}/course/${id}`}>
-      <div className="w-[360px] mx-auto group bg-transparent pb-4 ">
+      <div className="w-[400px]  max-md:w-full mx-auto group bg-transparent pb-4 ">
         <div className="rounded-xl border border-blue-100 group-hover:cursor-pointer group-hover:shadow-lg group-hover:shadow-dark-300">
           <div className="space-y-3 text-sm p-3">
             <div className="flex flex-col justify-between items-center">

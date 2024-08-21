@@ -82,8 +82,8 @@ export default function Page() {
         </div>
       ) : (
         <div
-          className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-32 font-inter ${
-            isSidebarOpen ? "translate-x-64 pl-20 " : "translate-x-0 pl-10 pr-4"
+          className={`flex-1 transition-transform pt-[97px] space-y-4 max-md:pt-32 font-inter ${
+            isSidebarOpen ? "translate-x-64 pl-20 " : "translate-x-0 pl-10 pr-10"
           }`}
           style={{
             // paddingBottom: "20px",
@@ -91,12 +91,12 @@ export default function Page() {
           }}
         >
           <div className="flex w-[100%] max-md:flex-col">
-            <div className="flex-col mx-2 w-[70%] flex-wrap">
+            <div className="flex-col mx-2 w-[70%] max-md:w-full flex-wrap">
               <div className="w-full">
                 {" "}
-                <div className="bg-[#ffffff] p-5 rounded-xl mb-2">
+                <div className="bg-[#ffffff] p-4 rounded-xl mb-2">
                   <div className="flex justify-between items-center">
-                    <h1 className="text-xl font-bold font-exo"> Courses</h1>
+                    <h1 className="text-xl font-bold font-exo mx-2 "> Courses</h1>
                     <div className="group px-3">
                       <Link
                         href="/courses"
@@ -112,7 +112,7 @@ export default function Page() {
                       </Link>
                     </div>
                   </div>
-                  <div className="flex space-x-4 flex-wrap ">
+                  <div className="flex flex-wrap max-md:flex-nowrap max-md:flex-col">
                     {isStudent &&
                       courses?.data?.map((course) => {
                         return (
@@ -132,16 +132,17 @@ export default function Page() {
                 </div>
               </div>
               <div>
-                <div className=" w-full mt-2 h-[520px] flex gap-4 lg:flex-row flex-col-reverse  max-md:w-full">
+                <div className=" w-full mt-4 h-[410px] flex gap-4 lg:flex-row flex-col-reverse  max-md:w-full">
                   <div className="bg-[#ffffff] p-2  rounded-xl grow">
                     <div>
                       <h1 className="text-xl font-bold px-3 py-4 font-exo">
                         Weeks Activity
                       </h1>
                     </div>
-                    <div className="h-[420px] overflow-y-scroll scrollbar-webkit p-4">
+                    <div className="h-[380px] px-4">
                       <FullCalendar
-                        height={500}
+                        // className="overflow-y-clip"
+                        height={300}
                         plugins={[dayGridPlugin]}
                         initialView="dayGridMonth"
                         events={[
@@ -161,29 +162,38 @@ export default function Page() {
               </div>
             </div>
 
-            <div className="flex mx-2 w-[30%] flex-col h-screen overflow-y-auto bg-[#ffffff] p-2 rounded-xl lg:w-fit scrollbar-webkit ">
+            <div className="flex mx-2  h-[840px] w-[30%] max-md:w-full flex-col overflow-y-auto bg-[#ffffff] p-2 rounded-xl lg:w-fit scrollbar-webkit max-md:m-4  ">
               <div>
                 <h1 className="text-xl font-bold px-3 py-4 font-exo">
                   Recent Activities
                 </h1>
               </div>
 
-              <div className="p-2 pt-0 flex lg:flex-col gap-2 lg:flex-nowrap flex-wrap resize-none ">
-                {assignments?.data?.items?.map((assignment) => {
-                  return (
-                    <AssignmentCard
-                      key={assignment.id}
-                      id={assignment.id}
-                      category={assignment.course_name}
-                      title={assignment?.question || assignment?.title}
-                      content={assignment?.description}
-                      priority={formatDateTime(assignment?.due_date)}
-                      type={assignment.type}
-                      // avatars={avatars}
-                      // extraCount={50}
-                    />
-                  );
-                })}
+              <div className="p-2 pt-0 flex lg:flex-col gap-2 lg:flex-nowrap flex-wrap max-md:flex-nowrap max-md:flex-col resize-none ">
+                {/* {assignments?.data?.items && assignments?.data?.items > 0 ? ( */}
+                {
+                  assignments?.data?.items?.map((assignment) => {
+                    return (
+                      <AssignmentCard
+                        key={assignment.id}
+                        id={assignment.course_id}
+                        category={assignment.course_name}
+                        title={assignment?.question || assignment?.title}
+                        content={assignment?.description}
+                        priority={formatDateTime(assignment?.due_date)}
+                        type={assignment.type}
+                        // avatars={avatars}
+                        // extraCount={50}
+                      />
+                    );
+                  })
+                  // ) : (
+                  //   <p className="flex h-96 w-[400px] justify-center items-center ">
+                  //     No Upcoming Activities
+                  //   </p>
+
+                  // )
+                }
                 {/* Add more AssignmentCard components as needed */}
               </div>
             </div>

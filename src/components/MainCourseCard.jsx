@@ -46,7 +46,7 @@ export default function MainCourseCard({
               </div>
 
               <div className="flex justify-between mt-4 mb-4">
-                <p clcassName="">{courseDesc}</p>
+                <p className="line-clamp-4 ">{courseDesc}</p>
                 {progress ? <p className="text-blue-300">50</p> : null}
               </div>
 
