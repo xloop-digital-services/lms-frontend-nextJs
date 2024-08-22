@@ -57,9 +57,9 @@ function SideBar() {
               <div className=" py-4 rounded bg-surface-100 flex flex-col">
                 <Link
                   href="/dashboard"
-                  className={`p-4 flex gap-4 rounded-xl border-dark-300  hover:text-blue-300 ${
+                  className={`p-4 flex gap-4 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
                     isLinkActive("/dashboard")
-                      ? "text-blue-300 bg-blue-600 "
+                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100 "
                       : "text-dark-600"
                   }`}
                 >
@@ -70,9 +70,9 @@ function SideBar() {
                 <div className={`${isAdmin && "hidden"}`}>
                   <Link
                     href="/program"
-                    className={`p-4 flex gap-4 rounded-xl border-dark-300  hover:text-blue-300 ${
+                    className={`p-4 flex gap-4 rounded-xl border-dark-300  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
                       isLinkActive("/program")
-                        ? "text-blue-300 bg-blue-600 "
+                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100 "
                         : "text-dark-600"
                     }`}
                   >
@@ -83,9 +83,9 @@ function SideBar() {
 
                 <Link
                   href="/courses"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl hover:text-blue-300 ${
+                  className={`p-4  flex gap-4 mt-2 rounded-xl hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
                     isLinkActive("/courses")
-                      ? "text-blue-300 bg-blue-600"
+                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
                       : "text-dark-600"
                   }`}
                 >
@@ -96,9 +96,9 @@ function SideBar() {
                 <div className={`${isAdmin && "hidden"}`}>
                   <Link
                     href="/attendance"
-                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300  ${
+                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40  ${
                       isLinkActive("/attendance")
-                        ? "text-blue-300 bg-blue-600"
+                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
                         : "text-dark-600"
                     }`}
                   >
@@ -107,9 +107,9 @@ function SideBar() {
                   </Link>
                   <Link
                     href="/quiz"
-                    className={`p-4  flex gap-4 mt-2 rounded-xl hover:text-blue-300 ${
+                    className={`p-4  flex gap-4 mt-2 rounded-xl hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
                       isLinkActive("/quiz")
-                        ? "text-blue-300 bg-blue-600"
+                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
                         : "text-dark-600"
                     }`}
                   >
@@ -118,9 +118,9 @@ function SideBar() {
                   </Link>
                   <Link
                     href="/assignment"
-                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
+                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40${
                       isLinkActive("/assignment")
-                        ? "text-blue-300 bg-blue-600"
+                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
                         : "text-dark-600"
                     }`}
                   >
@@ -129,9 +129,9 @@ function SideBar() {
                   </Link>
                   <Link
                     href="/project"
-                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
+                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
                       isLinkActive("/project")
-                        ? "text-blue-300 bg-blue-600"
+                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
                         : "text-dark-600"
                     }`}
                   >
@@ -140,9 +140,9 @@ function SideBar() {
                   </Link>
                   <Link
                     href="/exam"
-                    className={`p-4 flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
+                    className={`p-4 flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
                       isLinkActive("/exam")
-                        ? "text-blue-300 bg-blue-600"
+                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
                         : "text-dark-600"
                     }`}
                   >
@@ -151,9 +151,9 @@ function SideBar() {
                   </Link>
                   <Link
                     href="/grading"
-                    className={`p-4 flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
+                    className={`p-4 flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
                       isLinkActive("/grading")
-                        ? "text-blue-300 bg-blue-600"
+                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
                         : "text-dark-600"
                     }`}
                   >
@@ -163,9 +163,9 @@ function SideBar() {
                 </div>
                 <Link
                   href="/calendar"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
+                  className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
                     isLinkActive("/calendar")
-                      ? "text-blue-300 bg-blue-600"
+                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
                       : "text-dark-600"
                   }`}
                 >
@@ -175,11 +175,11 @@ function SideBar() {
                 <div className={`${!isAdmin && "hidden"}`}>
                   <Link
                     href="/user-management"
-                    className={`p-4 flex flex-col gap-4 mt-2 rounded-xl hover:text-blue-300 ${
+                    className={`p-4 flex flex-col gap-4 mt-2 rounded-xl hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
                       isLinkActive("/user-management") ||
                       isLinkActive("/user-management/approved") ||
                       isLinkActive("/user-management/shortlist")
-                        ? "text-blue-300 bg-blue-600"
+                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
                         : "text-dark-600"
                     }`}
                   >
@@ -220,9 +220,9 @@ function SideBar() {
                   </Link>
                   <Link
                     href="/session"
-                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
+                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
                       isLinkActive("/session")
-                        ? "text-blue-300 bg-blue-600"
+                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100 "
                         : "text-dark-600"
                     }`}
                   >
@@ -231,9 +231,9 @@ function SideBar() {
                   </Link>
                   <Link
                     href="/batch"
-                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
+                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
                       isLinkActive("/batch")
-                        ? "text-blue-300 bg-blue-600"
+                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
                         : "text-dark-600"
                     }`}
                   >
@@ -242,9 +242,9 @@ function SideBar() {
                   </Link>
                   <Link
                     href="/location"
-                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
+                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
                       isLinkActive("/location")
-                        ? "text-blue-300 bg-blue-600"
+                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
                         : "text-dark-600"
                     }`}
                   >
@@ -256,9 +256,9 @@ function SideBar() {
               <div className="flex flex-col">
                 <Link
                   href="/user/profile"
-                  className={`p-4 flex gap-4 border rounded-xl border-dark-300  hover:text-blue-300 ${
+                  className={`p-4 flex gap-4 border rounded-xl border-dark-300  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
                     isLinkActive("/user/profile")
-                      ? "text-blue-300 bg-blue-600"
+                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
                       : "text-dark-600"
                   }`}
                 >
@@ -269,9 +269,9 @@ function SideBar() {
                 <Link
                   href="/auth/login"
                   onClick={logOutUser}
-                  className={`p-4 flex gap-4 mt-2 border rounded-xl border-dark-300  hover:text-blue-300 ${
+                  className={`p-4 flex gap-4 mt-2 border rounded-xl border-dark-300  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
                     isLinkActive("/auth/login")
-                      ? "text-blue-300 bg-blue-600"
+                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
                       : "text-dark-600"
                   }`}
                 >

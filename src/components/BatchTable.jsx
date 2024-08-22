@@ -1,6 +1,6 @@
 import React from 'react'
 
-const SessionsTable = () => {
+const BatchTable = () => {
     return (
         <div className="flex flex-col ">
             <div className="-m-1.5 overflow-x-auto">
@@ -99,4 +99,4 @@ const SessionsTable = () => {
     )
 }
 
-export default SessionsTable
+export default BatchTable

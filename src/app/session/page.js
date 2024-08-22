@@ -58,7 +58,7 @@ export default function Page() {
           <div>
             <button
               onClick={toggleCityOpen}
-              className="flex justify-between items-center md:w-[200px] w-[80%] text-[#92A7BE] group-hover:text-[#0e1721] px-4 py-4 text-sm text-left bg-white border  border-[#92A7BE] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+              className="flex justify-between items-center md:w-[200px] w-[80%] text-[#92A7BE] group-hover:text-[#0e1721] px-4 py-4 text-sm text-left bg-surface-100 border  border-[#92A7BE] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
             >
               {selectedCity || city0ptions[0]}
               <span className="">
@@ -67,7 +67,7 @@ export default function Page() {
             </button>
 
             {isCityOpen && (
-              <div className="absolute z-10 w-[200px] mt-1 bg-white border rounded-lg shadow-lg transition-opacity duration-300 ease-in-out">
+              <div className="absolute z-10 w-[200px] mt-1 bg-surface-100 border rounded-lg shadow-lg transition-opacity duration-300 ease-in-out">
                 {city0ptions.map((option, index) => (
                   <div
                     key={index}
@@ -85,7 +85,7 @@ export default function Page() {
           <div>
             <button
               onClick={toggleLocationOpen}
-              className="flex justify-between items-center md:w-[200px] text-[#92A7BE] group-hover:text-[#0e1721] px-4 py-4 text-sm text-left bg-white border  border-[#92A7BE] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+              className="flex justify-between items-center md:w-[200px] text-[#92A7BE] group-hover:text-[#0e1721] px-4 py-4 text-sm text-left bg-surface-100 border  border-[#92A7BE] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
             >
               {selectedLocation || location0ptions[0]}
               <span className="">
@@ -94,7 +94,7 @@ export default function Page() {
             </button>
 
             {isLocationOpen && (
-              <div className="absolute z-10 w-[200px] mt-1 bg-white border rounded-lg shadow-lg transition-opacity duration-300 ease-in-out">
+              <div className="absolute z-10 w-[200px] mt-1 bg-surface-100 border rounded-lg shadow-lg transition-opacity duration-300 ease-in-out">
                 {location0ptions.map((option, index) => (
                   <div
                     key={index}
@@ -112,7 +112,7 @@ export default function Page() {
           <div>
             <button
               onClick={toggleBatchOpen}
-              className="flex justify-between items-center md:w-[200px] text-[#92A7BE] group-hover:text-[#0e1721] px-4 py-4 text-sm text-left bg-white border  border-[#92A7BE] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+              className="flex justify-between items-center md:w-[200px] text-[#92A7BE] group-hover:text-[#0e1721] px-4 py-4 text-sm text-left bg-surface-100 border  border-[#92A7BE] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
             >
               {selectedBatch || batch0ptions[0]}
               <span className="">
@@ -121,7 +121,7 @@ export default function Page() {
             </button>
 
             {isBatchOpen && (
-              <div className="absolute z-10 w-[200px] mt-1 bg-white border rounded-lg shadow-lg transition-opacity duration-300 ease-in-out">
+              <div className="absolute z-10 w-[200px] mt-1 bg-surface-100 border rounded-lg shadow-lg transition-opacity duration-300 ease-in-out">
                 {batch0ptions.map((option, index) => (
                   <div
                     key={index}
