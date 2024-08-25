@@ -24,15 +24,15 @@ export default function MainCourseCard({
   return (
     <>
     <Link href={route}>
-      <div className="w-full bg-surface-100 p-8 rounded-xl">
-        <div className="border border-dark-300 rounded-xl p-10 flex max-md:flex-col hover:border-blue-300">
-          <div className="w-100 mr-4">
+      <div className="w-full ">
+        <div className="border border-dark-300 rounded-xl p-6 flex max-md:flex-col hover:border-blue-300">
+          <div className=" mr-4">
             <Image
               src={courseImg}
               alt={altText}
               className="rounded-xl "
               width={600}
-              height={40}
+              style={{height:'210px'}}
             />
           </div>
 
@@ -53,8 +53,8 @@ export default function MainCourseCard({
               {progress ? <Progress progress={progress} /> : null}
             </div>
 
-            <div className="flex max-md:mt-4 justify-between">
-              <div className="flex">
+            <div className="flex max-md:mt-3 sm:justify-between sm:flex-row flex-col sm:gap-0 gap-3">
+              <div className="flex text-sm sm:text-base">
                 <p className=""> Duration: &nbsp; </p>
                 <p className="text-blue-300">
                   {" "}
@@ -62,7 +62,7 @@ export default function MainCourseCard({
                 </p>
               </div>
 
-              <Link href={`${route}`}>
+              <Link href={`${route}`} className="sm:w-auto w-full flex justify-end">
                 <FaChevronCircleRight size={24} fill="#03A1D8" />
               </Link>
             </div>

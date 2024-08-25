@@ -12,7 +12,7 @@ export default function Page() {
           <CircularProgress />
         </div>
       ) : ( */}
-        <CoursePage path="exam" />
+        <CoursePage path="exam" heading='Exam' />
       {/* )} */}
     </>
   );

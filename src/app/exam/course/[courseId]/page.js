@@ -1,11 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useSidebar } from "@/providers/useSidebar";
+import { useWindowSize } from "@/providers/useWindowSize"
 import StudentDataStructure from "@/components/StudentDataStructure";
 import CourseHead from "@/components/CourseHead";
 import { getExamByCourseId } from "@/api/route";
 
 export default function Page({ params }) {
+  const { width } = useWindowSize();
   const { isSidebarOpen } = useSidebar();
   const [exam, setExam] = useState([]);
   const courseId = params.courseId;
@@ -31,15 +33,17 @@ export default function Page({ params }) {
   }, []);
   return (
     <div
-      className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-20 font-inter ${
-        isSidebarOpen ? "translate-x-64 pl-20 " : "translate-x-0 pl-10 pr-4"
-      }`}
-      style={{
-        // paddingBottom: "20px",
-        width: isSidebarOpen ? "84%" : "100%",
-      }}
+    className={`flex-1 transition-transform pt-[90px] space-y-4 max-md:pt-32 font-inter ${
+      isSidebarOpen
+        ? "translate-x-64 pl-16 "
+        : "translate-x-0 pl-10 pr-10"
+    }`}
+    style={{
+      // paddingBottom: "20px",
+      width: isSidebarOpen ? "86%" : "100%",
+    }}
     >
-      <div className=" bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4">
+      <div className=" bg-surface-100 overflow-y-auto h-full mx-4 my-3 px-6 py-8 rounded-xl p-4">
         <CourseHead
           id={courseId}
           rating="Top Instructor"
@@ -97,7 +101,7 @@ export default function Page({ params }) {
         <StudentDataStructure
           quizzes={exam}
           key={exam.id}
-          field={"Exam"}
+          field="exam"
           assessment="Exam"
         />
       </div>

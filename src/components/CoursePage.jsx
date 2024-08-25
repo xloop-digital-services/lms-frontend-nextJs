@@ -11,7 +11,7 @@ import {
 import { useAuth } from "@/providers/AuthContext";
 import { CircularProgress } from "@mui/material";
 
-export default function CoursePage({ path, progress }) {
+export default function CoursePage({ path, progress, heading }) {
   const { isSidebarOpen } = useSidebar();
   const { userData } = useAuth();
   const isStudent = userData?.Group === "student";
@@ -30,7 +30,7 @@ export default function CoursePage({ path, progress }) {
           setCourses(response.data?.data);
           setLoader(false);
           // setCourseId(response?.data?.id)
-          // console.log(response?.data?.data?.[0]?.id)
+          console.log(response?.data)
         } else {
           console.error("Failed to fetch user, status:", response.status);
         }
@@ -49,20 +49,25 @@ export default function CoursePage({ path, progress }) {
   return (
     <>
       <div
-        className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-32 font-inter ${
-          isSidebarOpen ? "translate-x-64 pl-20 " : "translate-x-0 pl-10 pr-4"
+        className={`flex-1 transition-transform pt-[97px] space-y-4 max-md:pt-32 font-inter ${
+          isSidebarOpen
+            ? "translate-x-64 pl-20 "
+            : "translate-x-0 pl-10 pr-10"
         }`}
         style={{
-          width: isSidebarOpen ? "84%" : "100%",
+          // paddingBottom: "20px",
+          width: isSidebarOpen ? "85%" : "100%",
         }}
       >
         {loader ? (
-          <div className="flex h-screen justify-center items-center">
+          <div className="flex h-screen justify-center items-center ">
             <CircularProgress />
           </div>
         ) : (
           <>
-            <h2 className="text-xl font-bold">Courses</h2>
+          <div className="bg-surface-100 p-8 rounded-xl ">
+            <h2 className="text-xl font-bold pb-3">{heading}</h2>
+            <div className="flex flex-col w-full gap-4">
             {courses?.map((course) => {
               return (
                 <MainCourseCard
@@ -76,6 +81,8 @@ export default function CoursePage({ path, progress }) {
                 />
               );
             })}
+            </div>
+        </div>
           </>
         )}
       </div>

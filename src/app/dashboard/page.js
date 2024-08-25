@@ -89,7 +89,7 @@ export default function Page() {
           }`}
           style={{
             // paddingBottom: "20px",
-            width: isSidebarOpen ? "84%" : "100%",
+            width: isSidebarOpen ? "85%" : "100%",
           }}
         >
           <div className="flex w-[100%] max-md:flex-col">

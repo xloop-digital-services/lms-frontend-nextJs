@@ -293,7 +293,7 @@ export default function Page() {
                 <input
                   id="contact"
                   name="contact"
-                  placeholder="XXXX - XXXXXXX"
+                  placeholder="XXXX-XXXXXXX"
                   inputMode="numeric"
                   type="tel"
                   pattern="[0-9]{4}-[0-9]{7}"

@@ -15,7 +15,7 @@ export default function Page() {
       ) : ( */}
       <CoursePage
         path="courses"
-
+        heading='Courses'
       />
       {/* )} */}
     </>

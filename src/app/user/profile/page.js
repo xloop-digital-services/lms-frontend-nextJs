@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSidebar } from "@/providers/useSidebar";
 import {
   FaBookOpen,
@@ -31,6 +31,9 @@ function Profile() {
   const [user, setUser] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [loader, setLoader] = useState(true);
+  const formRef = useRef(null);
+  // const registrationID = user?.registration_id
+  const [registrationID, setRegistrationID] = useState('')
 
   useEffect(() => {
     async function fetchUser() {
@@ -46,6 +49,7 @@ function Profile() {
           setContactNumber(userData.contact || "");
           setProgram(userData.program || "");
           setCity(userData.city || "");
+          setRegistrationID(userData.registration_id || "")
         } else {
           console.error("Failed to fetch user, status:", response.status);
         }
@@ -59,14 +63,30 @@ function Profile() {
     setShowPassword(!showPassword);
   };
 
-  const handleEnabledPass = () => setIsDisablePass(false);
+  const handleEnabledPass = () => {
+    setIsDisablePass(false);
+
+    // Scroll to the form element when the modal is opened
+    setTimeout(() => {
+      if (formRef.current) {
+        formRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 0);
+  };
   const handleDisabledPass = () => {
-    setIsDisablePass(true);
-    setPassword("");
-    setConfirmPassword("");
+    // Scroll back to the top of the page
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    // Delay the hiding of the modal to allow the scroll to complete
+    setTimeout(() => {
+      setIsDisablePass(true);
+      setPassword("");
+      setConfirmPassword("");
+    }, 100); // Adjust this timing as needed
   };
 
   const handleEnabled = () => setIsDisable(false);
+
   const handleDisabled = () => {
     setIsDisable(true);
     setFirstName(user?.first_name || "");
@@ -76,6 +96,7 @@ function Profile() {
     setProgram(user?.program || "");
     setCity(user?.city || "");
   };
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -214,6 +235,38 @@ function Profile() {
 
   const getFirstWord = (name) => (name ? name[0] : "");
 
+  const validatePassword = (password) => {
+    // Modify the regex to include the characters you want to allow
+    const passwordRegex = /^[a-zA-Z0-9!@#$%^&*()_+=-]*$/;
+    return passwordRegex.test(password);
+  };
+
+  const handleConfirmChange = (e) => {
+    const { value } = e.target;
+    if (validatePassword(value)) {
+      setConfirmPassword(value);
+    } else {
+      // Handle invalid input case
+      console.log("Invalid characters in password");
+    }
+  };
+
+  const handleChange = (e) => {
+    const { value } = e.target;
+    if (validatePassword(value)) {
+      setPassword(value);
+    } else {
+      // Handle invalid input case
+      console.log("Invalid characters in password");
+    }
+  };
+
+  const formatContactInput = (value) => {
+    const numericValue = value.replace(/[^0-9]/g, "");
+    const formattedValue = numericValue.replace(/(\d{4})(\d{1,7})?/, "$1-$2");
+    return formattedValue.slice(0, 12);
+  };
+
   return (
     <>
       {/* {loader ? (
@@ -232,34 +285,46 @@ function Profile() {
           width: isSidebarOpen ? "83%" : "100%",
         }}
       >
-        <div className="lg:pt-12 pb-8 lg:pl-12 lg:pr-12 rounded-xl bg-surface-100 w-full">
+        <div
+          className={`lg:pt-12 pb-8 lg:pl-12 lg:pr-12 rounded-xl bg-surface-100 w-full h-[85vh] ${
+            !isDisabledPass && "h-full"
+          }`}
+        >
           <div className="flex flex-col lg:flex-row lg:px-8 px-4 lg:h-48 h-50">
             <div className="flex flex-col lg:flex-row w-full justify-center items-center lg:justify-start">
-              <div className="ml-2 mb-1 mt-4 relative block w-48 h-48 rounded-full bg-blue-300 border-0 flex font-extrabold text-5xl text-surface-100 justify-center items-center">
-                {getFirstWord(user?.first_name)}
+              <div className="ml-2 mb-1 mt-4 relative block w-48 h-48 rounded-full bg-blue-300 border-0 ">
+                <p className="flex uppercase font-extrabold h-full text-5xl text-surface-100 justify-center items-center">
+                  {getFirstWord(user?.first_name)}
+                </p>
               </div>
 
               <div className="flex lg:flex-col flex-row lg:w-[50%] w-[100%] lg:ml-8 lg:justify-center lg:items-center mt-4">
                 <div className="flex flex-col w-full mb-8">
-                  <h2 className="font-medium text-2xl">Name</h2>
-                  <p>{`${user?.first_name} ${user?.last_name}`}</p>
+                  <h2 className=" text-sm text-dark-400">Name</h2>
+                  <p className="font-medium text-xl capitalize">{`${firstName} ${lastName}`}</p>
                 </div>
                 <div className="flex flex-col w-full">
-                  <h2 className="font-medium text-xl">Registration ID</h2>
-                  <p className=" uppercase">{user?.registration_id}</p>
+                  <h2 className=" text-sm text-dark-400">Registration ID</h2>
+                  <p className="font-medium text-xl uppercase">
+                    {registrationID}
+                  </p>
                 </div>
               </div>
             </div>
             <div className="flex lg:flex-col flex-row lg:w-[20%] lg:justify-center justify-around gap-4 items-center">
               <button
                 onClick={handleEnabled}
-                className="flex w-full h-14 items-center justify-center rounded-lg bg-blue-300 py-1.5 text-sm font-semibold leading-6 text-base text-surface-100 shadow-sm outline-blue-300 focus:outline-blue-300 focus-visible:outline mb-4"
+                className={`${
+                  !isDisabled
+                    ? "bg-blue-200 cursor-not-allowed"
+                    : "bg-blue-300 cursor-pointer"
+                } flex w-full h-14 items-center justify-center rounded-lg py-1.5 font-semibold leading-6 text-base text-surface-100 shadow-sm outline-blue-300 focus:outline-blue-300 focus-visible:outline mb-4`}
               >
                 Edit profile
               </button>
               <button
                 onClick={handleEnabledPass}
-                className="flex w-full h-14 items-center justify-center rounded-lg bg-blue-300 py-1.5 text-sm font-semibold leading-6 text-base text-surface-100 shadow-sm outline-blue-300 focus:outline-blue-300 focus-visible:outline mb-4"
+                className="flex w-full h-14 items-center justify-center rounded-lg bg-blue-300 py-1.5 font-semibold leading-6 text-base text-surface-100 shadow-sm outline-blue-300 focus:outline-blue-300 focus-visible:outline mb-4"
               >
                 Change Password
               </button>
@@ -283,7 +348,9 @@ function Profile() {
                         name="first-name"
                         type="text"
                         placeholder="Enter your first name"
-                        className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 text-blue-500 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 pl-10 sm:text-sm sm:leading-6"
+                        className={`${
+                          !isDisabled && " ring-blue-300 ring-2"
+                        } block w-full capitalize outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 text-blue-500 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 pl-10 sm:text-sm sm:leading-6`}
                       />
                     </div>
                   </div>
@@ -302,7 +369,9 @@ function Profile() {
                       name="last-name"
                       type="text"
                       placeholder="Enter your last name"
-                      className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 text-blue-500 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 pl-10 sm:text-sm sm:leading-6"
+                      className={`${
+                        !isDisabled && " ring-blue-300 ring-2"
+                      } block w-full capitalize outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 text-blue-500 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 pl-10 sm:text-sm sm:leading-6`}
                     />
                   </div>
                 </div>
@@ -320,23 +389,32 @@ function Profile() {
                       name="email"
                       type="email"
                       placeholder="Enter your email address"
-                      className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 text-blue-500 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 pl-10 sm:text-sm sm:leading-6"
+                      className={`${
+                        !isDisabled && " text-dark-400"
+                      } block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 text-blue-500 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 pl-10 sm:text-sm sm:leading-6`}
                     />
                   </div>
                 </div>
                 <div className="lg:w-[50%] md:w-[50%]">
                   <label htmlFor="contact">Contact Number</label>
                   <div className="relative flex items-center mt-2">
-                    <FaPhoneAlt className="absolute left-3 text-dark-600 mt-2 " />
+                    <FaPhoneAlt className="absolute left-3 text-dark-600 mt-2" />
                     <input
                       id="contact"
                       disabled={isDisabled}
                       value={contactNumber}
-                      onChange={(e) => setContactNumber(e.target.value)}
-                      name="contact"
+                      placeholder="XXXX-XXXXXXX"
+                      inputMode="numeric"
                       type="tel"
-                      placeholder="Enter your contact number"
-                      className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 text-blue-500 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 pl-10 sm:text-sm sm:leading-6"
+                      pattern="[0-9]{4}-[0-9]{7}"
+                      name="contact"
+                      onChange={(e) => setContactNumber(e.target.value)}
+                      className={`${
+                        !isDisabled && "ring-blue-300 ring-2"
+                      } block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 text-blue-500 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 pl-10 sm:text-sm sm:leading-6`}
+                      onInput={(e) => {
+                        e.target.value = formatContactInput(e.target.value);
+                      }}
                     />
                   </div>
                 </div>
@@ -353,7 +431,9 @@ function Profile() {
                       onChange={(e) => setProgram(e.target.value)}
                       name="program"
                       type="text"
-                      className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 text-blue-500 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 pl-10 sm:text-sm sm:leading-6"
+                      className={`${
+                        !isDisabled && " text-dark-400"
+                      } block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 text-blue-500 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 pl-10 sm:text-sm sm:leading-6`}
                     />
                   </div>
                 </div>
@@ -369,30 +449,34 @@ function Profile() {
                       name="city"
                       type="text"
                       placeholder="Enter your city"
-                      className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 text-blue-500 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 pl-10 sm:text-sm sm:leading-6"
+                      className={`${
+                        !isDisabled && " text-dark-400"
+                      } block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 text-blue-500 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 pl-10 sm:text-sm sm:leading-6`}
                     />
                   </div>
                 </div>
               </div>
-
-              <div className="flex justify-end">
-                <button
-                  type="button"
-                  className="bg-surface-100 rounded-md px-4 py-2 mr-2 border border-blue-300 text-blue-300"
-                  onClick={handleDisabled}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="bg-blue-300 text-surface-100 rounded-md px-4 py-2 border border-blue-300 "
-                >
-                  Save Changes
-                </button>
-              </div>
+              {!isDisabled && (
+                <div className="flex justify-end">
+                  <button
+                    type="button"
+                    className="bg-surface-100 rounded-md px-4 py-2 mr-2 border border-blue-300 text-blue-300"
+                    onClick={handleDisabled}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="bg-blue-300 text-surface-100 rounded-md px-4 py-2 border border-blue-300 "
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              )}
             </form>
             {!isDisabledPass && (
               <form
+                ref={formRef}
                 onSubmit={handlePasswordSubmit}
                 className="space-y-6 mt-8 pt-8 pb-0 rounded-xl bg-gray-100"
               >
@@ -435,7 +519,7 @@ function Profile() {
                       <input
                         id="password"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={handleChange}
                         name="password"
                         type={showPassword ? "text" : "password"}
                         placeholder="Enter your new password"
@@ -460,8 +544,8 @@ function Profile() {
                       <input
                         id="confirm-password"
                         value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        name="confirm-password"
+                        onChange={handleConfirmChange}
+                        name="password"
                         type={showPassword ? "text" : "password"}
                         placeholder="Confirm your new password"
                         className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 text-blue-500 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 pl-10 sm:text-sm sm:leading-6"

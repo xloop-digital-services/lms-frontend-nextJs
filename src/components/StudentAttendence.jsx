@@ -1,7 +1,8 @@
 import React from "react";
 import { formatDateTime } from "./StudentDataStructure";
+import { CircularProgress } from "@mui/material";
 
-const StudentAttendence = ({ attendance }) => {
+const StudentAttendence = ({ attendance, loader }) => {
   return (
     <div className="flex flex-col ">
       <div className="-m-1.5 overflow-x-auto">
@@ -28,69 +29,67 @@ const StudentAttendence = ({ attendance }) => {
                     </th> */}
                     <th
                       scope="col"
-                      className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[30%]"
+                      className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[20%]"
                     >
                       Module
                     </th>
                     <th
                       scope="col"
-                      className="px-4 pr-12 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[30%]"
+                      className="px-4  py-4 text-center text-xs font-medium text-gray-500 uppercase w-[20%]"
                     >
                       Day
                     </th>
                     <th
                       scope="col"
-                      className="px-4 pr-12 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[30%]"
+                      className="px-4  py-4 text-center text-xs font-medium text-gray-500 uppercase w-[20%]"
                     >
                       Date
                     </th>
                     <th
                       scope="col"
-                      className="px-4 pr-[82px] py-4 text-center text-xs font-medium text-gray-500 uppercase w-[30%]"
+                      className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[20%]"
                     >
                       Mark
                     </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-dark-200">
-                  {attendance && attendance.length > 0 ? (
-                    attendance?.map((att, index) => {
-                      return (
-                        <tr key={index}>
-                          {/* <td className="py-3 ps-4">
-                       <div className="flex items-center h-5">
-                        <input id="hs-table-pagination-checkbox-1" type="checkbox" className="border-gray-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:Present:bg-blue-500 dark:Checked:border-blue-500 dark:focus:ring-offset-gray-800" />
-                        <label for="hs-table-pagination-checkbox-1" className="sr-only">Checkbox</label>
-                      </div> 
-                    </td> */}
-                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm font-medium text-gray-800">
-                            {`Session ${att.session}`}
-                          </td>
-                          <td className="px-6 py-4 text-center text-wrap whitespace-nowrap text-sm text-gray-800">
-                            {att.day}
-                          </td>
-                          <td className="px-6 py-4 text-center text-wrap whitespace-nowrap text-sm text-gray-800">
-                            {formatDateTime(att.date)}
-                          </td>
-                          <td className="px-12 py-4 whitespace-nowrap flex w-full text-center justify-center items-center text-sm text-surface-100">
-                            <p
-                              className={`w-[110px] text-center px-4 py-2 text-[12px] rounded-lg ${
-                                att?.status === "Present"
-                                  ? "bg-mix-300 w-110px]"
-                                  : att?.status === "Late"
-                                  ? "bg-mix-500 text-[#fff] w-[110px]"
-                                  : "bg-mix-200 w-110px]"
-                              }`}
-                            >
-                              {att.status}
-                            </p>
-                          </td>
-                        </tr>
-                      );
-                    })
+                  {loader ? (
+                    <tr>
+                      <td colSpan="4" className="text-center py-4">
+                        <CircularProgress />
+                      </td>
+                    </tr>
+                  ) : attendance && attendance.length > 0 ? (
+                    attendance.map((att, index) => (
+                      <tr key={index}>
+                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm font-medium text-gray-800">
+                          {`Session ${att.session}`}
+                        </td>
+                        <td className="px-6 py-4 text-center text-wrap whitespace-nowrap text-sm text-gray-800">
+                          {att.day}
+                        </td>
+                        <td className="px-6 py-4 text-center text-wrap whitespace-nowrap text-sm text-gray-800">
+                          {formatDateTime(att.date)}
+                        </td>
+                        <td className="px-12 py-2 whitespace-nowrap flex w-full text-center justify-center items-center text-sm text-surface-100">
+                          <p
+                            className={`w-[110px] text-center px-4 py-2 text-[12px] rounded-lg ${
+                              att.status === "Present"
+                                ? "bg-mix-300 w-110px]"
+                                : att.status === "Late"
+                                ? "bg-mix-500 text-[#fff] w-[110px]"
+                                : "bg-mix-200 w-110px]"
+                            }`}
+                          >
+                            {att.status}
+                          </p>
+                        </td>
+                      </tr>
+                    ))
                   ) : (
                     <tr>
-                      <td colSpan="3" className="text-center py-4">
+                      <td colSpan="4" className="text-center py-4">
                         No data found
                       </td>
                     </tr>

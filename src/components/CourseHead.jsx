@@ -33,16 +33,16 @@ const CourseHead = ({ rating, instructorName, id, progress, haveStatus }) => {
           key={courseData.id}
           className="flex justify-between max-md:flex-col max-md:items-center"
         >
-          <h2 className="text-xl font-bold">{courseData.name}</h2>
+          <h2 className="text-xl font-bold sm:text-start text-center pb-3">{courseData.name}</h2>
           <p className="text-blue-300 font-bold ">
             Cr. hrs: {courseData.credit_hours} hours
           </p>
         </div>
 
-        <div className="flex justify-between mb-4 max-md:flex-col max-md:justify-center max-md:items-center">
-          <div className="flex-col items-center">
+        <div className="flex justify-between  max-md:flex-col max-md:justify-center max-md:items-center">
+          <div className="flex-col items-center w-[75%]">
             {/* <div> */}
-              <p className="mt-2 mb-2 text-dark-500 max-md:text-center">
+              <p className="mt-2 mb-2 text-dark-500 max-md:text-center ">
                 {courseData.short_description}
               </p>
             {/* </div> */}
@@ -66,9 +66,13 @@ const CourseHead = ({ rating, instructorName, id, progress, haveStatus }) => {
         </div>
       </div>
 
-      {progress ? <Progress progress={progress} /> : null}
+      {progress ? 
+      <div className="py-4">
+        <Progress progress={progress} /> 
+      </div>
+      : null}
 
-      <hr className="my-8 text-dark-200"></hr>
+      <hr className="my-5 text-dark-200"></hr>
     </div>
   );
 };

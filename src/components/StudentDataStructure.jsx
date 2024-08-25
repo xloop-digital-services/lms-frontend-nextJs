@@ -50,6 +50,28 @@ const StudentDataStructure = ({
     setUploadFile(!uploadFile);
   };
 
+  const handleDownload = async (url) => {
+    console.log(url)
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/octet-stream",
+        },
+      });
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.download = url.split("/").pop(); // Get the file name from the URL
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error downloading the file:", error);
+    }
+  };
+
   return (
     <div>
       <div className="flex flex-col ">
@@ -71,40 +93,40 @@ const StudentDataStructure = ({
                     <tr>
                       <th
                         scope="col"
-                        className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[23%]"
+                        className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[25%]"
                       >
                         {assessment}
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[23%]"
+                        className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
                       >
                         Status
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[23%]"
+                        className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
                       >
                         Created Date
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[23%]"
+                        className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
                       >
                         Due Date
                       </th>
 
                       <th
                         scope="col"
-                        className="px-6 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[23%]"
+                        className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
                       >
-                        Action
+                        Submission Date
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[23%]"
+                        className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[12%]"
                       >
-                        Submission Date
+                        Action
                       </th>
                     </tr>
                   </thead>
@@ -115,9 +137,18 @@ const StudentDataStructure = ({
                         return (
                           <tr key={index}>
                             <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800 ">
-                              {quiz.question || quiz.title}
+                              <a
+                                href='#'
+                                className="cursor-pointer flex justify-center items-center text-black hover:text-[#2563eb] hover:underline" 
+                                title="download"
+                                onClick={(e) => {
+                                  e.preventDefault(); // Prevent the default anchor behavior
+                                  handleDownload(quiz.content); // Handle the download
+                                }}                              >
+                                {quiz.question || quiz.title}
+                              </a>
                             </td>
-                            <td className="px-6 py-2 flex justify-center items-center  text-center whitespace-nowrap text-sm text-surface-100 ">
+                            <td className="px-12 py-2  whitespace-nowrap text-sm text-surface-100">
                               <p
                                 className={`w-[110px] text-center px-4 py-2 text-[12px] rounded-lg ${
                                   quiz?.submission_status === "Submitted"
@@ -136,63 +167,64 @@ const StudentDataStructure = ({
                             <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
                               {formatDateTime(quiz?.due_date)}
                             </td>
-
-                            {}
-                            <td className="px-5 py-4 flex justify-center items-center text-center whitespace-nowrap text-sm text-[#03A1D8] font-medium space-x-4">
-                              {/* <div>
-                                  <MdRemoveRedEye size={23} />{" "}
-                                </div> */}
-                              <div>
-                                <LuUpload
-                                  size={23}
-                                  onClick={
-                                    quiz?.status !== "Submitted"
-                                      ? () => handleFileUpload(quiz?.id)
-                                      : undefined
-                                  }
-                                  className={`${
-                                    quiz?.status === "Submitted"
-                                      ? "cursor-not-allowed opacity-50"
-                                      : "cursor-pointer hover:opacity-80"
-                                  }`}
-                                  title="upload"
-                                  style={{
-                                    pointerEvents:
+                            <td className="px-6 py-4  text-center whitespace-nowrap text-sm text-gray-800">
+                              {quiz?.submitted_at
+                                ? formatDateTime(quiz?.submitted_at)
+                                : "-"}
+                            </td>
+                            <td className="px-12 py-3 whitespace-nowrap text-[#03A1D8]  ">
+                              <div className="flex items-center justify-center gap-4 ">
+                                <div>
+                                  <MdRemoveRedEye size={23} />
+                                </div>
+                                <div>
+                                  <LuUpload
+                                    size={20}
+                                    onClick={
+                                      quiz?.status !== "Submitted"
+                                        ? () => handleFileUpload(quiz?.id)
+                                        : undefined
+                                    }
+                                    className={`${
                                       quiz?.status === "Submitted"
-                                        ? "none"
-                                        : "auto",
-                                  }}
-                                />
-                              </div>
-                              <div
+                                        ? "cursor-not-allowed opacity-50"
+                                        : "cursor-pointer hover:opacity-80"
+                                    }`}
+                                    title="upload"
+                                    style={{
+                                      pointerEvents:
+                                        quiz?.status === "Submitted"
+                                          ? "none"
+                                          : "auto",
+                                    }}
+                                  />
+                                </div>
+                                {/* <div
                               // className="flex items-center gap-2 group "
                               // key={file.id}
                               >
                                 <a
                                   href={quiz.content}
-                                  className="group-hover:cursor-pointer flex justify-center items-center"
+                                  className="cursor-pointer flex justify-center items-center"
                                   download
                                 >
                                   <FaFileDownload
                                     size={20}
                                     fill="#03A1D8"
-                                    className="group-hover:cursor-pointer"
+                                    className="hover:cursor-pointer"
+                                    title="download"
                                   />
                                   <button
                                     onClick={() => downloadFile(quiz.content)}
                                     download
-                                    className="flex items-center text-blue-300 group-hover:cursor-pointer"
+                                    className="flex items-center text-blue-300 hover:cursor-pointer"
                                   >
-                                    {/* {quiz.content.split("/").pop()} */}
+                                    {/* {quiz.content.split("/").pop()} 
                                   </button>
                                 </a>
-                                {/* <p>{downloadStatus}</p> */}
+                                {/* <p>{downloadStatus}</p> 
+                              </div> */}
                               </div>
-                            </td>
-                            <td className="px-6 py-4  text-center whitespace-nowrap text-sm text-gray-800">
-                              {quiz?.submitted_at
-                                ? formatDateTime(quiz?.submitted_at)
-                                : "-"}
                             </td>
                           </tr>
                         );
@@ -214,6 +246,7 @@ const StudentDataStructure = ({
       {uploadFile && (
         <UplaodingFile
           field={field}
+          heading={assessment}
           setUploadFile={setUploadFile}
           assignmentID={iD}
         />

@@ -25,7 +25,7 @@ function SideBar() {
   const { logOutUser} = useAuth();
   const pathname = usePathname();
   const isLinkActive = (path) => {
-    return pathname === path;
+    return pathname === path || pathname.includes(path);;
   };
 
   return (
@@ -164,7 +164,7 @@ function SideBar() {
                 <Link
                   href="/auth/login"
                   onClick={logOutUser}
-                  className={`p-4 flex gap-4 mt-2 border rounded-xl border-dark-300  hover:text-blue-300 ${
+                  className={`p-4 flex gap-4 mt-2 border rounded-xl border-dark-300 hover:text-blue-300 ${
                     isLinkActive("/auth/login")
                       ? "text-blue-300 bg-blue-600"
                       : "text-dark-600"

@@ -8,6 +8,32 @@ body{
     background: #F4F6FA;
 }
 
+/* css for the subpages with respect to siddebar */
+.container {
+  width: 100%;
+  flex: 1;
+  transition: transform 0.3s ease;
+  padding-top: 90px;
+  font-family: 'Inter', sans-serif;
+}
+
+.container.max-md {
+  padding-top: 32px;
+}
+
+.container.sidebar-open {
+  transform: translateX(19rem); /* 64px equivalent in rem */
+  padding-left: 15px; /* Adjust as needed */
+  width: 83%;
+}
+
+.container.sidebar-closed {
+  transform: translateX(0);
+  padding-left: 10px;
+  padding-right: 10px;
+  width: 100%;
+}
+
 
 .font-exo{
     font-family: "Exo", sans-serif;
@@ -44,3 +70,21 @@ body{
     --fc-button-hover-bg-color: #03A1D8;
     --fc-button-hover-border-color: #ffff;
   }
+
+  
+/* transition for grading */
+  .transition-container {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+  }
+  
+  .max-height-full {
+    max-height: 1000px; /* Arbitrary large value to allow for full expansion */
+  }
+  
+  .max-height-0 {
+    max-height: 0;
+  }
+
+

@@ -7,13 +7,15 @@ import {
   uploadQuiz,
 } from "@/api/route";
 import { toast } from "react-toastify";
+import { CircularProgress } from "@mui/material";
 
-const UploadingFile = ({ field, setUploadFile, assignmentID }) => {
+const UploadingFile = ({ field, heading, setUploadFile, assignmentID }) => {
   const [comment, setComment] = useState("");
   const [fileUploaded, setFileUploaded] = useState(null);
   const [file, setFile] = useState(null);
   const [error, setError] = useState("");
   const [isDragOver, setIsDragOver] = useState(false);
+  const [loader, setLoader] = useState(false);
   // console.log(assignmentID);
   const supportedFormats = [
     ".pdf",
@@ -60,104 +62,57 @@ const UploadingFile = ({ field, setUploadFile, assignmentID }) => {
     setIsDragOver(false);
   };
 
-  const handleUploadQuiz = async () => {
-    if (file) {
-      const formData = new FormData();
-      formData.append("quiz_submitted_file", file);
-      formData.append("comments", comment);
-      formData.append("quiz", assignmentID);
-      try {
-        const response = await uploadQuiz(formData);
-        console.log("file uploaded", response);
-        if (response.status === 201) {
-          toast.success("Quiz has been submitted");
-          setComment("");
-          setUploadFile(false);
-        }
-      } catch (error) {
-        toast.error(error.response.data.message);
-        console.log("Error occurred:", error);
+  const handleUpload = async (type) => {
+    setLoader(true);
+    console.log('field is', type)
+    if (file === null) {
+      toast.warn('File is not selected');
+      setLoader(false);
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append(`${type}_submitted_file`, file);
+    formData.append("comments", comment);
+    formData.append(type, assignmentID);
+  
+    try {
+      const uploadFunctionMap = {
+        quiz: uploadQuiz,
+        exam: uploadExam,
+        project: uploadProject,
+        assignment: uploadAssignment,
+      };
+  
+      const uploadFunction = uploadFunctionMap[type];
+  
+      if (!uploadFunction) {
+        throw new Error('Invalid upload type');
       }
+  
+      const response = await uploadFunction(formData);
+      console.log("file uploaded", response);
+  
+      if (response.status === 201) {
+        toast.success(`${type} has been submitted`);
+        setComment("");
+        setLoader(false);
+        setUploadFile(false);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'An error occurred');
+      console.log("Error occurred:", error);
+      setLoader(false);
+      setUploadFile(false);
     }
   };
-
-  const handleUploadExam = async () => {
-    if (file) {
-      const formData = new FormData();
-      formData.append("exam_submitted_file", file);
-      formData.append("comments", comment);
-      formData.append("exam", assignmentID);
-      try {
-        const response = await uploadExam(formData);
-        console.log("file uploaded", response);
-        if (response.status === 201) {
-          toast.success("Exam has been submitted");
-          setComment("");
-          setUploadFile(false);
-        }
-      } catch (error) {
-        toast.error(error.response.data.message);
-        console.log("Error occurred:", error);
-      }
-    }
-  };
-
-  const handleUploadProject = async () => {
-    if (file) {
-      const formData = new FormData();
-      formData.append("project_submitted_file", file);
-      formData.append("comments", comment);
-      formData.append("project", assignmentID);
-      try {
-        const response = await uploadProject(formData);
-        console.log("file uploaded", response);
-        if (response.status === 201) {
-          toast.success("Project has been submitted");
-          setComment("");
-          setUploadFile(false);
-        }
-      } catch (error) {
-        toast.error(error.response.data.message);
-        console.log("Error occurred:", error);
-      }
-    }
-  };
-
-  const handleUploadAssignment = async () => {
-    if (file) {
-      const formData = new FormData();
-      formData.append("submitted_file", file);
-      formData.append("comments", comment);
-      formData.append("assignment", assignmentID);
-      try {
-        const response = await uploadAssignment(formData);
-        console.log("file uploaded", response);
-        if (response.status === 201) {
-          toast.success("Assignment has been submitted");
-          setComment("");
-          setUploadFile(false);
-        }
-      } catch (error) {
-        toast.error(error.response.data.message);
-        console.log("Error occurred:", error);
-      }
-    }
-  };
-
+  
   const handleUploadation = () => {
-    if (field === "Quiz") {
-      handleUploadQuiz();
-    }
-    if (field === "Assignment") {
-      handleUploadAssignment();
-    }
-    if (field === "Project") {
-      handleUploadProject();
-    }
-    if (field === "Exam") {
-      handleUploadExam();
-    }
+    handleUpload(field);
   };
+  
+
+  
 
   return (
     <div className="backDropOverlay h-screen flex justify-center items-center">
@@ -173,7 +128,7 @@ const UploadingFile = ({ field, setUploadFile, assignmentID }) => {
               }}
               className="text-start  px-2 py-[10px]"
             >
-              Upload {field}
+              Upload {heading}
             </h1>
             <button className="px-2" onClick={() => setUploadFile(false)}>
               <IoClose size={21} />
@@ -243,7 +198,13 @@ const UploadingFile = ({ field, setUploadFile, assignmentID }) => {
                 onClick={handleUploadation}
                 className="w-fit flex justify-center py-3 px-12 text-sm font-medium rounded-lg text-dark-100 bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
               >
-                Upload
+                {loader ? (
+                  <span>
+                    <CircularProgress size={20}/>
+                  </span>
+                ) : (
+                  <span> Upload </span>
+                )}
               </button>
             </div>
           </div>

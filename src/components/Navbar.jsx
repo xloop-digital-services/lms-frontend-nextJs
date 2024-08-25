@@ -100,7 +100,7 @@ export default function Navbar() {
       <nav className="fixed w-screen bg-surface-100 z-10">
         <div className="mx-auto px-2 sm:px-6 lg:px-8">
           <div className="relative flex h-20 items-center justify-between">
-            <div className="flex justify start ml-4">
+            <div className="hidden sm:flex justify start ml-4">
               <Link href="/dashboard" passHref>
                 <Image
                   src={logo}
@@ -116,7 +116,7 @@ export default function Navbar() {
             {loader ? (
               <CircularProgress />
             ) : (
-              <div className="flex justify-center items-center">
+              <div className="flex justify-end items-center w-full">
                 <div className="absolute inset-y-0 right-0 flex justify-center items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                   <div className="flex items-center" ref={dropdownRef}>
                     {/* <button
