@@ -13,7 +13,7 @@ const DevelopmentTable = ({ selectedOption, userByProgramID, loading }) => {
     setModal(!modal);
   };
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col h-full">
       <div className="-m-1.5 overflow-x-auto">
         <div className="p-1.5 min-w-full inline-block align-middle">
           <div className="border border-dark-300 rounded-lg divide-y divide-dark-200 dark:border-dark-700 dark:divide-dark-700">
@@ -47,43 +47,43 @@ const DevelopmentTable = ({ selectedOption, userByProgramID, loading }) => {
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-sm text-gray-500 uppercase w-[18%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
                     >
                       {selectedOption} Name
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-sm text-gray-500 uppercase w-[14%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[14%]"
                     >
                       Age
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-sm text-gray-500 uppercase w-[14%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[14%]"
                     >
                       City
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-sm text-gray-500 uppercase w-[14%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[14%]"
                     >
                       Area
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-sm text-gray-500 uppercase w-[14%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[14%]"
                     >
                       Education
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-sm text-gray-500 uppercase w-[16%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[16%]"
                     >
                       {selectedOption} Interest
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-sm text-gray-500 uppercase w-[15%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
                     >
                       Action
                     </th>
@@ -168,7 +168,13 @@ const DevelopmentTable = ({ selectedOption, userByProgramID, loading }) => {
                           </div>
                           {modal && <UserModal 
                           setModal={setModal}
-                          
+                          modal={modal}
+                          firstName={user?.first_name}
+                          lastName={user?.last_name}
+                          city={user?.city}
+                          email={user?.email}
+                          contact={user?.contact}
+                          status={user?.application_status}
                           />}
                         </td>
                       </tr>

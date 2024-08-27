@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import SessionsTable from "@/components/SessionsTable";
-import SessionCreationModal from "@/components/SessionCreationModal";
+import SessionCreationModal from "@/components/Modal/SessionCreationModal";
 import { useSidebar } from "@/providers/useSidebar";
 
 export default function Page() {

@@ -123,7 +123,7 @@ export default function Page() {
               )}
             </div> */}
             <div>
-              <button className="text-[#fff] bg-[#03A1D8] p-4 rounded-lg hover:cursor-pointer" onClick={handleBatchCreate}>
+              <button className="text-[#fff] bg-[#03A1D8] p-4 md:px-8 rounded-lg hover:cursor-pointer" onClick={handleBatchCreate}>
                 Create a new batch
               </button>
             </div>
