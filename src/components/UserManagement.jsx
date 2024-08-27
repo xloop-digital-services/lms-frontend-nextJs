@@ -1,27 +1,58 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { useSidebar } from "@/providers/useSidebar";
+import DevelopmentTable from "./DevelopmentTable";
+import { getUserByProgramID } from "@/api/route";
 
-const UserManagement = ({heading, table}) => {
+const UserManagement = ({heading, program, table}) => {
   const { isSidebarOpen } = useSidebar();
-  const [selectedOption, setSelectedOption] = useState("Student");
+  const [selectedOption, setSelectedOption] = useState("student");
   const [isOpen, setIsOpen] = useState(false);
   const [openSection, setOpenSection] = useState(null);
+  const [programID, setPorgramID] = useState(null)
+  const [userByProgramID, setUserByProgramID] = useState([])
+  const [loading, setLoading] = useState(false)
 
+  useEffect(() => {
+    if (programID) {
+      const fetchUsers = async () => {
+        setLoading(true)
+        try {
+          const response = await getUserByProgramID(programID, selectedOption);
+          if (response.data?.status_code === 200) {
+            setUserByProgramID(response.data?.data || []);
+          } else if (response.data?.status_code === 404) {
+            console.log('No users found for this program');
+          }
+        } catch (error) {
+          console.error('Error fetching users:', error);
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      fetchUsers();
+    }
+  }, [programID, selectedOption]);
+  
+
+  
+  const handleToggleSection = (section,id) => {
+    setUserByProgramID([])
+    setPorgramID(id)
+    setOpenSection(openSection === section ? null : section);
+   
+  };
+  
   const toggleOpen = () => {
     setIsOpen(!isOpen);
   };
-
-  const handleToggleSection = (section) => {
-    setOpenSection(openSection === section ? null : section);
-  };
-
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
     setIsOpen(false);
   };
 
-  const options = ["Student", "Instructor"];
+  const options = ["student", "instructor"];
 
   return (
     <div
@@ -29,10 +60,11 @@ const UserManagement = ({heading, table}) => {
         isSidebarOpen ? "translate-x-64 pl-20 " : "translate-x-0 pl-10 pr-4"
       }`}
       style={{
+        paddingBottom: '24px',
         width: isSidebarOpen ? "84%" : "100%",
       }}
     >
-        <div className="bg-surface-100 p-6 rounded-xl h-[85vh] space-y-4">
+        <div className="bg-surface-100 p-6 rounded-xl h-full space-y-4">
       <div>
         <p className="text-xl font-bold">{heading}</p>
       </div>
@@ -72,133 +104,44 @@ const UserManagement = ({heading, table}) => {
           )}
         </div>
       </div>
-      {selectedOption === "Student" ? (
         <div className="my-5 space-y-3">
-          <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
+          {
+            program.map((program) => (
+          <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col " key={program.id}>
             <div
               className=" flex justify-between items-center "
-              onClick={() => handleToggleSection("UI UX Design")}
+              onClick={() => handleToggleSection(program.name, program.id)}
             >
-              <p className="text-[17px] font-semibold font-exo">UI UX Design</p>
+              <p className="text-[17px] font-semibold font-exo">{program.name}</p>
               <span className="">
                 <IoIosArrowDown />
               </span>
             </div>
             <div
               className={`transition-container ${
-                openSection === "UI UX Design"
+                openSection === program.name
                   ? "max-height-full"
                   : "max-height-0"
               }`}
             >
-              {openSection === "UI UX Design" && (
+              {openSection === program.name && (
                 <div className="mt-2">
-                  {/* <StudentMarksTable field={openSection} /> */}
+                 {<DevelopmentTable 
+                 loading={loading}
+                 selectedOption={selectedOption}
+                 userByProgramID={userByProgramID}
+                  />}
                 </div>
               )}
             </div>
           </div>
 
-          <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
-            <div
-              className=" flex justify-between items-center "
-              onClick={() => handleToggleSection("Assignment")}
-            >
-              <p className="text-[17px] font-semibold font-exo">Assignment</p>
-              <span className="">
-                <IoIosArrowDown />
-              </span>
-            </div>
-            <div
-              className={`transition-container ${
-                openSection === "Assignment"
-                  ? "max-height-full"
-                  : "max-height-0"
-              }`}
-            >
-              {openSection === "Assignment" && (
-                <div className="mt-2">
-                  {/* <StudentMarksTable field={openSection} /> */}
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
-            <div
-              className=" flex justify-between items-center "
-              onClick={() => handleToggleSection("Project")}
-            >
-              <p className="text-[17px] font-semibold font-exo">Project</p>
-              <span className="">
-                <IoIosArrowDown />
-              </span>
-            </div>
-            <div
-              className={`transition-container ${
-                openSection === "Project" ? "max-height-full" : "max-height-0"
-              }`}
-            >
-              {openSection === "Project" && (
-                <div className="mt-2">
-                  {/* <StudentMarksTable field={openSection} /> */}
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
-            <div
-              className=" flex justify-between items-center "
-              onClick={() => handleToggleSection("Exam")}
-            >
-              <p className="text-[17px] font-semibold font-exo">Exam</p>
-              <span className="">
-                <IoIosArrowDown />
-              </span>
-            </div>
-            <div
-              className={`transition-container ${
-                openSection === "Exam" ? "max-height-full" : "max-height-0"
-              }`}
-            >
-              {openSection === "Exam" && (
-                <div className="mt-2">
-                  {/* <StudentMarksTable field={openSection} /> */}
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
-            <div
-              className=" flex justify-between items-center "
-              onClick={() => handleToggleSection("Development")}
-            >
-              <p className="text-[17px] font-semibold font-exo">Development</p>
-              <span className="">
-                <IoIosArrowDown />
-              </span>
-            </div>
-            <div
-              className={`transition-container ${
-                openSection === "Development"
-                  ? "max-height-full"
-                  : "max-height-0"
-              }`}
-            >
-              {openSection === "Development" && (
-                <div className="mt-2">
-                 {React.cloneElement(table, { selectedOption })}
-                </div>
-              )}
-            </div>
-          </div>
+            ))
+          }
+         
         </div>
-      ) : (
-        <div>
-          {React.cloneElement(table, { selectedOption })}
-        </div>
-      )}
+
+        
       </div>
     </div>
   );

@@ -33,7 +33,7 @@ export default function Page({ params }) {
       if (response.status === 200) {
         setQuizProgress(response?.data?.data);
         // setLoader(false);
-        console.log(quizProgress);
+        // console.log(quizProgress);
       } else {
         console.error("Failed to fetch user, status:", response.status);
       }

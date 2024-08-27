@@ -320,3 +320,23 @@ export const uploadExam = async (exam) => {
     throw error;
   }
 };
+
+export const getAllPrograms = async () => {
+  try {
+    const response = await axiosInstance.get('/course/programs/')
+
+    return response
+  } catch (error) {
+    throw error
+  }
+}
+
+export const getUserByProgramID = async (programID, selectedOption) =>{
+  try {
+    const response = await axiosInstance.get(`/applications-process/${programID}/?group_name=${selectedOption}`)
+    return response
+    
+  } catch (error) {
+    throw error
+  }
+}
