@@ -7,19 +7,25 @@ import { toast } from "react-toastify";
 import { resetPassword } from "@/api/route";
 import logo from "../../../../public/assets/img/logo.png";
 import Image from "next/image";
+import { CircularProgress } from "@mui/material";
 
 export default function Page() {
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false)
   // const API = process.env.NEXT_PUBLIC_BACKEND_URL;
   // const Token = localStorage.getItem("access-token");
   const Token = Cookies.get("access_token");
   const router = useRouter();
 
   const handleResetPassword = async (event) => {
+    setLoading(true)
+    console.log(email)
     event.preventDefault(); // Prevent the default form submission behavior
+    const formData = new FormData();
+    formData.append('email', email)
     try {
-      const response = await resetPassword(email);
-      if (response.status === 200) {
+      const response = await resetPassword(formData);
+      if (response.data.status_code === 200) {
         toast.success("Email sent successfully", {
           position: "top-right",
           autoClose: 2000,
@@ -33,6 +39,7 @@ export default function Page() {
             router.push("/auth/login");
           },
         });
+        setLoading(false)
       } else {
         toast.error("Wrong Email.", response.data.message, {
           position: "top-right",
@@ -43,10 +50,11 @@ export default function Page() {
           draggable: true,
           progress: undefined,
         });
+        setLoading(false)
       }
     } catch (error) {
       console.error("Error during login:", error);
-      toast.error("An error occurred during login.", {
+      toast.error("An error occurred.", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -55,6 +63,7 @@ export default function Page() {
         draggable: true,
         progress: undefined,
       });
+      setLoading(false)
     }
   };
 
@@ -114,9 +123,9 @@ export default function Page() {
                 <button
                   type="submit"
                   onClick={handleResetPassword}
-                  className="w-full flex justify-center py-3 px-4 text-sm font-medium rounded-lg text-dark-100 bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
+                  className="w-full flex justify-center py-3 px-4 text-sm gap-4 font-medium rounded-lg text-dark-100 bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
                 >
-                  Reset password
+                 {loading && <CircularProgress size={20} style={{color:'white'}} />} Reset password
                 </button>
               </div>
             </form>

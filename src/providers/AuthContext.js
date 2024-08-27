@@ -12,7 +12,7 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [userData, setUserData] = useState(null);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -41,6 +41,7 @@ export function AuthProvider({ children }) {
 
   const logInUser = async (event) => {
     event.preventDefault();
+    setLoading(true)
     try {
       const response = await axios.post(
         `${API}/login/`,
@@ -62,6 +63,7 @@ export function AuthProvider({ children }) {
           draggable: true,
           progress: undefined,
         });
+        setLoading(false)
       } else {
         toast.error("Login failed. Please check your credentials.", {
           position: "top-right",
@@ -72,6 +74,7 @@ export function AuthProvider({ children }) {
           draggable: true,
           progress: undefined,
         });
+        setLoading(false)
       }
     } catch (error) {
       console.error("Error during login:", error);
@@ -84,6 +87,7 @@ export function AuthProvider({ children }) {
         draggable: true,
         progress: undefined,
       });
+      setLoading(false)
     }
   };
 

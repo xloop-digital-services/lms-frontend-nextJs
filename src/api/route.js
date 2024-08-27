@@ -31,6 +31,16 @@ export const resetPassword = async (email) => {
   }
 };
 
+export const setNewPassword = async (data ,u_id, token) => {
+  try {
+    const response = await axiosInstance.post(`/reset-password/${u_id}/${token}/`, data)
+    return response
+    
+  } catch (error) {
+    throw error
+  }
+}
+
 //get user profile api
 export const getUserProfile = async () => {
   try {
