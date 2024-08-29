@@ -331,12 +331,44 @@ export const getAllPrograms = async () => {
   }
 }
 
-export const getUserByProgramID = async (programID, selectedOption) =>{
+// export const getUserByProgramID = async (programID, selectedOption) =>{
+//   try {
+//     const response = await axiosInstance.get(`/applications-process/${programID}/?group_name=${selectedOption}`)
+//     return response
+    
+//   } catch (error) {
+//     throw error
+//   }
+// }
+
+
+export const getStudentByStatus = async (programID, selectedOption, selectedStatus) => {
   try {
-    const response = await axiosInstance.get(`/applications-process/${programID}/?group_name=${selectedOption}`)
-    return response
+    const response = await axiosInstance.get(`/applications-process/${programID}/?group_name=${selectedOption}&status=${selectedStatus}`) 
+    return response;
     
   } catch (error) {
     throw error
   }
 }
+
+export const userSelectionByAdmin = async (id, data) => {
+  try {
+    const response = await axiosInstance.patch(`applications-process/?application_id=${id}`, data)
+    return response;
+
+  } catch (error) {
+    throw error
+  }
+}
+
+export const VerifyEmail = async (data) => {
+  try {
+    const response = await axiosInstance.post('/verify-email/', data)
+    return response;
+    
+  } catch (error) {
+    throw error
+  }
+}
+ 

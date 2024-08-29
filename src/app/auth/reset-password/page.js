@@ -82,7 +82,6 @@ export default function Page() {
               <div className="grid gap-y-5">
                 <div className="space-y-3">
                   <label
-                    for="email"
                     className="block text-sm font-medium leading-5 text-dark-700"
                   >
                     Email address
@@ -97,7 +96,6 @@ export default function Page() {
                       onChange={(e) => setEmail(e.target.value)}
                       className="py-3 px-4 block w-full outline-none border border-dark-200 rounded-md text-sm focus:border-blue-300 focus:ring-[#03A1D8] shadow-sm"
                       required
-                      aria-describedby="email-error"
                     />
                   </div>
                   <p
