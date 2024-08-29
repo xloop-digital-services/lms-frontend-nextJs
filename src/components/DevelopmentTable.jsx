@@ -23,9 +23,9 @@ const DevelopmentTable = ({
     <div className="flex flex-col h-full">
       <div className="-m-1.5 overflow-x-auto">
         <div className="p-1.5 min-w-full inline-block align-middle">
-          <div className="border border-dark-300 rounded-lg divide-y divide-dark-200 dark:border-dark-700 dark:divide-dark-700">
+          <div className="border border-dark-300 rounded-lg divide-y divide-dark-200 ">
             <div className="overflow-hidden">
-              <table className="min-w-full divide-y divide-dark-200 dark:divide-dark-700">
+              <table className="min-w-full divide-y divide-dark-200 ">
                 <thead className="bg-dark-50 dark:bg-dark-700">
                   <tr>
                     <th scope="col" className="py-3 px-4 pe-0">
@@ -33,7 +33,7 @@ const DevelopmentTable = ({
                         <input
                           id="hs-table-pagination-checkbox-all"
                           type="checkbox"
-                          className="border-dark-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-dark-800 dark:border-dark-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-dark-800"
+                          className="border-dark-200 rounded text-blue-600 focus:ring-blue-500 "
                         />
                         <label className="sr-only">Checkbox</label>
                       </div>
@@ -82,7 +82,7 @@ const DevelopmentTable = ({
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-dark-200 dark:divide-dark-700">
+                <tbody className="divide-y divide-dark-200 ">
                   {loading && userByProgramID.length == 0 ? (
                     <tr>
                       <td
@@ -105,7 +105,7 @@ const DevelopmentTable = ({
                             <label className="sr-only">Checkbox</label>
                           </div>
                         </td>
-                        <td className="px-6 whitespace-nowrap text-sm text-gray-800 dark:text-dark-200">
+                        <td className="px-6 whitespace-nowrap text-sm text-gray-800 ">
                           <div className="flex items-center gap-3">
                             <div className="data">
                               <p className="font-normal text-sm text-dark-900 capitalize">
@@ -114,19 +114,19 @@ const DevelopmentTable = ({
                             </div>
                           </div>
                         </td>
-                        <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-dark-200">
-                          {user?.date_of_birth || '-'}
+                        <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 ">
+                          {user?.date_of_birth || "-"}
                         </td>
-                        <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-dark-200">
+                        <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 ">
                           {user?.city}
                         </td>
-                        <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-dark-200">
+                        <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 ">
                           Dastagir
                         </td>
-                        <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-dark-200">
+                        <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 ">
                           16 years
                         </td>
-                        <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-dark-200">
+                        <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 ">
                           <div className="flex gap-2">
                             <p className="border border-dark-200 py-1 px-2 w-fit rounded-lg">
                               Java
