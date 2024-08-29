@@ -172,7 +172,7 @@ function SideBar() {
                   <FaCalendar size={24} />
                   Calendar
                 </Link>
-                <div >
+                <div className={`${!isAdmin && "hidden"}`}>
                   <Link
                     href="/user-management"
                     className={`p-4 flex flex-col gap-4 mt-2 rounded-xl hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
