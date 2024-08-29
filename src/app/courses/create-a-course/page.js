@@ -1,6 +1,7 @@
 "use client";
 import { createCourse, createProgram, getAllCourses } from "@/api/route";
 import CreateField from "@/components/CreateField";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -11,8 +12,8 @@ export default function Page() {
   const [coursesNames, setCoursesNames] = useState("");
   const [about, setAbout] = useState("");
   const [shortDesc, setShortDesc] = useState("");
-  const[chr, setChr] = useState('');
-
+  const [chr, setChr] = useState("");
+  const router = useRouter();
   const [inputCourses, setInputCourses] = useState([]);
 
   // async function fetchAllSkills() {
@@ -34,26 +35,19 @@ export default function Page() {
       short_description: shortDesc,
       about: about,
       skills: inputCourses,
-      credit_hours: chr
+      credit_hours: chr,
     };
     try {
       const response = await createCourse(courseData);
       if (response.status === 201) {
-        toast.success("Course created successfully!", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+        router.push("/courses");
+        toast.success("Course created successfully!");
         setCreatingProgram(courseData);
         setAbout("");
         setCoursesNames([]);
         setProgramName("");
         setShortDesc("");
-        setChr("")
+        setChr("");
       } else {
         toast.error(response.data?.message, {
           position: "top-right",

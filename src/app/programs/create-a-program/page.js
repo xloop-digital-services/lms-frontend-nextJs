@@ -1,6 +1,7 @@
 "use client";
 import { createProgram, getAllCourses } from "@/api/route";
 import CreateField from "@/components/CreateField";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -11,6 +12,7 @@ export default function Page() {
   const [coursesNames, setCoursesNames] = useState("");
   const [about, setAbout] = useState("");
   const [shortDesc, setShortDesc] = useState("");
+  const router = useRouter();
 
   const [inputCourses, setInputCourses] = useState([]);
 
@@ -37,41 +39,18 @@ export default function Page() {
     try {
       const response = await createProgram(program);
       if (response.status === 201) {
-        toast.success("Program created successfully!", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+        router.push("/programs");
+        toast.success("Program created successfully!");
         setCreatingProgram(program);
         setAbout("");
         setCoursesNames([]);
         setProgramName("");
         setShortDesc("");
       } else {
-        toast.error(response.data?.message, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+        toast.error(response.data?.message);
       }
     } catch (error) {
-      toast.error(`Error creating program: ${error.message}`, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      toast.error(`Error creating program: ${error.message}`);
     }
   };
 
