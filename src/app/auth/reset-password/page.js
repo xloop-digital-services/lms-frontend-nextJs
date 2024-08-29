@@ -20,7 +20,7 @@ export default function Page() {
   const handleResetPassword = async (event) => {
     setLoading(true)
     console.log(email)
-    event.preventDefault(); // Prevent the default form submission behavior
+    event.preventDefault(); 
     const formData = new FormData();
     formData.append('email', email)
     try {
@@ -41,28 +41,12 @@ export default function Page() {
         });
         setLoading(false)
       } else {
-        toast.error("Wrong Email.", response.data.message, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+        toast.error("Wrong Email.", response.data.message);
         setLoading(false)
       }
     } catch (error) {
       console.error("Error during login:", error);
-      toast.error("An error occurred.", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      toast.error("An error occurred.");
       setLoading(false)
     }
   };
@@ -94,7 +78,6 @@ export default function Page() {
               <div className="grid gap-y-5">
                 <div className="space-y-3">
                   <label
-                    for="email"
                     className="block text-sm font-medium leading-5 text-dark-700"
                   >
                     Email address
@@ -109,7 +92,6 @@ export default function Page() {
                       onChange={(e) => setEmail(e.target.value)}
                       className="py-3 px-4 block w-full outline-none border border-dark-200 rounded-md text-sm focus:border-blue-300 focus:ring-[#03A1D8] shadow-sm"
                       required
-                      aria-describedby="email-error"
                     />
                   </div>
                   <p

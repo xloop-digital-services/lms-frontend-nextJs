@@ -51,7 +51,7 @@ const StudentDataStructure = ({
   };
 
   const handleDownload = async (url) => {
-    console.log(url)
+    console.log(url);
     try {
       const response = await fetch(url, {
         method: "GET",
@@ -63,7 +63,7 @@ const StudentDataStructure = ({
       const downloadUrl = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = downloadUrl;
-      link.download = url.split("/").pop(); // Get the file name from the URL
+      link.download = url.split("/").pop();
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -138,13 +138,14 @@ const StudentDataStructure = ({
                           <tr key={index}>
                             <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800 ">
                               <a
-                                href='#'
-                                className="cursor-pointer flex justify-center items-center text-black hover:text-[#2563eb] hover:underline" 
+                                href="#"
+                                className="cursor-pointer flex justify-center items-center text-black hover:text-[#2563eb] hover:underline"
                                 title="download"
                                 onClick={(e) => {
                                   e.preventDefault(); // Prevent the default anchor behavior
                                   handleDownload(quiz.content); // Handle the download
-                                }}                              >
+                                }}
+                              >
                                 {quiz.question || quiz.title}
                               </a>
                             </td>

@@ -62,7 +62,6 @@ export default function Page() {
             headers: {
               "Content-Type": "application/json",
             },
-            // withCredentials: true, // Add this line if your backend requires credentials
           }
         );
 

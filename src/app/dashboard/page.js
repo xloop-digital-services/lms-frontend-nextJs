@@ -126,6 +126,7 @@ export default function Page() {
                             key={course.id}
                             image={image1}
                             courseName={course.name}
+                            route="course"
                             courseDesc={course.short_description}
                             // progress="50%"
                             // avatars={avatars}

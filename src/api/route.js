@@ -344,3 +344,253 @@ export const uploadExam = async (exam) => {
     throw error;
   }
 };
+
+// export const getUserByProgramID = async (programID, selectedOption) =>{
+//   try {
+//     const response = await axiosInstance.get(`/applications-process/${programID}/?group_name=${selectedOption}`)
+//     return response
+
+//   } catch (error) {
+//     throw error
+//   }
+// }
+
+export const getStudentByStatus = async (
+  programID,
+  selectedOption,
+  selectedStatus
+) => {
+  try {
+    const response = await axiosInstance.get(
+      `/applications-process/${programID}/?group_name=${selectedOption}&status=${selectedStatus}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const userSelectionByAdmin = async (id, data) => {
+  try {
+    const response = await axiosInstance.patch(
+      `applications-process/?application_id=${id}`,
+      data
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const VerifyEmail = async (data) => {
+  try {
+    const response = await axiosInstance.post("/verify-email/", data);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//Admin APIs
+//get all programs
+export const getAllPrograms = async () => {
+  try {
+    const response = await axiosInstance.get(`/course/programs/`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//get all skills
+export const getAllSkills = async () => {
+  try {
+    const response = await axiosInstance.get(`/course/skills/`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//get program by id
+export const getProgramById = async (progId) => {
+  try {
+    const response = await axiosInstance.get(`/course/programs/${progId}/`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//create a program
+export const createProgram = async (program) => {
+  try {
+    const response = await axiosInstance.post(`/course/programs/`, program);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//update a program
+export const updateProgram = async (program, programId) => {
+  try {
+    const response = await axiosInstance.put(
+      `/course/programs/${programId}/`,
+      program
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//create a course
+export const createCourse = async (course) => {
+  try {
+    const response = await axiosInstance.post(`/course/courses/`, course);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//update a course
+export const updateCourse = async (course, courseId) => {
+  try {
+    const response = await axiosInstance.put(
+      `/course/courses/${courseId}/`,
+      course
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+//update a module
+export const updateModule = async (module, moduleId) => {
+  try {
+    const response = await axiosInstance.put(
+      `/course/modules/${moduleId}/`,
+      module,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//create an assignment
+export const createAssignment = async (assignment) => {
+  try {
+    const response = await axiosInstance.post(
+      `/course/assignments/`,
+      assignment,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//update an assignment
+export const updateAssignment = async (assignmentData, assignmentId) => {
+  try {
+    const response = await axiosInstance.put(
+      `/course/assignments/${assignmentId}/`,
+      assignmentData
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//create a quiz
+export const createQuiz = async (quiz) => {
+  try {
+    const response = await axiosInstance.post(`/course/quizzes/`, quiz, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//update a quiz
+export const updateQuiz = async (quizData, quizId) => {
+  try {
+    const response = await axiosInstance.put(
+      `/course/quizzes/${quizId}/`,
+      quizData
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//create a project
+export const createProject = async (project) => {
+  try {
+    const response = await axiosInstance.post(`/course/projects/`, project, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//update the project
+export const updateProject = async (projectData, projectId) => {
+  try {
+    const response = await axiosInstance.put(
+      `/course/projects/${projectId}/`,
+      projectData
+    );
+  } catch (error) {
+    throw error;
+  }
+};
+
+//create an exam
+export const createExam = async (exam) => {
+  try {
+    const response = await axiosInstance.post(`/course/exams/`, exam, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//update the exam
+export const updateExam = async (examData, examId) => {
+  try {
+    const response = await axiosInstance.put(
+      `/course/exams/${examId}/`,
+      examData
+    );
+  } catch (error) {
+    throw error;
+  }
+};

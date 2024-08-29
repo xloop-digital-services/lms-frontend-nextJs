@@ -94,6 +94,8 @@ export function AuthProvider({ children }) {
   const logOutUser = () => {
     console.log("Logging out user...");
     setUserData(null);
+    setEmail('')
+    setPassword('')
     Cookies.remove("userData");
     Cookies.remove("userGroup");
     Cookies.remove("access_token");

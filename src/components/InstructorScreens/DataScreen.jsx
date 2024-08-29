@@ -1,15 +1,15 @@
-"use client"; // This line indicates the file is a client-side React component
+"use client";
 
-import React, { useState, useRef, useEffect } from "react"; // Ensure React and useState are imported correctly
-import MainCourseCard from "@/components/MainCourseCard"; // Import your custom components
-import courseImg from "/public/assets/img/course-image.png"; // Import your image assets
-import { IoIosArrowDown } from "react-icons/io"; // Import the icon
-import QuizTable from "@/components/QuizTable"; // Import your custom components
+import React, { useState, useRef, useEffect } from "react"; 
+import MainCourseCard from "@/components/MainCourseCard"; 
+import courseImg from "/public/assets/img/course-image.png"; 
+import { IoIosArrowDown } from "react-icons/io";
+import QuizTable from "@/components/QuizTable"; 
 
 const DataScreen = ({module}) => {
   const [selectedOption, setSelectedOption] = useState(` ${module} 1`);
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef(null); // Reference for the dropdown div
+  const dropdownRef = useRef(null); 
 
   const toggleOpen = () => {
     setIsOpen(!isOpen);

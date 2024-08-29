@@ -7,7 +7,6 @@ export const useWindowSize = () => {
   });
 
   useEffect(() => {
-    // Function to update the size
     const handleResize = () => {
       setWindowSize({
         width: window.innerWidth,
@@ -15,13 +14,8 @@ export const useWindowSize = () => {
       });
     };
 
-    // Set initial size
     handleResize();
-
-    // Add event listener
     window.addEventListener('resize', handleResize);
-
-    // Cleanup on unmount
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 

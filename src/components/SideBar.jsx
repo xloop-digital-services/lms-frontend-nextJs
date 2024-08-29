@@ -4,6 +4,7 @@ import { useSidebar } from "@/providers/useSidebar";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
+import { IoIosArrowDown } from "react-icons/io";
 import {
   FaBars,
   FaBookOpen,
@@ -17,15 +18,23 @@ import {
   FaSignOutAlt,
   FaTasks,
   FaUser,
+  FaListAlt,
 } from "react-icons/fa";
+
 import { useAuth } from "@/providers/AuthContext";
 
 function SideBar() {
   const { isSidebarOpen, toggleSidebar } = useSidebar();
-  const { logOutUser} = useAuth();
+  const { logOutUser, userData } = useAuth();
+  const isAdmin = userData?.Group === "admin";
   const pathname = usePathname();
   const isLinkActive = (path) => {
     return pathname === path || pathname.includes(path);;
+  };
+  const [isOpen, setIsOpen] = useState(false);
+
+  const ToggleOptions = () => {
+    setIsOpen(!isOpen);
   };
 
   return (
@@ -36,7 +45,7 @@ function SideBar() {
         }`}
       >
         <button
-          className={`cursor-pointer px-4 max-md:px-2 max-md:py-2 `}
+          className={`cursor-pointer pl-4 max-md:pl-2 max-md:py-2 `}
           onClick={toggleSidebar}
         >
           <FaBars size={24} />
@@ -44,13 +53,13 @@ function SideBar() {
 
         <nav className="flex flex-col mt-1 p-2 text-blue-500 sidebar ">
           <div className="flex flex-col h-screen">
-            <div className=" flex flex-col justify-between lg:h-[80%] h-[75%] overflow-y-auto pb-4">
+            <div className=" flex flex-col justify-between lg:h-[80%] h-[75%] overflow-y-scroll pb-4">
               <div className=" py-4 rounded bg-surface-100 flex flex-col">
                 <Link
                   href="/dashboard"
-                  className={`p-4 flex gap-4 rounded-xl border-dark-300  hover:text-blue-300 ${
+                  className={`p-4 flex gap-4 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
                     isLinkActive("/dashboard")
-                      ? "text-blue-300 bg-blue-600 "
+                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100 "
                       : "text-dark-600"
                   }`}
                 >
@@ -58,22 +67,38 @@ function SideBar() {
                   Dashboard
                 </Link>
 
+                {/* <div className={`${isAdmin && "hidden"}`}> */}
+                <Link
+                  href="/programs"
+                  className={`p-4 flex gap-4 rounded-xl border-dark-300  hover:text-blue-300 ${
+                    isLinkActive("/programs")
+                      ? "text-blue-300 bg-blue-600 "
+                      : "text-dark-600"
+                  }`}
+                >
+                  <FaBookOpen size={24} />
+                  Program
+                </Link>
+                {/* </div> */}
+
                 <Link
                   href="/courses"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl hover:text-blue-300 ${
+                  className={`p-4  flex gap-4 mt-2 rounded-xl hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
                     isLinkActive("/courses")
-                      ? "text-blue-300 bg-blue-600"
+                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
                       : "text-dark-600"
                   }`}
                 >
                   <FaBookOpen size={24} />
                   Courses
                 </Link>
+
+                {/* <div className={`${isAdmin && "hidden"}`}> */}
                 <Link
                   href="/attendance"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300  ${
+                  className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40  ${
                     isLinkActive("/attendance")
-                      ? "text-blue-300 bg-blue-600"
+                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
                       : "text-dark-600"
                   }`}
                 >
@@ -82,9 +107,9 @@ function SideBar() {
                 </Link>
                 <Link
                   href="/quiz"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl hover:text-blue-300 ${
+                  className={`p-4  flex gap-4 mt-2 rounded-xl hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
                     isLinkActive("/quiz")
-                      ? "text-blue-300 bg-blue-600"
+                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
                       : "text-dark-600"
                   }`}
                 >
@@ -93,9 +118,9 @@ function SideBar() {
                 </Link>
                 <Link
                   href="/assignment"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
+                  className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
                     isLinkActive("/assignment")
-                      ? "text-blue-300 bg-blue-600"
+                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
                       : "text-dark-600"
                   }`}
                 >
@@ -104,9 +129,9 @@ function SideBar() {
                 </Link>
                 <Link
                   href="/project"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
+                  className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
                     isLinkActive("/project")
-                      ? "text-blue-300 bg-blue-600"
+                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
                       : "text-dark-600"
                   }`}
                 >
@@ -115,9 +140,9 @@ function SideBar() {
                 </Link>
                 <Link
                   href="/exam"
-                  className={`p-4 flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
+                  className={`p-4 flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
                     isLinkActive("/exam")
-                      ? "text-blue-300 bg-blue-600"
+                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
                       : "text-dark-600"
                   }`}
                 >
@@ -126,34 +151,132 @@ function SideBar() {
                 </Link>
                 <Link
                   href="/grading"
-                  className={`p-4 flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
+                  className={`p-4 flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
                     isLinkActive("/grading")
-                      ? "text-blue-300 bg-blue-600"
+                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
                       : "text-dark-600"
                   }`}
                 >
-                   <FaClipboardCheck size={24} />
+                  <FaClipboardCheck size={24} />
                   Grading
                 </Link>
 
                 <Link
                   href="/calendar"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 ${
+                  className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
                     isLinkActive("/calendar")
-                      ? "text-blue-300 bg-blue-600"
+                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
                       : "text-dark-600"
                   }`}
                 >
                   <FaCalendar size={24} />
                   Calendar
                 </Link>
+                <div className={`${!isAdmin && "hidden"}`}>
+                  <Link
+                    href="/user-management"
+                    className={`p-4 flex flex-col gap-4 mt-2 cursor-pointer rounded-xl hover:text-blue-300 ${
+                      isLinkActive("/user-management") ||
+                      isLinkActive("/user-management/approved") ||
+                      isLinkActive("/user-management/shortlist")
+                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
+                        : "text-dark-600"
+                    }`}
+                  >
+                    <div
+                      className={`flex items-center justify-between w-full ${
+                        isOpen && "border-b border-dark-300 pb-2"
+                      }`}
+                      onClick={ToggleOptions}
+                    >
+                      <div className="flex gap-4">
+                        <FaListAlt size={24} />
+                        <p
+                          className={`flex-grow text-center ${
+                            isLinkActive("/user-management") && "font-semibold"
+                          }`}
+                        >
+                          User Management
+                        </p>
+                      </div>
+                      <button
+                        // onClick={ToggleOptions}
+                        className="group-hover:cursor-pointer"
+                      >
+                        <IoIosArrowDown size={22} />
+                      </button>
+                    </div>
+
+                    {isOpen && (
+                      <div>
+                        <ul className="flex flex-col list-disc pl-9 space-y-2">
+                          <li>
+                            <Link
+                              href="/user-management/approved"
+                              className={`${
+                                isLinkActive("/user-management/approved") &&
+                                "font-semibold"
+                              }`}
+                            >
+                              Approved users
+                            </Link>
+                          </li>
+                          <li>
+                            <Link
+                              href="/user-management/shortlist"
+                              className={`${
+                                isLinkActive("/user-management/shortlist") &&
+                                "font-semibold"
+                              }`}
+                            >
+                              Shortlist users
+                            </Link>
+                          </li>
+                        </ul>
+                      </div>
+                    )}
+                  </Link>
+                  <Link
+                    href="/session"
+                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
+                      isLinkActive("/session")
+                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100 "
+                        : "text-dark-600"
+                    }`}
+                  >
+                    <FaListAlt size={24} />
+                    Session
+                  </Link>
+                  <Link
+                    href="/batch"
+                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
+                      isLinkActive("/batch")
+                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
+                        : "text-dark-600"
+                    }`}
+                  >
+                    <FaListAlt size={24} />
+                    Batch
+                  </Link>
+                  <Link
+                    href="/location"
+                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
+                      isLinkActive("/location")
+                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
+                        : "text-dark-600"
+                    }`}
+                  >
+                    <FaListAlt size={24} />
+                    Location
+                  </Link>
+                </div>
               </div>
               <div className="flex flex-col">
                 <Link
                   href="/user/profile"
-                  className={`p-4 flex gap-4 border rounded-xl border-dark-300  hover:text-blue-300 ${
+                  className={`p-4 flex gap-4 border rounded-xl border-dark-300  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
                     isLinkActive("/user/profile")
-                      ? "text-blue-300 bg-blue-600"
+                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
                       : "text-dark-600"
                   }`}
                 >
@@ -166,7 +289,7 @@ function SideBar() {
                   onClick={logOutUser}
                   className={`p-4 flex gap-4 mt-2 border rounded-xl border-dark-300 hover:text-blue-300 ${
                     isLinkActive("/auth/login")
-                      ? "text-blue-300 bg-blue-600"
+                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
                       : "text-dark-600"
                   }`}
                 >

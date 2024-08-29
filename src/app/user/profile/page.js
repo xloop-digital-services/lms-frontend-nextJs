@@ -65,8 +65,6 @@ function Profile() {
 
   const handleEnabledPass = () => {
     setIsDisablePass(false);
-
-    // Scroll to the form element when the modal is opened
     setTimeout(() => {
       if (formRef.current) {
         formRef.current.scrollIntoView({ behavior: "smooth" });
@@ -74,15 +72,12 @@ function Profile() {
     }, 0);
   };
   const handleDisabledPass = () => {
-    // Scroll back to the top of the page
     window.scrollTo({ top: 0, behavior: "smooth" });
-
-    // Delay the hiding of the modal to allow the scroll to complete
     setTimeout(() => {
       setIsDisablePass(true);
       setPassword("");
       setConfirmPassword("");
-    }, 100); // Adjust this timing as needed
+    }, 100);
   };
 
   const handleEnabled = () => setIsDisable(false);
@@ -167,18 +162,8 @@ function Profile() {
       });
       return;
     } else if (!passwordRegex.test(password)) {
-      // Change else to else if
       toast.error(
-        "Password must be at least 8 characters long, include at least one letter, one number, and one special character, and contain no spaces.",
-        {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        }
+        "Password must be at least 8 characters long, include at least one letter, one number, and one special character, and contain no spaces."
       );
       return;
     }
@@ -192,41 +177,17 @@ function Profile() {
     try {
       const response = await changePassword(data);
       if (response.status === 200) {
-        toast.success("Password updated successfully!", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+        toast.success("Password updated successfully!");
         setPassword(data);
         setOldPassword("");
         setPassword("");
         setConfirmPassword("");
         setIsDisable(true);
       } else {
-        toast.error(response.data?.message, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+        toast.error(response.data?.message,);
       }
     } catch (error) {
-      toast.error(`Error updating password: ${error.message}`, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      toast.error(`Error updating password: ${error.message}`);
     }
   };
   // if (loader) {
@@ -236,7 +197,6 @@ function Profile() {
   const getFirstWord = (name) => (name ? name[0] : "");
 
   const validatePassword = (password) => {
-    // Modify the regex to include the characters you want to allow
     const passwordRegex = /^[a-zA-Z0-9!@#$%^&*()_+=-]*$/;
     return passwordRegex.test(password);
   };
@@ -246,7 +206,6 @@ function Profile() {
     if (validatePassword(value)) {
       setConfirmPassword(value);
     } else {
-      // Handle invalid input case
       console.log("Invalid characters in password");
     }
   };
@@ -256,7 +215,6 @@ function Profile() {
     if (validatePassword(value)) {
       setPassword(value);
     } else {
-      // Handle invalid input case
       console.log("Invalid characters in password");
     }
   };

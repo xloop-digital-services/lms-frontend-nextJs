@@ -8,6 +8,7 @@ import {
 } from "@/api/route";
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
+import { handleUploadProject } from "@/app/project/course/[courseId]/page";
 
 const UploadingFile = ({ field, heading, setUploadFile, assignmentID }) => {
   const [comment, setComment] = useState("");
@@ -45,7 +46,7 @@ const UploadingFile = ({ field, heading, setUploadFile, assignmentID }) => {
       if (supportedFormats.includes(`.${fileExtension}`)) {
         setFile(file);
         setFileUploaded(file.name);
-        setError(""); // Clear any previous error
+        setError("");  
       } else {
         setError("This file format is not supported.");
         setFileUploaded(null);
@@ -64,18 +65,18 @@ const UploadingFile = ({ field, heading, setUploadFile, assignmentID }) => {
 
   const handleUpload = async (type) => {
     setLoader(true);
-    console.log('field is', type)
+    console.log("field is", type);
     if (file === null) {
-      toast.warn('File is not selected');
+      toast.warn("File is not selected");
       setLoader(false);
       return;
     }
-  
+
     const formData = new FormData();
     formData.append(`${type}_submitted_file`, file);
     formData.append("comments", comment);
     formData.append(type, assignmentID);
-  
+
     try {
       const uploadFunctionMap = {
         quiz: uploadQuiz,
@@ -83,16 +84,16 @@ const UploadingFile = ({ field, heading, setUploadFile, assignmentID }) => {
         project: uploadProject,
         assignment: uploadAssignment,
       };
-  
+
       const uploadFunction = uploadFunctionMap[type];
-  
+
       if (!uploadFunction) {
-        throw new Error('Invalid upload type');
+        throw new Error("Invalid upload type");
       }
-  
+
       const response = await uploadFunction(formData);
       console.log("file uploaded", response);
-  
+
       if (response.status === 201) {
         toast.success(`${type} has been submitted`);
         setComment("");
@@ -100,19 +101,58 @@ const UploadingFile = ({ field, heading, setUploadFile, assignmentID }) => {
         setUploadFile(false);
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || 'An error occurred');
+      toast.error(error.response?.data?.message || "An error occurred");
       console.log("Error occurred:", error);
       setLoader(false);
       setUploadFile(false);
     }
   };
-  
+
+  const handleUploadExam = async () => {
+    if (file) {
+      const formData = new FormData();
+      formData.append("exam_submitted_file", file);
+      formData.append("comments", comment);
+      formData.append("exam", assignmentID);
+      try {
+        const response = await uploadExam(formData);
+        console.log("file uploaded", response);
+        if (response.status === 201) {
+          toast.success("Exam has been submitted");
+          setComment("");
+          setUploadFile(false);
+        }
+      } catch (error) {
+        toast.error(error.response.data.message);
+        console.log("Error occurred:", error);
+      }
+    }
+  };
+
+  const handleUploadAssignment = async () => {
+    if (file) {
+      const formData = new FormData();
+      formData.append("submitted_file", file);
+      formData.append("comments", comment);
+      formData.append("assignment", assignmentID);
+      try {
+        const response = await uploadAssignment(formData);
+        console.log("file uploaded", response);
+        if (response.status === 201) {
+          toast.success("Assignment has been submitted");
+          setComment("");
+          setUploadFile(false);
+        }
+      } catch (error) {
+        toast.error(error.response.data.message);
+        console.log("Error occurred:", error);
+      }
+    }
+  };
+
   const handleUploadation = () => {
     handleUpload(field);
   };
-  
-
-  
 
   return (
     <div className="backDropOverlay h-screen flex justify-center items-center">
@@ -200,7 +240,7 @@ const UploadingFile = ({ field, heading, setUploadFile, assignmentID }) => {
               >
                 {loader ? (
                   <span>
-                    <CircularProgress size={20}/>
+                    <CircularProgress size={20} />
                   </span>
                 ) : (
                   <span> Upload </span>

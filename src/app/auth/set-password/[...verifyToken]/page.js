@@ -18,7 +18,7 @@ export default function Page({ params }) {
   console.log("token", u_id ,'/', token);
 
   const handlePassword = async (event) => {
-    event.preventDefault(); // Prevent the default form submission behavior
+    event.preventDefault();
     setloading(true)
     // const formData = new FormData();
     // formData.append("password", newPassword);
