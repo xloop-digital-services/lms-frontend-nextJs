@@ -310,7 +310,7 @@ function Profile() {
               {!isDisabledPass && (
                 <form
                   onSubmit={handleSubmit}
-                  className="space-y-6 mt-8 pt-8 pb-0 rounded-xl bg-gray-100"
+                  className="space-y-6 pt-8 pb-0 rounded-xl bg-gray-100"
                 >
                   <h2 className="text-lg font-bold block leading-6">
                     Change Password

@@ -9,10 +9,19 @@ import {
 import { toast } from "react-toastify";
 import { handleUploadProject } from "@/app/project/course/[courseId]/page";
 
-const UploadingFile = ({ field, setUploadFile, assignmentID }) => {
+const UploadContent = ({
+  field,
+  setUploadFile,
+  handleUploadContent,
+  file,
+  setFile,
+  fileUploaded,
+  setFileUploaded,
+  // moduleId,
+}) => {
   const [comment, setComment] = useState("");
-  const [fileUploaded, setFileUploaded] = useState(null);
-  const [file, setFile] = useState(null);
+  // const [fileUploaded, setFileUploaded] = useState(null);
+  // const [file, setFile] = useState(null);
   const [error, setError] = useState("");
   const [isDragOver, setIsDragOver] = useState(false);
 
@@ -59,87 +68,6 @@ const UploadingFile = ({ field, setUploadFile, assignmentID }) => {
 
   const handleDragLeave = () => {
     setIsDragOver(false);
-  };
-
-  const handleUploadQuiz = async () => {
-    if (file) {
-      const formData = new FormData();
-      formData.append("quiz_submitted_file", file);
-      formData.append("comments", comment);
-      formData.append("quiz", assignmentID);
-      try {
-        const response = await uploadQuiz(formData);
-        console.log("file uploaded", response);
-        if (response.status === 201) {
-          toast.success("Quiz has been submitted");
-          setComment("");
-          setUploadFile(false);
-        }
-      } catch (error) {
-        toast.error(error.response.data.message);
-        console.log("Error occurred:", error);
-      }
-    }
-  };
-
-  const handleUploadExam = async () => {
-    if (file) {
-      const formData = new FormData();
-      formData.append("exam_submitted_file", file);
-      formData.append("comments", comment);
-      formData.append("exam", assignmentID);
-      try {
-        const response = await uploadExam(formData);
-        console.log("file uploaded", response);
-        if (response.status === 201) {
-          toast.success("Exam has been submitted");
-          setComment("");
-          setUploadFile(false);
-        }
-      } catch (error) {
-        toast.error(error.response.data.message);
-        console.log("Error occurred:", error);
-      }
-    }
-  };
-
- 
-
-  const handleUploadAssignment = async () => {
-    if (file) {
-      const formData = new FormData();
-      formData.append("submitted_file", file);
-      formData.append("comments", comment);
-      formData.append("assignment", assignmentID);
-      try {
-        const response = await uploadAssignment(formData);
-        console.log("file uploaded", response);
-        if (response.status === 201) {
-          toast.success("Assignment has been submitted");
-          setComment("");
-          setUploadFile(false);
-        }
-      } catch (error) {
-        toast.error(error.response.data.message);
-        console.log("Error occurred:", error);
-      }
-    }
-  };
-
-
-  const handleUploadation = () => {
-    if (field === "Quiz") {
-      handleUploadQuiz();
-    }
-    if (field === "Assignment") {
-      handleUploadAssignment();
-    }
-    if (field === "Project") {
-      handleUploadProject();
-    }
-    if (field === "Exam") {
-      handleUploadExam();
-    }
   };
 
   return (
@@ -210,7 +138,7 @@ const UploadingFile = ({ field, setUploadFile, assignmentID }) => {
                 </p>
               )}
             </div>
-            <div className="space-y-2 text-[15px]">
+            {/* <div className="space-y-2 text-[15px]">
               <p className="">Comment</p>
               <input
                 type="text"
@@ -219,11 +147,12 @@ const UploadingFile = ({ field, setUploadFile, assignmentID }) => {
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
               />
-            </div>
+            </div> */}
             <div className="flex w-full justify-center items-center">
               <button
                 type="submit"
-                onClick={handleUploadation}
+                onClick={handleUploadContent}
+                // onClick={handleUploadation}
                 className="w-fit flex justify-center py-3 px-12 text-sm font-medium rounded-lg text-dark-100 bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
               >
                 Upload
@@ -236,4 +165,4 @@ const UploadingFile = ({ field, setUploadFile, assignmentID }) => {
   );
 };
 
-export default UploadingFile;
+export default UploadContent;

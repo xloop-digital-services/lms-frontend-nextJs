@@ -50,7 +50,6 @@ export default function CoursePage({ path, progress }) {
 
   useEffect(() => {
     fetchCourses();
-
     // fetchCourseProgress();
   }, []);
 
