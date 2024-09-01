@@ -1,9 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import SessionsTable from "@/components/SessionsTable";
 import SessionCreationModal from "@/components/Modal/SessionCreationModal";
 import { useSidebar } from "@/providers/useSidebar";
+import { listAllSessions } from "@/api/route";
 
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
@@ -13,6 +14,54 @@ export default function Page() {
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [isBatchOpen, setIsBatchOpen] = useState(false);
+  const [sessions, setSessions] = useState([])
+  const [loading, setloading] = useState(false)
+  const [openModal, setOpenModal] = useState(false)
+
+  const handleListingAllSessions = async () => {
+    setloading(true);
+    try {
+      const response = await listAllSessions();
+      console.log('session fetching', response?.data)
+      setSessions(response?.data)
+      setloading(false)
+    } catch (error) {
+      console.log('error while fetching the session', error.response.data.message)
+      setloading(false)
+    }
+  }
+
+  useEffect(() => {
+    handleListingAllSessions()
+  },[])
+
+  const getBatch = async () => {
+    try {
+      const response = await listAllBatches();
+      console.log("batches", response?.data);
+      const batchOptionssArray = response?.data.map((batch) => batch.batch);
+      setbatchOptions(batchOptionssArray);
+      setLoadingBatch(false);
+    } catch (error) {
+      console.log("error while fetching the batches", error);
+      setLoadingBatch(false);
+    }
+  };
+
+  const getLocation = async () => {
+    try {
+      const response = await listAllLocations();
+      const locationOptionsArray = response?.data.map(location => ({
+        id: location.id,
+        name: location.name
+      }));
+      setLocationOptions(locationOptionsArray);
+      setLoadingLocation(false);
+    } catch (error) {
+      console.log("error while fetching the locations", error);
+      setLoadingLocation(false);
+    }
+  };
 
   const toggleCityOpen = () => {
     setIsCityOpen(!isCityOpen);
@@ -39,9 +88,13 @@ export default function Page() {
     setIsBatchOpen(false);
   };
 
-  const city0ptions = ["Karachi", "Lahore"];
-  const location0ptions = ["Malir", "F B Area"];
-  const batch0ptions = ["Batch 1", "Batch 2"];
+  const handleOpenSessionModal = () => {
+    setOpenModal(true)
+  }
+
+  // const city0ptions = ["Karachi", "Lahore"];
+  // const location0ptions = ["Malir", "F B Area"];
+  // const batch0ptions = ["Batch 1", "Batch 2"];
   return (
     <div className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-32 font-inter ${
         isSidebarOpen ? "translate-x-64 pl-20 " : "translate-x-0 pl-10 pr-4"
@@ -137,18 +190,23 @@ export default function Page() {
             )}
           </div>
           <div>
-            <button className="text-[#fff] bg-[#03A1D8] p-4 rounded-lg">
+            <button className="text-[#fff] bg-[#03A1D8] p-4 rounded-lg" onClick={handleOpenSessionModal}>
               Create a new session
             </button>
           </div>
         </div>
       </div>
       <div>
-        <SessionsTable />
+        <SessionsTable 
+        sessions={sessions}
+        loading={loading}
+        />
       </div>
       </div>
       <div>
-        {/* <SessionCreationModal /> */}
+        {openModal &&
+        <SessionCreationModal setOpenModal={setOpenModal} openModal={openModal} />
+        }
       </div>
     </div>
   );

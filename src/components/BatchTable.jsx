@@ -1,6 +1,7 @@
+import { CircularProgress } from "@mui/material";
 import React from "react";
 
-const BatchTable = () => {
+const BatchTable = ({batches, loading}) => {
 
 
   return (
@@ -63,24 +64,36 @@ const BatchTable = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-dark-200 dark:divide-gray-700">
-                  <tr>
+                 { loading && batches.length == 0 ? (
+                    <tr>
+                      <td
+                        colSpan="8"
+                        className="text-center py-4 text-dark-400"
+                      >
+                        <CircularProgress size={20} />
+                      </td>
+                    </tr>
+                  ): 
+                    batches && batches.length > 0 ? 
+                    batches.map((batch,index) => (
+                  <tr key={index}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
-                      Batch A
+                      {batch.batch || '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                      Gulshan e Iqbal
+                      {batch.city || '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                      50
+                      {batch.no_of_students || '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                      15/07/2024
+                      {batch.start_date || '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                      15/10/2024
+                      {batch.end_date || '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                      2014
+                      {batch.year || '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
                       Winter
@@ -91,6 +104,18 @@ const BatchTable = () => {
                       </p>
                     </td>
                   </tr>
+                    ) ) 
+                    :
+                    <tr>
+                    <td
+                      colSpan="8"
+                      className="px-6 py-4 whitespace-nowrap text-sm text-dark-400 dark:text-gray-200 text-center"
+                    >
+                      No batch found
+                    </td>
+                  </tr>
+                  
+                  }
                 </tbody>
               </table>
             </div>

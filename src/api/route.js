@@ -371,4 +371,66 @@ export const VerifyEmail = async (data) => {
     throw error
   }
 }
+
+
+export const listAllSessions = async () => {
+  try {
+    const response = await axiosInstance.get('/session/')
+    return response;
+
+  } catch (error) {
+    throw error
+  }
+}
+
+export const listAllBatches = async () => {
+  try {
+    const response = await axiosInstance.get('/batch/')
+    return response;
+    
+  } catch (error) {
+    throw error
+  }
+}
+
+export const listAllLocations = async () => {
+  try {
+    const response = await axiosInstance.get('/location/')
+    return response;
+    
+  } catch (error) {
+    throw error
+  }
+}
+
+export const createBatch = async (data) => {
+  try {
+    const response = await axiosInstance.post('/batch/', data)
+    return response;
+
+  } catch (error) {
+    throw error
+  }
+}
+
+export const createSession = async (data) => {
+  try {
+    const response = await axiosInstance.post('/session/', data)
+    return response;
+
+  } catch (error) {
+    throw error
+  }
+}
+
+export const createLocation = async (data) => {
+  try {
+    const response = await axiosInstance.post('/location/', data)
+    return response;
+
+  } catch (error) {
+    throw error
+  }
+}
+ 
  

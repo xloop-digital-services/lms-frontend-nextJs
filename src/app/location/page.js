@@ -1,24 +1,41 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { useSidebar } from "@/providers/useSidebar";
 import LocationsTable from "@/components/LocationsTable";
+import { listAllLocations } from "@/api/route";
 
 export default function Page() {
     const { isSidebarOpen } = useSidebar();
     const [selectedCity, setSelectedCity] = useState("Select your city");
     const [isCityOpen, setIsCityOpen] = useState(false);
+    const [locations, setLocations] = useState([])
+    const [loading, setLoading] = useState(true)
+
+    const handleListingAllLocations = async () => {
+      try {
+        const response = await listAllLocations();
+        console.log('fetch all locations', response?.data)
+        setLocations(response?.data)
+        setLoading(false)
+      } catch (error) {
+        console.log('error, while fetching the locations', error)
+        setLoading(false)
+      }
+    }
+
+    useEffect(()=>{
+      handleListingAllLocations();
+    },[])
 
     const toggleCityOpen = () => {
         setIsCityOpen(!isCityOpen);
       };
     
-    
       const handleCitySelect = (option) => {
         setSelectedCity(option);
         setIsCityOpen(false);
       };
-     
     
       const city0ptions = ["Karachi", "Lahore"];
   return (
@@ -65,7 +82,7 @@ export default function Page() {
             </div>
           </div>
         </div>
-        <LocationsTable />
+        <LocationsTable locations={locations} loading={loading} />
       </div>
     </div>
   );

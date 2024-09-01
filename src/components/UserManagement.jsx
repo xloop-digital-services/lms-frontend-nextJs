@@ -76,7 +76,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   };
 
   const toggleOpen = () => {
-    setIsOpen(true);
+    setIsOpen(!isOpen);
   };
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
@@ -105,13 +105,22 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
       style={{
         paddingBottom: "24px",
         width: isSidebarOpen ? "84%" : "100%",
+        height: "100vh", // Set the height to full screen
+        overflow: "hidden", // Hide any overflow from the parent container
       }}
     >
-      <div className="bg-surface-100 p-6 rounded-xl h-full space-y-4">
+      <div
+        className="bg-surface-100 p-6 rounded-xl space-y-4"
+        style={{
+          height: "100%", // Fill the remaining height
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         <div>
           <p className="text-xl font-bold">{heading}</p>
         </div>
-        <div className="w-full flex  items-center gap-4">
+        <div className="w-full flex items-center gap-4">
           <div className="flex grow">
             <input
               type="text"
@@ -150,7 +159,12 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
             )}
           </div>
         </div>
-        <div className="my-5 space-y-3">
+        <div
+          className="my-5 space-y-3 overflow-auto  scrollbar-webkit"
+          style={{
+            flexGrow: 1, // Allow this section to grow and take up remaining space
+          }}
+        >
           {loadingProgram ? (
             <div className="w-full h-full flex items-center justify-center">
               <CircularProgress />
@@ -158,17 +172,17 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
           ) : program && program.length > 0 ? (
             program.map((program) => (
               <div
-                className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col "
+                className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col"
                 key={program.id}
               >
                 <div
-                  className=" flex justify-between items-center "
+                  className="flex justify-between items-center"
                   onClick={() => handleToggleSection(program.name, program.id)}
                 >
                   <p className="text-[17px] font-semibold font-exo">
                     {program.name}
                   </p>
-                  <div className="flex items-center gap-2 ">
+                  <div className="flex items-center gap-2">
                     {openSection === program.name && (
                       <div className="z-20">
                         <button
@@ -182,10 +196,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                         </button>
 
                         {statusOpen && (
-                          <div
-                            // ref={dropdownRef}
-                            className="absolute capitalize z-40 min-w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
-                          >
+                          <div className="absolute capitalize z-40 min-w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out">
                             {status.map((option, index) => (
                               <div
                                 key={index}
