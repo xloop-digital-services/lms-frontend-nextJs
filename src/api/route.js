@@ -31,15 +31,17 @@ export const resetPassword = async (email) => {
   }
 };
 
-export const setNewPassword = async (data ,u_id, token) => {
+export const setNewPassword = async (data, u_id, token) => {
   try {
-    const response = await axiosInstance.post(`/reset-password/${u_id}/${token}/`, data)
-    return response
-    
+    const response = await axiosInstance.post(
+      `/reset-password/${u_id}/${token}/`,
+      data
+    );
+    return response;
   } catch (error) {
-    throw error
+    throw error;
   }
-}
+};
 
 //get user profile api
 export const getUserProfile = async () => {
@@ -455,12 +457,51 @@ export const createCourse = async (course) => {
   }
 };
 
+//create a module
+export const createModule = async (module) => {
+  try {
+    const response = await axiosInstance.post(`/course/modules/`, module, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//create a skill
+export const createSkill = async (skill) => {
+  try {
+    const response = await axiosInstance.post(`/course/skills/`, skill);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//get skill by id
+export const getSkillbyId = async (skillId) => {
+  try {
+    const response = await axiosInstance.get(`/course/skills/`, skillId);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 //update a course
 export const updateCourse = async (course, courseId) => {
   try {
     const response = await axiosInstance.put(
       `/course/courses/${courseId}/`,
       course
+      // {
+      //   headers: {
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // }
     );
     return response;
   } catch (error) {

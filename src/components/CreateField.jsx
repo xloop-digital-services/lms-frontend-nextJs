@@ -1,7 +1,10 @@
 "use client";
+import { createSkill } from "@/api/route";
 import { useSidebar } from "@/providers/useSidebar";
-import React, { useState } from "react";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
 import { FaPlus, FaTimes } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 export default function CreateField({
   title,
@@ -25,6 +28,10 @@ export default function CreateField({
   removeCourse,
   chr,
   setChr,
+  chrLab,
+  setChrLab,
+  fetchAllSkills,
+  create,
 }) {
   const { isSidebarOpen } = useSidebar();
   const [addModule, setAddModule] = useState(false);
@@ -32,6 +39,8 @@ export default function CreateField({
   const [moduleName, setModuleName] = "";
   const [moduleDesc, setModuleDesc] = "";
   const [courseId, setCourseId] = "";
+  const [skill, setSkill] = useState();
+  const [skillName, setSkillName] = useState("");
 
   const handleAddModule = () => {
     setAddModule(!addModule);
@@ -47,42 +56,42 @@ export default function CreateField({
     try {
       const response = await createCourse(moduleData);
       if (response.status === 201) {
-        toast.success("Module created successfully!", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+        toast.success("Module created successfully!");
         setModule(moduleData);
         setModuleName("");
         setModuleDesc("");
         setCourseId("");
-        setCoursesNames([])
+        setCoursesNames([]);
       } else {
-        toast.error(response.data?.message, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+        toast.error(response.data?.message);
       }
     } catch (error) {
-      toast.error(`Error creating course: ${error.message}`, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      toast.error(`Error creating course: ${error.message}`);
     }
+  };
+
+  const handleCreateSkill = async (e) => {
+    e.preventDefault();
+    const skills = {
+      skill_name: skillName,
+    };
+    try {
+      const response = await createSkill(skills);
+      if (response.status === 201) {
+        toast.success("Skill created Successfully!");
+        setSkillName("");
+        setSkill(false);
+        fetchAllSkills();
+      } else {
+        toast.error(response.data?.message);
+      }
+    } catch (error) {
+      toast.error(`Error creating skill: ${error?.message}`);
+      // console.log(error?.data?.data?.skill_name?.[0])
+    }
+  };
+  const handleSkills = () => {
+    setSkill(!skill);
   };
 
   return (
@@ -151,7 +160,7 @@ export default function CreateField({
             </div>
 
             <div className="my-4 sm:mb-0">
-              <label htmlFor="courses-names">{list} Names</label>
+              <label htmlFor="courses-names">{list}s Names</label>
               <div className="sm:pr-4">
                 <div className="relative flex flex-wrap items-center gap-2 bg-white outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 shadow-sm ring-1 ring-inset focus:ring-inset p-2 sm:text-sm sm:leading-6">
                   {inputCourses?.map((courseId) => {
@@ -161,7 +170,7 @@ export default function CreateField({
                         key={courseId}
                         className="flex items-center space-x-2 px-3 py-1 bg-blue-600 border border-blue-300 rounded-full"
                       >
-                        <span>{course?.name}</span>
+                        <span>{course?.name || course?.skill_name}</span>
                         <FaTimes
                           className="cursor-pointer"
                           onClick={() => removeCourse(courseId)}
@@ -173,9 +182,26 @@ export default function CreateField({
                   <input
                     id="courses-names"
                     disabled
-                    placeholder="Select courses"
+                    placeholder={`Select ${list}s`}
                     className="flex-grow outline-none bg-surface-100 placeholder-dark-300"
                   />
+                  {create === "course" ? (
+                    <Link href={`/${create}s/create-a-${create}`}>
+                      <button className="text-surface-100 px-2 py-1.5 rounded-md bg-blue-300">
+                        {" "}
+                        Create a {list}
+                      </button>
+                    </Link>
+                  ) : (
+                    <button
+                     type="button"
+                      className="text-surface-100  px-2 py-1.5  rounded-md bg-blue-300"
+                      onClick={handleSkills}
+                    >
+                      {" "}
+                      Create a {list}
+                    </button>
+                  )}
 
                   <select
                     value=""
@@ -183,11 +209,14 @@ export default function CreateField({
                     className=" flex items-center bg-surface-100 outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 py-1 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-8 p-2 sm:text-sm sm:leading-6"
                   >
                     <option value="" disabled>
-                      Select a course
+                      Select a {list}
                     </option>
                     {courses.map((course) => (
-                      <option key={course.id} value={course.name}>
-                        {course.name}
+                      <option
+                        key={course.id}
+                        value={course?.name || course?.skill_name}
+                      >
+                        {course?.name || course?.skill_name}
                       </option>
                     ))}
                   </select>
@@ -195,30 +224,62 @@ export default function CreateField({
               </div>
             </div>
 
+            {skill && (
+              <>
+                <div className="my-4 sm:mb-0">
+                  <label htmlFor="skill">Create a skill</label>
+                  <div className="sm:pr-4">
+                    <div className="relative w-full h-12 px-2 gap-4 flex items-center border-dark-400 rounded-md border mt-2 py-1.5">
+                      <label>Enter a new skill</label>
+                      <input
+                        id="skill"
+                        name="skill"
+                        type="text"
+                        value={skillName}
+                        onChange={(e) => setSkillName(e.target.value)}
+                        placeholder="select"
+                        className="px-2 block w-80 outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset sm:text-sm sm:leading-6"
+                      />
+                      <button
+                        className="text-surface-100 p-2 rounded-md bg-blue-300"
+                        onClick={handleCreateSkill}
+                      >
+                        Create skill
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+
             {route === "courses" && (
               <>
                 <div className="my-4 sm:mb-0">
                   <label htmlFor="about">Credit Hours</label>
                   <div className="sm:pr-4">
                     <div className="relative w-full h-12 px-2 gap-4 flex items-center border-dark-400 rounded-md border mt-2 py-1.5">
-                      Theory Hours and Lab/Practical Hours
+                      Theory Hours and
                       <input
-                        id="cr-hr"
-                        name="cr-hr"
+                        id="cr-hr-th"
+                        name="cr-hr-th"
                         type="number"
+                        min={0}
                         value={chr}
                         onChange={(e) => setChr(e.target.value)}
                         placeholder="select"
                         className="px-2 block w-20 outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset sm:text-sm sm:leading-6"
                       />
-                      {/* Lab/Practical Hours
+                      Lab/Practical Hours
                       <input
                         id="cr-hr"
                         name="cr-hr"
                         type="number"
+                        min={0}
                         placeholder="select"
+                        value={chrLab}
+                        onChange={(e) => setChrLab(e.target.value)}
                         className="px-2 block w-20 outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset sm:text-sm sm:leading-6"
-                      /> */}
+                      />
                     </div>
                   </div>
                 </div>

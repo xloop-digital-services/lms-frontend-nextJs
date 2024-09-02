@@ -1,10 +1,20 @@
 "use client";
 import React, { useState } from "react";
-import CoursePage from "@/components/CoursePage";
 import { CircularProgress } from "@mui/material";
+import StudentDashboard from "@/components/StudentDashboard";
+import AdminDashboard from "@/components/AdminDashboard";
+import { useAuth } from "@/providers/AuthContext";
+import CoursePage from "@/components/CoursePage";
+import AdminAttendance from "@/components/AdminAttendance";
 
 export default function Page() {
   const [loader, setLoader] = useState(true);
+  const { userData } = useAuth();
+  const isStudent = userData?.Group === "student";
+  const isAdmin = userData?.Group === "admin";
+  console.log(isStudent);
+  console.log(userData?.Group);
+
   return (
     <>
       {/* {loader ? (
@@ -12,7 +22,19 @@ export default function Page() {
           <CircularProgress />
         </div>
       ) : ( */}
-        <CoursePage path="attendance" heading='Attendence' />
+      <>
+        {isStudent ? (
+          // <div className="">
+          <CoursePage path="attendance" heading="Attendence" />
+        ) : // </div>
+        isAdmin ? (
+          <AdminAttendance />
+        ) : (
+          <div className="flex justify-center items-center h-screen w-full">
+            this is instructor
+          </div>
+        )}
+      </>
       {/* )} */}
     </>
   );

@@ -30,7 +30,7 @@ export default function Page({ params }) {
   const dropdownRef = useRef(null);
   const courseId = params.courseId;
   const { userData } = useAuth();
-  const userId = userData?.User?.id;
+  // const userId = userData?.user_data?.user;
   const regId = userData?.user_data?.registration_id;
   console.log(regId);
   const toggleOpen = () => {
@@ -323,11 +323,11 @@ export default function Page({ params }) {
               </div>
             </div>
           </div>
-          <div
+          {/* <div
             className={`transition-container ${
               openSection !== null ? "max-height-0" : "max-height-full"
             }`}
-          >
+          > */}
             <div className={`font-semibold font-exo py-3 `}>
               Student Performance Overview
             </div>
@@ -350,7 +350,7 @@ export default function Page({ params }) {
               <p>Loading...</p>
             )}
           </div>
-        </div>
+        {/* </div> */}
       </div>
     </div>
   );

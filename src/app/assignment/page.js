@@ -1,10 +1,39 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CoursePage from "@/components/CoursePage";
 import { CircularProgress } from "@mui/material";
+import { useAuth } from "@/providers/AuthContext";
+import AdminCoursePage from "@/components/AdminCoursePage";
+import { getAllCourses } from "@/api/route";
 
 export default function Page() {
-  // const [loader, setLoader] = useState(true);
+  const [loader, setLoader] = useState(true);
+  const { userData } = useAuth();
+  const isStudent = userData?.Group === "student";
+  const isAdmin = userData?.Group === "admin";
+  const [courses, setCourses] = useState([]);
+  console.log(userData?.Group)
+
+  async function fetchAllCourses() {
+    setLoader(true);
+    try {
+      const response = await getAllCourses();
+      if (response.status === 200) {
+        setCourses(response.data?.data);
+      } else {
+        console.error("Failed to fetch courses, status:", response.status);
+      }
+    } catch (error) {
+      console.error("Error fetching courses:", error);
+    } finally {
+      setLoader(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchAllCourses();
+  }, []);
+
   return (
     <>
       {/* {loader ? (
@@ -12,7 +41,19 @@ export default function Page() {
           <CircularProgress />
         </div>
       ) : ( */}
-        <CoursePage path="assignment" heading='Assignment'/>
+      <>
+        {isStudent ? (
+          // <div className="">
+          <CoursePage path="assignment" heading="Courses" />
+        ) : // </div>
+        isAdmin ? (
+          <AdminCoursePage title="Courses" programs={courses} route="course" route1="assignment" />
+        ) : (
+          <div className="flex justify-center items-center h-screen w-full">
+            this is instructor
+          </div>
+        )}
+      </>
       {/* )} */}
     </>
   );

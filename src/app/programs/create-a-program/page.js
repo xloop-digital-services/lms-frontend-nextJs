@@ -80,6 +80,7 @@ export default function Page() {
         title="Program"
         list="Courses"
         route="program"
+        create="course"
         handleSubmit={handleSubmit}
         handleSelectChange={handleSelectChange}
         programName={programName}

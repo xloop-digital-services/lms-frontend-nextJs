@@ -57,9 +57,12 @@ const CourseHead = ({
           )}
 
           <div className=" flex items-center justify-center max-md:flex-col gap-2">
-            {chr ? null : (
+            {chr ? (
+              <p className="text-blue-300 font-bold ">Cr. hrs: {chr} hours</p>
+            ) : (
               <p className="text-blue-300 font-bold ">
-                Cr. hrs: {courseData.credit_hours} hours
+                Cr. hrs: {courseData.theory_credit_hours}+
+                {courseData.lab_credit_hours} hours
               </p>
             )}
 

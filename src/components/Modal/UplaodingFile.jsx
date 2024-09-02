@@ -28,6 +28,8 @@ const UploadingFile = ({ field, heading, setUploadFile, assignmentID }) => {
     ".zip",
   ];
 
+  console.log(field);
+
   const handleBrowse = (event) => {
     const selectedFile = event.target.files[0];
     handleFileSelection(selectedFile);
@@ -46,7 +48,7 @@ const UploadingFile = ({ field, heading, setUploadFile, assignmentID }) => {
       if (supportedFormats.includes(`.${fileExtension}`)) {
         setFile(file);
         setFileUploaded(file.name);
-        setError("");  
+        setError("");
       } else {
         setError("This file format is not supported.");
         setFileUploaded(null);
@@ -150,8 +152,59 @@ const UploadingFile = ({ field, heading, setUploadFile, assignmentID }) => {
     }
   };
 
+  const handleUploadQuiz = async () => {
+    if (file) {
+      const formData = new FormData();
+      formData.append("quiz_submitted_file", file);
+      formData.append("comments", comment);
+      formData.append("quiz", assignmentID);
+      try {
+        const response = await uploadQuiz(formData);
+        console.log("file uploaded", response);
+        if (response.status === 201) {
+          toast.success("Quiz has been submitted");
+          setComment("");
+          setUploadFile(false);
+        }
+      } catch (error) {
+        toast.error(error.response.data.message);
+        console.log("Error occurred:", error);
+      }
+    }
+  };
+  async function handleUploadProject() {
+    if (file) {
+      const formData = new FormData();
+      formData.append("project_submitted_file", file);
+      formData.append("comments", comment);
+      formData.append("project", assignmentID);
+      try {
+        const response = await uploadProject(formData);
+        console.log("file uploaded", response);
+        if (response.status === 201) {
+          toast.success("Project has been submitted");
+          setComment("");
+          setUploadFile(false);
+        }
+      } catch (error) {
+        toast.error(error.response.data.message);
+        console.log("Error occurred:", error);
+      }
+    }
+  }
   const handleUploadation = () => {
-    handleUpload(field);
+    if (field === "quiz") {
+      handleUploadQuiz();
+    }
+    if (field === "assignment") {
+      handleUploadAssignment();
+    }
+    if (field === "project") {
+      handleUploadProject();
+    }
+    if (field === "exam") {
+      handleUploadExam();
+    }
   };
 
   return (

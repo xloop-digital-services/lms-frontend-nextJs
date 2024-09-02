@@ -60,15 +60,7 @@ export default function Page({ params }) {
 
       const response = await updateProgram(updatedProgramData, programId);
       if (response.status === 200) {
-        toast.success("Program updated successfully!", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+        toast.success("Program updated successfully!",);
         setIsEditing(false);
         fetchProgramById();
       } else {
@@ -186,7 +178,7 @@ export default function Page({ params }) {
                   }
                 />
                 <label className="text-lg font-bold mt-4">
-                  About the Course
+                  About the Program
                 </label>
                 <textarea
                   rows="3"
@@ -248,7 +240,7 @@ export default function Page({ params }) {
             ) : (
               <div className="flex flex-col">
                 <div className="flex justify-between max-md:flex-col">
-                  <h2 className="text-xl font-bold">About the Course</h2>
+                  <h2 className="text-xl font-bold">About the Program</h2>
                 </div>
                 <p className="mt-2 mb-2 text-dark-500 text-justify">
                   {programData.about}
@@ -272,6 +264,7 @@ export default function Page({ params }) {
                     courseDesc={course.short_description}
                     image={courseImg}
                     route={`course`}
+                    route1="courses"
                   />
                 ))}
               </div>

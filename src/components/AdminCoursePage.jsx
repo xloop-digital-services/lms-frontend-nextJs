@@ -9,7 +9,7 @@ import { useSidebar } from "@/providers/useSidebar";
 import { FaEdit, FaPlus } from "react-icons/fa";
 import Link from "next/link";
 
-export default function AdminCoursePage({ programs, title, route }) {
+export default function AdminCoursePage({ route1, programs, title, route }) {
   const { userData } = useAuth();
   const isStudent = userData?.Group === "student";
   const isAdmin = userData?.Group === "admin";
@@ -27,27 +27,36 @@ export default function AdminCoursePage({ programs, title, route }) {
       }}
     >
       <div className="flex justify-between ">
-        <h2 className="text-xl font-bold flex justify-start items-center">{title}</h2>
-        <Link href={`/${route}s/create-a-${route}`}  >
-          <button className=" flex justify-center items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-[#4296b3]">
-            <FaPlus /> Create a New {route}
-          </button>
-        </Link>
+        <h2 className="text-xl font-bold flex justify-start items-center">
+          {title}
+        </h2>
+        {route1 === "programs" || route === "course" ? (
+          <>
+            <Link href={`/${route1}/create-a-${route}`}>
+              <button className=" flex justify-center items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-[#4296b3]">
+                <FaPlus /> Create a New {route}
+              </button>
+            </Link>
+          </>
+        ) : null}
       </div>
       <div className="flex flex-wrap gap-3">
-        {programs?.map((program) => {
-          return (
-            <CourseCard
-              key={program.id}
-              id={program.id}
-              courseName={program.name}
-              courseDesc={program.short_description}
-              image={courseImg}
-              route={route}
-              status={program.status}
-            />
-          );
-        })}
+        {programs
+          ?.sort((a, b) => a.name.localeCompare(b.name))
+          .map((program) => {
+            return (
+              <CourseCard
+                key={program.id}
+                id={program.id}
+                courseName={program.name}
+                courseDesc={program.short_description}
+                image={courseImg}
+                route={route}
+                route1={route1}
+                status={program.status}
+              />
+            );
+          })}
       </div>
     </div>
   );

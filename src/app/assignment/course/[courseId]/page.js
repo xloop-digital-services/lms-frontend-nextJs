@@ -7,6 +7,7 @@ import {
   createAssignment,
   getAssignmentsByCourseId,
   getProgressForAssignment,
+  updateAssignment,
 } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
 import { toast } from "react-toastify";
@@ -20,11 +21,13 @@ export default function Page({ params }) {
   const isStudent = userData?.Group === "student";
   const [isCreatingQuiz, setCreatingQuiz] = useState(false);
   const [question, setQuestion] = useState("");
+  const [activeStatus, setActiveStatus]= useState();
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [quiz, setQuiz] = useState("");
   const [file, setFile] = useState(null);
-
+  const [resubmission, setResubmission] = useState("");
+  const [isEditing, setIsEditing] = useState("");
   // console.log(courseId);
 
   async function fetchAssignments() {
@@ -39,6 +42,7 @@ export default function Page({ params }) {
       console.log("error", error);
     }
   }
+
   async function fetchAssignmentProgress() {
     const response = await getProgressForAssignment(courseId);
     // setLoader(true);
@@ -63,6 +67,7 @@ export default function Page({ params }) {
       description: description,
       content: file,
       due_date: dueDate,
+      no_of_resubmissions_allowed: resubmission,
     };
 
     try {
@@ -75,6 +80,7 @@ export default function Page({ params }) {
         setDueDate("");
         setFile(null);
         fetchAssignments();
+        setResubmission("");
         setCreatingQuiz(false);
       } else {
         toast.error("Error creating Assignment", response?.message);
@@ -85,12 +91,44 @@ export default function Page({ params }) {
     }
   };
 
+  const handleUpdateAssignment = async (id) => {
+    // event.preventDefault();
+
+    const updatedData = {
+      question: question,
+      status: activeStatus,
+      // due_date: dueDate,
+      content: file,
+    };
+
+    try {
+      const response = await updateAssignment(updatedData, id);
+      if (response.status === 200) {
+        toast.success("Assignment updated successfully!");
+        setAssignments((prevAssignments) =>
+          prevAssignments.map((assignment) =>
+            assignment.id === id
+              ? { ...assignment, ...updatedData }
+              : assignment
+          )
+        );
+        setIsEditing(false);
+      } else {
+        toast.error(`Failed to update assignment, status: ${response.status}`);
+      }
+    } catch (error) {
+      toast.error(`Error updating assignment: ${error.message}`);
+      console.error("Error updating assignment:", error);
+    }
+  };
+
   const handleFileUpload = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
       setFile(selectedFile);
       setFileUploaded(selectedFile.name);
     }
+    // fetchAssignments();
   };
   useEffect(() => {
     fetchAssignments();
@@ -122,7 +160,7 @@ export default function Page({ params }) {
         {isCreatingQuiz && (
           <>
             <form>
-              <div>
+              <div className="my-2">
                 <label className="text-md">Assignment Question</label>
                 <input
                   type="text"
@@ -132,7 +170,7 @@ export default function Page({ params }) {
                 />
               </div>
 
-              <div>
+              <div className="my-2">
                 <label className="text-md">Assignment description</label>
                 <input
                   type="text"
@@ -141,7 +179,7 @@ export default function Page({ params }) {
                   onChange={(e) => setDescription(e.target.value)}
                 />
               </div>
-              <div>
+              <div className="my-2">
                 <label className="text-md">Due Date</label>
                 <input
                   type="datetime-local"
@@ -150,14 +188,26 @@ export default function Page({ params }) {
                   onChange={(e) => setDueDate(e.target.value)}
                 />
               </div>
-              <div>
-                <label className="text-md">Upload Assignment</label>
-                <input
-                  type="file"
-                  className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
-                  onClick={handleFileUpload}
-                  onChange={(e) => setFile(e.target.files[0])}
-                />
+              <div className="flex gap-2 my-2 sm:flex-row flex-col lg:w-[100%]">
+                <div className="mb-4 sm:mb-0 lg:w-[50%] md:w-[50%]">
+                  <label className="text-md">No. of resubmission allowed</label>
+                  <input
+                    type="number"
+                    min={0}
+                    className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                    value={resubmission}
+                    onChange={(e) => setResubmission(e.target.value)}
+                  />
+                </div>
+                <div className="mb-4 sm:mb-0 lg:w-[50%] md:w-[50%]">
+                  <label className="text-md">Upload Assignment</label>
+                  <input
+                    type="file"
+                    className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                    onClick={handleFileUpload}
+                    onChange={(e) => setFile(e.target.files[0])}
+                  />
+                </div>
               </div>
               <button
                 type="submit"
@@ -171,8 +221,10 @@ export default function Page({ params }) {
         )}
         <StudentDataStructure
           quizzes={assignments}
+          setQuizzes={setAssignments}
           key={assignments.id}
           field="assignment"
+          onUpdateQuiz={handleUpdateAssignment}
           assessment="Assignments"
         />
       </div>

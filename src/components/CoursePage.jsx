@@ -16,7 +16,7 @@ export default function CoursePage({ path, progress, heading }) {
   const { userData } = useAuth();
   const isStudent = userData?.Group === "student";
   const [courses, setCourses] = useState([]);
-  const progId = userData?.session?.program;
+  const progId = userData?.User?.program?.id;
   const [loader, setLoader] = useState(true);
   // console.log(progId)
   // const [courseId, setCourseId] = useState();

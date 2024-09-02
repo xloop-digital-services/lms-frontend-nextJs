@@ -7,27 +7,6 @@ import { createProject, getProjectByCourseId } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
 import { toast } from "react-toastify";
 
-export async function handleUploadProject() {
-  if (file) {
-    const formData = new FormData();
-    formData.append("project_submitted_file", file);
-    formData.append("comments", comment);
-    formData.append("project", assignmentID);
-    try {
-      const response = await uploadProject(formData);
-      console.log("file uploaded", response);
-      if (response.status === 201) {
-        toast.success("Project has been submitted");
-        setComment("");
-        setUploadFile(false);
-      }
-    } catch (error) {
-      toast.error(error.response.data.message);
-      console.log("Error occurred:", error);
-    }
-  }
-}
-
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
   const [project, setProject] = useState([]);
@@ -39,6 +18,7 @@ export default function Page({ params }) {
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [quiz, setQuiz] = useState("");
+  const [resubmission, setResubmission] = useState("");
   const [file, setFile] = useState(null);
 
   // console.log(courseId);
@@ -65,6 +45,7 @@ export default function Page({ params }) {
       description: description,
       content: file,
       due_date: dueDate,
+      no_of_resubmissions_allowed: resubmission,
     };
 
     try {
@@ -77,7 +58,8 @@ export default function Page({ params }) {
         setDueDate("");
         setFile(null);
         fetchProject();
-        setCreatingQuiz(false)
+        setResubmission("");
+        setCreatingQuiz(false);
       } else {
         toast.error("Error creating Project", response?.message);
       }
@@ -101,15 +83,13 @@ export default function Page({ params }) {
 
   return (
     <div
-    className={`flex-1 transition-transform pt-[90px] space-y-4 max-md:pt-32 font-inter ${
-      isSidebarOpen
-        ? "translate-x-64 pl-16 "
-        : "translate-x-0 pl-10 pr-10"
-    }`}
-    style={{
-      // paddingBottom: "20px",
-      width: isSidebarOpen ? "86%" : "100%",
-    }}
+      className={`flex-1 transition-transform pt-[90px] space-y-4 max-md:pt-32 font-inter ${
+        isSidebarOpen ? "translate-x-64 pl-16 " : "translate-x-0 pl-10 pr-10"
+      }`}
+      style={{
+        // paddingBottom: "20px",
+        width: isSidebarOpen ? "86%" : "100%",
+      }}
     >
       <div className=" bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl h-[85vh] p-4">
         <CourseHead
@@ -153,14 +133,26 @@ export default function Page({ params }) {
                   onChange={(e) => setDueDate(e.target.value)}
                 />
               </div>
-              <div>
-                <label className="text-md">Upload Project</label>
-                <input
-                  type="file"
-                  className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
-                  onClick={handleFileUpload}
-                  onChange={(e) => setFile(e.target.files[0])}
-                />
+              <div className="flex gap-2 my-2 sm:flex-row flex-col lg:w-[100%]">
+                <div className="mb-4 sm:mb-0 lg:w-[50%] md:w-[50%]">
+                  <label className="text-md">No. of resubmission allowed</label>
+                  <input
+                    type="number"
+                    min={0}
+                    className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                    value={resubmission}
+                    onChange={(e) => setResubmission(e.target.value)}
+                  />
+                </div>
+                <div className="mb-4 sm:mb-0 lg:w-[50%] md:w-[50%]">
+                  <label className="text-md">Upload Project</label>
+                  <input
+                    type="file"
+                    className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                    onClick={handleFileUpload}
+                    onChange={(e) => setFile(e.target.files[0])}
+                  />
+                </div>
               </div>
               <button
                 type="submit"

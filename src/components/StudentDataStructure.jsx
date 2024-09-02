@@ -3,13 +3,9 @@ import { LiaFileDownloadSolid } from "react-icons/lia";
 import { MdRemoveRedEye } from "react-icons/md";
 import { LuUpload } from "react-icons/lu";
 import UplaodingFile from "./Modal/UplaodingFile";
-import {
-  FaFileDownload,
-  FaFilePdf,
-  FaInfoCircle,
-  FaRegFilePdf,
-} from "react-icons/fa";
+import { FaCheck, FaEdit, FaTrash } from "react-icons/fa";
 import { downloadFile } from "@/app/courses/course/[courseId]/page";
+import { useAuth } from "@/providers/AuthContext";
 
 export function formatDateTime(apiDateTime) {
   const dateObject = new Date(apiDateTime);
@@ -37,39 +33,33 @@ const StudentDataStructure = ({
   field,
   assessment,
   assessmentNumber,
+  onUpdateQuiz,
   dueDate,
   status,
   remarks,
+  setQuizzes,
 }) => {
   const [uploadFile, setUploadFile] = useState(false);
+  const [edit, setEdit] = useState(false);
   const [iD, setId] = useState("");
+  const { userData } = useAuth();
+  const isAdmin = userData?.Group === "admin";
 
   const handleFileUpload = (id) => {
-    // console.log(field, "id", id);
     setId(id);
     setUploadFile(!uploadFile);
   };
 
-  const handleDownload = async (url) => {
-    console.log(url);
-    try {
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/octet-stream",
-        },
-      });
-      const blob = await response.blob();
-      const downloadUrl = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = downloadUrl;
-      link.download = url.split("/").pop();
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (error) {
-      console.error("Error downloading the file:", error);
-    }
+  const handleEditAssessment = (id) => {
+    setId(id);
+    setEdit(!edit);
+  };
+  const handleQuestionChange = (id, newQuestion) => {
+    setQuizzes((prevQuizzes) =>
+      prevQuizzes.map((quiz) =>
+        quiz.id === id ? { ...quiz, question: newQuestion } : quiz
+      )
+    );
   };
 
   return (
@@ -122,6 +112,31 @@ const StudentDataStructure = ({
                       >
                         Submission Date
                       </th>
+                      {field === "exam" ? null : (
+                        <>
+                          <th
+                            scope="col"
+                            className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
+                          >
+                            Resubmissions allowed
+                          </th>
+                          {/*                        
+                         <th
+                         scope="col"
+                         className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
+                       >
+                         Resubmissions Left
+                       </th> */}
+                        </>
+                      )}
+                      {isAdmin ? (
+                        <th
+                          scope="col"
+                          className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[12%]"
+                        >
+                          Status
+                        </th>
+                      ) : null}
                       <th
                         scope="col"
                         className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[12%]"
@@ -137,17 +152,40 @@ const StudentDataStructure = ({
                         return (
                           <tr key={index}>
                             <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800 ">
-                              <a
-                                href="#"
-                                className="cursor-pointer flex justify-center items-center text-black hover:text-[#2563eb] hover:underline"
-                                title="download"
-                                onClick={(e) => {
-                                  e.preventDefault(); // Prevent the default anchor behavior
-                                  handleDownload(quiz.content); // Handle the download
-                                }}
-                              >
-                                {quiz.question || quiz.title}
-                              </a>
+                              {edit && iD === quiz.id ? (
+                                <>
+                                  <th
+                                    scope="col"
+                                    className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
+                                  >
+                                    <textarea
+                                      rows="2"
+                                      className="block outline-dark-300 p-4 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset sm:text-sm sm:leading-6"
+                                      value={quiz.question || quiz.title}
+                                      onChange={(e) =>
+                                        handleQuestionChange(
+                                          quiz.id,
+                                          e.target.value
+                                        )
+                                      }
+                                    />
+                                  </th>
+                                </>
+                              ) : (
+                                <>
+                                  <a
+                                    href="#"
+                                    className="cursor-pointer flex justify-center items-center text-black hover:text-[#2563eb] hover:underline"
+                                    title="download"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      downloadFile(quiz.content);
+                                    }}
+                                  >
+                                    {quiz.question || quiz.title}
+                                  </a>
+                                </>
+                              )}
                             </td>
                             <td className="px-12 py-2  whitespace-nowrap text-sm text-surface-100">
                               <p
@@ -173,33 +211,140 @@ const StudentDataStructure = ({
                                 ? formatDateTime(quiz?.submitted_at)
                                 : "-"}
                             </td>
+
+                            {field === "exam" ? null : (
+                              //  : edit ? (
+                              //   <th
+                              //     scope="col"
+                              //     className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
+                              //   >
+
+                              //     <input
+                              //       type="number"
+                              //       min={0}
+                              //       className="block w-20 outline-dark-300 p-4 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset sm:text-sm sm:leading-6"
+                              //       // value={resubmission}
+                              //       // onChange={(e) => setResubmission(e.target.value)}
+                              //     />
+                              //   </th>
+                              // ) :
+                              <>
+                                <th
+                                  scope="col"
+                                  className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
+                                >
+                                  {quiz?.no_of_resubmissions_allowed}
+                                </th>
+                                {/* <th
+                                  scope="col"
+                                  className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
+                                >
+                                  {quiz?.remaining_resubmissions}
+                                </th> */}
+                              </>
+                            )}
+                            {isAdmin && !edit ? (
+                              <th
+                                scope="col"
+                                className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[12%]"
+                              >
+                                {quiz.status === 0
+                                  ? "Inactive"
+                                  : quiz.status === 1
+                                  ? "active"
+                                  : "-"}
+                              </th>
+                            ) : isAdmin && edit ? (
+                              <>
+                                <th
+                                  scope="col"
+                                  className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[12%]"
+                                >
+                                  <select className=" bg-surface-100 block p-2 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5">
+                                    <option value="active">Active</option>
+                                    <option>Inactive</option>
+                                  </select>
+                                </th>
+                              </>
+                            ) : null}
                             <td className="px-12 py-3 whitespace-nowrap text-[#03A1D8]  ">
                               <div className="flex items-center justify-center gap-4 ">
                                 <div>
-                                  <MdRemoveRedEye size={23} />
-                                </div>
-                                <div>
-                                  <LuUpload
-                                    size={20}
-                                    onClick={
-                                      quiz?.status !== "Submitted"
-                                        ? () => handleFileUpload(quiz?.id)
-                                        : undefined
-                                    }
-                                    className={`${
-                                      quiz?.status === "Submitted"
-                                        ? "cursor-not-allowed opacity-50"
-                                        : "cursor-pointer hover:opacity-80"
-                                    }`}
-                                    title="upload"
-                                    style={{
-                                      pointerEvents:
-                                        quiz?.status === "Submitted"
-                                          ? "none"
-                                          : "auto",
-                                    }}
+                                  <MdRemoveRedEye
+                                    title="view"
+                                    className="cursor-pointer"
+                                    size={23}
                                   />
                                 </div>
+                                {isAdmin && edit && (
+                                  <>
+                                    <LuUpload
+                                      size={20}
+                                      className={`
+                                      "cursor-pointer hover:opacity-80"
+                                    `}
+                                      title="upload"
+                                      // style={{
+                                      //   pointerEvents:
+                                      //     quiz?.status === "Submitted"
+                                      //       ? "none"
+                                      //       : "auto",
+                                      // }}
+                                    />
+
+                                    <FaCheck
+                                      size={20}
+                                      className={`
+                                      "cursor-pointer hover:opacity-80"
+                                    `}
+                                      title="Save"
+                                      onClick={() => onUpdateQuiz(iD)}
+                                    />
+                                  </>
+                                )}
+                                {isAdmin ? null : (
+                                  <div>
+                                    <LuUpload
+                                      size={20}
+                                      onClick={
+                                        quiz?.submission_status !== "Submitted"
+                                          ? () => handleFileUpload(quiz?.id)
+                                          : undefined
+                                      }
+                                      className={`${
+                                        quiz?.submission_status === "Submitted"
+                                          ? "cursor-not-allowed opacity-50"
+                                          : "cursor-pointer hover:opacity-80"
+                                      }`}
+                                      title="upload"
+                                      // style={{
+                                      //   pointerEvents:
+                                      //     quiz?.submission_status ===
+                                      //     "Submitted"
+                                      //       ? "none"
+                                      //       : "auto",
+                                      // }}
+                                    />
+                                  </div>
+                                )}
+
+                                {/* {isAdmin ? (
+                                  <div
+                                    title="edit"
+                                    className="cursor-pointer"
+                                    onClick={() =>
+                                      handleEditAssessment(quiz?.id)
+                                    }
+                                  >
+                                    <FaEdit />{" "}
+                                  </div>
+
+                                <div title="delete" className="cursor-pointer">
+                                  <FaTrash />{" "}
+                                </div>
+                                ) : null} */}
+
+
                                 {/* <div
                               // className="flex items-center gap-2 group "
                               // key={file.id}
@@ -244,6 +389,7 @@ const StudentDataStructure = ({
           </div>
         </div>
       </div>
+
       {uploadFile && (
         <UplaodingFile
           field={field}

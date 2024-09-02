@@ -1,5 +1,10 @@
 "use client";
-import { createCourse, createProgram, getAllCourses } from "@/api/route";
+import {
+  createCourse,
+  createProgram,
+  getAllCourses,
+  getAllSkills,
+} from "@/api/route";
 import CreateField from "@/components/CreateField";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -13,21 +18,24 @@ export default function Page() {
   const [about, setAbout] = useState("");
   const [shortDesc, setShortDesc] = useState("");
   const [chr, setChr] = useState("");
+  const [chrLab, setChrLab] = useState("");
   const router = useRouter();
   const [inputCourses, setInputCourses] = useState([]);
 
-  // async function fetchAllSkills() {
-  //   try {
-  //     const response = await getAllSkills();
-  //     if (response.status === 200) {
-  //       setCourses(response.data?.data);
-  //     } else {
-  //       console.error("Failed to fetch courses, status:", response.status);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching courses:", error);
-  //   }
-  // }
+  async function fetchAllSkills() {
+    try {
+      const response = await getAllSkills();
+      if (response.status === 200) {
+        setCourses(response.data?.data);
+      } else {
+        console.error("Failed to fetch courses, status:", response.status);
+      }
+    } catch (error) {
+      console.error("Error fetching courses:", error);
+    }
+  }
+
+  // console.log(courses);
   const handleSubmit = async (event) => {
     event.preventDefault();
     const courseData = {
@@ -35,7 +43,8 @@ export default function Page() {
       short_description: shortDesc,
       about: about,
       skills: inputCourses,
-      credit_hours: chr,
+      theory_credit_hours: chr || 0,
+      lab_credit_hours: chrLab || 0,
     };
     try {
       const response = await createCourse(courseData);
@@ -48,6 +57,7 @@ export default function Page() {
         setProgramName("");
         setShortDesc("");
         setChr("");
+        setChrLab("");
       } else {
         toast.error(response.data?.message);
       }
@@ -59,7 +69,7 @@ export default function Page() {
   const handleSelectChange = (event) => {
     const selectedName = event.target.value;
     const selectedCourse = courses.find(
-      (course) => course.name === selectedName
+      (course) => course.name || course.skill_name === selectedName
     );
 
     if (selectedCourse) {
@@ -72,16 +82,17 @@ export default function Page() {
   const removeCourse = (courseToRemove) => {
     setInputCourses(inputCourses.filter((course) => course !== courseToRemove));
   };
-  // useEffect(() => {
-  //   fetchAllSkills();
-  // }, []);
+  useEffect(() => {
+    fetchAllSkills();
+  }, []);
 
   return (
     <div>
       <CreateField
         title="Course"
-        list="Skills"
+        list="Skill"
         route="courses"
+        create="skill"
         handleSubmit={handleSubmit}
         handleSelectChange={handleSelectChange}
         programName={programName}
@@ -98,6 +109,10 @@ export default function Page() {
         courses={courses}
         chr={chr}
         setChr={setChr}
+        chrLab={chrLab}
+        setChrLab={setChrLab}
+        removeCourse={removeCourse}
+        fetchAllSkills={fetchAllSkills}
       />
     </div>
   );

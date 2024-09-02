@@ -28,6 +28,7 @@ export default function Page({ params }) {
   const [dueDate, setDueDate] = useState("");
   const [quiz, setQuiz] = useState("");
   const [file, setFile] = useState(null);
+  const [resubmission, setResubmission] = useState("");
 
   async function fetchQuizzes() {
     const response = await getQuizByCourseId(courseId);
@@ -67,6 +68,7 @@ export default function Page({ params }) {
       description: description,
       content: file,
       due_date: dueDate,
+      no_of_resubmissions_allowed: resubmission,
     };
 
     try {
@@ -79,6 +81,7 @@ export default function Page({ params }) {
         setDueDate("");
         setFile(null);
         fetchQuizzes();
+        setResubmission("");
         setCreatingQuiz(false);
       } else {
         toast.error("Error creating Quiz", response?.message);
@@ -164,21 +167,28 @@ export default function Page({ params }) {
                   onChange={(e) => setDueDate(e.target.value)}
                 />
               </div>
-              <div>
-                <label className="text-md">Upload Quiz</label>
-                <input
-                  type="file"
-                  className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
-                  // value={courseData.name}
-                  // onChange={(e) =>
-                  //   setCourseData({ ...courseData, name: e.target.value })
-                  // }
-
-                  // value={dueDate}
-                  onClick={handleFileUpload}
-                  onChange={(e) => setFile(e.target.files[0])}
-                />
+              <div className="flex gap-2 my-2 sm:flex-row flex-col lg:w-[100%]">
+                <div className="mb-4 sm:mb-0 lg:w-[50%] md:w-[50%]">
+                  <label className="text-md">No. of resubmission allowed</label>
+                  <input
+                    type="number"
+                    min={0}
+                    className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                    value={resubmission}
+                    onChange={(e) => setResubmission(e.target.value)}
+                  />
+                </div>
+                <div className="mb-4 sm:mb-0 lg:w-[50%] md:w-[50%]">
+                  <label className="text-md">Upload Quiz</label>
+                  <input
+                    type="file"
+                    className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                    onClick={handleFileUpload}
+                    onChange={(e) => setFile(e.target.files[0])}
+                  />
+                </div>
               </div>
+              
               <button
                 type="submit"
                 onClick={handleAssignmentCreation}

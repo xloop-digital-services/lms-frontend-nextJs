@@ -126,6 +126,9 @@ export default function Page({ params }) {
             provided.
           </li>
         </ul>
+        <p className="pt-2 text-mix-200">
+          Note: No Resubmissions allowed*
+        </p>
 
         <hr className="my-8 text-dark-200 "></hr>
         <div className="flex mb-8">

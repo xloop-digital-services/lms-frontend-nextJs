@@ -36,25 +36,25 @@ export default function Page() {
 
   return (
     <>
-      {loader ? (
+      {/* {loader ? (
         <div className="flex h-screen justify-center items-center">
           <CircularProgress />
         </div>
-      ) : (
+      ) : ( */}
         <>
           {isStudent ? (
-            <div className="">
+            // <div className="">
               <CoursePage path="courses" heading="Courses" />
-            </div>
+            // </div>
           ) : isAdmin ? (
-            <AdminCoursePage title="Courses" programs={courses}  route="course" />
+            <AdminCoursePage title="Courses" programs={courses} route1="courses" route="course" />
           ) : (
             <div className="flex justify-center items-center h-screen w-full">
               this is instructor
             </div>
           )}
         </>
-      )}
+      {/* )} */}
     </>
   );
 }

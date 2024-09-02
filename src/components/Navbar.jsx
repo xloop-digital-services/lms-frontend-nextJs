@@ -92,7 +92,7 @@ export default function Navbar() {
   };
 
   const firstWord = getFirstWord(user?.first_name);
-  console.log(firstWord)
+  // console.log(firstWord)
 
 
   return (
