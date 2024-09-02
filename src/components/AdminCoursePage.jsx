@@ -41,7 +41,8 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
         ) : null}
       </div>
       <div className="flex flex-wrap gap-3">
-        {programs
+      {programs?.length > 0 &&
+        (programs 
           ?.sort((a, b) => a.name.localeCompare(b.name))
           .map((program) => {
             return (
@@ -56,7 +57,7 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
                 status={program.status}
               />
             );
-          })}
+          }))}
       </div>
     </div>
   );
