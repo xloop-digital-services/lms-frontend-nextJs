@@ -87,7 +87,7 @@ export default function Page({ params }) {
         toast.error("Error creating Quiz", response?.message);
       }
     } catch (error) {
-      console.log(error);
+      toast.error("Error creating Quiz", error);
     }
   };
 

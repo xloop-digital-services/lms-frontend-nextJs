@@ -198,6 +198,7 @@ export default function Page({ params }) {
         setModuleName("");
         setModuleDesc("");
         fetchModules();
+        setFileUploaded("");
         setCreatingModule(false);
       } else {
         toast.error(response.data?.message);
@@ -216,12 +217,8 @@ export default function Page({ params }) {
     if (selectedFile) {
       setFile(selectedFile);
       setFileUploaded(selectedFile.name);
-      // console.log(typeof selectedFile);
     }
   };
-
-  // console.log(fileUploaded)
-
   async function handleSave() {
     const updatedCourseData = {
       ...courseData,
@@ -286,6 +283,7 @@ export default function Page({ params }) {
         setIsEditingModule(false);
         setModuleId(null);
         fetchModules();
+        setFileUploaded("");
       } else {
         toast.error(`Failed to update module, status: ${response.status}`);
       }
