@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 import { IoEyeSharp } from "react-icons/io5";
 import { BsEyeSlashFill } from "react-icons/bs";
+import { useAuth } from "@/providers/AuthContext";
 
 function Profile() {
   const { isSidebarOpen } = useSidebar();
@@ -33,7 +34,11 @@ function Profile() {
   const [loader, setLoader] = useState(true);
   const formRef = useRef(null);
   // const registrationID = user?.registration_id
-  const [registrationID, setRegistrationID] = useState('')
+  const { userData } = useAuth();
+  const isStudent = userData?.Group === "student";
+  const isAdmin = userData?.Group === "admin";
+  const isInstructor = userData?.Group === "instructor";
+  const [registrationID, setRegistrationID] = useState("");
 
   useEffect(() => {
     async function fetchUser() {
@@ -49,7 +54,7 @@ function Profile() {
           setContactNumber(userData.contact || "");
           setProgram(userData.program?.name || "");
           setCity(userData.city || "");
-          setRegistrationID(userData.registration_id || "")
+          setRegistrationID(userData.registration_id || "");
         } else {
           console.error("Failed to fetch user, status:", response.status);
         }
@@ -91,7 +96,6 @@ function Profile() {
     setProgram(user?.program || "");
     setCity(user?.city || "");
   };
-
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -184,7 +188,7 @@ function Profile() {
         setConfirmPassword("");
         setIsDisable(true);
       } else {
-        toast.error(response.data?.message,);
+        toast.error(response.data?.message);
       }
     } catch (error) {
       toast.error(`Error updating password: ${error.message}`);
@@ -261,12 +265,14 @@ function Profile() {
                   <h2 className=" text-sm text-dark-400">Name</h2>
                   <p className="font-medium text-xl capitalize">{`${firstName} ${lastName}`}</p>
                 </div>
-                <div className="flex flex-col w-full">
-                  <h2 className=" text-sm text-dark-400">Registration ID</h2>
-                  <p className="font-medium text-xl uppercase">
-                    {registrationID}
-                  </p>
-                </div>
+                {isStudent && (
+                  <div className="flex flex-col w-full">
+                    <h2 className=" text-sm text-dark-400">Registration ID</h2>
+                    <p className="font-medium text-xl uppercase">
+                      {registrationID}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
             <div className="flex lg:flex-col flex-row lg:w-[20%] lg:justify-center justify-around gap-4 items-center">

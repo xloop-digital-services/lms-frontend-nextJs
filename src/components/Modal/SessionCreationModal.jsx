@@ -1,18 +1,96 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
+import { createSession } from "@/api/route";
+import { CircularProgress } from "@mui/material";
+import DatePicker from "react-datepicker";
+import { FaClock } from "react-icons/fa";
+import { toast } from "react-toastify";
+import useClickOutside from "@/providers/useClickOutside";
+import moment from "moment";
 
-const SessionCreationModal = () => {
-  const Location0ptions = ["Karachi", "Lahore"];
-  const Batch0ptions = ["Batch 1", "Batch 2"];
-  const Program0ptions = ["Program 1", "Program 2"];
+const SessionCreationModal = ({
+  setOpenModal,
+  LocationOptions,
+  batchOptions,
+  loadingLocation,
+  loadingBatch,
+  setUpdateSession,
+  updateSession,
+}) => {
+  const [selectedLocation, setSelectedLocation] = useState(
+    "select your location"
+  );
+  const [selectedLocationId, setSelectedLocationId] = useState(null);
+  const [selectedBatch, setSelectedBatch] = useState("select your batch");
 
-  const [selectedLocation, setSelectedLocation] = useState("Location");
-  const [selectedBatch, setSelectedBatch] = useState("Batch");
-  const [selectedProgram, setSelectedProgram] = useState("Program");
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [isBatchOpen, setIsBatchOpen] = useState(false);
-  const [isProgramOpen, setIsProgramOpen] = useState(false);
+  const [isBatchSelected, setIsBatchSelected] = useState(false);
+  const [isLocationSelected, setIsLocationSelected] = useState(false);
+  const [capacity, setCapacity] = useState();
+  const [startTime, setStartTime] = useState(null);
+  const [endTime, setEndTime] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [loadingCreation, setLoadingCreation] = useState(false);
+  const mouseClick = useRef(null);
+  const modalClose = useRef(null);
+
+  useClickOutside(mouseClick, () => {
+    setIsLocationOpen(false);
+    setIsBatchOpen(false);
+  });
+
+  useClickOutside(modalClose, () => setOpenModal(false));
+
+  const handleSessionCreation = async () => {
+    setLoadingCreation(true);
+    if (!errorMessage) {
+      try {
+        // Format time to "hh:mm:ss" or "hh:mm:ss.uuuuuu" (24-hour format) before sending to backend
+        const data = {
+          batch: selectedBatch,
+          location: selectedLocationId,
+          no_of_students: capacity,
+          start_time: startTime,
+          end_time: endTime,
+        };
+
+        const response = await createSession(data);
+        console.log("session created", response.data.message);
+        setLoadingCreation(false);
+        setOpenModal(false);
+        setUpdateSession(!updateSession);
+      } catch (error) {
+        console.log(
+          "error while session creation",
+          error.response.data.message
+        );
+        toast.error("error in session creation");
+        setLoadingCreation(false);
+      }
+    } else {
+      toast.warn("Correct your start time and end time");
+      setLoadingCreation(false);
+    }
+  };
+
+  const handleStartTimeChange = (time) => {
+    // Set the start time as a JavaScript Date object
+    setStartTime(time);
+  };
+
+  const handleEndTimeChange = (time) => {
+    // Set the end time as a JavaScript Date object
+    setEndTime(time);
+
+    // Check if end time is earlier than start time
+    if (startTime && moment(time).isSameOrBefore(startTime)) {
+      setErrorMessage("End time should be greater than start time");
+    } else {
+      setErrorMessage("");
+    }
+  };
 
   const toggleLocationOpen = () => {
     setIsLocationOpen(!isLocationOpen);
@@ -22,120 +100,211 @@ const SessionCreationModal = () => {
     setIsBatchOpen(!isBatchOpen);
   };
 
-  const toggleProgramOpen = () => {
-    setIsProgramOpen(!isProgramOpen);
-  };
-
   const handleLocationSelect = (option) => {
-    setSelectedLocation(option);
+    setSelectedLocation(option.name);
+    setSelectedLocationId(option.id);
     setIsLocationOpen(false);
+    setIsLocationSelected(true);
   };
   const handleBatchSelect = (option) => {
     setSelectedBatch(option);
+    setIsBatchSelected(true);
     setIsBatchOpen(false);
-  };
-  const handleProgramSelect = (option) => {
-    setSelectedProgram(option);
-    setIsProgramOpen(false);
   };
 
   return (
-    <div>
-      <div className="py-6 space-y-5 text-[#07224D]">
-        <div className="flex gap-3 mx-auto w-full justify-between">
-          <div className="space-y-2 text-[15px] w-full">
-            <p>Program</p>
-            <button
-              onClick={toggleProgramOpen}
-              className="flex justify-between items-center w-full text-[#92A7BE] group-hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-white border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
-            >
-              {selectedProgram || Program0ptions[0]}
-              <span className="">
-                <IoIosArrowDown />
-              </span>
-            </button>
-
-            {isProgramOpen && (
-              <div className="absolute z-10 w-[200px] bg-white border rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out">
-                {Program0ptions.map((option, index) => (
-                  <div
-                    key={index}
-                    onClick={() => handleLocationSelect(option)}
-                    className="p-2 cursor-pointer "
-                  >
-                    <div className="px-4 py-1 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
-                      {option}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+    <div className="backDropOverlay h-screen flex justify-center items-center">
+      <div className=" min-w-[550px] z-[1000] mx-auto my-20">
+        {loadingCreation && (
+          <div className="absolute inset-0 w-full p-2 flex items-center justify-center bg-surface-100 bg-opacity-30 z-[1100]">
+            <CircularProgress size={30} />
           </div>
-          <div className="space-y-2 text-[15px] w-full">
-            <p>Batch</p>
-            <button
-              onClick={toggleBatchOpen}
-              className="flex justify-between items-center w-full text-[#92A7BE] group-hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-white border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+        )}
+        <div
+          ref={modalClose}
+          style={{ backgroundColor: "#EBF6FF" }}
+          className="p-5 rounded-xl"
+        >
+          <div className="flex justify-between">
+            <h1
+              style={{
+                fontWeight: 700,
+                fontSize: "17px",
+                lineHeight: "24.2px",
+                color: "#07224D",
+              }}
+              className="text-start  px-2 py-[10px]"
             >
-              {selectedBatch || Batch0ptions[0]}
-              <span className="">
-                <IoIosArrowDown />
-              </span>
+              Session Creation
+            </h1>
+            <button className="px-2" onClick={() => setOpenModal(false)}>
+              <IoClose size={21} />
             </button>
-
-            {isBatchOpen && (
-              <div className="absolute z-10 w-[200px] mt-1 bg-white border rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out">
-                {Batch0ptions.map((option, index) => (
-                  <div
-                    key={index}
-                    onClick={() => handleBatchSelect(option)}
-                    className="p-2 cursor-pointer "
-                  >
-                    <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
-                      {option}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
-        </div>
-        <div className="flex gap-3 mx-auto w-full justify-between">
-          <div className="space-y-2 text-[15px] w-full">
-            <p>Location</p>
-            <button
-              onClick={toggleLocationOpen}
-              className="flex justify-between items-center w-full text-[#92A7BE] group-hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-white border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
-            >
-              {selectedLocation || Location0ptions[0]}
-              <span className="">
-                <IoIosArrowDown />
-              </span>
-            </button>
-
-            {isLocationOpen && (
-              <div className="absolute z-10 w-[200px] bg-white border rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out">
-                {Location0ptions.map((option, index) => (
-                  <div
-                    key={index}
-                    onClick={() => handleLocationSelect(option)}
-                    className="p-2 cursor-pointer "
+          <div className="bg-[#fff] p-6 rounded-xl space-y-5">
+            <div className="flex gap-3 mx-auto w-full justify-between">
+              <div className="space-y-2 text-[15px] w-full">
+                <p>Batch</p>
+                <button
+                  onClick={toggleBatchOpen}
+                  className={`${
+                    !isBatchSelected ? " text-[#92A7BE]" : "text-[#424b55]"
+                  } flex justify-between items-center w-full  hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                >
+                  {selectedBatch || batchOptions[0]}
+                  <span
+                    className={`${
+                      isBatchOpen ? "rotate-180 duration-300" : "duration-300"
+                    }`}
                   >
-                    <div className="px-4 py-1 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
-                      {option}
-                    </div>
+                    <IoIosArrowDown />
+                  </span>
+                </button>
+
+                {isBatchOpen && (
+                  <div
+                    ref={mouseClick}
+                    className="absolute z-10 full mt-1 bg-surface-100 max-h-[200px] overflow-auto scrollbar-webkit min-w-[500px] border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
+                  >
+                    {loadingBatch && batchOptions.length == 0 ? (
+                      <div className="w-full flex items-center justify-center p-1">
+                        <CircularProgress size={15} />
+                      </div>
+                    ) : batchOptions && batchOptions.length > 0 ? (
+                      batchOptions.map((option, index) => (
+                        <div
+                          key={index}
+                          onClick={() => handleBatchSelect(option)}
+                          className="p-2 cursor-pointer "
+                        >
+                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                            {option}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-sm text-center text-dark-300">
+                        no batch found
+                      </div>
+                    )}
                   </div>
-                ))}
+                )}
               </div>
-            )}
-          </div>
-          <div className="space-y-2 text-[15px] w-full">
-            <p>Capacity</p>
-            <input
-              type="text"
-              className="border border-dark-300 outline-none p-3 rounded-lg w-full "
-              placeholder="capacity"
-            />
+            </div>
+            <div className="flex gap-3 mx-auto w-full justify-between">
+              <div className="space-y-2 text-[15px] w-full">
+                <p>Location</p>
+                <button
+                  onClick={toggleLocationOpen}
+                  className={`${
+                    !isLocationSelected ? " text-[#92A7BE]" : "text-[#424b55]"
+                  } flex justify-between items-center w-full  hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                >
+                  {selectedLocation || LocationOptions[0]}
+                  <span
+                    className={`${
+                      isLocationOpen
+                        ? "rotate-180 duration-300"
+                        : "duration-300"
+                    }`}
+                  >
+                    <IoIosArrowDown />
+                  </span>
+                </button>
+
+                {isLocationOpen && (
+                  <div
+                    ref={mouseClick}
+                    className="absolute z-10 min-w-[242px] max-h-[200px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
+                  >
+                    {loadingLocation && LocationOptions.length == 0 ? (
+                      <div className="w-full flex items-center justify-center p-1">
+                        <CircularProgress size={15} />
+                      </div>
+                    ) : LocationOptions && LocationOptions.length > 0 ? (
+                      LocationOptions.map((option, index) => (
+                        <div
+                          key={index}
+                          onClick={() => handleLocationSelect(option)}
+                          className="p-2 cursor-pointer"
+                        >
+                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                            {option.name}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-sm text-center text-dark-300">
+                        no location found
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+              <div className="space-y-2 text-[15px] w-full">
+                <p>Number of Students</p>
+                <input
+                  type="number"
+                  className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full "
+                  placeholder="number of students"
+                  value={capacity}
+                  min={0}
+                  onChange={(e) => setCapacity(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="flex gap-3 mx-auto w-full justify-between">
+              <div className="space-y-2 text-[15px] w-full">
+                <p>Start Time</p>
+                <div className="relative">
+                  <DatePicker
+                    selected={startTime} // Pass the JavaScript Date object directly
+                    onChange={handleStartTimeChange}
+                    showTimeSelect
+                    showTimeSelectOnly
+                    timeIntervals={15}
+                    timeCaption="Time"
+                    dateFormat="HH:mm:ss"
+                    placeholderText="Select start time"
+                    className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
+                  />
+                  <FaClock className="absolute right-3 top-1/2 transform -translate-y-1/2 text-dark-400" />
+                </div>
+              </div>
+
+              <div className="space-y-2 text-[15px] w-full">
+                <p>End Time</p>
+                <div className="relative">
+                  <DatePicker
+                    selected={endTime} // Pass the JavaScript Date object directly
+                    onChange={handleEndTimeChange}
+                    showTimeSelect
+                    showTimeSelectOnly
+                    timeIntervals={15}
+                    timeCaption="Time"
+                    dateFormat="HH:mm:ss"
+                    placeholderText="Select end time"
+                    className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
+                  />
+                  <FaClock className="absolute right-3 top-1/2 transform -translate-y-1/2 text-dark-400" />
+                </div>
+                {errorMessage && (
+                  <p className="text-[#D84848] text-[12px] mt-2">
+                    {errorMessage}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div className="flex w-full justify-center items-center">
+              <button
+                type="submit"
+                onClick={handleSessionCreation}
+                className="w-fit flex justify-center py-3 px-12 text-sm font-medium rounded-lg text-dark-100 bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
+              >
+                Create
+              </button>
+            </div>
           </div>
         </div>
       </div>

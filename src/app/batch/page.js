@@ -1,42 +1,99 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { useSidebar } from "@/providers/useSidebar";
 import BatchTable from "@/components/BatchTable";
 import BatchModal from "@/components/Modal/BatchModal";
+import { filterByCity, listAllBatches } from "@/api/route";
+import cityAreas from "../../../public/data/cityAreas.json";
+import useClickOutside from "@/providers/useClickOutside";
+import { IoIosCloseCircleOutline } from "react-icons/io";
 
 export default function Page() {
-    const { isSidebarOpen } = useSidebar();
-    const [selectedCity, setSelectedCity] = useState("Select your city");
-    const [isCityOpen, setIsCityOpen] = useState(false);
-    const [isOpenModal, setIsOpenModal] = useState(false)
-  
-    const toggleCityOpen = () => {
-      setIsCityOpen(!isCityOpen);
-    };
-  
-  
-    const handleCitySelect = (option) => {
-      setSelectedCity(option);
-      setIsCityOpen(false);
-    };
-   
-  
-    const city0ptions = ["Karachi", "Lahore"];
+  const { isSidebarOpen } = useSidebar();
+  const [selectedCity, setSelectedCity] = useState("Select your city");
+  const [isCityOpen, setIsCityOpen] = useState(false);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [batches, setBatches] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [updateBatch, setUpdateBatch] = useState(false);
+  const [city0ptions, setCityOptions] = useState([]);
+  const [isCitySelected, setIscitySelected] = useState(false);
+  const [filterCity, setFilterCity] = useState([])
+  const mousedown = useRef(null);
 
-    const handleBatchCreate = () => {
-        setIsOpenModal(!isOpenModal)
+  useClickOutside(mousedown, () => setIsCityOpen(false));
+
+  const handleListingAllBatches = async () => {
+    try {
+      const response = await listAllBatches();
+      console.log("batches", response?.data);
+      setBatches(response?.data);
+      setLoading(false);
+    } catch (error) {
+      console.log("error while fetching the batches", error);
+      setLoading(false);
     }
+  };
 
-    return (
-      <div className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-32 font-inter ${
-          isSidebarOpen ? "translate-x-64 pl-20 " : "translate-x-0 pl-10 pr-4"
-        }`}
-        style={{
-          width: isSidebarOpen ? "84%" : "100%",
-        }}>
-          <div className="bg-surface-100 p-6 rounded-xl">
-        <div className="w-full flex justify-between items-center  gap-4">
+  useEffect(() => {
+    handleListingAllBatches();
+  }, [updateBatch]);
+
+  useEffect(() => {
+    console.log("city of areas", cityAreas);
+    setCityOptions(cityAreas);
+  }, []);
+
+  //filter by city
+  useEffect(() => {
+    const handleFilterByCity = async () => {
+      setLoading(true);
+      try {
+        const response = await filterByCity(selectedCity);
+        console.log("filteration success", response);
+        setBatches(response?.data?.locations)
+        setLoading(false);
+      } catch (error) {
+        console.log("error while filtering by city", error);
+        setLoading(false);
+      }
+    };
+    handleFilterByCity();
+  }, [selectedCity]);
+
+  const handleResetFilter = () => {
+    setSelectedCity("Select your city")
+    setUpdateBatch(true)
+  }
+
+  const toggleCityOpen = () => {
+    setIsCityOpen(!isCityOpen);
+  };
+
+  const handleCitySelect = (option) => {
+    setSelectedCity(option.name);
+    setIsCityOpen(false);
+    setIscitySelected(true);
+  };
+
+  const handleBatchCreate = () => {
+    setIsOpenModal(!isOpenModal);
+  };
+
+  return (
+    <div
+      className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-22 font-inter ${
+        isSidebarOpen
+          ? "translate-x-64 pl-20 "
+          : "translate-x-0 sm:pl-5 px-4 sm:pr-5"
+      }`}
+      style={{
+        width: isSidebarOpen ? "84%" : "100%",
+      }}
+    >
+      <div className="bg-surface-100 p-6 rounded-xl">
+        <div className="w-full mx-auto flex sm:flex-row flex-col sm:justify-between items-center  gap-4">
           <div>
             <p className="font-bold text-xl">Batch Details</p>
           </div>
@@ -44,16 +101,22 @@ export default function Page() {
             <div>
               <button
                 onClick={toggleCityOpen}
-                className="flex justify-between items-center md:w-[200px] w-[80%] text-[#92A7BE] group-hover:text-[#0e1721] px-4 py-4 text-sm text-left bg-surface-100 border  border-[#92A7BE] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+                className={`${
+                  !isCitySelected ? " text-[#92A7BE]" : "text-[#424b55]"
+                } flex justify-between items-center  sm:w-[200px]   hover:text-[#0e1721] sm:p-4 px-2 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
               >
-                {selectedCity || city0ptions[0]}
-                <span className="">
+                {selectedCity || city0ptions[0] } 
+                {isCitySelected && <span className="text-dark-400" onClick={handleResetFilter}><IoIosCloseCircleOutline size={20} /></span>} 
+                <span className="pl-1">
                   <IoIosArrowDown />
                 </span>
               </button>
-  
+
               {isCityOpen && (
-                <div className="absolute z-10 w-[200px] mt-1 bg-surface-100 border rounded-lg shadow-lg transition-opacity duration-300 ease-in-out">
+                <div
+                  ref={mousedown}
+                  className="absolute z-10 sm:w-[200px] sm:h-full  max-h-[400px] overflow-auto scrollbar-webkit mt-1 bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                >
                   {city0ptions.map((option, index) => (
                     <div
                       key={index}
@@ -61,7 +124,7 @@ export default function Page() {
                       className="p-2 cursor-pointer "
                     >
                       <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
-                        {option}
+                        {option.name}
                       </div>
                     </div>
                   ))}
@@ -123,19 +186,29 @@ export default function Page() {
               )}
             </div> */}
             <div>
-              <button className="text-[#fff] bg-[#03A1D8] p-4 md:px-8 rounded-lg hover:cursor-pointer" onClick={handleBatchCreate}>
-                Create a new batch
+              <button
+                className="text-[#fff] bg-[#03A1D8] sm:flex text-sm sm:p-4 px-3 py-3 md:px-8 rounded-lg hover:cursor-pointer"
+                onClick={handleBatchCreate}
+              >
+                Create <span className="sm:flex hidden px-1">a new </span> batch
               </button>
             </div>
           </div>
         </div>
         <div>
-        <BatchTable />
-        </div>
-        </div>
-        <div>
-          {isOpenModal && <BatchModal setIsOpenModal={setIsOpenModal} />}
+          <BatchTable batches={batches} loading={loading} />
         </div>
       </div>
-    );
-  }
+      <div>
+        {isOpenModal && (
+          <BatchModal
+            setIsOpenModal={setIsOpenModal}
+            setUpdateBatch={setUpdateBatch}
+            cityOptions={city0ptions}
+            updateBatch={updateBatch}
+          />
+        )}
+      </div>
+    </div>
+  );
+}

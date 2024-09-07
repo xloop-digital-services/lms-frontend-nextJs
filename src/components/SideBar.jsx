@@ -67,7 +67,104 @@ function SideBar() {
                   <FaHome size={24} />
                   Dashboard
                 </Link>
+                <div className={`${!isAdmin && "hidden"}`}>
+                  <Link
+                    href="/user-management"
+                    className={`p-4 flex flex-col gap-4 mt-2 cursor-pointer rounded-xl hover:text-blue-300 ${
+                      isLinkActive("/user-management") ||
+                      isLinkActive("/user-management/approved") ||
+                      isLinkActive("/user-management/shortlist")
+                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
+                        : "text-dark-600"
+                    }`}
+                  >
+                    <div
+                      className={`flex items-center justify-between w-full ${
+                        isOpen && "border-b border-dark-300 pb-2"
+                      }`}
+                      onClick={ToggleOptions}
+                    >
+                      <div className="flex gap-4">
+                        <FaListAlt size={24} />
+                        <p
+                          className={`flex-grow text-center ${
+                            isLinkActive("/user-management") && "font-semibold"
+                          }`}
+                        >
+                          User Management
+                        </p>
+                      </div>
+                      <button
+                        // onClick={ToggleOptions}
+                        className="group-hover:cursor-pointer"
+                      >
+                        <IoIosArrowDown size={22} />
+                      </button>
+                    </div>
 
+                    {isOpen && (
+                      <div>
+                        <ul className="flex flex-col list-disc pl-9 space-y-2">
+                          <li>
+                            <Link
+                              href="/user-management/approved"
+                              className={`${
+                                isLinkActive("/user-management/approved") &&
+                                "font-semibold"
+                              }`}
+                            >
+                              Applicants
+                            </Link>
+                          </li>
+                          <li>
+                            <Link
+                              href="/user-management/shortlist"
+                              className={`${
+                                isLinkActive("/user-management/shortlist") &&
+                                "font-semibold"
+                              }`}
+                            >
+                              Users
+                            </Link>
+                          </li>
+                        </ul>
+                      </div>
+                    )}
+                  </Link>
+                  <Link
+                    href="/location"
+                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
+                      isLinkActive("/location")
+                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
+                        : "text-dark-600"
+                    }`}
+                  >
+                    <FaListAlt size={24} />
+                    Location
+                  </Link>
+                  <Link
+                    href="/batch"
+                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
+                      isLinkActive("/batch")
+                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
+                        : "text-dark-600"
+                    }`}
+                  >
+                    <FaListAlt size={24} />
+                    Batch
+                  </Link>
+                  <Link
+                    href="/session"
+                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
+                      isLinkActive("/session")
+                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100 "
+                        : "text-dark-600"
+                    }`}
+                  >
+                    <FaListAlt size={24} />
+                    Session
+                  </Link>
+                </div>
                 {/* <div className={`${isAdmin && "hidden"}`}> */}
                 {(isAdmin || isStudent) && (
                   <Link
@@ -176,104 +273,6 @@ function SideBar() {
                   <FaCalendar size={24} />
                   Calendar
                 </Link>
-                <div className={`${!isAdmin && "hidden"}`}>
-                  <Link
-                    href="/user-management"
-                    className={`p-4 flex flex-col gap-4 mt-2 cursor-pointer rounded-xl hover:text-blue-300 ${
-                      isLinkActive("/user-management") ||
-                      isLinkActive("/user-management/approved") ||
-                      isLinkActive("/user-management/shortlist")
-                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
-                        : "text-dark-600"
-                    }`}
-                  >
-                    <div
-                      className={`flex items-center justify-between w-full ${
-                        isOpen && "border-b border-dark-300 pb-2"
-                      }`}
-                      onClick={ToggleOptions}
-                    >
-                      <div className="flex gap-4">
-                        <FaListAlt size={24} />
-                        <p
-                          className={`flex-grow text-center ${
-                            isLinkActive("/user-management") && "font-semibold"
-                          }`}
-                        >
-                          User Management
-                        </p>
-                      </div>
-                      <button
-                        // onClick={ToggleOptions}
-                        className="group-hover:cursor-pointer"
-                      >
-                        <IoIosArrowDown size={22} />
-                      </button>
-                    </div>
-
-                    {isOpen && (
-                      <div>
-                        <ul className="flex flex-col list-disc pl-9 space-y-2">
-                          <li>
-                            <Link
-                              href="/user-management/approved"
-                              className={`${
-                                isLinkActive("/user-management/approved") &&
-                                "font-semibold"
-                              }`}
-                            >
-                              Approved users
-                            </Link>
-                          </li>
-                          <li>
-                            <Link
-                              href="/user-management/shortlist"
-                              className={`${
-                                isLinkActive("/user-management/shortlist") &&
-                                "font-semibold"
-                              }`}
-                            >
-                              Shortlist users
-                            </Link>
-                          </li>
-                        </ul>
-                      </div>
-                    )}
-                  </Link>
-                  <Link
-                    href="/session"
-                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
-                      isLinkActive("/session")
-                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100 "
-                        : "text-dark-600"
-                    }`}
-                  >
-                    <FaListAlt size={24} />
-                    Session
-                  </Link>
-                  <Link
-                    href="/batch"
-                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
-                      isLinkActive("/batch")
-                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
-                        : "text-dark-600"
-                    }`}
-                  >
-                    <FaListAlt size={24} />
-                    Batch
-                  </Link>
-                  <Link
-                    href="/location"
-                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
-                      isLinkActive("/location")
-                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
-                        : "text-dark-600"
-                    }`}
-                  >
-                    <FaListAlt size={24} />
-                    Location
-                  </Link>
-                </div>
               </div>
               <div className="flex flex-col">
                 <Link

@@ -1,13 +1,144 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
-import { RiArrowDownDoubleFill } from "react-icons/ri";
-import SessionCreationModal from "./SessionCreationModal";
+import { IoIosArrowDown } from "react-icons/io";
+import DatePicker from "react-datepicker";
+import { FaCalendar, FaClock } from "react-icons/fa";
+import { createBatch } from "@/api/route";
+import { CircularProgress } from "@mui/material";
+import { toast } from "react-toastify";
+import useClickOutside from "@/providers/useClickOutside";
 
-const BatchModal = ({ setIsOpenModal }) => {
+
+const BatchModal = ({updateBatch ,setIsOpenModal, setUpdateBatch, cityOptions }) => {
+  const [selectedCity, setSelectedCity] = useState("City");
+  const [isCityOpen, setIsCityOpen] = useState(false);
+  const [locations, setLocations] = useState([]); // State to store the list of location names
+  const [currentLocation, setCurrentLocation] = useState(""); // State to store the current input value
+  const inputRef = useRef(null); // Ref to focus the input field
+  const [startDate, setstartDate] = useState(null);
+  const [endDate, setendDate] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [studentCapacity, setStudentCapacity] = useState();
+  const [year, setYear] = useState();
+  const [loadingCreation, setLoadingCreation] = useState(false);
+  const [isCitySelected, setIsCitySelected] = useState(false);
+  const [cityShortName, setCityShortName] = useState("");
+  const cityDown = useRef(null);
+  const modalDown = useRef(null);
+
+  useClickOutside(cityDown, () => setIsCityOpen(false))
+
+  useClickOutside(modalDown, () => setIsOpenModal(false))
+
+  const handleBatchCreation = async () => {
+    setLoadingCreation(true);
+    if (!errorMessage) {
+      try {
+        const data = {
+          city: selectedCity,
+          city_abb: cityShortName,
+          year: year,
+          no_of_students: studentCapacity,
+          start_date: startDate,
+          end_date: endDate,
+        };
+
+        const response = await createBatch(data);
+        console.log("batch created", response?.data.message);
+        toast.success('Batch created')
+        setLoadingCreation(false);
+        setIsOpenModal(false);
+        setUpdateBatch(!updateBatch);
+      } catch (error) {
+        console.log("error is occuring", error.response.data.error);
+        toast.error(error.response.data.error[0])
+        setLoadingCreation(false);
+      }
+    } else {
+      toast.warn("select the correct time");
+      setLoadingCreation(false);
+    }
+  };
+
+  const handleStartDate = (date) => {
+    // Check if the date is a valid Date object
+    if (date instanceof Date && !isNaN(date)) {
+      const formattedDate = date.toISOString().split("T")[0]; // Extract the date part
+    setstartDate(formattedDate); // Set the start date
+    // console.log("start date,", date);
+    console.log('formated start date', formattedDate)
+
+    } else {
+      toast.error("Invalid date selected");
+    }
+  };
+
+  const handleEndDateChange = (date) => {
+    if (date instanceof Date && !isNaN(date)) {
+    const formattedDate = date.toISOString().split("T")[0]; // Extract the date part
+    setendDate(formattedDate); // Set the end date
+    // console.log('end date,', date)
+    console.log('formated end date', formattedDate)
+
+    // Check if end date is earlier than start date
+    if (startDate && date <= startDate) {
+      setErrorMessage("End date should be greater than start date");
+    } else {
+      setErrorMessage("");
+    }
+    } else {
+      toast.error("Invalid date selected");
+    }
+  };
+
+  // Handle adding a new location
+  const handleAddLocation = () => {
+    setIsInputActive(true); // Activate the input field
+    if (inputRef.current) {
+      inputRef.current.focus(); // Focus the input field
+    }
+  };
+
+  // Handle adding location when Enter key is pressed
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      if (currentLocation.trim() !== "") {
+        setLocations((prevLocations) => [...prevLocations, currentLocation]); // Add location
+        setCurrentLocation(""); // Clear input field
+      }
+    }
+  };
+
+  // Handle removing a location
+  const handleRemoveLocation = (index) => {
+    setLocations((prevLocations) =>
+      prevLocations.filter((_, i) => i !== index)
+    ); // Remove location
+  };
+
+  const toggleCityOpen = () => {
+    setIsCityOpen(!isCityOpen);
+  };
+  const handleCitySelect = (option) => {
+    setSelectedCity(option.name);
+    setCityShortName(option.shortName);
+    setIsCityOpen(false);
+    setIsCitySelected(true);
+  };
+
   return (
     <div className="backDropOverlay h-screen flex justify-center items-center">
-      <div className="w-[550px] z-[1000] mx-auto my-20">
-        <div style={{ backgroundColor: "#EBF6FF" }} className="p-5 rounded-xl">
+      <div className="w-[550px] z-[1000] mx-auto my-20 ">
+        {loadingCreation && (
+          <div className="absolute inset-0 w-full p-2 flex items-center justify-center bg-surface-100 bg-opacity-30 z-[1100]">
+            <CircularProgress size={30} />
+          </div>
+        )}
+        <div
+          ref={modalDown}
+          style={{ backgroundColor: "#EBF6FF" }}
+          className="xsm:p-5 p-2 m-2 rounded-xl"
+        >
           <div className="flex justify-between">
             <h1
               style={{
@@ -16,7 +147,7 @@ const BatchModal = ({ setIsOpenModal }) => {
                 lineHeight: "24.2px",
                 color: "#07224D",
               }}
-              className="text-start  px-2 py-[10px]"
+              className="text-start  px-2 xsm:py-[10px] pb-[5px]"
             >
               Batch Creation
             </h1>
@@ -24,46 +155,174 @@ const BatchModal = ({ setIsOpenModal }) => {
               <IoClose size={21} />
             </button>
           </div>
-          <div className={`bg-surface-100 p-6 rounded-xl space-y-5 `}>
-            <div>
-              <div className="flex justify-center items-center">
-                <div className="w-full h-[2px] bg-[#485564]"></div>
-                <div className="w-full flex items-center ml-2">
-                  <span>Basic Information</span>
-                  <span>
-                    <RiArrowDownDoubleFill />
+          <div
+            className={`bg-surface-100 xsm:p-6 px-3 py-4 rounded-xl xsm:space-y-5 space-y-2`}
+          >
+            <div className="flex  gap-3 mx-auto w-full justify-between">
+              {/* <div className="space-y-2 text-[15px] w-full">
+                <p>Batch</p>
+                <input
+                  type="text"
+                  className="border border-dark-300 outline-none p-3 rounded-lg w-full "
+                  placeholder="batch name"
+                  value={batchName}
+                  onChange={(e) => setbatchName(e.target.value)}
+                />
+              </div>         */}
+              <div className="space-y-2 text-[15px] w-full">
+                <p>City</p>
+                <button
+                  onClick={toggleCityOpen}
+                  className={`${
+                    !isCitySelected ? " text-[#92A7BE]" : "text-[#424b55]"
+                  } flex justify-between items-center w-full  hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                >
+                  {selectedCity}
+                  <span className="">
+                    <IoIosArrowDown />
                   </span>
-                </div>
-                <div className="w-full h-[2px] bg-[#485564]"></div>
+                </button>
+
+                {isCityOpen && (
+                  <div ref={cityDown} className="absolute z-10 xsm:w-[461px] w-[83%] max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out">
+                    {cityOptions.map((option, index) => (
+                      <div
+                        key={index}
+                        onClick={() => handleCitySelect(option)}
+                        className="p-2 cursor-pointer "
+                      >
+                        <div className="px-4 py-1 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                          {option.name}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
-            <div>
-              <div className="flex justify-center items-center">
-                <div className="w-full h-[2px] bg-[#485564]"></div>
-                <div className="w-full flex items-center ml-2">
-                  <span>Session Creation</span>
-                  <span>
-                    <RiArrowDownDoubleFill />
-                  </span>
+
+            <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
+              {/* <div className="space-y-2 text-[15px] w-full">
+                <p>Location</p>
+                <div
+                  className={`border border-dark-300 px-3 ${
+                    locations.length > 0 ? "py-2" : "py-3"
+                  } rounded-lg flex gap-2`}
+                >
+                  {/* Add Location Button *
+                  <button
+                    className="text-dark-300 hover:text-dark-400 px-1 border border-dark-200 rounded-lg hover:border-dark-400"
+                    onClick={handleAddLocation}
+                  >
+                    +
+                  </button>
+                 Display Added Locations 
+                  {locations.map((location, index) => (
+                    <div
+                      key={index}
+                      className="border border-dark-300 p-1 px-2 rounded-lg flex items-center space-x-2"
+                    >
+                      <span>{location}</span>
+                      <button
+                        onClick={() => handleRemoveLocation(index)}
+                        className="text-red-500 hover:text-red-700 text-sm"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                  * Input Field *
+                  {isInputActive && (
+                    <input
+                      ref={inputRef}
+                      type="text"
+                      className="outline-none w-full"
+                      placeholder="Enter location"
+                      value={currentLocation}
+                      onChange={(e) => setCurrentLocation(e.target.value)}
+                      onKeyDown={handleKeyPress} // Handle Enter key press
+                    />
+                  )}
                 </div>
-                <div className="w-full h-[2px] bg-[#485564]"></div>
+              </div> */}
+              <div className="space-y-2 text-[15px] w-full">
+                <p>Number of Students</p>
+                <input
+                  type="number"
+                  className="border border-dark-300 outline-none p-3 rounded-lg w-full "
+                  placeholder="number of students"
+                  value={studentCapacity}
+                  min={0}
+                  onChange={(e) => setStudentCapacity(e.target.value)}
+                />
               </div>
-              <SessionCreationModal />
+              <div className="space-y-2 text-[15px] w-full">
+                <p>Year</p>
+                <input
+                  type="text"
+                  className="border border-dark-300 outline-none p-3 rounded-lg w-full "
+                  placeholder="batch year"
+                  value={year}
+                  onChange={(e) => setYear(e.target.value)}
+                />
+              </div>
             </div>
-            <div>
-              <div className="flex justify-center items-center">
-                <div className="w-full h-[2px] bg-[#485564]"></div>
-                <div className="w-full flex items-center ml-2">
-                  <span className="">Location Creation</span>
-                  <span>
-                    <RiArrowDownDoubleFill />
-                  </span>
+
+            <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
+              <div className="space-y-2 text-[15px] w-full">
+                <p>Start Date</p>
+                <div className="relative w-full">
+                  {" "}
+                  {/* Added w-full to parent */}
+                  <DatePicker
+                    selected={startDate}
+                    onChange={handleStartDate}
+                    dateFormat="yyyy-MM-dd" // Corrected format to lowercase
+                    placeholderText="Select start date"
+                    className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full" // Ensured w-full for input
+                  />
+                  <FaCalendar className="absolute right-3 top-1/2 transform -translate-y-1/2 text-dark-400 pointer-events-none" />
                 </div>
-                <div className="w-full h-[2px] bg-[#485564]"></div>
               </div>
+
+              <div className="space-y-2 text-[15px] w-full">
+                <p>End Date</p>
+                <div className="relative w-full">
+                  {" "}
+                  {/* Added w-full to parent */}
+                  <DatePicker
+                    selected={endDate}
+                    onChange={handleEndDateChange}
+                    dateFormat="yyyy-MM-dd"
+                    placeholderText="Select end date"
+                    className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full" // Ensured w-full for input
+                  />
+                  <FaCalendar className="absolute right-3 top-1/2 transform -translate-y-1/2 text-dark-400 pointer-events-none" />
+                </div>
+                {errorMessage && (
+                  <p className="text-[#D84848] text-[12px] mt-2 ">
+                    {errorMessage}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div className="flex gap-3 mx-auto w-full justify-between">
+              {/* <div className="space-y-2 text-[15px] w-full">
+                <p>Category</p>
+                <input
+                  type="text"
+                  className="border border-dark-300 outline-none p-3 rounded-lg w-full "
+                  placeholder="capacity"
+                />
+              </div> */}
             </div>
             <div className="flex w-full justify-center items-center">
-              <button className="w-fit flex justify-center py-3 px-12 text-sm font-medium rounded-lg text-dark-100 bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+              <button
+                type="submit"
+                onClick={handleBatchCreation}
+                className="w-fit flex justify-center py-3 px-12 text-sm font-medium rounded-lg text-dark-100 bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
+              >
                 Create
               </button>
             </div>

@@ -96,13 +96,14 @@ export const getCourseByProgId = async (progId) => {
 //get instructor courses
 export const getInstructorCourses = async (insId) => {
   try {
-    const response = await axiosInstance.get(`/instructor-courses/?instructor_id=${insId}`);
+    const response = await axiosInstance.get(
+      `/instructor-courses/?instructor_id=${insId}`
+    );
     return response;
   } catch (error) {
     throw error;
   }
 };
-
 
 //get program by Registration Id
 export const getProgramByRegId = async (regId) => {
@@ -250,7 +251,6 @@ export const getOverallProgress = async (courseId, regId) => {
   }
 };
 
-
 //get quizzes Grading (admin)
 export const getQuizGrading = async (courseId, quizId) => {
   try {
@@ -262,7 +262,6 @@ export const getQuizGrading = async (courseId, quizId) => {
     throw error;
   }
 };
-
 
 //get assignments Grading (admin)
 export const getAssignmentGrading = async (courseId, assignId) => {
@@ -299,7 +298,6 @@ export const getExamGrading = async (courseId, examId) => {
     throw error;
   }
 };
-
 
 //get student attendance
 export const getStudentAttendance = async (courseId, regId) => {
@@ -431,7 +429,7 @@ export const uploadExam = async (exam) => {
 //   }
 // }
 
-export const getStudentByStatus = async (
+export const getUserByStatus = async (
   programID,
   selectedOption,
   selectedStatus
@@ -472,6 +470,100 @@ export const VerifyEmail = async (data) => {
 export const getAllPrograms = async () => {
   try {
     const response = await axiosInstance.get(`/course/programs/`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const listAllSessions = async () => {
+  try {
+    const response = await axiosInstance.get("/session/");
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const listAllBatches = async () => {
+  try {
+    const response = await axiosInstance.get("/batch/");
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const listAllLocations = async () => {
+  try {
+    const response = await axiosInstance.get("/location/");
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const createBatch = async (data) => {
+  try {
+    const response = await axiosInstance.post("/batch/", data);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const createSession = async (data) => {
+  try {
+    const response = await axiosInstance.post("/session/", data);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const createLocation = async (data) => {
+  try {
+    const response = await axiosInstance.post("/location/", data);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const filterByCity = async (cityname) => {
+  try {
+    const response = await axiosInstance.get(
+      `/filter-locations-by-city/?city=${cityname}/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getApplicationsTotalNumber = async (filteration_id) => {
+  try {
+    const response = await axiosInstance.get(
+      `/application-count/${filteration_id}/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getCityStatistics = async () => {
+  try {
+    const response = await axiosInstance.get("/city-stats/");
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const totalUsersCount = async () => {
+  try {
+    const response = await axiosInstance.get("/admin-portal-count/");
     return response;
   } catch (error) {
     throw error;
@@ -746,4 +838,3 @@ export const markAttendanceByCourseId = async (courseId, attendance) => {
     throw error;
   }
 };
-

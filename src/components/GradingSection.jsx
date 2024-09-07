@@ -19,20 +19,18 @@ export const GradingSection = ({ title, options, courseId }) => {
   };
 
   const handleSelect = (id) => {
-    const tempSelected = selected; // Store the current selected value
     setSelected(id);
     setIsOpen(false);
+    if (!selected) return;
 
-    // if (!tempSelected && title === "Quiz") {
-    //   fetchQuizzesGrading();
-    //   return; // Ensure the function stops here
-    // }
-
-    if (!tempSelected && title === "Assignment") {
-      fetchAsignmentsGrading();
-      return; // Ensure the function stops here
-    }
+    // if (!selected && title === "Assignment") return;
+    // fetchAsignmentsGrading();
   };
+
+  useEffect(() => {
+    // fetchQuizzesGrading();
+    fetchAsignmentsGrading();
+  }, [selected]);
 
   const handleToggleSection = (section) => {
     setOpenSection(openSection === section ? null : section);
@@ -135,11 +133,7 @@ export const GradingSection = ({ title, options, courseId }) => {
       </div>
       {selected && openSection && (
         <div className="mt-3">
-          <StudentMarksTable
-            assessments={
-              quizGrading || assignmentGrading || projectGrading || examGrading
-            }
-          />
+          <StudentMarksTable assessments={assignmentGrading} />
         </div>
       )}
     </div>
