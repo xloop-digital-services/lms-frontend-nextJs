@@ -3,22 +3,25 @@ import React, { useEffect, useState } from "react";
 import { useSidebar } from "@/providers/useSidebar";
 import StudentAttendence from "@/components/StudentAttendence";
 import CourseHead from "@/components/CourseHead";
-import { getStudentAttendance } from "@/api/route";
+import { getStudentsByCourseId } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
 import { CircularProgress } from "@mui/material";
+import AdminAttendance from "@/components/AdminAttendance";
 
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
   const courseId = params.courseId;
   const [attendance, setAttendance] = useState([]);
   const { userData } = useAuth();
+  const isStudent = userData?.Group === "student";
+  const isAdmin = userData?.Group === "admin";
   const [loader, setLoader] = useState(false);
   const regId = userData?.user_data?.registration_id;
 
   useEffect(() => {
     if (!regId) return;
     async function fetchAttendance() {
-      const response = await getStudentAttendance(courseId, regId);
+      const response = await getStudentsByCourseId(courseId);
       setLoader(true);
       try {
         if (response.status === 200) {
@@ -37,7 +40,7 @@ export default function Page({ params }) {
     }
 
     fetchAttendance();
-  }, [regId]);
+  }, []);
   return (
     <>
       {loader ? (
@@ -63,7 +66,13 @@ export default function Page({ params }) {
               instructorName="Maaz"
             />
 
-            <StudentAttendence attendance={attendance} loader={loader} />
+            {isStudent ? (
+              <StudentAttendence attendance={attendance} loader={loader} />
+            ) : isAdmin ? (
+              <AdminAttendance courseId={courseId} />
+            ) : (
+              <AdminAttendance courseId={courseId} />
+            )}
           </div>
         </div>
       )}

@@ -6,6 +6,8 @@ import CourseCard from "@/components/CourseCard";
 import { getAllPrograms, getProgramById } from "@/api/route";
 import AdminCoursePage from "@/components/AdminCoursePage";
 import MainCourseCard from "@/components/MainCourseCard";
+import StudentProgram from "@/components/StudentProgram";
+import InstructorCoursePage from "@/components/InstructorCoursePage";
 
 export default function Page() {
   const [loader, setLoader] = useState(true);
@@ -57,21 +59,15 @@ export default function Page() {
   }, [progId]);
 
   return (
+    // <>
+    //   {loader ? (
+    //     <div className="flex h-screen justify-center items-center">
+    //       <CircularProgress />
+    //     </div>
+    //   ) : (
     <>
-      {/* {loader ? (
-        <div className="flex h-screen justify-center items-center">
-          <CircularProgress />
-        </div>
-      ) : ( */}
       {isStudent ? (
-        <div className="">
-        <AdminCoursePage
-          title="Programs"
-          programs={program}
-          route="program"
-          route1="programs"
-        />
-        </div>
+        <StudentProgram path="programs" heading="Registered Program" />
       ) : isAdmin ? (
         <AdminCoursePage
           title="Programs"
@@ -79,14 +75,13 @@ export default function Page() {
           route="program"
           route1="programs"
         />
+      ) : isInstructor ? (
+        <InstructorCoursePage title="Quizzes" route="course" route1="quiz" />
       ) : (
-        <div className="flex justify-center items-center h-screen w-full">
-          {" "}
-          this is instructor
-        </div>
+        <div>No data found </div>
       )}
-
-      {/* )} */}
     </>
+    // )}
+    // </>
   );
 }

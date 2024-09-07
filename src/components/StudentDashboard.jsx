@@ -82,7 +82,7 @@ export default function StudentDashboard() {
                     </Link>
                   </div>
                 </div>
-                <div className="flex flex-wrap max-md:flex-nowrap max-md:flex-col">
+                <div className="flex gap-2 flex-wrap max-md:flex-nowrap max-md:flex-col">
                   {isStudent &&
                     courses?.data?.map((course) => {
                       return (

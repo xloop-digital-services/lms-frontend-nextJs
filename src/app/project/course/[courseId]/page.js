@@ -20,7 +20,8 @@ export default function Page({ params }) {
   const [quiz, setQuiz] = useState("");
   const [resubmission, setResubmission] = useState("");
   const [file, setFile] = useState(null);
-
+  const [loading, setLoading] = useState(false);
+  const [updateStatus, setUpdateStatus] = useState(false);
   // console.log(courseId);
 
   async function fetchProject() {
@@ -39,6 +40,7 @@ export default function Page({ params }) {
 
   const handleAssignmentCreation = async (event) => {
     event.preventDefault();
+    setLoading(true)
     const assignment = {
       course: courseId,
       title: question,
@@ -79,7 +81,7 @@ export default function Page({ params }) {
 
   useEffect(() => {
     fetchProject();
-  }, []);
+  }, [updateStatus]);
 
   return (
     <div
@@ -141,7 +143,11 @@ export default function Page({ params }) {
                     min={0}
                     className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
                     value={resubmission}
-                    onChange={(e) => setResubmission(e.target.value)}
+                    onChange={(e) =>
+                      setResubmission(
+                        e.target.value === "" ? 0 : Number(e.target.value)
+                      )
+                    }
                   />
                 </div>
                 <div className="mb-4 sm:mb-0 lg:w-[50%] md:w-[50%]">
@@ -157,9 +163,17 @@ export default function Page({ params }) {
               <button
                 type="submit"
                 onClick={handleAssignmentCreation}
-                className="w-40 my-4 flex justify-center py-3 px-4 text-sm font-medium rounded-lg text-dark-100 bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
+                disabled={loading}
+                className={`w-40 my-4 flex justify-center py-3 px-4 text-sm font-medium rounded-lg text-surface-100 
+                  ${
+                    loading
+                      ? "bg-blue-300 text-surface-100"
+                      : "bg-[#03A1D8] hover:bg-[#2799bf]"
+                  } 
+                  focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 
+                  transition duration-150 ease-in-out`}
               >
-                Create Project
+                {loading ? "Creating..." : "Create Quiz"}
               </button>
             </form>
           </>
@@ -170,6 +184,7 @@ export default function Page({ params }) {
           key={project.id}
           field="project"
           assessment="Project"
+          setUpdateStatus={setUpdateStatus}
         />
       </div>
     </div>

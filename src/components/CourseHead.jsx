@@ -74,7 +74,7 @@ const CourseHead = ({
                 {isEditing ? (
                   <p className="flex justify-center items-center gap-2">
                     <FaTimes />
-                    Cancel Edit
+                    Cancel 
                   </p>
                 ) : (
                   <p className="flex justify-center items-center gap-2">

@@ -10,7 +10,13 @@ import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 import { handleUploadProject } from "@/app/project/course/[courseId]/page";
 
-const UploadingFile = ({ field, heading, setUploadFile, assignmentID }) => {
+const UploadingFile = ({
+  field,
+  heading,
+  setUploadFile,
+  assignmentID,
+  setUpdateStatus,
+}) => {
   const [comment, setComment] = useState("");
   const [fileUploaded, setFileUploaded] = useState(null);
   const [file, setFile] = useState(null);
@@ -123,6 +129,7 @@ const UploadingFile = ({ field, heading, setUploadFile, assignmentID }) => {
           toast.success("Exam has been submitted");
           setComment("");
           setUploadFile(false);
+          setUpdateStatus(true);
         }
       } catch (error) {
         toast.error(error.response.data.message);
@@ -144,6 +151,7 @@ const UploadingFile = ({ field, heading, setUploadFile, assignmentID }) => {
           toast.success("Assignment has been submitted");
           setComment("");
           setUploadFile(false);
+          setUpdateStatus(true);
         }
       } catch (error) {
         toast.error(error.response.data.message);
@@ -165,9 +173,10 @@ const UploadingFile = ({ field, heading, setUploadFile, assignmentID }) => {
           toast.success("Quiz has been submitted");
           setComment("");
           setUploadFile(false);
+          setUpdateStatus(true);
         }
       } catch (error) {
-        toast.error(error.response.data.message);
+        toast.error(error?.response?.data?.message);
         console.log("Error occurred:", error);
       }
     }
@@ -185,6 +194,7 @@ const UploadingFile = ({ field, heading, setUploadFile, assignmentID }) => {
           toast.success("Project has been submitted");
           setComment("");
           setUploadFile(false);
+          setUpdateStatus(true);
         }
       } catch (error) {
         toast.error(error.response.data.message);

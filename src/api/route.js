@@ -93,6 +93,29 @@ export const getCourseByProgId = async (progId) => {
   }
 };
 
+//get instructor courses
+export const getInstructorCourses = async (insId) => {
+  try {
+    const response = await axiosInstance.get(`/instructor-courses/?instructor_id=${insId}`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+//get program by Registration Id
+export const getProgramByRegId = async (regId) => {
+  try {
+    const response = await axiosInstance.get(
+      `course/programs/student/${regId}/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 //get course by id
 export const getCourseById = async (id) => {
   try {
@@ -226,6 +249,57 @@ export const getOverallProgress = async (courseId, regId) => {
     throw error;
   }
 };
+
+
+//get quizzes Grading (admin)
+export const getQuizGrading = async (courseId, quizId) => {
+  try {
+    const response = await axiosInstance.get(
+      `course/courses/${courseId}/quizzes/${quizId}/students/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+//get assignments Grading (admin)
+export const getAssignmentGrading = async (courseId, assignId) => {
+  try {
+    const response = await axiosInstance.get(
+      `course/courses/${courseId}/assignments/${assignId}/students/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//get project Grading (admin)
+export const getProjectGrading = async (courseId, projId) => {
+  try {
+    const response = await axiosInstance.get(
+      `course/courses/${courseId}/projects/${projId}/students/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//get project Grading (admin)
+export const getExamGrading = async (courseId, examId) => {
+  try {
+    const response = await axiosInstance.get(
+      `course/courses/${courseId}/exams/${examId}/students/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 
 //get student attendance
 export const getStudentAttendance = async (courseId, regId) => {
@@ -635,3 +709,41 @@ export const updateExam = async (examData, examId) => {
     throw error;
   }
 };
+
+//get attendance by courseId
+export const getAttendanceByCourseId = async (courseId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/attendance/?course_id=${courseId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//get students by courseId
+export const getStudentsByCourseId = async (courseId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/course-students/?course_id=${courseId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//post attendance by courseId
+export const markAttendanceByCourseId = async (courseId, attendance) => {
+  try {
+    const response = await axiosInstance.get(
+      `/attendance/?course_id=${courseId}`,
+      attendance
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+

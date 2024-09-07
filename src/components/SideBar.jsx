@@ -27,9 +27,10 @@ function SideBar() {
   const { isSidebarOpen, toggleSidebar } = useSidebar();
   const { logOutUser, userData } = useAuth();
   const isAdmin = userData?.Group === "admin";
+  const isStudent = userData?.Group === "student";
   const pathname = usePathname();
   const isLinkActive = (path) => {
-    return pathname === path || pathname.includes(path);;
+    return pathname === path || pathname.includes(path);
   };
   const [isOpen, setIsOpen] = useState(false);
 
@@ -68,17 +69,20 @@ function SideBar() {
                 </Link>
 
                 {/* <div className={`${isAdmin && "hidden"}`}> */}
-                <Link
-                  href="/programs"
-                  className={`p-4 flex gap-4 rounded-xl border-dark-300  hover:text-blue-300 ${
-                    isLinkActive("/programs")
-                      ? "text-blue-300 bg-blue-600 "
-                      : "text-dark-600"
-                  }`}
-                >
-                  <FaBookOpen size={24} />
-                  Program
-                </Link>
+                {(isAdmin || isStudent) && (
+                  <Link
+                    href="/programs"
+                    className={`p-4 flex gap-4 rounded-xl border-dark-300  hover:text-blue-300 ${
+                      isLinkActive("/programs")
+                        ? "text-blue-300 bg-blue-600 "
+                        : "text-dark-600"
+                    }`}
+                  >
+                    <FaBookOpen size={24} />
+                    Program
+                  </Link>
+                )}
+
                 {/* </div> */}
 
                 <Link

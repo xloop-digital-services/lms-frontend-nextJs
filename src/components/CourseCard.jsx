@@ -18,15 +18,15 @@ const CourseCard = ({
   status,
   id,
   route,
-  route1
+  route1,
 }) => {
   const { userData } = useAuth();
   const isAdmin = userData?.Group === "admin";
   const isStudent = userData?.Group === "student";
 
   return (
-    <Link href={`/${route1}/${route}/${id}`}>
-      <div className="w-[345px] m-2 bg-surface-100 rounded-xl lg:mx-0 mx-auto group max-md:w-full">
+    <Link href={`/${route1}/${route}/${id}`} className="mx-1">
+      <div className="w-[330px]  bg-surface-100 rounded-xl lg:mx-0 mx-auto group max-md:w-full">
         <div className="rounded-xl h-[320px] p-2 border border-blue-100 group-hover:cursor-pointer group-hover:border-2 group-hover:border-blue-300 my-4">
           <div className="relative">
             <Image
@@ -34,7 +34,13 @@ const CourseCard = ({
               alt="course-image"
               className="p-4 w-full rounded-xl"
             />
-            <p className={`absolute top-0 right-0 w-20 p-2 rounded-md flex items-center justify-center  ${status === 0 ? "bg-mix-200 text-surface-100" : "bg-mix-300 text-surface-100"}`}>
+            <p
+              className={`absolute top-0 right-0 w-20 p-2 rounded-md flex items-center justify-center  ${
+                status === 0
+                  ? "bg-mix-200 text-surface-100"
+                  : "bg-mix-300 text-surface-100"
+              }`}
+            >
               {status === 0 ? "Inactive" : "Active"}
             </p>
           </div>
@@ -94,10 +100,12 @@ const CourseCard = ({
                   </Link>
                 </div>
               ) : (
-                <div className="flex justify-center items-center h-screen w-full">
-                  {" "}
-                  this is instructor
-                </div>
+                <Link
+                  href={`/${route1}s/${route}/${id}`}
+                  className="text-[#fcfeff] bg-[#03A1D8] p-1 rounded-full"
+                >
+                  <MdKeyboardArrowRight size={20} />
+                </Link>
               )}
             </div>
           </div>

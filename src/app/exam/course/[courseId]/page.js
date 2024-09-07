@@ -21,6 +21,8 @@ export default function Page({ params }) {
   const [dueDate, setDueDate] = useState("");
   const [quiz, setQuiz] = useState("");
   const [file, setFile] = useState(null);
+  const [updateStatus, setUpdateStatus] = useState(false);
+  const [loading, setLoading] = useState(false);
   // console.log(courseId);
 
   async function fetchExam() {
@@ -37,6 +39,7 @@ export default function Page({ params }) {
     }
   }
   const handleAssignmentCreation = async (event) => {
+    setLoading(true)
     event.preventDefault();
     const assignment = {
       course: courseId,
@@ -75,7 +78,7 @@ export default function Page({ params }) {
   };
   useEffect(() => {
     fetchExam();
-  }, []);
+  }, [updateStatus]);
   return (
     <div
       className={`flex-1 transition-transform pt-[90px] space-y-4 max-md:pt-32 font-inter ${
@@ -126,9 +129,7 @@ export default function Page({ params }) {
             provided.
           </li>
         </ul>
-        <p className="pt-2 text-mix-200">
-          Note: No Resubmissions allowed*
-        </p>
+        <p className="pt-2 text-mix-200">Note: No Resubmissions allowed*</p>
 
         <hr className="my-8 text-dark-200 "></hr>
         <div className="flex mb-8">
@@ -203,9 +204,17 @@ export default function Page({ params }) {
               <button
                 type="submit"
                 onClick={handleAssignmentCreation}
-                className="w-40 my-4 flex justify-center py-3 px-4 text-sm font-medium rounded-lg text-dark-100 bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
+                disabled={loading}
+                className={`w-40 my-4 flex justify-center py-3 px-4 text-sm font-medium rounded-lg text-surface-100 
+                  ${
+                    loading
+                      ? "bg-blue-300 text-surface-100"
+                      : "bg-[#03A1D8] hover:bg-[#2799bf]"
+                  } 
+                  focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 
+                  transition duration-150 ease-in-out`}
               >
-                Create Exam
+                {loading ? "Creating..." : "Create Quiz"}
               </button>
             </form>
           </>
@@ -215,6 +224,7 @@ export default function Page({ params }) {
           key={exam.id}
           field="exam"
           assessment="Exam"
+          setUpdateStatus={setUpdateStatus}
         />
       </div>
     </div>

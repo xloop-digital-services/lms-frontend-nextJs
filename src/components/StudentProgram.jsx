@@ -6,28 +6,29 @@ import courseImg from "/public/assets/img/course-image.png";
 import {
   getCourseByProgId,
   getCourses,
+  getProgramByRegId,
   getProgressForCourse,
 } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
 import { CircularProgress } from "@mui/material";
 
-export default function CoursePage({ path, progress, heading }) {
+export default function StudentProgram({ path, progress, heading }) {
   const { isSidebarOpen } = useSidebar();
   const { userData } = useAuth();
   const isStudent = userData?.Group === "student";
-  const [courses, setCourses] = useState([]);
+  const regId = userData?.user_data?.registration_id;
+  const [program, setProgram] = useState([]);
   const progId = userData?.User?.program?.id;
   const [loader, setLoader] = useState(true);
-  // console.log(progId)
-  // const [courseId, setCourseId] = useState();
+
   useEffect(() => {
-    if (!progId) return;
-    async function fetchCourses() {
-      const response = await getCourseByProgId(progId);
+    if (!regId) return;
+    async function fetchStudentProgram() {
+      const response = await getProgramByRegId(regId);
       setLoader(true);
       try {
         if (response.status === 200) {
-          setCourses(response.data?.data);
+          setProgram(response.data?.data);
           setLoader(false);
           // setCourseId(response?.data?.id)
           console.log(response?.data);
@@ -39,8 +40,8 @@ export default function CoursePage({ path, progress, heading }) {
       }
     }
 
-    fetchCourses();
-  }, [progId]);
+    fetchStudentProgram();
+  }, [regId]);
 
   if (loader) {
     <CircularProgress />;
@@ -65,23 +66,21 @@ export default function CoursePage({ path, progress, heading }) {
           <>
             <div className="bg-surface-100 p-8 rounded-xl ">
               <h2 className="text-xl font-bold pb-1">{heading}</h2>
-              <p className="pb-6">
-                Select a course to view the {heading}
-              </p>
+              <p className="pb-6">Select a course to view the {heading}</p>
               <div className="flex flex-col w-full gap-4">
-                {courses?.map((course) => {
-                  return (
-                    <MainCourseCard
-                      key={course.id}
-                      courseImg={courseImg}
-                      courseName={course.name}
-                      courseDesc={course.short_description}
-                      // progress={courseProgress?.progress_percentage}
-                      durationOfCourse={course.credit_hours}
-                      route={`${path}/course/${course.id}`}
-                    />
-                  );
-                })}
+                {/* {program?.map(([program]) => { */}
+                {/* // return ( */}
+                <MainCourseCard
+                  //   key={program.id}
+                  courseImg={courseImg}
+                  courseName={program.name}
+                  courseDesc={program.short_description}
+                  // progress={courseProgress?.progress_percentage}
+                  //   durationOfCourse={program.credit_hours}
+                  route={`${path}/program/${program.id}`}
+                />
+                {/* ); */}
+                {/* })} */}
               </div>
             </div>
           </>

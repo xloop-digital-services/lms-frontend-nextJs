@@ -47,7 +47,7 @@ function Profile() {
           setLastName(userData.last_name || "");
           setEmail(userData.email || "");
           setContactNumber(userData.contact || "");
-          setProgram(userData.program || "");
+          setProgram(userData.program?.name || "");
           setCity(userData.city || "");
           setRegistrationID(userData.registration_id || "")
         } else {

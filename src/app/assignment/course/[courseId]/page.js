@@ -15,20 +15,21 @@ import { toast } from "react-toastify";
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
   const [assignments, setAssignments] = useState([]);
-  const courseId = params.courseId;
   const [assignmentProgress, setAssignmentProgress] = useState({});
+  const [currentAssignment, setCurrentAssignment] = useState(null); // For editing
+  const courseId = params.courseId;
   const { userData } = useAuth();
   const isStudent = userData?.Group === "student";
   const [isCreatingQuiz, setCreatingQuiz] = useState(false);
   const [question, setQuestion] = useState("");
-  const [activeStatus, setActiveStatus]= useState();
+  const [activeStatus, setActiveStatus] = useState();
+  const [loading, setLoading] = useState(false);
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [quiz, setQuiz] = useState("");
   const [file, setFile] = useState(null);
   const [resubmission, setResubmission] = useState("");
-  const [isEditing, setIsEditing] = useState("");
-  // console.log(courseId);
+  const [updateStatus, setUpdateStatus] = useState(false);
 
   async function fetchAssignments() {
     const response = await getAssignmentsByCourseId(courseId);
@@ -36,7 +37,7 @@ export default function Page({ params }) {
       if (response.status === 200) {
         setAssignments(response?.data?.data);
       } else {
-        console.error("Failed to fetch user, status:", response.status);
+        console.error("Failed to fetch assignments, status:", response.status);
       }
     } catch (error) {
       console.log("error", error);
@@ -45,14 +46,11 @@ export default function Page({ params }) {
 
   async function fetchAssignmentProgress() {
     const response = await getProgressForAssignment(courseId);
-    // setLoader(true);
     try {
       if (response.status === 200) {
         setAssignmentProgress(response?.data?.data);
-        // setLoader(false);
-        console.log(assignmentProgress);
       } else {
-        console.error("Failed to fetch user, status:", response.status);
+        console.error("Failed to fetch progress, status:", response.status);
       }
     } catch (error) {
       console.log("error", error);
@@ -61,6 +59,7 @@ export default function Page({ params }) {
 
   const handleAssignmentCreation = async (event) => {
     event.preventDefault();
+    setLoading(true);
     const assignment = {
       course: courseId,
       question: question,
@@ -71,82 +70,70 @@ export default function Page({ params }) {
     };
 
     try {
-      const response = await createAssignment(assignment);
-      if (response.status === 201) {
-        toast.success("Assignment created Successfully", response?.message);
+      const response = currentAssignment
+        ? await updateAssignment(assignment, currentAssignment.id)
+        : await createAssignment(assignment);
+      if (response.status === (currentAssignment ? 200 : 201)) {
+        toast.success(
+          currentAssignment
+            ? "Assignment updated successfully!"
+            : "Assignment created successfully!",
+          response?.message?.message
+        );
         setQuiz(assignment);
         setDescription("");
         setQuestion("");
         setDueDate("");
         setFile(null);
-        fetchAssignments();
         setResubmission("");
         setCreatingQuiz(false);
+        setCurrentAssignment(null);
+        fetchAssignments();
       } else {
-        toast.error("Error creating Assignment", response?.message);
+        toast.error(
+          `Error ${currentAssignment ? "updating" : "creating"} Assignment`,
+          response?.message
+        );
       }
     } catch (error) {
-      toast.error("Error creating Assignment", error);
+      toast.error(
+        `Error ${currentAssignment ? "updating" : "creating"} Assignment`,
+        error
+      );
       console.log(error);
     }
   };
 
   const handleUpdateAssignment = async (id) => {
-    // event.preventDefault();
-
-    const updatedData = {
-      question: question,
-      status: activeStatus,
-      // due_date: dueDate,
-      content: file,
-    };
-
-    try {
-      const response = await updateAssignment(updatedData, id);
-      if (response.status === 200) {
-        toast.success("Assignment updated successfully!");
-        setAssignments((prevAssignments) =>
-          prevAssignments.map((assignment) =>
-            assignment.id === id
-              ? { ...assignment, ...updatedData }
-              : assignment
-          )
-        );
-        setIsEditing(false);
-      } else {
-        toast.error(`Failed to update assignment, status: ${response.status}`);
-      }
-    } catch (error) {
-      toast.error(`Error updating assignment: ${error.message}`);
-      console.error("Error updating assignment:", error);
+    const assignmentToEdit = assignments.find(
+      (assignment) => assignment.id === id
+    );
+    if (!assignmentToEdit) {
+      toast.error("Assignment not found");
+      return;
     }
+    setCurrentAssignment(assignmentToEdit);
+    setQuestion(assignmentToEdit.question);
+    setDescription(assignmentToEdit.description);
+    setDueDate(assignmentToEdit.due_date);
+    setResubmission(assignmentToEdit.no_of_resubmissions_allowed);
+    setFile(null); // Handle file separately if needed
+    setCreatingQuiz(true);
   };
 
-  const handleFileUpload = (e) => {
-    const selectedFile = e.target.files[0];
-    if (selectedFile) {
-      setFile(selectedFile);
-      setFileUploaded(selectedFile.name);
-    }
-    // fetchAssignments();
-  };
   useEffect(() => {
     fetchAssignments();
     if (isStudent) fetchAssignmentProgress();
-  }, []);
+  }, [updateStatus]);
 
-  // console.log("assignments here", assignments);
   return (
     <div
       className={`flex-1 transition-transform pt-[90px] space-y-4 max-md:pt-32 font-inter ${
         isSidebarOpen ? "translate-x-64 pl-16 " : "translate-x-0 pl-10 pr-10"
       }`}
-      style={{
-        // paddingBottom: "20px",
-        width: isSidebarOpen ? "86%" : "100%",
-      }}
+      style={{ width: isSidebarOpen ? "86%" : "100%" }}
     >
-      <div className=" bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl h-[85vh] p-4">
+      <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl h-[85vh] p-4">
         <CourseHead
           id={courseId}
           rating="Top Instructor"
@@ -159,7 +146,7 @@ export default function Page({ params }) {
         />
         {isCreatingQuiz && (
           <>
-            <form>
+            <form onSubmit={handleAssignmentCreation}>
               <div className="my-2">
                 <label className="text-md">Assignment Question</label>
                 <input
@@ -196,7 +183,11 @@ export default function Page({ params }) {
                     min={0}
                     className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
                     value={resubmission}
-                    onChange={(e) => setResubmission(e.target.value)}
+                    onChange={(e) =>
+                      setResubmission(
+                        e.target.value === "" ? 0 : Number(e.target.value)
+                      )
+                    }
                   />
                 </div>
                 <div className="mb-4 sm:mb-0 lg:w-[50%] md:w-[50%]">
@@ -204,7 +195,6 @@ export default function Page({ params }) {
                   <input
                     type="file"
                     className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
-                    onClick={handleFileUpload}
                     onChange={(e) => setFile(e.target.files[0])}
                   />
                 </div>
@@ -212,21 +202,30 @@ export default function Page({ params }) {
               <button
                 type="submit"
                 onClick={handleAssignmentCreation}
-                className="w-40 my-4 flex justify-center py-3 px-4 text-sm font-medium rounded-lg text-dark-100 bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
+                disabled={loading}
+                className={`w-40 my-4 flex justify-center py-3 px-4 text-sm font-medium rounded-lg text-surface-100 
+        ${loading ? "bg-blue-300 text-surface-100" : "bg-[#03A1D8] hover:bg-[#2799bf]"} 
+        focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 
+        transition duration-150 ease-in-out`}
               >
-                Create Assignment
+                {loading ? "Creating..." : "Create Quiz"}
               </button>
             </form>
           </>
         )}
-        <StudentDataStructure
-          quizzes={assignments}
-          setQuizzes={setAssignments}
-          key={assignments.id}
-          field="assignment"
-          onUpdateQuiz={handleUpdateAssignment}
-          assessment="Assignments"
-        />
+
+        <div className="mt-10">
+          <StudentDataStructure
+            quizzes={assignments}
+            setQuizzes={setAssignments}
+            key={assignments.id}
+            field="assignment"
+            onUpdateQuiz={handleUpdateAssignment}
+            assessment="Assignments"
+            setUpdateStatus={setUpdateStatus}
+            handleUpdateAssignment={handleUpdateAssignment}
+          />
+        </div>
       </div>
     </div>
   );

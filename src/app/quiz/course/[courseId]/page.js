@@ -19,6 +19,7 @@ export default function Page({ params }) {
   const [quizzes, setQuizzes] = useState([]);
   const courseId = params.courseId;
   const [quizProgress, setQuizProgress] = useState({});
+  const [loading, setLoading] = useState(false);
   // console.log(courseId);
   const { userData } = useAuth();
   const isStudent = userData?.Group === "student";
@@ -29,6 +30,7 @@ export default function Page({ params }) {
   const [quiz, setQuiz] = useState("");
   const [file, setFile] = useState(null);
   const [resubmission, setResubmission] = useState("");
+  const [updateStatus, setUpdateStatus] = useState(false);
 
   async function fetchQuizzes() {
     const response = await getQuizByCourseId(courseId);
@@ -61,6 +63,7 @@ export default function Page({ params }) {
   }
 
   const handleAssignmentCreation = async (event) => {
+    setLoading(true);
     event.preventDefault();
     const assignment = {
       course: courseId,
@@ -105,7 +108,7 @@ export default function Page({ params }) {
     {
       isStudent && fetchQuizProgress();
     }
-  }, []);
+  }, [updateStatus]);
 
   return (
     <div
@@ -175,7 +178,11 @@ export default function Page({ params }) {
                     min={0}
                     className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
                     value={resubmission}
-                    onChange={(e) => setResubmission(e.target.value)}
+                    onChange={(e) =>
+                      setResubmission(
+                        e.target.value === "" ? 0 : Number(e.target.value)
+                      )
+                    }
                   />
                 </div>
                 <div className="mb-4 sm:mb-0 lg:w-[50%] md:w-[50%]">
@@ -188,13 +195,21 @@ export default function Page({ params }) {
                   />
                 </div>
               </div>
-              
+
               <button
                 type="submit"
                 onClick={handleAssignmentCreation}
-                className="w-40 my-4 flex justify-center py-3 px-4 text-sm font-medium rounded-lg text-dark-100 bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
+                disabled={loading}
+                className={`w-40 my-4 flex justify-center py-3 px-4 text-sm font-medium rounded-lg text-surface-100 
+                  ${
+                    loading
+                      ? "bg-blue-300 text-surface-100"
+                      : "bg-[#03A1D8] hover:bg-[#2799bf]"
+                  } 
+                  focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 
+                  transition duration-150 ease-in-out`}
               >
-                Create Quiz
+                {loading ? "Creating..." : "Create Quiz"}
               </button>
             </form>
           </>
@@ -204,6 +219,7 @@ export default function Page({ params }) {
           key={quizzes.id}
           field="quiz"
           assessment="Quiz"
+          setUpdateStatus={setUpdateStatus}
         />
       </div>
     </div>
