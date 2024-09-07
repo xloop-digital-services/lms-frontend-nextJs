@@ -1,7 +1,13 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { GradingSection } from "./GradingSection";
-import { getQuizByCourseId, getQuizGrading } from "@/api/route";
+import {
+  getAssignmentsByCourseId,
+  getExamByCourseId,
+  getProjectByCourseId,
+  getQuizByCourseId,
+  getQuizGrading,
+} from "@/api/route";
 
 const Grading = ({ courseId }) => {
   // const quiz = ["quiz1", "quiz2", "quiz3", "quiz4"];
@@ -10,7 +16,10 @@ const Grading = ({ courseId }) => {
   // const projects = ["project1", "project2", "project3"];
 
   const [quizzes, setQuizzes] = useState([]);
-  const [quizGrading, setQuizGrading] = useState([]);
+  const [assignments, setAssignments] = useState([]);
+  const [exams, setExams] = useState([]);
+  const [projects, setProjects] = useState([]);
+
   async function fetchQuizzes() {
     const response = await getQuizByCourseId(courseId);
     try {
@@ -25,11 +34,39 @@ const Grading = ({ courseId }) => {
     }
   }
 
-  async function fetchQuizzesGrading() {
-    const response = await getQuizGrading(courseId, 1);
+  async function fetchAssignments() {
+    const response = await getAssignmentsByCourseId(courseId);
     try {
       if (response.status === 200) {
-        setQuizGrading(response?.data?.data);
+        setAssignments(response?.data?.data);
+        console.log(quizzes);
+      } else {
+        console.error("Failed to fetch user, status:", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
+  async function fetchExams() {
+    const response = await getExamByCourseId(courseId);
+    try {
+      if (response.status === 200) {
+        setExams(response?.data?.data);
+        console.log(quizzes);
+      } else {
+        console.error("Failed to fetch user, status:", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
+  async function fetchProjects() {
+    const response = await getProjectByCourseId(courseId);
+    try {
+      if (response.status === 200) {
+        setProjects(response?.data?.data);
         console.log(quizzes);
       } else {
         console.error("Failed to fetch user, status:", response.status);
@@ -41,15 +78,22 @@ const Grading = ({ courseId }) => {
 
   useEffect(() => {
     fetchQuizzes();
-    fetchQuizzesGrading();
+    fetchAssignments();
+    fetchExams();
+    fetchProjects();
+    // fetchQuizzesGrading();
   }, []);
 
   return (
     <div className="">
-      <GradingSection title="Quiz" options={quizzes} />
-      {/* <GradingSection title="Assignments" options={assignments} />
-      <GradingSection title="Exams" options={exams} />
-      <GradingSection title="Projects" options={projects} /> */}
+      <GradingSection title="Quiz" options={quizzes} courseId={courseId} />
+      <GradingSection
+        title="Assignment"
+        options={assignments}
+        courseId={courseId}
+      />
+      <GradingSection title="Exam" options={exams} courseId={courseId} />
+      <GradingSection title="Project" options={projects} courseId={courseId} />
     </div>
   );
 };

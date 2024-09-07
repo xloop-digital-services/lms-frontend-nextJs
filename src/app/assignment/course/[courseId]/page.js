@@ -208,7 +208,7 @@ export default function Page({ params }) {
         focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 
         transition duration-150 ease-in-out`}
               >
-                {loading ? "Creating..." : "Create Quiz"}
+                {loading ? "Creating..." : "Create Assignment"}
               </button>
             </form>
           </>

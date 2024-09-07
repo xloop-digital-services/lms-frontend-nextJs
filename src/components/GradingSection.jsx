@@ -1,26 +1,74 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import StudentMarksTable from "./StudentMarksTable";
+import { getAssignmentGrading, getQuizGrading } from "@/api/route";
 
-export const GradingSection = ({ title, options }) => {
+export const GradingSection = ({ title, options, courseId }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [openSection, setOpenSection] = useState(null);
   const [selected, setSelected] = useState(null);
+  const [quizGrading, setQuizGrading] = useState([]);
+  const [assignmentGrading, setAssignmentGrading] = useState([]);
+  const [examGrading, setExamGrading] = useState([]);
+  const [projectGrading, setProjectGrading] = useState([]);
 
   const toggleOpen = (e) => {
     e.stopPropagation();
     setIsOpen(!isOpen);
   };
 
-  const handleSelect = (option) => {
-    setSelected(option);
+  const handleSelect = (id) => {
+    const tempSelected = selected; // Store the current selected value
+    setSelected(id);
     setIsOpen(false);
+
+    // if (!tempSelected && title === "Quiz") {
+    //   fetchQuizzesGrading();
+    //   return; // Ensure the function stops here
+    // }
+
+    if (!tempSelected && title === "Assignment") {
+      fetchAsignmentsGrading();
+      return; // Ensure the function stops here
+    }
   };
 
   const handleToggleSection = (section) => {
     setOpenSection(openSection === section ? null : section);
   };
+
+  async function fetchQuizzesGrading() {
+    const response = await getQuizGrading(courseId, selected);
+    try {
+      if (response.status === 200) {
+        setQuizGrading(response?.data?.data?.students);
+        console.log(quizGrading);
+      } else {
+        console.error("Failed to fetch user, status:", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
+  async function fetchAsignmentsGrading() {
+    const response = await getAssignmentGrading(courseId, selected);
+    try {
+      if (response.status === 200) {
+        setAssignmentGrading(response?.data?.data?.students);
+        console.log(assignmentGrading);
+      } else {
+        console.error("Failed to fetch user, status:", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
+  // useEffect(() => {
+  //   fetchQuizzesGrading();
+  // });
 
   return (
     <div className="border my-3 border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
@@ -41,7 +89,7 @@ export const GradingSection = ({ title, options }) => {
                   onClick={toggleOpen}
                   className="flex justify-between z-30 items-center min-w-[200px] text-[#92A7BE] hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border  border-[#92A7BE] rounded-lg  focus:outline-none  transition duration-300 ease-in-out"
                 >
-                 Select quiz
+                  Select {title}
                   <span
                     className={`${
                       !isOpen ? "rotate-180 duration-300" : "duration-300"
@@ -57,10 +105,10 @@ export const GradingSection = ({ title, options }) => {
                     onClick={(e) => e.stopPropagation()} // This prevents the click event from propagating to parent elements
                   >
                     {options?.length > 0 ? (
-                      options.map((option, index) => (
+                      options.map((option) => (
                         <div
-                          key={index}
-                          onClick={() => handleSelect(option)}
+                          key={option.id}
+                          onClick={() => handleSelect(option.id)}
                           className="p-2 cursor-pointer"
                         >
                           <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
@@ -85,9 +133,13 @@ export const GradingSection = ({ title, options }) => {
           </span>
         </div>
       </div>
-      {selected && openSection === title && (
+      {selected && openSection && (
         <div className="mt-3">
-          <StudentMarksTable />
+          <StudentMarksTable
+            assessments={
+              quizGrading || assignmentGrading || projectGrading || examGrading
+            }
+          />
         </div>
       )}
     </div>
