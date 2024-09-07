@@ -10,36 +10,36 @@ const BatchTable = ({batches, loading}) => {
         <div className="p-1.5 min-w-full inline-block align-middle">
           <div className="mt-4 border border-dark-300 rounded-lg divide-y divide-dark-200 dark:border-gray-700 dark:divide-gray-700">
             <div className="overflow-hidden">
-              <table className="min-w-full divide-y divide-dark-200 dark:divide-gray-700">
+              <table className=" min-w-full divide-y divide-dark-200 dark:divide-gray-700">
                 <thead className="bg-gray-50 dark:bg-gray-700">
                   <tr>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[20%]"
                     >
                       Batch Name
                     </th>
-                    <th
+                    {/* <th
                       scope="col"
                       className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
                     >
                       Area
-                    </th>
+                    </th> */}
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[20%]"
                     >
                       Number of Students
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[20%]"
                     >
                       Start Date
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[20%]"
                     >
                       End Date
                     </th>
@@ -49,15 +49,15 @@ const BatchTable = ({batches, loading}) => {
                     >
                       year
                     </th>
-                    <th
+                    {/* <th
                       scope="col"
                       className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
                     >
                       Categories
-                    </th>
+                    </th> */}
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[20%]"
                     >
                       Active Status
                     </th>
@@ -80,9 +80,9 @@ const BatchTable = ({batches, loading}) => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
                       {batch.batch || '-'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                      {batch.city || '-'}
-                    </td>
+                    {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                      {batch.city_id || '-'}
+                    </td> */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
                       {batch.no_of_students || '-'}
                     </td>
@@ -95,10 +95,10 @@ const BatchTable = ({batches, loading}) => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
                       {batch.year || '-'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                    {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
                       Winter
-                    </td>
-                    <td className="px-12 py-2 whitespace-nowrap flex w-full justify-end text-sm text-surface-100 dark:text-gray-200 ">
+                    </td> */}
+                    <td className="px-8 py-2 whitespace-nowrap flex w-full justify-start items-center text-sm text-surface-100 dark:text-gray-200 ">
                       <p className="bg-[#18A07A] w-[90px] text-center px-4 py-2 text-[12px] rounded-lg">
                         Active
                       </p>
@@ -119,7 +119,7 @@ const BatchTable = ({batches, loading}) => {
                 </tbody>
               </table>
             </div>
-            <div className="py-1 px-4">
+            {/* <div className="py-1 px-4">
               <nav className="flex items-center space-x-1">
                 <button
                   type="button"
@@ -155,7 +155,7 @@ const BatchTable = ({batches, loading}) => {
                   <span aria-hidden="true">»</span>
                 </button>
               </nav>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

@@ -1,0 +1,162 @@
+[
+    {
+        "name": "Karachi",
+        "shortName": "KHI",
+        "areas": [
+            { "name": "Clifton", "shortName": "C" },
+            { "name": "DHA", "shortName": "DHA" },
+            { "name": "Gulshan-e-Iqbal", "shortName": "GI" },
+            { "name": "Saddar", "shortName": "S" },
+            { "name": "Korangi", "shortName": "K" },
+            { "name": "Nazimabad", "shortName": "N" },
+            { "name": "North Karachi", "shortName": "NK" },
+            { "name": "Orangi Town", "shortName": "OT" },
+            { "name": "Malir", "shortName": "M" },
+            { "name": "Landhi", "shortName": "L" }
+        ]
+    },
+    {
+        "name": "Lahore",
+        "shortName": "LHR",
+        "areas": [
+            { "name": "Gulberg", "shortName": "G" },
+            { "name": "Model Town", "shortName": "MT" },
+            { "name": "DHA", "shortName": "DHA" },
+            { "name": "Johar Town", "shortName": "JT" },
+            { "name": "Bahria Town", "shortName": "BT" },
+            { "name": "Shalimar", "shortName": "S" },
+            { "name": "Ravi Town", "shortName": "RT" },
+            { "name": "Iqbal Town", "shortName": "IT" },
+            { "name": "Cantt", "shortName": "C" },
+            { "name": "Garden Town", "shortName": "GT" }
+        ]
+    },
+    {
+        "name": "Islamabad",
+        "shortName": "ISB",
+        "areas": [
+            { "name": "F-6", "shortName": "F6" },
+            { "name": "F-7", "shortName": "F7" },
+            { "name": "G-10", "shortName": "G10" },
+            { "name": "G-11", "shortName": "G11" },
+            { "name": "G-8", "shortName": "G8" },
+            { "name": "H-8", "shortName": "H8" },
+            { "name": "I-8", "shortName": "I8" },
+            { "name": "E-11", "shortName": "E11" },
+            { "name": "D-12", "shortName": "D12" },
+            { "name": "Blue Area", "shortName": "BA" }
+        ]
+    },
+    {
+        "name": "Rawalpindi",
+        "shortName": "RWP",
+        "areas": [
+            { "name": "Saddar", "shortName": "S" },
+            { "name": "Satellite Town", "shortName": "ST" },
+            { "name": "Peshawar Road", "shortName": "PR" },
+            { "name": "Bahria Town", "shortName": "BT" },
+            { "name": "Chaklala", "shortName": "C" },
+            { "name": "Murree Road", "shortName": "MR" },
+            { "name": "Dhok Kala Khan", "shortName": "DKK" },
+            { "name": "Shamsabad", "shortName": "S" },
+            { "name": "Adiala Road", "shortName": "AR" },
+            { "name": "Askari", "shortName": "A" }
+        ]
+    },
+    {
+        "name": "Faisalabad",
+        "shortName": "FSD",
+        "areas": [
+            { "name": "Peoples Colony", "shortName": "PC" },
+            { "name": "Madina Town", "shortName": "MT" },
+            { "name": "Jinnah Colony", "shortName": "JC" },
+            { "name": "Gulberg", "shortName": "G" },
+            { "name": "Samundri Road", "shortName": "SR" },
+            { "name": "D Ground", "shortName": "DG" },
+            { "name": "Kohinoor City", "shortName": "KC" },
+            { "name": "Sargodha Road", "shortName": "SR" },
+            { "name": "Millat Town", "shortName": "MT" },
+            { "name": "Chak Jhumra", "shortName": "CJ" }
+        ]
+    },
+    {
+        "name": "Peshawar",
+        "shortName": "PEW",
+        "areas": [
+            { "name": "University Town", "shortName": "UT" },
+            { "name": "Hayatabad", "shortName": "H" },
+            { "name": "Saddar", "shortName": "S" },
+            { "name": "Gulbahar", "shortName": "G" },
+            { "name": "Cantt", "shortName": "C" },
+            { "name": "Tehkal", "shortName": "T" },
+            { "name": "Dabgari Garden", "shortName": "DG" },
+            { "name": "Ring Road", "shortName": "RR" },
+            { "name": "Dala Zak Road", "shortName": "DZR" },
+            { "name": "Shah Alam", "shortName": "SA" }
+        ]
+    },
+    {
+        "name": "Quetta",
+        "shortName": "QTA",
+        "areas": [
+            { "name": "Saryab Road", "shortName": "SR" },
+            { "name": "Jinnah Town", "shortName": "JT" },
+            { "name": "Satellite Town", "shortName": "ST" },
+            { "name": "Zarghoon Road", "shortName": "ZR" },
+            { "name": "Airport Road", "shortName": "AR" },
+            { "name": "Chaman Housing Scheme", "shortName": "CHS" },
+            { "name": "Cantt", "shortName": "C" },
+            { "name": "Brewery Road", "shortName": "BR" },
+            { "name": "Liaquat Bazar", "shortName": "LB" },
+            { "name": "Hanna Urak", "shortName": "HU" }
+        ]
+    },
+    {
+        "name": "Multan",
+        "shortName": "MUX",
+        "areas": [
+            { "name": "Cantt", "shortName": "C" },
+            { "name": "Gulgasht Colony", "shortName": "GC" },
+            { "name": "Shah Rukn-e-Alam", "shortName": "SRA" },
+            { "name": "Nishtar Road", "shortName": "NR" },
+            { "name": "Bosan Road", "shortName": "BR" },
+            { "name": "Garden Town", "shortName": "GT" },
+            { "name": "Wapda Town", "shortName": "WT" },
+            { "name": "Askari Colony", "shortName": "AC" },
+            { "name": "Suraj Miani", "shortName": "SM" },
+            { "name": "Vehari Road", "shortName": "VR" }
+        ]
+    },
+    {
+        "name": "Hyderabad",
+        "shortName": "HDD",
+        "areas": [
+            { "name": "Qasimabad", "shortName": "Q" },
+            { "name": "Latifabad", "shortName": "L" },
+            { "name": "Cantt", "shortName": "C" },
+            { "name": "Hala Naka", "shortName": "HN" },
+            { "name": "Gulistan-e-Sajjad", "shortName": "GS" },
+            { "name": "Auto Bahn Road", "shortName": "ABR" },
+            { "name": "Wadhu Wah", "shortName": "WW" },
+            { "name": "Naseem Nagar", "shortName": "NN" },
+            { "name": "Gulshan-e-Iqbal", "shortName": "GI" },
+            { "name": "City Centre", "shortName": "CC" }
+        ]
+    },
+    {
+        "name": "Sialkot",
+        "shortName": "SKT",
+        "areas": [
+            { "name": "Cantt", "shortName": "C" },
+            { "name": "Defence Road", "shortName": "DR" },
+            { "name": "Shahabpura", "shortName": "S" },
+            { "name": "Ugoki Road", "shortName": "UR" },
+            { "name": "Kotli Loharan", "shortName": "KL" },
+            { "name": "Sambrial", "shortName": "S" },
+            { "name": "Saddar Bazar", "shortName": "SB" },
+            { "name": "Lohianwala", "shortName": "L" },
+            { "name": "Model Town", "shortName": "MT" },
+            { "name": "Daska", "shortName": "D" }
+        ]
+    }
+]

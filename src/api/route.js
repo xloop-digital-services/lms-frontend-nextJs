@@ -342,7 +342,7 @@ export const getAllPrograms = async () => {
 // }
 
 
-export const getStudentByStatus = async (programID, selectedOption, selectedStatus) => {
+export const getUserByStatus = async (programID, selectedOption, selectedStatus) => {
   try {
     const response = await axiosInstance.get(`/applications-process/${programID}/?group_name=${selectedOption}&status=${selectedStatus}`) 
     return response;
@@ -433,4 +433,43 @@ export const createLocation = async (data) => {
   }
 }
  
+
+export const filterByCity = async (cityname) => {
+  try{
+    const response = await axiosInstance.get(`/filter-locations-by-city/?city=${cityname}/`)
+    return response;
+
+  }catch(error){
+    throw error
+  }
+}
+
+export const getApplicationsTotalNumber = async (filteration_id) =>  {
+try {
+  const response = await axiosInstance.get(`/application-count/${filteration_id}/`)
+  return response;
+
+} catch (error) {
+  throw error
+}
+}
+
+export const getCityStatistics = async () => {
+  try {
+    const response = await axiosInstance.get('/city-stats/')
+    return response;
+    
+  } catch (error) {
+    throw error
+  }
+}
+
+export const totalUsersCount = async () => {
+  try {
+    const response = await axiosInstance.get('/admin-portal-count/')
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
  

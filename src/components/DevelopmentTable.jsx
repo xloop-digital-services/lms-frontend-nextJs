@@ -70,9 +70,9 @@ const DevelopmentTable = ({
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[16%]"
+                      className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[16%]"
                     >
-                      {selectedOption} Interest
+                      Status
                     </th>
                     <th
                       scope="col"
@@ -115,7 +115,7 @@ const DevelopmentTable = ({
                           </div>
                         </td>
                         <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-dark-200">
-                          {user?.date_of_birth || '-'}
+                          {user?.date_of_birth || "-"}
                         </td>
                         <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-dark-200">
                           {user?.city}
@@ -126,13 +126,16 @@ const DevelopmentTable = ({
                         <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-dark-200">
                           16 years
                         </td>
-                        <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-dark-200">
-                          <div className="flex gap-2">
-                            <p className="border border-dark-200 py-1 px-2 w-fit rounded-lg">
-                              Java
-                            </p>
-                            <p className="border border-dark-200 py-1 px-2 w-fit rounded-lg">
-                              Javascript
+                        <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-800 dark:text-dark-200">
+                          <div className=" whitespace-nowrap flex w-full justify-start text-sm text-surface-100 dark:text-gray-200 ">
+                            <p
+                              className={`${
+                                user?.application_status === "pending"
+                                  ? "bg-[#DDF8EE] text-blue-300 border border-blue-300"
+                                  : "bg-[#18A07A]"
+                              }  w-[120px] text-center px-4 py-2 rounded-lg capitalize`}
+                            >
+                              {user?.application_status}
                             </p>
                           </div>
                         </td>
@@ -166,15 +169,18 @@ const DevelopmentTable = ({
 
             {modal && selectedUser && (
               <UserModal
+                selectedOption={selectedOption}
                 setModal={setModal}
                 modal={modal}
                 firstName={selectedUser.first_name}
                 lastName={selectedUser.last_name}
+                dob={selectedUser.date_of_birth}
                 city={selectedUser.city || "-"}
                 email={selectedUser.email}
                 contact={selectedUser.contact || "-"}
                 status={selectedUser.application_status}
                 program={selectedUser.program}
+                skill={selectedUser.skill}
                 id={selectedUser.id}
                 setStatusUpdated={setStatusUpdated}
                 statusUpdated={statusUpdated}

@@ -1,24 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
-import { createSession, listAllBatches, listAllLocations } from "@/api/route";
+import { createSession } from "@/api/route";
 import { CircularProgress } from "@mui/material";
 import DatePicker from "react-datepicker";
 import { FaClock } from "react-icons/fa";
 import { toast } from "react-toastify";
+import useClickOutside from "@/providers/useClickOutside";
+import moment from "moment";
 
-const SessionCreationModal = ({ setOpenModal, openModal }) => {
-
-  const [selectedLocation, setSelectedLocation] = useState("select your location");
+const SessionCreationModal = ({
+  setOpenModal,
+  LocationOptions,
+  batchOptions,
+  loadingLocation,
+  loadingBatch,
+  setUpdateSession,
+  updateSession,
+}) => {
+  const [selectedLocation, setSelectedLocation] = useState(
+    "select your location"
+  );
   const [selectedLocationId, setSelectedLocationId] = useState(null);
   const [selectedBatch, setSelectedBatch] = useState("select your batch");
 
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [isBatchOpen, setIsBatchOpen] = useState(false);
-  const [batchOptions, setbatchOptions] = useState([]);
-  const [loadingBatch, setLoadingBatch] = useState(true);
-  const [loadingLocation, setLoadingLocation] = useState(true);
-  const [Location0ptions, setLocationOptions] = useState([]);
   const [isBatchSelected, setIsBatchSelected] = useState(false);
   const [isLocationSelected, setIsLocationSelected] = useState(false);
   const [capacity, setCapacity] = useState();
@@ -26,11 +33,21 @@ const SessionCreationModal = ({ setOpenModal, openModal }) => {
   const [endTime, setEndTime] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [loadingCreation, setLoadingCreation] = useState(false);
+  const mouseClick = useRef(null);
+  const modalClose = useRef(null);
+
+  useClickOutside(mouseClick, () => {
+    setIsLocationOpen(false);
+    setIsBatchOpen(false);
+  });
+
+  useClickOutside(modalClose, () => setOpenModal(false));
 
   const handleSessionCreation = async () => {
     setLoadingCreation(true);
     if (!errorMessage) {
       try {
+        // Format time to "hh:mm:ss" or "hh:mm:ss.uuuuuu" (24-hour format) before sending to backend
         const data = {
           batch: selectedBatch,
           location: selectedLocationId,
@@ -38,10 +55,12 @@ const SessionCreationModal = ({ setOpenModal, openModal }) => {
           start_time: startTime,
           end_time: endTime,
         };
+
         const response = await createSession(data);
         console.log("session created", response.data.message);
         setLoadingCreation(false);
-        setOpenModal(false)
+        setOpenModal(false);
+        setUpdateSession(!updateSession);
       } catch (error) {
         console.log(
           "error while session creation",
@@ -52,52 +71,26 @@ const SessionCreationModal = ({ setOpenModal, openModal }) => {
       }
     } else {
       toast.warn("Correct your start time and end time");
+      setLoadingCreation(false);
     }
   };
 
+  const handleStartTimeChange = (time) => {
+    // Set the start time as a JavaScript Date object
+    setStartTime(time);
+  };
+
   const handleEndTimeChange = (time) => {
+    // Set the end time as a JavaScript Date object
     setEndTime(time);
 
     // Check if end time is earlier than start time
-    if (startTime && time <= startTime) {
+    if (startTime && moment(time).isSameOrBefore(startTime)) {
       setErrorMessage("End time should be greater than start time");
     } else {
       setErrorMessage("");
     }
   };
-
-  const getBatch = async () => {
-    try {
-      const response = await listAllBatches();
-      console.log("batches", response?.data);
-      const batchOptionssArray = response?.data.map((batch) => batch.batch);
-      setbatchOptions(batchOptionssArray);
-      setLoadingBatch(false);
-    } catch (error) {
-      console.log("error while fetching the batches", error);
-      setLoadingBatch(false);
-    }
-  };
-
-  const getLocation = async () => {
-    try {
-      const response = await listAllLocations();
-      const locationOptionsArray = response?.data.map(location => ({
-        id: location.id,
-        name: location.name
-      }));
-      setLocationOptions(locationOptionsArray);
-      setLoadingLocation(false);
-    } catch (error) {
-      console.log("error while fetching the locations", error);
-      setLoadingLocation(false);
-    }
-  };
-
-  useEffect(() => {
-    getBatch();
-    getLocation();
-  }, [openModal]);
 
   const toggleLocationOpen = () => {
     setIsLocationOpen(!isLocationOpen);
@@ -109,7 +102,7 @@ const SessionCreationModal = ({ setOpenModal, openModal }) => {
 
   const handleLocationSelect = (option) => {
     setSelectedLocation(option.name);
-    setSelectedLocationId(option.id)
+    setSelectedLocationId(option.id);
     setIsLocationOpen(false);
     setIsLocationSelected(true);
   };
@@ -127,7 +120,11 @@ const SessionCreationModal = ({ setOpenModal, openModal }) => {
             <CircularProgress size={30} />
           </div>
         )}
-        <div style={{ backgroundColor: "#EBF6FF" }} className="p-5 rounded-xl">
+        <div
+          ref={modalClose}
+          style={{ backgroundColor: "#EBF6FF" }}
+          className="p-5 rounded-xl"
+        >
           <div className="flex justify-between">
             <h1
               style={{
@@ -165,9 +162,12 @@ const SessionCreationModal = ({ setOpenModal, openModal }) => {
                 </button>
 
                 {isBatchOpen && (
-                  <div className="absolute z-10 full mt-1 bg-surface-100 max-h-[200px] overflow-auto scrollbar-webkit min-w-[500px] border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out">
+                  <div
+                    ref={mouseClick}
+                    className="absolute z-10 full mt-1 bg-surface-100 max-h-[200px] overflow-auto scrollbar-webkit min-w-[500px] border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
+                  >
                     {loadingBatch && batchOptions.length == 0 ? (
-                      <div className="">
+                      <div className="w-full flex items-center justify-center p-1">
                         <CircularProgress size={15} />
                       </div>
                     ) : batchOptions && batchOptions.length > 0 ? (
@@ -200,7 +200,7 @@ const SessionCreationModal = ({ setOpenModal, openModal }) => {
                     !isLocationSelected ? " text-[#92A7BE]" : "text-[#424b55]"
                   } flex justify-between items-center w-full  hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
-                  {selectedLocation || Location0ptions[0]}
+                  {selectedLocation || LocationOptions[0]}
                   <span
                     className={`${
                       isLocationOpen
@@ -213,19 +213,22 @@ const SessionCreationModal = ({ setOpenModal, openModal }) => {
                 </button>
 
                 {isLocationOpen && (
-                  <div className="absolute z-10 min-w-[242px] max-h-[200px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out">
-                    {loadingLocation && Location0ptions.length == 0 ? (
-                      <div className="">
+                  <div
+                    ref={mouseClick}
+                    className="absolute z-10 min-w-[242px] max-h-[200px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
+                  >
+                    {loadingLocation && LocationOptions.length == 0 ? (
+                      <div className="w-full flex items-center justify-center p-1">
                         <CircularProgress size={15} />
                       </div>
-                    ) : Location0ptions && Location0ptions.length > 0 ? (
-                      Location0ptions.map((option, index) => (
+                    ) : LocationOptions && LocationOptions.length > 0 ? (
+                      LocationOptions.map((option, index) => (
                         <div
                           key={index}
                           onClick={() => handleLocationSelect(option)}
-                          className="p-2 cursor-pointer "
+                          className="p-2 cursor-pointer"
                         >
-                          <div className="px-4 py-1 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
                             {option.name}
                           </div>
                         </div>
@@ -239,7 +242,7 @@ const SessionCreationModal = ({ setOpenModal, openModal }) => {
                 )}
               </div>
               <div className="space-y-2 text-[15px] w-full">
-                <p>Capacity</p>
+                <p>Number of Students</p>
                 <input
                   type="number"
                   className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full "
@@ -255,15 +258,15 @@ const SessionCreationModal = ({ setOpenModal, openModal }) => {
                 <p>Start Time</p>
                 <div className="relative">
                   <DatePicker
-                    selected={startTime}
-                    onChange={(date) => setStartTime(date)}
+                    selected={startTime} // Pass the JavaScript Date object directly
+                    onChange={handleStartTimeChange}
                     showTimeSelect
                     showTimeSelectOnly
                     timeIntervals={15}
                     timeCaption="Time"
-                    dateFormat="h:mm aa" // Set the desired time format
+                    dateFormat="HH:mm:ss"
                     placeholderText="Select start time"
-                    className="border border-dark-300 text-[#424b55]  outline-none p-3 rounded-lg w-full"
+                    className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
                   />
                   <FaClock className="absolute right-3 top-1/2 transform -translate-y-1/2 text-dark-400" />
                 </div>
@@ -273,25 +276,26 @@ const SessionCreationModal = ({ setOpenModal, openModal }) => {
                 <p>End Time</p>
                 <div className="relative">
                   <DatePicker
-                    selected={endTime}
+                    selected={endTime} // Pass the JavaScript Date object directly
                     onChange={handleEndTimeChange}
                     showTimeSelect
                     showTimeSelectOnly
                     timeIntervals={15}
                     timeCaption="Time"
-                    dateFormat="h:mm aa"
+                    dateFormat="HH:mm:ss"
                     placeholderText="Select end time"
-                    className="border border-dark-300 text-[#424b55]  outline-none p-3 rounded-lg w-full"
+                    className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
                   />
                   <FaClock className="absolute right-3 top-1/2 transform -translate-y-1/2 text-dark-400" />
                 </div>
                 {errorMessage && (
-                  <p className="text-[#D84848] text-[12px] mt-2 ">
+                  <p className="text-[#D84848] text-[12px] mt-2">
                     {errorMessage}
                   </p>
                 )}
               </div>
             </div>
+
             <div className="flex w-full justify-center items-center">
               <button
                 type="submit"

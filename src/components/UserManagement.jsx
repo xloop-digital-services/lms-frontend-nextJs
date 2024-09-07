@@ -2,7 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { useSidebar } from "@/providers/useSidebar";
 import DevelopmentTable from "./DevelopmentTable";
-import { getStudentByStatus, getUserByProgramID } from "@/api/route";
+import {
+  getUserByStatus,
+  getUserByProgramID,
+  getApplicationsTotalNumber,
+} from "@/api/route";
 import { CircularProgress } from "@mui/material";
 import useClickOutside from "@/providers/useClickOutside";
 
@@ -17,57 +21,52 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   const [programID, setPorgramID] = useState(null);
   const [userByProgramID, setUserByProgramID] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [approvedRequest, setApprovedRequest] = useState(null);
+  const [pendingRequest, setPendingRequest] = useState(null);
+  const [shortListRequest, setShortlisted] = useState(null);
 
   const dropdownRef = useRef(null);
 
   // Use the custom hook for the dropdown
   useClickOutside(dropdownRef, () => setIsOpen(false));
 
-  // useEffect(() => {
-  //   if (programID) {
-  //     const fetchUsers = async () => {
-  //       setLoading(true);
-  //       try {
-  //         const response = await getUserByProgramID(programID, selectedOption);
-  //         if (response.data?.status_code === 200) {
-  //           setUserByProgramID(response.data?.data || []);
-  //         } else if (response.data?.status_code === 404) {
-  //           console.log("No users found for this program");
-  //           setLoading(false);
-  //         }
-  //       } catch (error) {
-  //         console.error("Error fetching users:", error);
-  //       } finally {
-  //         setLoading(false);
-  //       }
-  //     };
-
-  //     // fetchUsers();
-  //   }
-  // }, [programID, selectedOption]);
-
   useEffect(() => {
     if (programID) {
-      handleStudentByStatus();
+      const handleUserByStatus = async () => {
+        setLoading(true);
+        try {
+          const response = await getUserByStatus(
+            programID,
+            selectedOption,
+            selectedStatus
+          );
+          setUserByProgramID(response.data?.data || []);
+          console.log("res", response.data?.data || []);
+          setLoading(false);
+        } catch (error) {
+          console.log(error);
+          setLoading(false);
+        }
+      };
+      handleUserByStatus();
     }
   }, [programID, selectedOption, selectedStatus, statusUpdated]);
 
-  const handleStudentByStatus = async () => {
-    setLoading(true);
-    try {
-      const response = await getStudentByStatus(
-        programID,
-        selectedOption,
-        selectedStatus
-      );
-      setUserByProgramID(response.data?.data || []);
-      console.log("res", response.data?.data || []);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    const handleApplicationsNumber = async () => {
+      try {
+        const response = await getApplicationsTotalNumber(programID);
+        console.log("numbers", response.data);
+        setApprovedRequest(response?.data?.data.approved);
+        setPendingRequest(response?.data?.data.pending);
+        setShortlisted(response?.data?.data.short_listed);
+        // console.log('short:',response?.data?.data.short_listed)
+      } catch (error) {
+        console.log("error while fetching number of applications", error);
+      }
+    };
+    handleApplicationsNumber();
+  }, [selectedStatus, programID]);
 
   const handleToggleSection = (section, id) => {
     setUserByProgramID([]);
@@ -125,13 +124,13 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
             <input
               type="text"
               placeholder="Search program by names"
-              className="p-3 border border-[#92A7BE] rounded-lg outline-none w-full"
+              className="p-3 sm:text-base text-sm border border-[#92A7BE] rounded-lg outline-none w-full"
             />
           </div>
           <div>
             <button
               onClick={toggleOpen}
-              className="flex justify-between z-50 items-center min-w-[200px] text-[#92A7BE] hover:text-[#0e1721] px-4 py-4 text-sm text-left bg-white border  border-[#92A7BE] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+              className="flex justify-between sm:text-base text-sm z-50 items-center w-full gap-1 md:w-[200px] text-[#92A7BE] hover:text-[#0e1721] px-4 py-3 text-left bg-white border  border-[#92A7BE] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
             >
               {selectedOption || options[0]}
               <span className="">
@@ -142,7 +141,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
             {isOpen && (
               <div
                 ref={dropdownRef}
-                className="absolute capitalize z-50 min-w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                className="absolute capitalize z-50 w-fit md:w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
               >
                 {options.map((option, index) => (
                   <div
@@ -176,12 +175,28 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                 key={program.id}
               >
                 <div
-                  className="flex justify-between items-center"
+                  className="flex nsm:flex-row flex-col space-y-2 justify-between items-center"
                   onClick={() => handleToggleSection(program.name, program.id)}
                 >
-                  <p className="text-[17px] font-semibold font-exo">
+                  <div className=" flex gap-3 text-[17px] font-semibold font-exo">
                     {program.name}
-                  </p>
+                    <div className="mt-1 text-[12px] text-blue-300 font-bold " title={`number of ${selectedStatus} applications`} >
+                      {openSection === program.name &&
+                        (selectedStatus === "pending" ? (
+                          <p>( {pendingRequest} )</p>
+                        ) : selectedStatus === "approved" ? (
+                          <p>( {approvedRequest} )</p>
+                        ) : (
+                          <p>( {shortListRequest} )</p>
+                        ))
+                        // <div className="flex gap-2 mt-1 text-[12px] text-[#404850] font-normal">
+                        //   <p>approved: {approvedRequest}</p>
+                        //   <p>pending: {pendingRequest}</p>
+                        //   <p>shortlisted: {shortListRequest}</p>
+                        // </div>
+                      }
+                    </div>
+                  </div>
                   <div className="flex items-center gap-2">
                     {openSection === program.name && (
                       <div className="z-20">

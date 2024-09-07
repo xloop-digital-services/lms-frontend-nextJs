@@ -11,14 +11,17 @@ import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 
 const UserModal = ({
+  selectedOption,
   setModal,
   firstName,
   lastName,
+  dob,
   city,
   contact,
   email,
   status,
   program,
+  skill,
   id,
   setStatusUpdated,
   statusUpdated,
@@ -27,6 +30,7 @@ const UserModal = ({
   const [enableApprovalButton, setEnableApprovalButton] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState("");
   const [programID, setPorgramID] = useState(null);
+  const [skillID, setSkillID] = useState([]);
   const [loading, setLoading] = useState(false);
   let data = null;
 
@@ -37,18 +41,42 @@ const UserModal = ({
     setEnableApprovalButton(true);
   };
 
+  const handleSkillSelection = (id) => {
+    setSkillID((prevSkillIDs) => {
+      if (prevSkillIDs.includes(id)) {
+        // If already selected, remove it
+        return prevSkillIDs.filter((skillID) => skillID !== id);
+      } else {
+        // If not selected, add it
+        return [...prevSkillIDs, id];
+      }
+    });
+
+    
+    setEnableApprovalButton(true);
+  };
+  console.log('skills id', skillID)
+
   const handleUserSelection = async () => {
     setLoading(true);
     if (selectedStatus === "approved") {
-      data = {
-        application_status: selectedStatus,
-        program_id: programID,
-      };
+      if (selectedOption === "student") {
+        data = {
+          application_status: selectedStatus,
+          program_id: programID,
+        };
+      } else {
+        data = {
+          application_status: selectedStatus,
+          skills_id: skillID,
+        };
+      }
     } else {
       data = {
         application_status: selectedStatus,
       };
     }
+
     try {
       const response = await userSelectionByAdmin(id, data);
       console.log("response while selecting", response.data);
@@ -67,7 +95,7 @@ const UserModal = ({
         setStatusUpdated(!statusUpdated);
       }
     } catch (error) {
-      toast.error(error.response.data.message , {
+      toast.error(error.response.data.message, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -133,8 +161,8 @@ const UserModal = ({
                 <table className="w-[40%] border-collapse">
                   <tbody>
                     <tr className="border-b border-[#d7e4ee]">
-                      <td className="text-dark-400 text-center py-2">Age</td>
-                      <td className="text-center py-2">16 years</td>
+                      <td className="text-dark-400 text-center py-2">DOB</td>
+                      <td className="text-center py-2">{dob}</td>
                     </tr>
                     <tr className="border-b border-[#d7e4ee]">
                       <td className="text-dark-400 text-center py-2">Area</td>
@@ -166,33 +194,60 @@ const UserModal = ({
                         : "Areas of Interest"}
                     </p>
                     <div className="">
-                      {program &&
-                        program.length > 0 &&
-                        program.map((prog, index) => (
-                          <div key={index} className="flex items-center gap-2">
+                      {program && program.length > 0
+                        ? program.map((prog, index) => (
                             <div
-                              className={`${
-                                status === "approved" ? "hidden" : " flex"
-                              } items-center h-5`}
+                              key={index}
+                              className="flex items-center gap-2"
                             >
-                              <input
-                                id={`radio-${index}`}
-                                type="radio"
-                                name="programSelection" // Same name attribute for all radio buttons
-                                // value={prog.name} // Store the value of the selected program
-                                onChange={() => handleEnableApprove(prog.id)} // Call a function to handle the selection
-                                className="border-gray-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
-                              />
-                              {/* <label
+                              <div
+                                className={`${
+                                  status === "approved" ? "hidden" : " flex"
+                                } items-center h-5`}
+                              >
+                                <input
+                                  id={`radio-${index}`}
+                                  type="radio"
+                                  name="programSelection" // Same name attribute for all radio buttons
+                                  // value={prog.name} // Store the value of the selected program
+                                  onChange={() => handleEnableApprove(prog.id)} // Call a function to handle the selection
+                                  className="border-gray-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
+                                />
+                                {/* <label
                                 htmlFor={`radio-${index}`}
                                 className="sr-only"
                               >
                                 Select {prog.name}
                               </label> */}
+                              </div>
+                              <p>{prog.name}</p>
                             </div>
-                            <p>{prog.name}</p>
-                          </div>
-                        ))}
+                          ))
+                        : skill &&
+                          skill.length > 0 &&
+                          skill.map((skill, index) => (
+                            <div
+                              key={index}
+                              className="flex items-center gap-2"
+                            >
+                              <div
+                                className={`${
+                                  status === "approved" ? "hidden" : " flex"
+                                } items-center h-5`}
+                              >
+                                <input
+                                  id={`checkbox-${index}`} // Unique ID for each checkbox
+                                  type="checkbox" // Use checkbox instead of radio
+                                  name="skillSelection" // Name attribute can be the same for checkboxes
+                                  onChange={() =>
+                                    handleSkillSelection(skill.id)
+                                  } // Call function to handle selection
+                                  className="border-gray-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
+                                />
+                              </div>
+                              <p>{skill.name}</p>
+                            </div>
+                          ))}
                     </div>
                   </div>
                   <div>

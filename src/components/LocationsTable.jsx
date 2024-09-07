@@ -88,7 +88,7 @@ const LocationsTable = ({ locations, loading }) => {
                 </tbody>
               </table>
             </div>
-            <div className="py-1 px-4">
+            {/* <div className="py-1 px-4">
               <nav className="flex items-center space-x-1">
                 <button
                   type="button"
@@ -124,7 +124,7 @@ const LocationsTable = ({ locations, loading }) => {
                   <span aria-hidden="true">»</span>
                 </button>
               </nav>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

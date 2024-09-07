@@ -206,12 +206,12 @@ function SideBar() {
                         <ul className="flex flex-col list-disc pl-9 space-y-2">
                           <li>
                             <Link href="/user-management/approved" className={`${isLinkActive("/user-management/approved") && 'font-semibold'}`}>
-                              Approved users
+                              Applicants
                             </Link>
                           </li>
                           <li>
                             <Link href="/user-management/shortlist" className={`${isLinkActive("/user-management/shortlist") && 'font-semibold'}`}>
-                              Shortlist users
+                              Users
                             </Link>
                           </li>
                         </ul>

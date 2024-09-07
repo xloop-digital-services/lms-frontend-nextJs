@@ -10,7 +10,7 @@ const SessionsTable = ({ sessions, loading }) => {
             <div className="overflow-hidden">
               <table className="min-w-full divide-y divide-dark-200 dark:divide-gray-700">
                 <thead className="bg-gray-50 dark:bg-gray-700">
-                  <tr>   
+                  <tr>
                     <th
                       scope="col"
                       className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
@@ -54,25 +54,43 @@ const SessionsTable = ({ sessions, loading }) => {
                       </td>
                     </tr>
                   ) : sessions && sessions.length > 0 ? (
-                    sessions.map((session, index) => (
-                      <tr key={index}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                          {session.batch}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                          {session.location}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                          {session.no_of_students}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                          {session.start_time}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                          {session.end_time}
-                        </td>
-                      </tr>
-                    ))
+                    sessions.map((session, index) => {
+                      // Convert start time to desired format
+                      const startTime = new Date(
+                        session.start_time
+                      ).toLocaleTimeString([], {
+                        hour: "numeric",
+                        minute: "2-digit",
+                      });
+
+                      // Convert end time to desired format
+                      const endTime = new Date(
+                        session.end_time
+                      ).toLocaleTimeString([], {
+                        hour: "numeric",
+                        minute: "2-digit",
+                      });
+
+                      return (
+                        <tr key={index}>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                            {session.batch}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                            {session.location_name}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                            {session.no_of_students}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                            {startTime}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                            {endTime}
+                          </td>
+                        </tr>
+                      );
+                    })
                   ) : (
                     <tr>
                       <td
@@ -86,7 +104,7 @@ const SessionsTable = ({ sessions, loading }) => {
                 </tbody>
               </table>
             </div>
-            <div className="py-1 px-4">
+            {/* <div className="py-1 px-4">
               <nav className="flex items-center space-x-1">
                 <button
                   type="button"
@@ -122,7 +140,7 @@ const SessionsTable = ({ sessions, loading }) => {
                   <span aria-hidden="true">»</span>
                 </button>
               </nav>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
