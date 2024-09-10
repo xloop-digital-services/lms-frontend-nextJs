@@ -19,7 +19,7 @@ export default function Page() {
   const [updateBatch, setUpdateBatch] = useState(false);
   const [city0ptions, setCityOptions] = useState([]);
   const [isCitySelected, setIscitySelected] = useState(false);
-  const [filterCity, setFilterCity] = useState([])
+  const [filterCity, setFilterCity] = useState([]);
   const mousedown = useRef(null);
 
   useClickOutside(mousedown, () => setIsCityOpen(false));
@@ -35,37 +35,36 @@ export default function Page() {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     handleListingAllBatches();
   }, [updateBatch]);
 
-  useEffect(() => {
-    console.log("city of areas", cityAreas);
-    setCityOptions(cityAreas);
-  }, []);
+  // useEffect(() => {
+  //   console.log("city of areas", cityAreas);
+  //   setCityOptions(cityAreas);
+  // }, []);
 
   //filter by city
-  useEffect(() => {
-    const handleFilterByCity = async () => {
-      setLoading(true);
-      try {
-        const response = await filterByCity(selectedCity);
-        console.log("filteration success", response);
-        setBatches(response?.data?.locations)
-        setLoading(false);
-      } catch (error) {
-        console.log("error while filtering by city", error);
-        setLoading(false);
-      }
-    };
-    handleFilterByCity();
-  }, [selectedCity]);
+  // useEffect(() => {
+  //   const handleFilterByCity = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const response = await filterByCity(selectedCity);
+  //       console.log("filteration success", response);
+  //       setBatches(response?.data?.locations);
+  //       setLoading(false);
+  //     } catch (error) {
+  //       console.log("error while filtering by city", error);
+  //       setLoading(false);
+  //     }
+  //   };
+  //   handleFilterByCity();
+  // }, [selectedCity]);
 
   const handleResetFilter = () => {
-    setSelectedCity("Select your city")
-    setUpdateBatch(true)
-  }
+    setSelectedCity("Select your city");
+    setUpdateBatch(true);
+  };
 
   const toggleCityOpen = () => {
     setIsCityOpen(!isCityOpen);
@@ -98,7 +97,7 @@ export default function Page() {
             <p className="font-bold text-xl">Batch Details</p>
           </div>
           <div className="flex gap-3">
-            <div>
+            {/* <div>
               <button
                 onClick={toggleCityOpen}
                 className={`${
@@ -130,7 +129,7 @@ export default function Page() {
                   ))}
                 </div>
               )}
-            </div>
+            </div> */}
             {/* <div>
               <button
                 onClick={toggleLocationOpen}

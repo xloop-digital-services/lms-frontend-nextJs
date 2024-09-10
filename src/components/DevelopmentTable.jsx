@@ -28,7 +28,7 @@ const DevelopmentTable = ({
               <table className="min-w-full divide-y divide-dark-200 ">
                 <thead className="bg-dark-50 dark:bg-dark-700">
                   <tr>
-                    <th scope="col" className="py-3 px-4 pe-0">
+                    {/* <th scope="col" className="py-3 px-4 pe-0">
                       <div className="flex items-center h-5">
                         <input
                           id="hs-table-pagination-checkbox-all"
@@ -37,7 +37,7 @@ const DevelopmentTable = ({
                         />
                         <label className="sr-only">Checkbox</label>
                       </div>
-                    </th>
+                    </th> */}
                     <th
                       scope="col"
                       className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
@@ -95,7 +95,7 @@ const DevelopmentTable = ({
                   ) : userByProgramID && userByProgramID.length > 0 ? (
                     userByProgramID.map((user, index) => (
                       <tr key={index}>
-                        <td className="py-3 ps-4">
+                        {/* <td className="py-3 ps-4">
                           <div className="flex items-center h-5">
                             <input
                               id="hs-table-pagination-checkbox-1"
@@ -104,7 +104,7 @@ const DevelopmentTable = ({
                             />
                             <label className="sr-only">Checkbox</label>
                           </div>
-                        </td>
+                        </td> */}
                         <td className="px-6 whitespace-nowrap text-sm text-gray-800 ">
                           <div className="flex items-center gap-3">
                             <div className="data">
@@ -179,6 +179,7 @@ const DevelopmentTable = ({
                 email={selectedUser.email}
                 contact={selectedUser.contact || "-"}
                 status={selectedUser.application_status}
+                location={selectedUser.location}
                 program={selectedUser.program}
                 skill={selectedUser.skill}
                 id={selectedUser.id}

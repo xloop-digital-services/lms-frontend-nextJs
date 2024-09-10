@@ -6,34 +6,37 @@ import { toast } from "react-toastify";
 import Image from "next/image";
 import { setNewPassword } from "@/api/route";
 import { CircularProgress } from "@mui/material";
+import { IoEyeSharp } from "react-icons/io5";
+import { BsEyeSlashFill } from "react-icons/bs";
 
 export default function Page({ params }) {
-  const [loading, setloading] = useState(false)
+  const [loading, setloading] = useState(false);
   const [newPassword, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   // const verifyToken = params.verifyToken;
   const router = useRouter();
-  const u_id = params.verifyToken[0]
-  const token = params.verifyToken[1]
-  console.log("token", u_id ,'/', token);
+  const u_id = params.verifyToken[0];
+  const token = params.verifyToken[1];
+  console.log("token", u_id, "/", token);
 
   const handlePassword = async (event) => {
     event.preventDefault();
-    setloading(true)
+    setloading(true);
     // const formData = new FormData();
     // formData.append("password", newPassword);
     // formData.append("password2", confirmPassword);
     // console.log("formData",formData);
 
     const data = {
-      password : newPassword,
-      password2 : confirmPassword
-    }
-    console.log('form',data)
+      password: newPassword,
+      password2: confirmPassword,
+    };
+    console.log("form", data);
 
     try {
       const response = await setNewPassword(data, u_id, token);
-      console.log('res', response)
+      console.log("res", response);
       if (response.status === 200) {
         toast.success("Password Reset Successfully", {
           position: "top-right",
@@ -49,7 +52,7 @@ export default function Page({ params }) {
             router.push("/auth/login");
           },
         });
-        setloading(false)
+        setloading(false);
       } else {
         toast.error("Wrong Password.", response.data.message, {
           position: "top-right",
@@ -60,7 +63,7 @@ export default function Page({ params }) {
           draggable: true,
           progress: undefined,
         });
-        setloading(false)
+        setloading(false);
       }
     } catch (error) {
       console.error("Error during login:", error);
@@ -75,8 +78,12 @@ export default function Page({ params }) {
       });
       setConfirmPassword("");
       setPassword("");
-      setloading(false)
+      setloading(false);
     }
+  };
+
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -113,7 +120,7 @@ export default function Page({ params }) {
                   </label>
                   <div className="relative">
                     <input
-                      type="new-password"
+                      type={showPassword ? "text" : "password"}
                       id="new-password"
                       name="new-password"
                       placeholder="Enter new password"
@@ -123,6 +130,16 @@ export default function Page({ params }) {
                       required
                       aria-describedby="email-error"
                     />
+                    <div
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-[#b0b0c0] hover:text-[#686870]"
+                      onClick={handleShowPassword}
+                    >
+                      {showPassword ? (
+                        <IoEyeSharp size={20} />
+                      ) : (
+                        <BsEyeSlashFill size={20} />
+                      )}
+                    </div>
                   </div>
                 </div>
                 <div className="space-y-3">
@@ -134,7 +151,7 @@ export default function Page({ params }) {
                   </label>
                   <div className="relative">
                     <input
-                      type="confirm-password"
+                      type={showPassword ? "text" : "password"}
                       id="confirm-password"
                       name="confirm-password"
                       placeholder="Confirm by password"
@@ -144,6 +161,16 @@ export default function Page({ params }) {
                       required
                       aria-describedby="email-error"
                     />
+                    <div
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-[#b0b0c0] hover:text-[#686870]"
+                      onClick={handleShowPassword}
+                    >
+                      {showPassword ? (
+                        <IoEyeSharp size={20} />
+                      ) : (
+                        <BsEyeSlashFill size={20} />
+                      )}
+                    </div>
                   </div>
                 </div>
                 <button
@@ -151,7 +178,10 @@ export default function Page({ params }) {
                   className="w-full flex justify-center gap-4 py-3 px-4 text-sm font-medium rounded-lg text-dark-100 bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
                   onClick={handlePassword}
                 >
-                  {loading && <CircularProgress size={20} style={{color:'white'}} />} Reset password
+                  {loading && (
+                    <CircularProgress size={20} style={{ color: "white" }} />
+                  )}{" "}
+                  Reset password
                 </button>
               </div>
             </form>

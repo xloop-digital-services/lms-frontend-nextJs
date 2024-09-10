@@ -13,7 +13,7 @@ const PieChart = ({approved, pending, shortlisted}) => {
           labels: ["Approved", "Pending", "Shortlist"],
           datasets: [
             {
-              data: [approved, shortlisted, pending],
+              data: [approved,pending, shortlisted],
               backgroundColor: ["#18A07A", "#F29D41", "#D84848"],
             },
           ],

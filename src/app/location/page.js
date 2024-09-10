@@ -75,7 +75,7 @@ export default function Page() {
             <p className="font-bold text-xl">Locations Details</p>
           </div>
           <div className="flex gap-3">
-            <div>
+            {/* <div>
               <button
                 onClick={toggleCityOpen}
                 className={`${
@@ -102,7 +102,7 @@ export default function Page() {
                   ))}
                 </div>
               )}
-            </div>
+            </div> */}
             <div>
               <button
                 className="text-[#fff] bg-[#03A1D8] p-4 md:px-8 rounded-lg hover:cursor-pointer"

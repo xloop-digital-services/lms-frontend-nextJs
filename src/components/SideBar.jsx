@@ -68,8 +68,7 @@ function SideBar() {
                   Dashboard
                 </Link>
                 <div className={`${!isAdmin && "hidden"}`}>
-                  <Link
-                    href="/user-management"
+                  <div
                     className={`p-4 flex flex-col gap-4 mt-2 cursor-pointer rounded-xl hover:text-blue-300 ${
                       isLinkActive("/user-management") ||
                       isLinkActive("/user-management/approved") ||
@@ -107,9 +106,9 @@ function SideBar() {
                         <ul className="flex flex-col list-disc pl-9 space-y-2">
                           <li>
                             <Link
-                              href="/user-management/approved"
+                              href="/user-management/applicants"
                               className={`${
-                                isLinkActive("/user-management/approved") &&
+                                isLinkActive("/user-management/applicants") &&
                                 "font-semibold"
                               }`}
                             >
@@ -118,9 +117,9 @@ function SideBar() {
                           </li>
                           <li>
                             <Link
-                              href="/user-management/shortlist"
+                              href="/user-management/users"
                               className={`${
-                                isLinkActive("/user-management/shortlist") &&
+                                isLinkActive("/user-management/users") &&
                                 "font-semibold"
                               }`}
                             >
@@ -130,7 +129,7 @@ function SideBar() {
                         </ul>
                       </div>
                     )}
-                  </Link>
+                  </div>
                   <Link
                     href="/location"
                     className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${

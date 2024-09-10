@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
-import { createSession } from "@/api/route";
+import { createSession, getAllCourses } from "@/api/route";
 import { CircularProgress } from "@mui/material";
 import DatePicker from "react-datepicker";
 import { FaClock } from "react-icons/fa";
@@ -18,11 +18,9 @@ const SessionCreationModal = ({
   setUpdateSession,
   updateSession,
 }) => {
-  const [selectedLocation, setSelectedLocation] = useState(
-    "select your location"
-  );
+  const [selectedLocation, setSelectedLocation] = useState("select location");
   const [selectedLocationId, setSelectedLocationId] = useState(null);
-  const [selectedBatch, setSelectedBatch] = useState("select your batch");
+  const [selectedBatch, setSelectedBatch] = useState("select batch");
 
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [isBatchOpen, setIsBatchOpen] = useState(false);
@@ -33,12 +31,22 @@ const SessionCreationModal = ({
   const [endTime, setEndTime] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [loadingCreation, setLoadingCreation] = useState(false);
+  const [courseNames, setCourseNames] = useState([]); // Store only the names
+  const [coursesMap, setCoursesMap] = useState({}); // Store the mapping of names to full course objects
+  const [selectedCourse, setSelectedCourse] = useState();
+  const [selectedCourseName, setSelectedCourseName] = useState(null);
+  const [selectedCourseId, setSelectedCourseId] = useState(null);
+  const [isCourseOpen, setIsCourseOpen] = useState(false);
+  const [isCourseSelected, setIsCourseSelected] = useState(false);
+  const [loadingCourses, setLoadingCourses] = useState(false);
+  const [selectedDays, setSelectedDays] = useState([]);
   const mouseClick = useRef(null);
   const modalClose = useRef(null);
 
   useClickOutside(mouseClick, () => {
     setIsLocationOpen(false);
     setIsBatchOpen(false);
+    setIsCourseOpen(false);
   });
 
   useClickOutside(modalClose, () => setOpenModal(false));
@@ -46,27 +54,43 @@ const SessionCreationModal = ({
   const handleSessionCreation = async () => {
     setLoadingCreation(true);
     if (!errorMessage) {
-      try {
-        // Format time to "hh:mm:ss" or "hh:mm:ss.uuuuuu" (24-hour format) before sending to backend
-        const data = {
-          batch: selectedBatch,
-          location: selectedLocationId,
-          no_of_students: capacity,
-          start_time: startTime,
-          end_time: endTime,
-        };
+      if (
+        selectedLocation &&
+        selectedBatch &&
+        selectedCourseName &&
+        capacity &&
+        startTime &&
+        endTime &&
+        selectedDays
+      ) {
+        try {
+          // Format time to "hh:mm:ss" or "hh:mm:ss.uuuuuu" (24-hour format) before sending to backend
+          const data = {
+            batch: selectedBatch,
+            location: selectedLocationId,
+            no_of_students: capacity,
+            start_time: startTime,
+            end_time: endTime,
+            course_id: selectedCourseId,
+            days_of_week: selectedDays,
+          };
 
-        const response = await createSession(data);
-        console.log("session created", response.data.message);
-        setLoadingCreation(false);
-        setOpenModal(false);
-        setUpdateSession(!updateSession);
-      } catch (error) {
-        console.log(
-          "error while session creation",
-          error.response.data.message
-        );
-        toast.error("error in session creation");
+          const response = await createSession(data);
+          // console.log("session created", response.data.message);
+          toast.success(response.data.message);
+          setLoadingCreation(false);
+          setOpenModal(false);
+          setUpdateSession(!updateSession);
+        } catch (error) {
+          console.log(
+            "error while session creation",
+            error.response.data.message
+          );
+          toast.error("error in session creation");
+          setLoadingCreation(false);
+        }
+      } else {
+        toast.error("properly select the fields to create a session");
         setLoadingCreation(false);
       }
     } else {
@@ -75,29 +99,88 @@ const SessionCreationModal = ({
     }
   };
 
-  const handleStartTimeChange = (time) => {
-    // Set the start time as a JavaScript Date object
-    setStartTime(time);
+  useEffect(() => {
+    const handleCoursesList = async () => {
+      setLoadingCourses(true);
+      try {
+        const response = await getAllCourses();
+        console.log("courses", response?.data?.data);
+
+        // Create an array of course names
+        const namesArray = response?.data?.data.map((course) => course.name);
+        // console.log("names of courses", namesArray);
+
+        // Create a map of course names to full course objects
+        const coursesObject = response?.data?.data.reduce((acc, course) => {
+          acc[course.name] = course; // Map course name to its full object
+          return acc;
+        }, {});
+
+        setCourseNames(response?.data?.data); // Set course names array
+        setCoursesMap(coursesObject); // Set courses map
+        setLoadingCourses(false);
+      } catch (error) {
+        console.log("error in courses list", error);
+        setLoadingCourses(false);
+      }
+    };
+
+    handleCoursesList();
+  }, []);
+
+  const handleStartTimeChange = (event) => {
+    // Get the value from the input field
+    const time = event.target.value; // 'HH:mm' format
+
+    // Convert the time to a JavaScript Date object for comparison (if needed)
+    const [hours, minutes] = time.split(":");
+    const startTimeDate = new Date();
+    startTimeDate.setHours(hours);
+    startTimeDate.setMinutes(minutes);
+
+    // Update the state with the time string
+    setStartTime(time); // If you want to keep it in 'HH:mm' format
   };
 
-  const handleEndTimeChange = (time) => {
-    // Set the end time as a JavaScript Date object
-    setEndTime(time);
+  const handleEndTimeChange = (event) => {
+    // Get the value from the input field
+    const time = event.target.value; // 'HH:mm' format
 
-    // Check if end time is earlier than start time
-    if (startTime && moment(time).isSameOrBefore(startTime)) {
-      setErrorMessage("End time should be greater than start time");
+    // Convert the time to a JavaScript Date object for comparison (if needed)
+    const [hours, minutes] = time.split(":");
+    const endTimeDate = new Date();
+    endTimeDate.setHours(hours);
+    endTimeDate.setMinutes(minutes);
+
+    // Update the state with the time string
+    setEndTime(time); // If you want to keep it in 'HH:mm' format
+
+    // Validate end time against start time
+    if (startTime) {
+      const [startHours, startMinutes] = startTime.split(":");
+      const startTimeDate = new Date();
+      startTimeDate.setHours(startHours);
+      startTimeDate.setMinutes(startMinutes);
+
+      if (endTimeDate <= startTimeDate) {
+        setErrorMessage("End time should be greater than start time");
+      } else {
+        setErrorMessage("");
+      }
     } else {
       setErrorMessage("");
     }
   };
-
   const toggleLocationOpen = () => {
     setIsLocationOpen(!isLocationOpen);
   };
 
   const toggleBatchOpen = () => {
     setIsBatchOpen(!isBatchOpen);
+  };
+
+  const toggleCourseOpen = () => {
+    setIsCourseOpen(!isCourseOpen);
   };
 
   const handleLocationSelect = (option) => {
@@ -111,10 +194,39 @@ const SessionCreationModal = ({
     setIsBatchSelected(true);
     setIsBatchOpen(false);
   };
+  const handleCourseSelect = (courseName) => {
+    setSelectedCourseName(courseName.name);
+    setSelectedCourseId(courseName.id);
+    // const selectedCourseObject = coursesMap[courseName]; // Get the full course object by name
+    // setSelectedCourse(selectedCourseObject);
+    setIsCourseSelected(true);
+    setIsCourseOpen(false);
+  };
+
+  const WEEKDAYS = {
+    0: ["Monday", "Mon"],
+    1: ["Tuesday", "Tue"],
+    2: ["Wednesday", "Wed"],
+    3: ["Thursday", "Thu"],
+    4: ["Friday", "Fri"],
+    5: ["Saturday", "Sat"],
+    6: ["Sunday", "Sun"],
+  };
+
+  const handleCheckboxChange = (event) => {
+    const { value, checked } = event.target;
+    if (checked) {
+      setSelectedDays((prev) => [...prev, value]);
+      console.log("checked", selectedDays);
+      // console.log('event', event.target) // Add day if checked
+    } else {
+      setSelectedDays((prev) => prev.filter((day) => day !== value)); // Remove day if unchecked
+    }
+  };
 
   return (
     <div className="backDropOverlay h-screen flex justify-center items-center">
-      <div className=" min-w-[550px] z-[1000] mx-auto my-20">
+      <div className=" w-[550px] z-[1000] mx-auto my-20 overflow-auto scrollbar-webkit">
         {loadingCreation && (
           <div className="absolute inset-0 w-full p-2 flex items-center justify-center bg-surface-100 bg-opacity-30 z-[1100]">
             <CircularProgress size={30} />
@@ -123,7 +235,7 @@ const SessionCreationModal = ({
         <div
           ref={modalClose}
           style={{ backgroundColor: "#EBF6FF" }}
-          className="p-5 rounded-xl"
+          className="xsm:p-5 p-2 m-2 rounded-xl"
         >
           <div className="flex justify-between">
             <h1
@@ -133,7 +245,7 @@ const SessionCreationModal = ({
                 lineHeight: "24.2px",
                 color: "#07224D",
               }}
-              className="text-start  px-2 py-[10px]"
+              className="text-start  px-2 xsm:py-[10px] pb-[5px]"
             >
               Session Creation
             </h1>
@@ -141,8 +253,8 @@ const SessionCreationModal = ({
               <IoClose size={21} />
             </button>
           </div>
-          <div className="bg-[#fff] p-6 rounded-xl space-y-5">
-            <div className="flex gap-3 mx-auto w-full justify-between">
+          <div className="bg-surface-100 xsm:p-6 px-3 py-4 rounded-xl xsm:space-y-5 space-y-2">
+            <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
               <div className="space-y-2 text-[15px] w-full">
                 <p>Batch</p>
                 <button
@@ -164,7 +276,7 @@ const SessionCreationModal = ({
                 {isBatchOpen && (
                   <div
                     ref={mouseClick}
-                    className="absolute z-10 full mt-1 bg-surface-100 max-h-[200px] overflow-auto scrollbar-webkit min-w-[500px] border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
+                    className="absolute z-10 min-w-[240px] max-h-[170px] mt-1 bg-surface-100  overflow-auto scrollbar-webkit border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
                   >
                     {loadingBatch && batchOptions.length == 0 ? (
                       <div className="w-full flex items-center justify-center p-1">
@@ -190,8 +302,55 @@ const SessionCreationModal = ({
                   </div>
                 )}
               </div>
+              <div className="space-y-2 text-[15px] w-full">
+                <p>Course</p>
+                <button
+                  onClick={toggleCourseOpen}
+                  className={`${
+                    !isCourseSelected ? "text-[#92A7BE]" : "text-[#424b55]"
+                  } flex justify-between items-center w-full hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                >
+                  {selectedCourseName ? selectedCourseName : "select a course"}
+                  <span
+                    className={`${
+                      isCourseOpen ? "rotate-180 duration-300" : "duration-300"
+                    } `}
+                  >
+                    <IoIosArrowDown />
+                  </span>
+                </button>
+
+                {isCourseOpen && (
+                  <div
+                    ref={mouseClick}
+                    className="absolute z-10 min-w-[240px] mt-1 bg-surface-100 max-h-[200px] overflow-auto scrollbar-webkit border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
+                  >
+                    {loadingCourses && courseNames.length === 0 ? (
+                      <div className="w-full flex items-center justify-center p-1">
+                        <CircularProgress size={15} />
+                      </div>
+                    ) : courseNames && courseNames.length > 0 ? (
+                      courseNames.map((name) => (
+                        <div
+                          key={name}
+                          onClick={() => handleCourseSelect(name)}
+                          className="p-2 cursor-pointer"
+                        >
+                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                            {name.name}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-sm text-center text-dark-300">
+                        No course found
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
-            <div className="flex gap-3 mx-auto w-full justify-between">
+            <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
               <div className="space-y-2 text-[15px] w-full">
                 <p>Location</p>
                 <button
@@ -215,7 +374,7 @@ const SessionCreationModal = ({
                 {isLocationOpen && (
                   <div
                     ref={mouseClick}
-                    className="absolute z-10 min-w-[242px] max-h-[200px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
+                    className="absolute z-10 min-w-[240px] max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
                   >
                     {loadingLocation && LocationOptions.length == 0 ? (
                       <div className="w-full flex items-center justify-center p-1">
@@ -242,7 +401,7 @@ const SessionCreationModal = ({
                 )}
               </div>
               <div className="space-y-2 text-[15px] w-full">
-                <p>Number of Students</p>
+                <p>Capacity</p>
                 <input
                   type="number"
                   className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full "
@@ -250,43 +409,38 @@ const SessionCreationModal = ({
                   value={capacity}
                   min={0}
                   onChange={(e) => setCapacity(e.target.value)}
+                  required
                 />
               </div>
             </div>
-            <div className="flex gap-3 mx-auto w-full justify-between">
+            <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
+              {/* Start Time Input */}
               <div className="space-y-2 text-[15px] w-full">
                 <p>Start Time</p>
                 <div className="relative">
-                  <DatePicker
-                    selected={startTime} // Pass the JavaScript Date object directly
+                  <input
+                    type="time"
+                    value={startTime}
                     onChange={handleStartTimeChange}
-                    showTimeSelect
-                    showTimeSelectOnly
-                    timeIntervals={15}
-                    timeCaption="Time"
-                    dateFormat="HH:mm:ss"
-                    placeholderText="Select start time"
                     className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
+                    placeholder="Select start time"
+                    required
                   />
-                  <FaClock className="absolute right-3 top-1/2 transform -translate-y-1/2 text-dark-400" />
                 </div>
               </div>
 
+              {/* End Time Input */}
               <div className="space-y-2 text-[15px] w-full">
                 <p>End Time</p>
                 <div className="relative">
-                  <DatePicker
-                    selected={endTime} // Pass the JavaScript Date object directly
+                  <input
+                    type="time"
+                    value={endTime}
                     onChange={handleEndTimeChange}
-                    showTimeSelect
-                    showTimeSelectOnly
-                    timeIntervals={15}
-                    timeCaption="Time"
-                    dateFormat="HH:mm:ss"
-                    placeholderText="Select end time"
                     className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
+                    placeholder="Select end time"
+                    required
                   />
-                  <FaClock className="absolute right-3 top-1/2 transform -translate-y-1/2 text-dark-400" />
                 </div>
                 {errorMessage && (
                   <p className="text-[#D84848] text-[12px] mt-2">
@@ -295,15 +449,35 @@ const SessionCreationModal = ({
                 )}
               </div>
             </div>
-
-            <div className="flex w-full justify-center items-center">
-              <button
-                type="submit"
-                onClick={handleSessionCreation}
-                className="w-fit flex justify-center py-3 px-12 text-sm font-medium rounded-lg text-dark-100 bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
-              >
-                Create
-              </button>
+            <div className="flex flex-col gap-3 mx-auto  w-full">
+              <div className="space-y-2 text-[15px] w-full">
+                <p>Week Days</p>
+                <div className="flex flex-wrap gap-3">
+                  {Object.entries(WEEKDAYS).map(
+                    ([key, [fullName, shortName]]) => (
+                      <label key={key} className="flex items-center ">
+                        <input
+                          type="checkbox"
+                          value={key}
+                          onChange={handleCheckboxChange}
+                          className="mr-2"
+                          required
+                        />
+                        {fullName} ({shortName})
+                      </label>
+                    )
+                  )}
+                </div>
+              </div>
+              <div className="flex items-center justify-center w-full">
+                <button
+                  type="submit"
+                  onClick={handleSessionCreation}
+                  className="w-fit flex justify-center py-3 px-12 text-sm font-medium rounded-lg text-dark-100 bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
+                >
+                  Create
+                </button>
+              </div>
             </div>
           </div>
         </div>

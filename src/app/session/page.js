@@ -153,7 +153,7 @@ export default function Page() {
           <div className="flex gap-3 sm:flex-row flex-col text-base lg:text-sm">
             <div className="flex gap-3 ">
               {/* City Dropdown */}
-              <div>
+              {/* <div>
                 <button
                   onClick={toggleCityOpen}
                   className={`${
@@ -187,7 +187,7 @@ export default function Page() {
               </div>
 
               {/* Location Dropdown */}
-              <div>
+              {/* <div>
                 <button
                   onClick={toggleLocationOpen}
                   className={`${
@@ -224,9 +224,9 @@ export default function Page() {
                     )}
                   </div>
                 )}
-              </div>
+              </div> */}
 
-              {/* Batch Dropdown */}
+              {/* Batch Dropdown *
               <div>
                 <button
                   onClick={toggleBatchOpen}
@@ -264,7 +264,7 @@ export default function Page() {
                     )}
                   </div>
                 )}
-              </div>
+              </div> */}
             </div>
             {/* Create Session Button */}
             <div>

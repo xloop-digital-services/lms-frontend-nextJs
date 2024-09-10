@@ -13,31 +13,31 @@ const SessionsTable = ({ sessions, loading }) => {
                   <tr>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[24%]"
                     >
                       Batch
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[24%]"
                     >
                       Location
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[24%]"
                     >
                       Capacity
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[24%]"
                     >
                       Start Time
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[20%]"
                     >
                       End Time
                     </th>
@@ -83,10 +83,10 @@ const SessionsTable = ({ sessions, loading }) => {
                             {session.no_of_students}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                            {startTime}
+                            {session.start_time}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                            {endTime}
+                            {session.end_time}
                           </td>
                         </tr>
                       );
