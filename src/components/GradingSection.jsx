@@ -1,8 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
-import StudentMarksTable from "./StudentMarksTable";
-import { getAssignmentGrading, getQuizGrading } from "@/api/route";
+import {
+  getAssignmentGrading,
+  getExamGrading,
+  getProjectGrading,
+  getQuizGrading,
+} from "@/api/route";
+import AdminMarksTable from "./AdminMarksTable";
 
 export const GradingSection = ({ title, options, courseId }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,6 +17,8 @@ export const GradingSection = ({ title, options, courseId }) => {
   const [assignmentGrading, setAssignmentGrading] = useState([]);
   const [examGrading, setExamGrading] = useState([]);
   const [projectGrading, setProjectGrading] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [fetch, setFetch] = useState(false);
 
   const toggleOpen = (e) => {
     e.stopPropagation();
@@ -21,52 +28,88 @@ export const GradingSection = ({ title, options, courseId }) => {
   const handleSelect = (id) => {
     setSelected(id);
     setIsOpen(false);
-    if (!selected) return;
-
-    // if (!selected && title === "Assignment") return;
-    // fetchAsignmentsGrading();
   };
-
-  useEffect(() => {
-    // fetchQuizzesGrading();
-    fetchAsignmentsGrading();
-  }, [selected]);
 
   const handleToggleSection = (section) => {
     setOpenSection(openSection === section ? null : section);
   };
 
   async function fetchQuizzesGrading() {
+    setLoading(true);
     const response = await getQuizGrading(courseId, selected);
     try {
       if (response.status === 200) {
+        setLoading(false);
         setQuizGrading(response?.data?.data?.students);
         console.log(quizGrading);
       } else {
-        console.error("Failed to fetch user, status:", response.status);
+        console.error("Failed to fetch quizzes, status:", response.status);
       }
     } catch (error) {
       console.log("error", error);
     }
   }
 
-  async function fetchAsignmentsGrading() {
+  async function fetchAssignmentsGrading() {
+    setLoading(true);
     const response = await getAssignmentGrading(courseId, selected);
     try {
       if (response.status === 200) {
+        setLoading(false);
         setAssignmentGrading(response?.data?.data?.students);
         console.log(assignmentGrading);
       } else {
-        console.error("Failed to fetch user, status:", response.status);
+        console.error("Failed to fetch assignments, status:", response.status);
       }
     } catch (error) {
       console.log("error", error);
     }
   }
 
-  // useEffect(() => {
-  //   fetchQuizzesGrading();
-  // });
+  async function fetchExamGrading() {
+    setLoading(true);
+    const response = await getExamGrading(courseId, selected);
+    try {
+      if (response.status === 200) {
+        setLoading(false);
+        setExamGrading(response?.data?.data?.students);
+        console.log(examGrading);
+      } else {
+        console.error("Failed to fetch exams, status:", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
+  async function fetchProjectGrading() {
+    setLoading(true);
+    const response = await getProjectGrading(courseId, selected);
+    try {
+      if (response.status === 200) {
+        setLoading(false);
+        setProjectGrading(response?.data?.data?.students);
+        console.log(projectGrading);
+      } else {
+        console.error("Failed to fetch projects, status:", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
+  useEffect(() => {
+    if (!selected) return;
+    if (title === "Assignment") {
+      fetchAssignmentsGrading();
+    } else if (title === "Quiz") {
+      fetchQuizzesGrading();
+    } else if (title === "Exam") {
+      fetchExamGrading();
+    } else if (title === "Project") {
+      fetchProjectGrading();
+    }
+  }, [selected, fetch, title]);
 
   return (
     <div className="border my-3 border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
@@ -100,7 +143,7 @@ export const GradingSection = ({ title, options, courseId }) => {
                 {isOpen && (
                   <div
                     className="absolute capitalize z-40 min-w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
-                    onClick={(e) => e.stopPropagation()} // This prevents the click event from propagating to parent elements
+                    onClick={(e) => e.stopPropagation()}
                   >
                     {options?.length > 0 ? (
                       options.map((option) => (
@@ -131,11 +174,26 @@ export const GradingSection = ({ title, options, courseId }) => {
           </span>
         </div>
       </div>
-      {selected && openSection && (
+      {selected && openSection === title && (
         <div className="mt-3">
-          <StudentMarksTable assessments={assignmentGrading} />
+          <AdminMarksTable
+            setFetch={setFetch}
+            title={title}
+            assessments={
+              title === "Assignment"
+                ? assignmentGrading
+                : title === "Quiz"
+                ? quizGrading
+                : title === "Project"
+                ? projectGrading
+                : examGrading
+            }
+            assessmentId={selected}
+          />
         </div>
       )}
     </div>
   );
 };
+
+export default GradingSection;

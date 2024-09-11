@@ -325,7 +325,7 @@ const AdminDashboard = () => {
               <div className="flex grow">
                 <input
                   type="text"
-                  placeholder="Search program by names"
+                  placeholder="Search batch by name"
                   className="p-3 text-sm border border-[#92A7BE] rounded-lg outline-none w-full"
                 />
               </div>

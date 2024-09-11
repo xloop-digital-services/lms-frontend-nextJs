@@ -15,9 +15,10 @@ import {
 } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
 
-export default function StudentGrading(courseId) {
+export default function StudentGrading({ courseId, regId: propRegId }) {
   const { width } = useWindowSize();
   const { isSidebarOpen } = useSidebar();
+
   // const [selectedOption, setSelectedOption] = useState("Hammad Siddiqui");
   const [isOpen, setIsOpen] = useState(false);
   const [openSection, setOpenSection] = useState(null);
@@ -28,11 +29,13 @@ export default function StudentGrading(courseId) {
   const [exam, setExam] = useState([]);
   const [loader, setLoader] = useState(true);
   const dropdownRef = useRef(null);
-//   const courseId = params.courseId;
   const { userData } = useAuth();
+  const isStudent = userData?.Group === "student";
+  //   const courseId = params.courseId;
   // const userId = userData?.user_data?.user;
-  const regId = userData?.user_data?.registration_id;
-  console.log(regId);
+  const regId = isStudent ? userData?.user_data?.registration_id : propRegId;
+  // const regId = userData?.user_data?.registration_id;
+  // console.log(regId);
   const toggleOpen = () => {
     setIsOpen(!isOpen);
   };

@@ -4,14 +4,17 @@ import { CircularProgress } from "@mui/material";
 import StudentDashboard from "@/components/StudentDashboard";
 import AdminDashboard from "@/components/AdminDashboard";
 import { useAuth } from "@/providers/AuthContext";
+import InstructorDashboard from "@/components/InstructorDashboard";
 
 export default function Page() {
   const [loader, setLoader] = useState(true);
   const { userData } = useAuth();
   const isStudent = userData?.Group === "student";
   const isAdmin = userData?.Group === "admin";
-  console.log(isStudent)
-  console.log(userData?.Group)
+  const isInstructor = userData?.Group === "instructor";
+
+  // console.log(isStudent);
+  // console.log(userData?.Group);
 
   return (
     <>
@@ -22,18 +25,15 @@ export default function Page() {
       ) : ( */}
       <>
         {isStudent ? (
-          // <div className="">
-            <StudentDashboard />
-          // </div>
+          <StudentDashboard />
         ) : isAdmin ? (
           <AdminDashboard />
+        ) : isInstructor ? (
+          <InstructorDashboard />
         ) : (
-          <div className="flex justify-center items-center h-screen w-full">
-            this is instructor
-          </div>
+          <div>No data found </div>
         )}
       </>
-      {/* )} */}
     </>
   );
 }

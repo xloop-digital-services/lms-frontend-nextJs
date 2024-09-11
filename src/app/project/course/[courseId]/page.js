@@ -3,35 +3,42 @@ import React, { useEffect, useState } from "react";
 import { useSidebar } from "@/providers/useSidebar";
 import StudentDataStructure from "@/components/StudentDataStructure";
 import CourseHead from "@/components/CourseHead";
-import { createProject, getProjectByCourseId } from "@/api/route";
+import {
+  createProject,
+  getProjectByCourseId,
+  updateProject,
+} from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
 import { toast } from "react-toastify";
+import { CircularProgress } from "@mui/material";
+import AdminDataStructure from "@/components/AdminDataStructure";
 
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
-  const [project, setProject] = useState([]);
+  const [assignments, setAssignments] = useState([]);
+  const [currentAssignment, setCurrentAssignment] = useState(null);
   const courseId = params.courseId;
   const { userData } = useAuth();
   const isStudent = userData?.Group === "student";
   const [isCreatingQuiz, setCreatingQuiz] = useState(false);
   const [question, setQuestion] = useState("");
+  const [loading, setLoading] = useState(false);
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [quiz, setQuiz] = useState("");
-  const [resubmission, setResubmission] = useState("");
   const [file, setFile] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [resubmission, setResubmission] = useState("");
   const [updateStatus, setUpdateStatus] = useState(false);
-  // console.log(courseId);
+  const [assignmentStatus, setAssignmentStatus] = useState(0);
+  const [fetch, setFetch] = useState(false);
 
-  async function fetchProject() {
+  async function fetchAssignments() {
     const response = await getProjectByCourseId(courseId);
     try {
       if (response.status === 200) {
-        setProject(response?.data?.data);
-        console.log(project);
+        setAssignments(response?.data?.data);
       } else {
-        console.error("Failed to fetch user, status:", response.status);
+        console.error("Failed to fetch projects, status:", response.status);
       }
     } catch (error) {
       console.log("error", error);
@@ -41,46 +48,76 @@ export default function Page({ params }) {
   const handleAssignmentCreation = async (event) => {
     event.preventDefault();
     setLoading(true);
-    const assignment = {
-      course: courseId,
-      title: question,
-      description: description,
-      content: file,
-      due_date: dueDate,
-      no_of_resubmissions_allowed: resubmission,
-    };
+
+    const formData = new FormData();
+    formData.append("course", courseId);
+    formData.append("title", question);
+    formData.append("description", description);
+    if (file) {
+      formData.append("content", file);
+    }
+    formData.append("due_date", dueDate);
+    formData.append("no_of_resubmissions_allowed", resubmission);
+    formData.append("status", assignmentStatus);
 
     try {
-      const response = await createProject(assignment);
-      if (response.status === 201) {
-        toast.success("Project created Successfully", response?.message);
-        setQuiz(assignment);
+      const response = currentAssignment
+        ? await updateProject(formData, currentAssignment.id)
+        : await createProject(formData);
+
+      if (response.status === (currentAssignment ? 200 : 201)) {
+        setLoading(false);
+        toast.success(
+          currentAssignment
+            ? "Project updated successfully!"
+            : "Project created successfully!",
+          response?.message?.message
+        );
+        setQuiz(assignments);
         setDescription("");
         setQuestion("");
         setDueDate("");
         setFile(null);
-        fetchProject();
         setResubmission("");
         setCreatingQuiz(false);
+        setCurrentAssignment(null);
+        fetchAssignments();
       } else {
-        toast.error("Error creating Project", response?.message);
+        setLoading(false);
+        toast.error(
+          `Error ${currentAssignment ? "updating" : "creating"} Project`,
+          response?.message
+        );
       }
     } catch (error) {
-      toast.error("Error creating Project", error);
+      setLoading(false);
+      toast.error(
+        `Error ${currentAssignment ? "updating" : "creating"} Project`,
+        error
+      );
       console.log(error);
     }
   };
 
-  const handleFileUpload = (e) => {
-    const selectedFile = e.target.files[0];
-    if (selectedFile) {
-      setFile(selectedFile);
-      setFileUploaded(selectedFile.name); // Update the uploaded file name
+  const handleUpdateAssignment = async (id) => {
+    const assignmentToEdit = assignments.find(
+      (assignment) => assignment.id === id
+    );
+    if (!assignmentToEdit) {
+      toast.error("Project not found");
+      return;
     }
+    setCurrentAssignment(assignmentToEdit);
+    setQuestion(assignmentToEdit.question);
+    setDescription(assignmentToEdit.description);
+    setDueDate(assignmentToEdit.due_date);
+    setResubmission(assignmentToEdit.no_of_resubmissions_allowed);
+    setFile(assignmentToEdit.content);
+    setCreatingQuiz(true);
   };
 
   useEffect(() => {
-    fetchProject();
+    fetchAssignments();
   }, [updateStatus]);
 
   return (
@@ -88,16 +125,14 @@ export default function Page({ params }) {
       className={`flex-1 transition-transform pt-[90px] space-y-4 max-md:pt-32 font-inter ${
         isSidebarOpen ? "translate-x-64 pl-16 " : "translate-x-0 pl-10 pr-10"
       }`}
-      style={{
-        // paddingBottom: "20px",
-        width: isSidebarOpen ? "86%" : "100%",
-      }}
+      style={{ width: isSidebarOpen ? "86%" : "100%" }}
     >
-      <div className=" bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl h-[85vh] p-4">
+      <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4">
         <CourseHead
           id={courseId}
           rating="Top Instructor"
           instructorName="Maaz"
+          // progress={assignmentProgress?.progress_percentage}
           haveStatus={true}
           title="Create Project"
           isEditing={isCreatingQuiz}
@@ -106,8 +141,38 @@ export default function Page({ params }) {
 
         {isCreatingQuiz && (
           <>
-            <form>
-              <div>
+            <div className="flex justify-between max-md:flex-col">
+              <h2 className="text-lg font-bold my-4">
+                {currentAssignment ? "Update Project" : "Create Project"}
+              </h2>
+
+              <div className="flex items-center my-4">
+                <span className="mr-4 text-md">Project Status</span>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={assignmentStatus === 1}
+                    onChange={() =>
+                      setAssignmentStatus((prevStatus) =>
+                        prevStatus === 0 ? 1 : 0
+                      )
+                    }
+                    className="sr-only"
+                  />
+                  <div className="w-11 h-6 bg-blue-600 rounded-full"></div>
+                  <div
+                    className={`absolute w-4 h-4 bg-blue-300 rounded-full shadow-md transform transition-transform ${
+                      assignmentStatus === 1 ? "translate-x-5" : "translate-x-1"
+                    }`}
+                  ></div>
+                </label>
+                <span className="ml-4 text-md">
+                  {assignmentStatus === 1 ? "Active" : "Inactive"}
+                </span>
+              </div>
+            </div>
+            <form onSubmit={handleAssignmentCreation}>
+              <div className="my-2">
                 <label className="text-md">Project Question</label>
                 <input
                   type="text"
@@ -117,7 +182,7 @@ export default function Page({ params }) {
                 />
               </div>
 
-              <div>
+              <div className="my-2">
                 <label className="text-md">Project description</label>
                 <input
                   type="text"
@@ -126,7 +191,7 @@ export default function Page({ params }) {
                   onChange={(e) => setDescription(e.target.value)}
                 />
               </div>
-              <div>
+              <div className="my-2">
                 <label className="text-md">Due Date</label>
                 <input
                   type="datetime-local"
@@ -145,7 +210,7 @@ export default function Page({ params }) {
                     value={resubmission}
                     onChange={(e) =>
                       setResubmission(
-                        e.target.value === "" ? 0 : Number(e.target.value)
+                        e.target.value === "" ? null : Number(e.target.value)
                       )
                     }
                   />
@@ -153,9 +218,9 @@ export default function Page({ params }) {
                 <div className="mb-4 sm:mb-0 lg:w-[50%] md:w-[50%]">
                   <label className="text-md">Upload Project</label>
                   <input
+                    required
                     type="file"
                     className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
-                    onClick={handleFileUpload}
                     onChange={(e) => setFile(e.target.files[0])}
                   />
                 </div>
@@ -165,27 +230,53 @@ export default function Page({ params }) {
                 onClick={handleAssignmentCreation}
                 disabled={loading}
                 className={`w-40 my-4 flex justify-center py-3 px-4 text-sm font-medium rounded-lg text-surface-100 
-                  ${
-                    loading
-                      ? "bg-blue-300 text-surface-100"
-                      : "bg-[#03A1D8] hover:bg-[#2799bf]"
-                  } 
-                  focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 
-                  transition duration-150 ease-in-out`}
+    ${
+      loading
+        ? "bg-blue-300 text-surface-100"
+        : currentAssignment
+        ? "bg-[#03A1D8] hover:bg-[#2799bf]"
+        : "bg-[#03A1D8] hover:bg-[#2799bf]"
+    } 
+    focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 
+    transition duration-150 ease-in-out`}
               >
-                {loading ? "Creating..." : "Create Project"}
+                {loading ? (
+                  <CircularProgress size={20} style={{ color: "white" }} />
+                ) : currentAssignment ? (
+                  "Update Project"
+                ) : (
+                  "Create Project"
+                )}
               </button>
             </form>
           </>
         )}
-
-        <StudentDataStructure
-          quizzes={project}
-          key={project.id}
-          field="project"
-          assessment="Project"
-          setUpdateStatus={setUpdateStatus}
-        />
+        <div className="mt-10">
+          {isStudent ? (
+            <StudentDataStructure
+              quizzes={assignments}
+              setQuizzes={setAssignments}
+              key={assignments.id}
+              field="project"
+              onUpdateQuiz={handleUpdateAssignment}
+              assessment="Projects"
+              setUpdateStatus={setUpdateStatus}
+              handleUpdateAssignment={handleUpdateAssignment}
+            />
+          ) : (
+            <AdminDataStructure
+              quizzes={assignments}
+              setQuizzes={setAssignments}
+              key={assignments.id}
+              field="project"
+              onUpdateQuiz={handleUpdateAssignment}
+              assessment="Projects"
+              setUpdateStatus={setUpdateStatus}
+              handleUpdateAssignment={handleUpdateAssignment}
+            />
+          )}
+        </div>
+       
       </div>
     </div>
   );

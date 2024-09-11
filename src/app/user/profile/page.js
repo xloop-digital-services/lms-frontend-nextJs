@@ -248,7 +248,7 @@ function Profile() {
         }}
       >
         <div
-          className={`lg:pt-12 pb-8 lg:pl-12 lg:pr-12 rounded-xl bg-surface-100 w-full h-[85vh] ${
+          className={`lg:pt-12 pb-8 lg:pl-12 lg:pr-12 rounded-xl bg-surface-100 w-full  ${
             !isDisabledPass && "h-full"
           }`}
         >

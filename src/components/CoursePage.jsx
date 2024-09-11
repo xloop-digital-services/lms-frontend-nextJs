@@ -64,7 +64,7 @@ export default function CoursePage({ path, progress, heading }) {
         ) : (
           <>
             <div className="bg-surface-100 p-8 rounded-xl ">
-              <h2 className="text-xl font-bold pb-1">{heading}</h2>
+              <h2 className="text-xl font-bold pb-1 font-exo">{heading}</h2>
               <p className="pb-6">
                 Select a course to view the {heading}
               </p>

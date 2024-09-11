@@ -1,6 +1,7 @@
 "use client";
 import {
   createModule,
+  createSkill,
   getAllSkills,
   getCourseById,
   getModuleByCourseId,
@@ -69,7 +70,9 @@ export default function Page({ params }) {
   const [courses, setCourses] = useState([]);
   const [skillbyID, setSkillbyID] = useState("");
   const [skillId, setSkillId] = useState("");
+  const [skill, setSkill] = useState();
   // console.log(isAdmin)
+  // const [skillName, setSkillName] = useState("");
 
   async function fetchCoursesById() {
     const response = await getCourseById(courseId);
@@ -77,6 +80,12 @@ export default function Page({ params }) {
     try {
       if (response.status === 200) {
         setCourseData(response?.data?.data);
+        const skillNames = courseData?.skills?.map((skillId) => {
+          const skill = courseData.find((item) => item.id === skillId);
+          return skill ? skill.skill_name : "Unknown skill";
+        });
+
+        setSkills(skillNames);
         setLoader(false);
       } else {
         console.error("Failed to fetch course, status:", response.status);
@@ -86,25 +95,50 @@ export default function Page({ params }) {
     }
   }
 
-  // const handleSkillId = (id) => {
-  //   setSkillId(id);
-  //   fetchSkillbyId();
-  // };
+  const handleCreateSkill = async (e) => {
+    e.preventDefault();
+    const skills = {
+      skill_name: skillName,
+    };
+    try {
+      const response = await createSkill(skills);
+      if (response.status === 201) {
+        toast.success("Skill created Successfully!");
+        // setSkillName("");
+        setSkill(false);
+        fetchAllSkills();
+      } else {
+        toast.error(response.data?.message);
+      }
+    } catch (error) {
+      toast.error(`Error creating skill: ${error?.message}`);
+      // console.log(error?.data?.data?.skill_name?.[0])
+    }
+  };
+  const handleSkills = () => {
+    setSkill(!skill);
+  };
 
-  // async function fetchSkillbyId() {
-  //   const response = await getSkillbyId(skillId);
-  //   setLoader(true);
-  //   try {
-  //     if (response.status === 200) {
-  //       setSkillbyID(response?.data?.data);
-  //       setLoader(false);
-  //     } else {
-  //       console.error("Failed to fetch course, status:", response.status);
-  //     }
-  //   } catch (error) {
-  //     console.log("error", error);
-  //   }
-  // }
+  const handleSkillId = (id) => {
+    setSkillId(id);
+    fetchSkillbyId();
+  };
+
+  async function fetchSkillbyId() {
+    const response = await getAllSkills();
+    setLoader(true);
+    try {
+      if (response.status === 200) {
+        setSkillbyID(response?.data?.data);
+        console.log(response?.data?.data)
+        setLoader(false);
+      } else {
+        console.error("Failed to fetch skills, status:", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
 
   async function fetchCourseProgress() {
     const response = await getProgressForCourse(courseId);
@@ -322,6 +356,13 @@ export default function Page({ params }) {
     });
   };
 
+  useEffect(() => {
+    if (courseData?.skills?.length > 0) {
+      fetchAllSkills();
+    }
+    // console.log(courseData?.skills);
+  }, [courseData]);
+
   return (
     <>
       {loader ? (
@@ -357,7 +398,7 @@ export default function Page({ params }) {
             {isEditing ? (
               <div className="flex flex-col">
                 <div className="flex">
-                  <label className="text-lg font-bold">Course Name</label>
+                  <label className="text-lg font-exo font-bold">Course Name</label>
                   {/* <div
                     onClick={handleToggle}
                     className={`w-16 h-8 flex items-center rounded-full p-1 cursor-pointer bg-blue-600 ${
@@ -381,7 +422,8 @@ export default function Page({ params }) {
                     setCourseData({ ...courseData, name: e.target.value })
                   }
                 />
-                <label className="text-lg font-bold">Short Description</label>
+                <label className="text-lg font-exo font-bold">
+                  Short Description</label>
                 <input
                   className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
                   value={courseData.short_description}
@@ -392,7 +434,7 @@ export default function Page({ params }) {
                     })
                   }
                 />
-                <label className="text-lg font-bold mt-4">
+                <label className="font-exo text-lg font-bold mt-4">
                   About the Course
                 </label>
                 <textarea
@@ -405,7 +447,7 @@ export default function Page({ params }) {
                 />
 
                 <div className="my-4 sm:mb-0">
-                  <label htmlFor="about">Credit Hours</label>
+                <label className="text-lg font-exo font-bold">Credit Hours</label>
                   <div className="sm:pr-4">
                     <div className="relative w-full h-12 px-2 gap-4 flex items-center border-dark-400 rounded-md border mt-2 py-1.5">
                       Theory Hours and
@@ -449,7 +491,7 @@ export default function Page({ params }) {
                     </div>
                   </div>
                   <div className="my-4 sm:mb-0">
-                    <label htmlFor="courses-names">Skills Names</label>
+                  <label className="text-lg font-exo font-bold">Skills Names</label>
                     <div className="sm:pr-4">
                       <div className="relative flex flex-wrap items-center gap-2 bg-white outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 shadow-sm ring-1 ring-inset focus:ring-inset p-2 sm:text-sm sm:leading-6">
                         {inputCourses?.map((courseId) => {
@@ -476,14 +518,14 @@ export default function Page({ params }) {
                           className="flex-grow outline-none bg-surface-100 placeholder-dark-300"
                         />
 
-                        {/* <button
+                        <button
                           type="button"
                           className="text-surface-100  px-2 py-1.5  rounded-md bg-blue-300"
                           onClick={handleSkills}
                         >
                           {" "}
                           Create a Skill
-                        </button> */}
+                        </button>
 
                         <select
                           value=""
@@ -515,42 +557,69 @@ export default function Page({ params }) {
               <>
                 <div className="flex flex-col">
                   <div className="flex justify-between max-md:flex-col">
-                    <h2 className="text-xl font-bold">About the Course</h2>
+                    <h2 className="text-xl font-exo font-bold">About the Course</h2>
                   </div>
                   <p className="mt-2 mb-2 text-dark-500 text-justify">
                     {courseData.about}
                   </p>
                 </div>
                 <div className="flex flex-col">
-                  {/* <div className="flex justify-between max-md:flex-col mt-8 mb-4">
-                    <h2 className="text-xl font-bold">Skills You gain</h2>
+                  <div className="flex justify-between max-md:flex-col mt-8 mb-4">
+                    <h2 className="text-xl font-exo font-bold">Skills You gain</h2>
                   </div>
                   <div className="flex gap-2 max-md:flex-col">
-                    {courseData?.skills?.length > 0 ? (
-                      courseData.skills.map((skill, index) => (
+                    {skills?.length > 0 ? (
+                      skills.map((skillName, index) => (
                         <div
                           key={index}
-                          onChange={() => handleSkillId(skill)}
                           className="flex bg-blue-600 w-fit py-[9px] px-5 rounded-lg items-center space-x-2 max-md:mt-2"
                         >
                           <p className="uppercase text-[12px] text-blue-300">
-                            {skillbyID?.data?.skill_name}
+                            {skillName}
                           </p>
                         </div>
                       ))
                     ) : (
                       <p>No skills available</p>
                     )}
-                  </div> */}
+                  </div>
 
                   {/* </div> */}
                 </div>
               </>
             )}
 
+            {skill && (
+              <>
+                <div className="my-4 sm:mb-0">
+                  <label htmlFor="skill">Create a skill</label>
+                  <div className="sm:pr-4">
+                    <div className="relative w-full h-12 px-2 gap-4 flex items-center border-dark-400 rounded-md border mt-2 py-1.5">
+                      <label>Enter a new skill</label>
+                      <input
+                        id="skill"
+                        name="skill"
+                        type="text"
+                        value={skillName}
+                        onChange={(e) => setSkillName(e.target.value)}
+                        placeholder="select"
+                        className="px-2 block w-80 outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset sm:text-sm sm:leading-6"
+                      />
+                      <button
+                        className="text-surface-100 p-2 rounded-md bg-blue-300"
+                        onClick={handleCreateSkill}
+                      >
+                        Create skill
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+
             <div className="flex flex-col gap-4">
               <div className="flex justify-between items-center max-md:flex-col mt-8 mb-4">
-                <h2 className="text-xl font-bold">Modules</h2>
+                <h2 className="text-xl font-exo font-bold">Modules</h2>
                 {isAdmin && (
                   <button
                     className=" flex justify-center items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl hover:bg-[#4296b3]"

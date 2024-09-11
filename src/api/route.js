@@ -263,11 +263,34 @@ export const getQuizGrading = async (courseId, quizId) => {
   }
 };
 
+//update quizzes Grading (admin)
+export const updateQuizGrading = async (quizData) => {
+  try {
+    const response = await axiosInstance.post(`course/quiz_grading/`, quizData);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 //get assignments Grading (admin)
 export const getAssignmentGrading = async (courseId, assignId) => {
   try {
     const response = await axiosInstance.get(
       `course/courses/${courseId}/assignments/${assignId}/students/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//update assignments Grading (admin)
+export const updateAssignmentGrading = async (assignData) => {
+  try {
+    const response = await axiosInstance.post(
+      `course/assignments_grading/`,
+      assignData
     );
     return response;
   } catch (error) {
@@ -287,11 +310,59 @@ export const getProjectGrading = async (courseId, projId) => {
   }
 };
 
-//get project Grading (admin)
+//update project Grading (admin)
+export const updateProjectGrading = async (projectData) => {
+  try {
+    const response = await axiosInstance.post(
+      `course/project_gradings/`,
+      projectData
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//post weightage for course(admin)
+export const assignWeightages = async (data) => {
+  try {
+    const response = await axiosInstance.post(`course/weightages/ `, data);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//get all weightage for course(admin)
+export const getWeightages = async (courseId) => {
+  try {
+    const response = await axiosInstance.get(
+      `course/course_weightages/${courseId}/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//get exam Grading (admin)
 export const getExamGrading = async (courseId, examId) => {
   try {
     const response = await axiosInstance.get(
       `course/courses/${courseId}/exams/${examId}/students/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//update exam Grading (admin)
+export const updateExamGrading = async (examData) => {
+  try {
+    const response = await axiosInstance.post(
+      `course/exam_gradings/`,
+      examData
     );
     return response;
   } catch (error) {
@@ -647,16 +718,6 @@ export const createSkill = async (skill) => {
   }
 };
 
-//get skill by id
-export const getSkillbyId = async (skillId) => {
-  try {
-    const response = await axiosInstance.get(`/course/skills/`, skillId);
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-
 //update a course
 export const updateCourse = async (course, courseId) => {
   try {
@@ -814,6 +875,19 @@ export const getAttendanceByCourseId = async (courseId) => {
   }
 };
 
+//get attendance by courseId and date
+export const getAttendanceByCourseIdDate = async (courseId, date) => {
+  try {
+    const response = await axiosInstance.get(
+      `/attendance/?date=${date}&course_id=${courseId}`
+    );
+
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 //get students by courseId
 export const getStudentsByCourseId = async (courseId) => {
   try {
@@ -829,9 +903,45 @@ export const getStudentsByCourseId = async (courseId) => {
 //post attendance by courseId
 export const markAttendanceByCourseId = async (courseId, attendance) => {
   try {
-    const response = await axiosInstance.get(
+    const response = await axiosInstance.post(
       `/attendance/?course_id=${courseId}`,
       attendance
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//get calendar (sessions)
+export const getCalendarSessions = async (userId) => {
+  try {
+    const response = await axiosInstance.get(`/sessions/calendar/${userId}/`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//get sessions
+export const getInstructorSessions = async (userId, group) => {
+  try {
+    const response = await axiosInstance.get(
+      `/user-sessions/${userId}/?group_name=${group}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+
+//get data
+export const getData = async () => {
+  try {
+    const response = await axiosInstance.get(
+      `/user-process/1/?group_name=student`
     );
     return response;
   } catch (error) {

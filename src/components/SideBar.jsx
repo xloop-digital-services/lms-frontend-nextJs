@@ -19,6 +19,7 @@ import {
   FaTasks,
   FaUser,
   FaListAlt,
+  FaUsers,
 } from "react-icons/fa";
 
 import { useAuth } from "@/providers/AuthContext";
@@ -261,7 +262,19 @@ function SideBar() {
                   <FaClipboardCheck size={24} />
                   Grading
                 </Link>
-
+                {!isStudent && (
+                  <Link
+                    href="/students"
+                    className={`p-4 flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
+                      isLinkActive("/students")
+                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
+                        : "text-dark-600"
+                    }`}
+                  >
+                    <FaUsers size={24} />
+                    Students
+                  </Link>
+                )}
                 <Link
                   href="/calendar"
                   className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${

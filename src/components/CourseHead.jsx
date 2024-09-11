@@ -51,9 +51,9 @@ const CourseHead = ({
           className="flex justify-between max-md:flex-col max-md:items-center"
         >
           {name ? (
-            <h2 className="text-xl font-bold">{name}</h2>
+            <h2 className=" font-exo text-xl font-bold">{name}</h2>
           ) : (
-            <h2 className="text-xl font-bold">{courseData.name}</h2>
+            <h2 className="font-exo text-xl font-bold">{courseData.name}</h2>
           )}
 
           <div className=" flex items-center justify-center max-md:flex-col gap-2">
@@ -66,23 +66,27 @@ const CourseHead = ({
               </p>
             )}
 
-            {isAdmin && (
-              <button
-                className=" flex justify-center items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl hover:bg-[#4296b3]"
-                onClick={() => setIsEditing(!isEditing)}
-              >
-                {isEditing ? (
-                  <p className="flex justify-center items-center gap-2">
-                    <FaTimes />
-                    Cancel 
-                  </p>
-                ) : (
-                  <p className="flex justify-center items-center gap-2">
-                    <FaEdit /> {title}
-                  </p>
+            {title ? (
+              <>
+                {!isStudent && (
+                  <button
+                    className=" flex justify-center items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl hover:bg-[#4296b3]"
+                    onClick={() => setIsEditing(!isEditing)}
+                  >
+                    {isEditing ? (
+                      <p className="flex justify-center items-center gap-2">
+                        <FaTimes />
+                        Cancel
+                      </p>
+                    ) : (
+                      <p className="flex justify-center items-center gap-2">
+                        <FaEdit /> {title}
+                      </p>
+                    )}
+                  </button>
                 )}
-              </button>
-            )}
+              </>
+            ) : null}
           </div>
         </div>
         {shortDesc ? (

@@ -26,7 +26,7 @@ const CourseCard = ({
 
   return (
     <Link href={`/${route1}/${route}/${id}`} className="mx-1">
-      <div className="w-[330px]  bg-surface-100 rounded-xl lg:mx-0 mx-auto group max-md:w-full">
+      <div className="w-[330px]  bg-surface-100 rounded-xl lg:mx-0 group max-md:w-full">
         <div className="rounded-xl h-[320px] p-2 border border-blue-100 group-hover:cursor-pointer group-hover:border-2 group-hover:border-blue-300 my-4">
           <div className="relative">
             <Image
@@ -101,10 +101,11 @@ const CourseCard = ({
                 </div>
               ) : (
                 <Link
-                  href={`/${route1}s/${route}/${id}`}
-                  className="text-[#fcfeff] bg-[#03A1D8] p-1 rounded-full"
+                  href={`/${route1}/${route}/${id}`}
+                  className=" flex gap-1 justify-center items-center w-full h-4 bg-[#DDF8EE] border text-mix-300 border-mix-300 p-4 rounded-lg "
                 >
-                  <MdKeyboardArrowRight size={20} />
+                  <FaEye fill="#18a07a" size={20} />
+                  View
                 </Link>
               )}
             </div>

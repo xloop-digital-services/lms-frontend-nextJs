@@ -7,9 +7,9 @@ import { getStudentAttendance, getStudentsByCourseId } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
 import { CircularProgress } from "@mui/material";
 import AdminAttendance from "@/components/AdminAttendance";
-import { toast } from "react-toastify";
+import AdminStudentGrading from "@/components/AdminStudentGrading";
 
-export default function Page({ params }) {
+export default function Page({params}) {
   const { isSidebarOpen } = useSidebar();
   const courseId = params.courseId;
   const [attendance, setAttendance] = useState([]);
@@ -19,7 +19,6 @@ export default function Page({ params }) {
   const isAdmin = userData?.Group === "admin";
   const [loader, setLoader] = useState(false);
   const regId = userData?.user_data?.registration_id;
-
   useEffect(() => {
     if (!regId) return;
     async function fetchAttendance() {
@@ -90,16 +89,9 @@ export default function Page({ params }) {
               id={courseId}
               rating="Top Instructor"
               instructorName="Maaz"
+              haveStatus={true}
             />
-
-            {isStudent ? (
-              <StudentAttendence
-                attendance={attendanceStudent}
-                loader={loader}
-              />
-            ) : (
-              <AdminAttendance courseId={courseId} />
-            )}
+            <AdminStudentGrading courseId={courseId} />
           </div>
         </div>
       )}

@@ -177,7 +177,7 @@ export default function Page({ params }) {
                     })
                   }
                 />
-                <label className="text-lg font-bold mt-4">
+                <label className=" font-exo text-lg font-bold mt-4">
                   About the Program
                 </label>
                 <textarea

@@ -24,6 +24,8 @@ export default function InstructorCoursePage({
   const isStudent = userData?.Group === "student";
   const [courses, setCourses] = useState([]);
   const insId = userData?.user_data?.id;
+  const insEmailId = userData?.User?.email;
+  console.log(insEmailId)
   const [loader, setLoader] = useState(true);
   console.log(insId);
   // const [courseId, setCourseId] = useState();
@@ -66,7 +68,7 @@ export default function InstructorCoursePage({
       <div className="bg-surface-100 p-8 rounded-xl ">
         <div className="flex justify-between max-md:flex-col max-md:items-center ">
           <div className="flex flex-col">
-            <h2 className="text-xl font-bold flex pb-2 justify-start items-center">
+            <h2 className="font-exo text-xl font-bold flex pb-2 justify-start items-center">
               {title}
             </h2>
             <p className="pb-4">Select a course to view the {title}</p>
@@ -77,7 +79,7 @@ export default function InstructorCoursePage({
             <CircularProgress />
           </div>
         ) : (
-          <div className="flex flex-wrap">
+          <div className="flex flex-wrap max-md:flex-col">
             {courses?.length > 0
               ? courses
                   .sort((a, b) => a.name.localeCompare(b.name))
