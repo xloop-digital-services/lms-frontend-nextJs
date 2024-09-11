@@ -30,7 +30,8 @@ const UserModal = ({
   const [enableApprovalButton, setEnableApprovalButton] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState("");
   const [programID, setPorgramID] = useState(null);
-  const [locationId, setLocationId] = useState(null);
+  const [locationId, setLocationId] = useState([]);
+  const [studentLocationId, setStudentLocationId] = useState(null);
   const [skillID, setSkillID] = useState([]);
   const [loading, setLoading] = useState(false);
   let data = null;
@@ -48,20 +49,30 @@ const UserModal = ({
         return [...prevSkillIDs, id];
       }
     });
-
-    setEnableApprovalButton(true);
   };
   // console.log("skills id", skillID);
 
   const handleLocationSelect = (id) => {
-    setLocationId(id);
+    if (selectedOption === "student") {
+      setStudentLocationId(id);
+    } else {
+      setLocationId((prevLocationIDs) => {
+        if (prevLocationIDs.includes(id)) {
+          // If already selected, remove it
+          return prevLocationIDs.filter((locationID) => locationID !== id);
+        } else {
+          // If not selected, add it
+          return [...prevLocationIDs, id];
+        }
+      });
+    }
   };
 
   useEffect(() => {
-    if (programID && locationId) {
+    if ((programID || skillID) && locationId) {
       setEnableApprovalButton(true);
     }
-  }, [programID, locationId]);
+  }, [programID, locationId, skillID]);
 
   const handleUserSelection = async () => {
     setLoading(true);
@@ -70,13 +81,13 @@ const UserModal = ({
         data = {
           application_status: selectedStatus,
           program_id: programID,
-          location_id: locationId,
+          location_id: studentLocationId,
         };
       } else {
         data = {
           application_status: selectedStatus,
           skills_id: skillID,
-          location_id: locationId,
+          locations_id: locationId,
         };
       }
     } else {
@@ -99,7 +110,7 @@ const UserModal = ({
         });
         setLoading(false);
         setModal(false);
-        setStatusUpdated(!statusUpdated);
+        setStatusUpdated(statusUpdated + 1);
       }
     } catch (error) {
       toast.error(error.response.data.message, {
@@ -179,7 +190,7 @@ const UserModal = ({
                   <tbody>
                     <tr className="border-b border-[#d7e4ee]">
                       <td className="text-dark-400 text-center py-2">DOB</td>
-                      <td className="text-center py-2">{dob || '-'}</td>
+                      <td className="text-center py-2">{dob || "-"}</td>
                     </tr>
                     <tr className="border-b border-[#d7e4ee]">
                       <td className="text-dark-400 text-center py-2">Area</td>
@@ -187,13 +198,13 @@ const UserModal = ({
                     </tr>
                     <tr className="border-b border-[#d7e4ee]">
                       <td className="text-dark-400 text-center py-2">City</td>
-                      <td className="text-center py-2">{city || '-'}</td>
+                      <td className="text-center py-2">{city || "-"}</td>
                     </tr>
                     <tr className="border-b border-[#d7e4ee]">
                       <td className="text-dark-400 text-center py-2">
                         Contact
                       </td>
-                      <td className="text-center py-2">{contact || '-'}</td>
+                      <td className="text-center py-2">{contact || "-"}</td>
                     </tr>
                     <tr className="">
                       <td className="text-dark-400 text-center py-2">
@@ -276,8 +287,8 @@ const UserModal = ({
                           } items-center h-5`}
                         >
                           <input
-                            id={`radio-${index}`}
-                            type="radio"
+                            id={`checkbox-${index}`}
+                            type="checkbox"
                             name="locationSelection" // Same name attribute for all radio buttons
                             // value={prog.name} // Store the value of the selected program
                             onChange={() => handleLocationSelect(prog.id)} // Call a function to handle the selection

@@ -1,35 +1,37 @@
-import { assignSessionToInstructor, assignSessiontoStudent, listAllSessions } from "@/api/route";
-import useClickOutside from "@/providers/useClickOutside";
-import { CircularProgress } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
+import { CircularProgress } from "@mui/material";
 import { IoClose } from "react-icons/io5";
 import { BsArrowUpRightSquare } from "react-icons/bs";
 import { toast } from "react-toastify";
-import loadCustomRoutes from "next/dist/lib/load-custom-routes";
+import useClickOutside from "@/providers/useClickOutside";
+import {
+  assignSessionToInstructor,
+  assignSessiontoStudent,
+  getInstructorSessions,
+  listAllSessions,
+} from "@/api/route";
+import { IoIosArrowDown } from "react-icons/io";
 
 const ApprovalUserModal = ({
   selectedOption,
   setModal,
-  modal,
   firstName,
   lastName,
-  dob,
-  city,
   email,
-  contact,
-  status,
   locations,
   programs,
   skills,
+  status,
   id,
-  loading,
 }) => {
   const [sessions, setSessions] = useState([]);
   const [loadingSessions, setLoadingSessions] = useState(false);
-  const [sessionIds, setSessionIds] = useState([]); // Corrected spelling
+  const [sessionIds, setSessionIds] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [selected, setSelected] = useState(false); // Corrected variable name
-  const [loadingAssign, setLoadingAssign] = useState(false)
+  const [selected, setSelected] = useState(false);
+  const [loadingAssign, setLoadingAssign] = useState(false);
+  const [assignedSessions, setAssignedSessions] = useState([]);
+  const [updateSession, setUpdateSessions]  = useState(0)
   const click = useRef(null);
 
   useClickOutside(click, () => setShowDropdown(false));
@@ -39,7 +41,6 @@ const ApprovalUserModal = ({
     try {
       const response = await listAllSessions();
       setLoadingSessions(false);
-      console.log("sessions", response.data);
       setSessions(response.data);
     } catch (error) {
       console.log("Error while fetching the sessions", error);
@@ -47,10 +48,10 @@ const ApprovalUserModal = ({
     }
   };
 
-  useEffect(()=> {
-    handleGetSessions()
-    setSelected(false)
-  },[])
+  useEffect(() => {
+    handleGetSessions();
+    setSelected(false);
+  }, []);
 
   const handleToggle = (e) => {
     e.stopPropagation();
@@ -60,40 +61,53 @@ const ApprovalUserModal = ({
   const handleSelectSession = (session) => {
     setSessionIds((prevSelected) => {
       if (prevSelected.includes(session.id)) {
-        // If the session is already selected, remove it
         return prevSelected.filter((id) => id !== session.id);
       } else {
-        // Otherwise, add the session ID to the array
         return [...prevSelected, session.id];
       }
     });
-    setSelected(true); // Set selected to true if at least one session is selected
+    setSelected(true);
+    // setAssignedSessions(
+    //   sessions.filter((session) => sessionIds.includes(session.id))
+    // );
   };
 
   const handleSessionAssign = async () => {
-    setLoadingAssign(true)
+    setLoadingAssign(true);
     const data = {
       user_id: id,
-      session_ids: sessionIds, // Corrected spelling
+      session_ids: sessionIds,
     };
     try {
-      if(selectedOption === 'student'){
-        const response = await assignSessiontoStudent(data);
-        toast.success(response.data.message)
-        console.log("session response for student", response);
-        setLoadingAssign(false)
-        
-      } else {
-        const response = await assignSessionToInstructor(data)
-        toast.success(response.data.message)
-        console.log("session response for student", response);
-        setLoadingAssign(false)
-      }
+      const response =
+        selectedOption === "student"
+          ? await assignSessiontoStudent(data)
+          : await assignSessionToInstructor(data);
+
+      toast.success(response.data.message);
+      setUpdateSessions(updateSession+1)
+      // Update assigned sessions state
+      // setModal(false);
+      setLoadingAssign(false);
     } catch (error) {
-      console.log('Error in assigning', error); // Corrected spelling
-      setLoadingAssign(false)
+      console.log("Error in assigning", error);
+      setLoadingAssign(false);
     }
   };
+
+  const handleUserSessions = async () => {
+    try {
+      const response = await getInstructorSessions(id, selectedOption);
+      console.log("response", response.data);
+      setAssignedSessions(response?.data?.data);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  useEffect(() => {
+    handleUserSessions();
+  }, [id, selectedOption, updateSession]);
 
   return (
     <div className="backDropOverlay min-h-screen flex items-center">
@@ -120,9 +134,7 @@ const ApprovalUserModal = ({
               <IoClose size={21} />
             </button>
           </div>
-          <div
-            className="bg-surface-100 p-6 rounded-xl flex flex-col justify-start space-y-5"
-          >
+          <div className="bg-surface-100 p-6 rounded-xl flex flex-col justify-start space-y-5">
             <div>
               <h1 className="text-2xl text-center">
                 {firstName} {lastName}
@@ -144,17 +156,63 @@ const ApprovalUserModal = ({
               </div>
             </div>
             <div className="w-full h-[2px] bg-dark-200"></div>
-            <div className="px-[30px] text-base flex gap-4 items-center">
+            <div className="px-[30px] text-base flex gap-4 items-start justify-evenly">
+              <div className="flex flex-col gap-4">
+                {locations && (
+                  <div className="space-y-2">
+                    <p className="border-b border-dark-300 py-1 text-sm text-dark-400">
+                      Selected Locations
+                    </p>
+                    <p>{locations}</p>
+                  </div>
+                )}
+                {selectedOption === "student"
+                  ? programs && (
+                      <div className="space-y-2">
+                        <p className="border-b border-dark-300 py-1 text-sm text-dark-400">
+                          Selected Programs
+                        </p>
+                        <p>{programs}</p>
+                      </div>
+                    )
+                  : skills && (
+                      <div className="space-y-2">
+                        <p className="border-b border-dark-300 py-1 text-sm text-dark-400">
+                          Selected Skills
+                        </p>
+
+                        <p>{skills}</p>
+                      </div>
+                    )}
+              </div>
+              
+              {assignedSessions && assignedSessions.length > 0 && (
+                <div className="">
+                  <h2 className=" border-b border-dark-300 py-1 text-sm text-dark-400">
+                    Assigned Sessions:
+                  </h2>
+                  <ul>
+                    {assignedSessions.map((session, index) => (
+                      <li key={index}>
+                        {session.location} {session.course}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               <div>
                 <button
                   onClick={handleToggle}
-                  className="border border-dark-300 px-4 py-2 rounded-xl hover:bg-dark-100"
+                  className=" flex justify-between items-center gap-3 border border-dark-300 px-4 py-2 rounded-lg hover:bg-dark-100"
                 >
                   Select Sessions
+                  <span><IoIosArrowDown /></span>
                 </button>
-                {/* Dropdown logic */}
                 {showDropdown && (
-                  <div ref={click} className="absolute mt-2 p-2 border border-dark-300 bg-[#ffff] rounded-xl shadow bg-white z-20">
+                  <div
+                    ref={click}
+                    className="absolute max-h-[100px] overflow-auto scrollbar-webkit mt-2 p-2 border border-dark-300 bg-[#ffff] rounded-xl shadow z-20"
+                  >
                     {loadingSessions ? (
                       <CircularProgress size={20} />
                     ) : (
@@ -162,9 +220,9 @@ const ApprovalUserModal = ({
                         {sessions.map((session) => (
                           <li
                             key={session.id}
-                            className={`px-4 py-2 hover:bg-gray-100 cursor-pointer ${
+                            className={`px-4 py-2 mb-2 hover:bg-dark-100 cursor-pointer rounded-lg ${
                               sessionIds.includes(session.id)
-                                ? "bg-blue-100" // Highlight selected sessions
+                                ? "bg-blue-100"
                                 : ""
                             }`}
                             onClick={() => handleSelectSession(session)}
@@ -179,10 +237,16 @@ const ApprovalUserModal = ({
               </div>
               {selected && (
                 <div>
-                  <button onClick={handleSessionAssign}><BsArrowUpRightSquare size={33} className="text-dark-300 hover:text-dark-400" /> </button>
+                  <button onClick={handleSessionAssign} type="assign session">
+                    <BsArrowUpRightSquare
+                      size={33}
+                      className="text-dark-300 hover:text-dark-400"
+                    />
+                  </button>
                 </div>
               )}
             </div>
+            
           </div>
         </div>
       </div>

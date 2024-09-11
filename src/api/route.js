@@ -610,6 +610,26 @@ export const assignSessionToInstructor = async (data) => {
   }
 }
 
+export const getSuggestedSessions = async (programID,locationId) => {
+  try {
+    const response = await axiosInstance.get(`preferred-sessions/?${programID}&${locationId}`)
+  } catch (error) {
+    throw error
+  }
+}
+
+//get sessions
+export const getInstructorSessions = async (userId, group) => {
+  try {
+    const response = await axiosInstance.get(
+      `/user-sessions/${userId}/?group_name=${group}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 //get all skills
 export const getAllSkills = async () => {
   try {
@@ -878,3 +898,8 @@ export const markAttendanceByCourseId = async (courseId, attendance) => {
     throw error;
   }
 };
+
+
+
+
+

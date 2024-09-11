@@ -17,11 +17,14 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   const { isSidebarOpen } = useSidebar();
   const [selectedOption, setSelectedOption] = useState("student");
   const [selectedStatus, setSelectedStatus] = useState("pending");
-  const [statusUpdated, setStatusUpdated] = useState(false);
+  const [statusUpdated, setStatusUpdated] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const [statusOpen, setStatusOpen] = useState(false);
-  const [openSection, setOpenSection] = useState(null);
-  const [isSectionOpen, setIsSectionOpen] = useState(false);
+  const [programSection, setProgramSection] = useState(null);
+  const [skillSection, setSkillSection] = useState(null);
+
+  const [isProgramSectionOpen, setIsProgramSectionOpen] = useState(false);
+  const [isSkillSectionOpen, setIsSkillSectionOpen] = useState(false);
   const [programID, setPorgramID] = useState(null);
   const [userByProgramID, setUserByProgramID] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -40,33 +43,48 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   const [locations, setLocations] = useState([]);
   const [userPrograms, setUserPrograms] = useState([]);
   const [userSkills, setUserSkills] = useState([]);
-  const [users, setUsers] = useState([])
-  const [userId, setUserId] = useState(null)
+  const [users, setUsers] = useState([]);
+  const [userId, setUserId] = useState(null);
+  const [message, setMessage] = useState("");
+  const [count, setCount] = useState(0);
 
   const dropdownRef = useRef(null);
+  const dropProgram = useRef(null);
   useClickOutside(dropdownRef, () => setIsOpen(false));
+  useClickOutside(dropProgram, () => setIsProgramSectionOpen(false));
 
   useEffect(() => {
     const handleApprovedUsers = async () => {
+      setMessage("");
       try {
         setLoadingUsers(true);
         const response = await getUserDataByProgramIdnSkillId(
           approvedProgramID,
           selectedOption
         );
-        // console.log("response from both idss", response.data);
-        setApplications(response?.data?.data.map((data) => data.application));
-        setLocations(response?.data?.data.map((data) => data.location));
-        setUserSkills(response?.data?.data.map((data) => data.skills));
-        setUserPrograms(response?.data?.data.map((data) => data.program));
-        setUsers(response?.data?.data.map((data) => data.user))
 
-        // console.log(response?.data?.data?.[0].?id)
-        const getUserId = users.map(user => user.id)
-        setUserId(users.map(user => user.id));
-        setLoadingUsers(false);
+        if (response.data.status_code === 200) {
+          setApplications(
+            response?.data?.data.data.map((data) => data.application)
+          );
+          setLocations(response?.data?.data.data.map((data) => data.location));
+          setUserSkills(response?.data?.data.data.map((data) => data.skills));
+          setUserPrograms(
+            response?.data?.data.data.map((data) => data.program)
+          );
+          setUsers(response?.data?.data.data.map((data) => data.user));
+          setCount(response?.data?.data.count);
+
+          // console.log(response?.data?.data?.[0].?id)
+          const getUserId = users.map((user) => user.id);
+          setUserId(users.map((user) => user.id));
+          setLoadingUsers(false);
+        } // console.log("response from both idss", response.data);
       } catch (error) {
         console.log("error is occuring while both", error);
+        // setMessage(response.data.message);
+        setMessage("no data found");
+
         setLoadingUsers(false);
       }
     };
@@ -74,8 +92,6 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
       handleApprovedUsers();
     }
   }, [heading, approvedProgramID, selectedOption]);
-
-  console.log('jsdlfjdlfds',users.map(user => user.id))
 
   useEffect(() => {
     const handleGetAllSkills = async () => {
@@ -106,7 +122,6 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
             selectedStatus
           );
           setUserByProgramID(response.data?.data || []);
-          // console.log("res", response.data?.data || []);
           setLoading(false);
         } catch (error) {
           console.log(error);
@@ -159,16 +174,28 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
     //   setUserByProgramID([]);
     //   setIsSectionOpen(false);
     //   setPorgramID(null);
-    //   setOpenSection(null);
+    //   setProgramSection(null);
     // }
+    setIsProgramSectionOpen(false);
+    setIsSkillSectionOpen(false);
     setUserByProgramID([]);
+    setUsers([]);
+    setApplications([]);
+    setLocations([]);
+    setCount(0);
+    // setUserPrograms([])
     if (heading === "Applicants") {
       setPorgramID(id);
     } else {
       setapprovedProgramID(id);
     }
-    setOpenSection(section);
-    setIsSectionOpen(true);
+    if (selectedOption === "student") {
+      setProgramSection(section);
+      setIsProgramSectionOpen(true);
+    } else {
+      setSkillSection(section);
+      setIsSkillSectionOpen(true);
+    }
   };
 
   const handletoggleCourse = (courseName) => {
@@ -291,22 +318,27 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                           className="mt-1 text-[12px] text-blue-300 font-bold"
                           title={`number of ${selectedStatus} applications`}
                         >
-                          {isSectionOpen &&
-                            openSection === program.name &&
-                            (selectedStatus === "pending" ? (
-                              <p>( {pendingRequest} )</p>
+                          {heading === "Applicants" &&
+                          isProgramSectionOpen &&
+                          programSection === program.name ? (
+                            selectedStatus === "pending" ? (
+                              <p>({pendingRequest})</p>
                             ) : selectedStatus === "approved" ? (
-                              <p>( {approvedRequest} )</p>
+                              <p>({approvedRequest})</p>
                             ) : (
-                              <p>( {shortListRequest} )</p>
-                            ))}
+                              <p>({shortListRequest})</p>
+                            )
+                          ) : (
+                            isProgramSectionOpen &&
+                            programSection === program.name && <p>({count})</p>
+                          )}
                         </div>
                       </div>
 
                       <div className="flex items-center gap-2">
                         {heading === "Applicants" &&
-                          isSectionOpen &&
-                          openSection === program.name && (
+                          isProgramSectionOpen &&
+                          programSection === program.name && (
                             <div className="z-20">
                               <button
                                 onClick={toggleStatusOpen}
@@ -343,35 +375,39 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                     </div>
                     <div
                       className={`transition-container ${
-                        isSectionOpen && openSection === program.name
+                        isProgramSectionOpen && programSection === program.name
                           ? "max-height-full"
                           : "max-height-0"
                       }`}
                     >
-                      {isSectionOpen && openSection === program.name && (
-                        <div className="mt-2">
-                          {heading === "Applicants" ? (
-                            <DevelopmentTable
-                              loading={loading}
-                              selectedStatus={selectedStatus}
-                              selectedOption={selectedOption}
-                              userByProgramID={userByProgramID}
-                              setStatusUpdated={setStatusUpdated}
-                              statusUpdated={statusUpdated}
-                            />
-                          ) : (
-                            <UserApprovalTable
-                              loadingUsers={loadingUsers}
-                              selectedOption={selectedOption}
-                              applications={applications}
-                              locations={locations}
-                              userPrograms={userPrograms}
-                              userSkills={userSkills}
-                              users={users}
-                            />
-                          )}
-                        </div>
-                      )}
+                      {isProgramSectionOpen &&
+                        programSection === program.name && (
+                          <div className="mt-2">
+                            {heading === "Applicants" ? (
+                              <DevelopmentTable
+                                loading={loading}
+                                selectedStatus={selectedStatus}
+                                selectedOption={selectedOption}
+                                userByProgramID={userByProgramID}
+                                setStatusUpdated={setStatusUpdated}
+                                statusUpdated={statusUpdated}
+                              />
+                            ) : (
+                              <UserApprovalTable
+                                loadingUsers={loadingUsers}
+                                selectedOption={selectedOption}
+                                applications={applications}
+                                locations={locations}
+                                userPrograms={userPrograms}
+                                userSkills={userSkills}
+                                users={users}
+                                message={message}
+                                count={count}
+                                approvedProgramID={approvedProgramID}
+                              />
+                            )}
+                          </div>
+                        )}
                     </div>
                   </div>
                 ))
@@ -395,12 +431,31 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                   >
                     <div className="flex gap-3 text-[17px] font-semibold font-exo">
                       {skill.name}
+                      <div
+                        className="mt-1 text-[12px] text-blue-300 font-bold"
+                        title={`number of ${selectedStatus} applications`}
+                      >
+                        {heading === "Applicants" && 
+                          isSkillSectionOpen &&
+                          skillSection === skill.name ? (
+                          selectedStatus === "pending" ? (
+                            <p>( {pendingRequest} )</p>
+                          ) : selectedStatus === "approved" ? (
+                            <p>( {approvedRequest} )</p>
+                          ) : (
+                            <p>( {shortListRequest} )</p>
+                          )
+                        ) : (
+                          isSkillSectionOpen &&
+                          skillSection === skill.name && <p>( {count} )</p>
+                        )}
+                      </div>
                     </div>
 
                     <div className="flex items-center gap-2">
                       {heading === "Applicants" &&
-                        isSectionOpen &&
-                        openSection === skill.name && (
+                        isSkillSectionOpen &&
+                        skillSection === skill.name && (
                           <div className="z-20">
                             <button
                               onClick={toggleStatusOpen}
@@ -437,12 +492,12 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                   </div>
                   <div
                     className={`transition-container ${
-                      isSectionOpen && openSection === skill.name
+                      isSkillSectionOpen && skillSection === skill.name
                         ? "max-height-full"
                         : "max-height-0"
                     }`}
                   >
-                    {isSectionOpen && openSection === skill.name && (
+                    {isSkillSectionOpen && skillSection === skill.name && (
                       <div className="mt-2">
                         {heading === "Applicants" ? (
                           <DevelopmentTable
@@ -462,6 +517,9 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                             userPrograms={userPrograms}
                             userSkills={userSkills}
                             users={users}
+                            message={message}
+                            count={count}
+                            approvedProgramID={approvedProgramID}
                           />
                         )}
                       </div>

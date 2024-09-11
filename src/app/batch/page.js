@@ -29,6 +29,7 @@ export default function Page() {
       const response = await listAllBatches();
       console.log("batches", response?.data);
       setBatches(response?.data);
+      setCityOptions(cityAreas);
       setLoading(false);
     } catch (error) {
       console.log("error while fetching the batches", error);
@@ -41,7 +42,7 @@ export default function Page() {
 
   // useEffect(() => {
   //   console.log("city of areas", cityAreas);
-  //   setCityOptions(cityAreas);
+    
   // }, []);
 
   //filter by city
