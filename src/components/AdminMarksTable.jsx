@@ -212,7 +212,7 @@ const AdminMarksTable = ({ assessments, courseId, setFetch, title }) => {
                                   handleSave(assessment.submission_id)
                                 }
                               >
-                                Save
+                                  Grade
                               </button>
                             ) : (
                               <button

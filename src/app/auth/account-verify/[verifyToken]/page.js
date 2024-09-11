@@ -6,6 +6,8 @@ import { useState } from "react";
 import { VerifyEmail } from "@/api/route";
 import { CircularProgress } from "@mui/material";
 import { toast } from "react-toastify";
+import { IoEyeSharp } from "react-icons/io5";
+import { BsEyeSlashFill } from "react-icons/bs";
 
 export default function Page({params}){
   const encodedToken = params.verifyToken;
@@ -13,6 +15,7 @@ export default function Page({params}){
   const [loading, setloading] = useState(false)
   const [newPassword, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false)
   const router = useRouter();
 
   console.log('token', verifyToken)
@@ -74,8 +77,10 @@ export default function Page({params}){
       setPassword("");
       setloading(false)
     }
-  
+  }
 
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword)
   }
     
   return (
@@ -111,7 +116,7 @@ export default function Page({params}){
                   </label>
                   <div className="relative">
                     <input
-                      type="new-password"
+                      type={showPassword ? "text" : "password"}
                       id="new-password"
                       name="new-password"
                       placeholder="Enter new password"
@@ -121,6 +126,16 @@ export default function Page({params}){
                       required
                       aria-describedby="email-error"
                     />
+                    <div
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-[#b0b0c0] hover:text-[#686870]"
+                      onClick={handleShowPassword}
+                    >
+                      {showPassword ? (
+                        <IoEyeSharp size={20} />
+                      ) : (
+                        <BsEyeSlashFill size={20} />
+                      )}
+                    </div>
                   </div>
                 </div>
                 <div className="space-y-3">
@@ -132,7 +147,7 @@ export default function Page({params}){
                   </label>
                   <div className="relative">
                     <input
-                      type="confirm-password"
+                      type={showPassword ? "text" : "password"}
                       id="confirm-password"
                       name="confirm-password"
                       placeholder="Confirm by password"
@@ -141,6 +156,16 @@ export default function Page({params}){
                       className="py-3 px-4 block w-full outline-none border border-dark-200 rounded-md text-sm focus:border-blue-300 focus:ring-[#03A1D8] shadow-sm"
                       required
                     />
+                    <div
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-[#b0b0c0] hover:text-[#686870]"
+                      onClick={handleShowPassword}
+                    >
+                      {showPassword ? (
+                        <IoEyeSharp size={20} />
+                      ) : (
+                        <BsEyeSlashFill size={20} />
+                      )}
+                    </div>
                   </div>
                 </div>
                 <button

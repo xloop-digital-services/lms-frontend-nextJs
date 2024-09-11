@@ -22,12 +22,12 @@ const ShortListUserTable = ({selectedOption}) => {
                             <table className="min-w-full divide-y divide-dark-200 dark:divide-gray-700">
                                 <thead className="bg-gray-50 dark:bg-gray-700">
                                     <tr >
-                                        <th scope="col" className="py-3 px-4 pe-0">
+                                        {/* <th scope="col" className="py-3 px-4 pe-0">
                                             <div className="flex items-center h-5">
                                                 <input id="hs-table-pagination-checkbox-all" type="checkbox" className="border-dark-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" />
                                                 <label for="hs-table-pagination-checkbox-all" className="sr-only">Checkbox</label>
                                             </div>
-                                        </th>
+                                        </th> */}
                                         <th scope="col" className="px-6 py-4 text-start text-sm text-gray-500 uppercase w-[15%]">{selectedOption} Name</th>
                                         <th scope="col" className="px-6 py-4 text-start text-sm text-gray-500 uppercase w-[15%]">Age</th>
                                         <th scope="col" className="px-6 py-4 text-start text-sm text-gray-500 uppercase w-[15%]">City</th>
@@ -39,12 +39,12 @@ const ShortListUserTable = ({selectedOption}) => {
                                 </thead>
                                 <tbody className="divide-y divide-dark-200 dark:divide-gray-700">
                                     <tr>
-                                        <td className="py-3 ps-4">
+                                        {/* <td className="py-3 ps-4">
                                             <div className="flex items-center h-5">
                                                 <input id="hs-table-pagination-checkbox-1" type="checkbox" className="border-dark-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" />
                                                 <label for="hs-table-pagination-checkbox-1" className="sr-only">Checkbox</label>
                                             </div>
-                                        </td>
+                                        </td> */}
                                         <td className="px-6 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
                                         <div class=" flex items-center gap-3">
                                         {/* <img src={Image} alt="Floyd image" className='w-9' /> */}

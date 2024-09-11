@@ -46,7 +46,7 @@ export default function Page({ params }) {
       if (response.status === 200) {
         setAssignments(response?.data?.data);
       } else {
-        console.error("Failed to fetch assignments, status:", response.status);
+        console.error("Failed to fetch exam, status:", response.status);
       }
     } catch (error) {
       console.log("error", error);
@@ -66,7 +66,7 @@ export default function Page({ params }) {
     }
     formData.append("due_date", dueDate);
     // formData.append("no_of_resubmissions_allowed", resubmission);
-    // formData.append("status", assignmentStatus);
+    formData.append("status", assignmentStatus);
 
     try {
       const response = currentAssignment
@@ -86,7 +86,7 @@ export default function Page({ params }) {
         setQuestion("");
         setDueDate("");
         setFile(null);
-        setResubmission("");
+        // setResubmission("");
         setCreatingQuiz(false);
         setCurrentAssignment(null);
         fetchAssignments();
@@ -119,7 +119,7 @@ export default function Page({ params }) {
     setQuestion(assignmentToEdit.question);
     setDescription(assignmentToEdit.description);
     setDueDate(assignmentToEdit.due_date);
-    setResubmission(assignmentToEdit.no_of_resubmissions_allowed);
+    // setResubmission(assignmentToEdit.no_of_resubmissions_allowed);
     setFile(assignmentToEdit.content);
     setCreatingQuiz(true);
   };
@@ -192,7 +192,7 @@ export default function Page({ params }) {
                 {currentAssignment ? "Update Exam" : "Create Exam"}
               </h2>
 
-              {/* <div className="flex items-center my-4">
+              <div className="flex items-center my-4">
                 <span className="mr-4 text-md">Exam Status</span>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
@@ -215,7 +215,7 @@ export default function Page({ params }) {
                 <span className="ml-4 text-md">
                   {assignmentStatus === 1 ? "Active" : "Inactive"}
                 </span>
-              </div> */}
+              </div>
             </div>
             <form onSubmit={handleAssignmentCreation}>
               <div className="my-2">
@@ -312,13 +312,13 @@ export default function Page({ params }) {
               handleUpdateAssignment={handleUpdateAssignment}
             />
           ) : (
-            <AdminDataStructure 
+            <AdminDataStructure
               quizzes={assignments}
               setQuizzes={setAssignments}
               key={assignments.id}
               field="exam"
               onUpdateQuiz={handleUpdateAssignment}
-              assessment="Quiz"
+              assessment="Exam"
               setUpdateStatus={setUpdateStatus}
               handleUpdateAssignment={handleUpdateAssignment}
             />

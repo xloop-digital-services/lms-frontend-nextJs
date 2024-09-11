@@ -8,8 +8,12 @@ import { CircularProgress } from "@mui/material";
 import { toast } from "react-toastify";
 import useClickOutside from "@/providers/useClickOutside";
 
-
-const BatchModal = ({updateBatch ,setIsOpenModal, setUpdateBatch, cityOptions }) => {
+const BatchModal = ({
+  updateBatch,
+  setIsOpenModal,
+  setUpdateBatch,
+  cityOptions,
+}) => {
   const [selectedCity, setSelectedCity] = useState("City");
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [locations, setLocations] = useState([]); // State to store the list of location names
@@ -26,9 +30,9 @@ const BatchModal = ({updateBatch ,setIsOpenModal, setUpdateBatch, cityOptions })
   const cityDown = useRef(null);
   const modalDown = useRef(null);
 
-  useClickOutside(cityDown, () => setIsCityOpen(false))
+  useClickOutside(cityDown, () => setIsCityOpen(false));
 
-  useClickOutside(modalDown, () => setIsOpenModal(false))
+  useClickOutside(modalDown, () => setIsOpenModal(false));
 
   const handleBatchCreation = async () => {
     setLoadingCreation(true);
@@ -45,13 +49,13 @@ const BatchModal = ({updateBatch ,setIsOpenModal, setUpdateBatch, cityOptions })
 
         const response = await createBatch(data);
         console.log("batch created", response?.data.message);
-        toast.success('Batch created')
+        toast.success("Batch created");
         setLoadingCreation(false);
         setIsOpenModal(false);
         setUpdateBatch(!updateBatch);
       } catch (error) {
-        console.log("error is occuring", error.response.data.error);
-        toast.error(error.response.data.error[0])
+        console.log("error is occuring", error.response);
+        // toast.error(error?.response?.data?.error[0])
         setLoadingCreation(false);
       }
     } else {
@@ -60,36 +64,34 @@ const BatchModal = ({updateBatch ,setIsOpenModal, setUpdateBatch, cityOptions })
     }
   };
 
-  const handleStartDate = (date) => {
+  const handleStartDate = (event) => {
     // Check if the date is a valid Date object
-    if (date instanceof Date && !isNaN(date)) {
-      const formattedDate = date.toISOString().split("T")[0]; // Extract the date part
-    setstartDate(formattedDate); // Set the start date
-    // console.log("start date,", date);
-    console.log('formated start date', formattedDate)
-
-    } else {
-      toast.error("Invalid date selected");
-    }
-  };
-
-  const handleEndDateChange = (date) => {
-    if (date instanceof Date && !isNaN(date)) {
-    const formattedDate = date.toISOString().split("T")[0]; // Extract the date part
-    setendDate(formattedDate); // Set the end date
-    // console.log('end date,', date)
-    console.log('formated end date', formattedDate)
-
+    // if (date instanceof Date && !isNaN(date)) {
+    //   const formattedDate = date.toISOString().split("T")[0]; // Extract the date part
+    //   setstartDate(formattedDate); // Set the start date
+    //   // console.log("start date,", date);
+    //   console.log("formated start date", formattedDate);
+    // } else {
+    //   toast.error("Invalid date selected");
+        setstartDate(event.target.value);
+        // }
+      };
+      
+      const handleEndDateChange = (event) => {
+        // if (date instanceof Date && !isNaN(date)) {
+          //   const formattedDate = date.toISOString().split("T")[0]; // Extract the date part
+    //   setendDate(formattedDate); // Set the end date
+    //   // console.log('end date,', date)
+    //   console.log("formated end date", formattedDate);
+    setendDate(event.target.value);
     // Check if end date is earlier than start date
-    if (startDate && date <= startDate) {
+    if (startDate && event.target.value <= startDate) {
       setErrorMessage("End date should be greater than start date");
     } else {
       setErrorMessage("");
     }
-    } else {
-      toast.error("Invalid date selected");
-    }
   };
+  
 
   // Handle adding a new location
   const handleAddLocation = () => {
@@ -184,7 +186,10 @@ const BatchModal = ({updateBatch ,setIsOpenModal, setUpdateBatch, cityOptions })
                 </button>
 
                 {isCityOpen && (
-                  <div ref={cityDown} className="absolute z-10 xsm:w-[461px] w-[83%] max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out">
+                  <div
+                    ref={cityDown}
+                    className="absolute z-10 xsm:w-[461px] w-[83%] max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
+                  >
                     {cityOptions.map((option, index) => (
                       <div
                         key={index}
@@ -269,38 +274,36 @@ const BatchModal = ({updateBatch ,setIsOpenModal, setUpdateBatch, cityOptions })
             </div>
 
             <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
+              {/* Start Date Input */}
               <div className="space-y-2 text-[15px] w-full">
                 <p>Start Date</p>
                 <div className="relative w-full">
-                  {" "}
-                  {/* Added w-full to parent */}
-                  <DatePicker
-                    selected={startDate}
+                  <input
+                    type="date"
+                    value={startDate}
                     onChange={handleStartDate}
-                    dateFormat="yyyy-MM-dd" // Corrected format to lowercase
-                    placeholderText="Select start date"
-                    className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full" // Ensured w-full for input
+                    className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
+                    placeholder="Select start date"
                   />
-                  <FaCalendar className="absolute right-3 top-1/2 transform -translate-y-1/2 text-dark-400 pointer-events-none" />
+                  {/* <FaCalendar className="absolute right-3 top-1/2 transform -translate-y-1/2 text-dark-400 pointer-events-none" /> */}
                 </div>
               </div>
 
+              {/* End Date Input */}
               <div className="space-y-2 text-[15px] w-full">
                 <p>End Date</p>
                 <div className="relative w-full">
-                  {" "}
-                  {/* Added w-full to parent */}
-                  <DatePicker
-                    selected={endDate}
+                  <input
+                    type="date"
+                    value={endDate}
                     onChange={handleEndDateChange}
-                    dateFormat="yyyy-MM-dd"
-                    placeholderText="Select end date"
-                    className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full" // Ensured w-full for input
+                    className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
+                    placeholder="Select end date"
                   />
-                  <FaCalendar className="absolute right-3 top-1/2 transform -translate-y-1/2 text-dark-400 pointer-events-none" />
+                  {/* <FaCalendar className="absolute right-3 top-1/2 transform -translate-y-1/2 text-dark-400 pointer-events-none" /> */}
                 </div>
                 {errorMessage && (
-                  <p className="text-[#D84848] text-[12px] mt-2 ">
+                  <p className="text-[#D84848] text-[12px] mt-2">
                     {errorMessage}
                   </p>
                 )}

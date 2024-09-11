@@ -19,7 +19,9 @@ const UserModal = ({
   contact,
   email,
   status,
+  location,
   program,
+  resume,
   skill,
   id,
   setStatusUpdated,
@@ -29,13 +31,14 @@ const UserModal = ({
   const [enableApprovalButton, setEnableApprovalButton] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState("");
   const [programID, setPorgramID] = useState(null);
+  const [locationId, setLocationId] = useState([]);
+  const [studentLocationId, setStudentLocationId] = useState(null);
   const [skillID, setSkillID] = useState([]);
   const [loading, setLoading] = useState(false);
   let data = null;
   // Use the custom hook for the modal
   const handleEnableApprove = (id) => {
     setPorgramID(id);
-    setEnableApprovalButton(true);
   };
   const handleSkillSelection = (id) => {
     setSkillID((prevSkillIDs) => {
@@ -47,10 +50,28 @@ const UserModal = ({
         return [...prevSkillIDs, id];
       }
     });
-
-    setEnableApprovalButton(true);
   };
-  console.log("skills id", skillID);
+  // console.log("skills id", skillID);
+  const handleLocationSelect = (id) => {
+    if (selectedOption === "student") {
+      setStudentLocationId(id);
+    } else {
+      setLocationId((prevLocationIDs) => {
+        if (prevLocationIDs.includes(id)) {
+          // If already selected, remove it
+          return prevLocationIDs.filter((locationID) => locationID !== id);
+        } else {
+          // If not selected, add it
+          return [...prevLocationIDs, id];
+        }
+      });
+    }
+  };
+  useEffect(() => {
+    if ((programID || skillID) && locationId) {
+      setEnableApprovalButton(true);
+    }
+  }, [programID, locationId, skillID]);
   const handleUserSelection = async () => {
     setLoading(true);
     if (selectedStatus === "approved") {
@@ -58,11 +79,13 @@ const UserModal = ({
         data = {
           application_status: selectedStatus,
           program_id: programID,
+          location_id: studentLocationId,
         };
       } else {
         data = {
           application_status: selectedStatus,
           skills_id: skillID,
+          locations_id: locationId,
         };
       }
     } else {
@@ -85,7 +108,7 @@ const UserModal = ({
         });
         setLoading(false);
         setModal(false);
-        setStatusUpdated(!statusUpdated);
+        setStatusUpdated(statusUpdated + 1);
       }
     } catch (error) {
       toast.error(error.response.data.message, {
@@ -144,115 +167,146 @@ const UserModal = ({
               </h1>
               <p className="text-sm text-dark-400 text-center">{email}</p>
             </div>
+            <div className="absolute top-[60px] right-[50px]">
+              <p className="text-sm text-dark-400 text-center">Status</p>
+              <div className=" py-2 whitespace-nowrap flex w-full justify-start text-sm text-surface-100 dark:text-gray-200 ">
+                <p
+                  className={`${
+                    status === "pending"
+                      ? "bg-[#DDF8EE] text-blue-300 border border-blue-300"
+                      : "bg-[#18A07A]"
+                  }  w-[120px] text-center px-4 py-2 rounded-lg capitalize`}
+                >
+                  {status}
+                </p>
+              </div>
+            </div>
             <div className="w-full h-[2px] bg-dark-200"></div>
             <div className="px-[40px] text-base">
               <div className="md:flex justify-evenly">
-                <table className="w-[40%] border-collapse">
+                <table className="w-[30%] border-collapse">
                   <tbody>
                     <tr className="border-b border-[#d7e4ee]">
                       <td className="text-dark-400 text-center py-2">DOB</td>
-                      <td className="text-center py-2">{dob}</td>
+                      <td className="text-center py-2">{dob || "-"}</td>
                     </tr>
-                    <tr className="border-b border-[#d7e4ee]">
+                    {/* <tr className="border-b border-[#d7e4ee]">
                       <td className="text-dark-400 text-center py-2">Area</td>
-                      <td className="text-center py-2">Gulberg</td>
-                    </tr>
+                      <td className="text-center py-2">{location.name}</td>
+                    </tr> */}
                     <tr className="border-b border-[#d7e4ee]">
                       <td className="text-dark-400 text-center py-2">City</td>
-                      <td className="text-center py-2">{city}</td>
+                      <td className="text-center py-2">{city || "-"}</td>
                     </tr>
                     <tr className="border-b border-[#d7e4ee]">
                       <td className="text-dark-400 text-center py-2">
                         Contact
                       </td>
-                      <td className="text-center py-2">{contact}</td>
+                      <td className="text-center py-2">{contact || "-"}</td>
                     </tr>
-                    <tr className="">
+                    {/* <tr className="">
                       <td className="text-dark-400 text-center py-2">
                         Education
                       </td>
                       <td className="text-center py-2">BS(CS)</td>
-                    </tr>
+                    </tr> */}
+                    {selectedOption === "instructor" && (
+                      <tr>
+                        <td className="text-dark-400 text-center py-2">Resume</td>
+                        <td className="text-center py-2 px-4">{resume}</td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
-                <div className="space-y-5">
-                  <div className="space-y-2 ">
-                    <p className="text-sm text-dark-400">
-                      {status === "approved"
+                <div className="space-y-2  ">
+                  <p className="text-sm text-dark-400">
+                    {selectedOption === "student"
+                      ? status === "approved"
                         ? "Selected Program"
-                        : "Areas of Interest"}
-                    </p>
-                    <div className="">
-                      {program && program.length > 0
-                        ? program.map((prog, index) => (
+                        : "Areas of Interest"
+                      : "Skills set"}
+                  </p>
+                  <div className="space-y-2 ">
+                    {selectedOption === "student" ? (
+                      program && program.length > 0 ? (
+                        // Display Program Logic
+                        program.map((prog, index) => (
+                          <div key={index} className="flex items-center gap-2">
+                            {/* Radio Button for Program Selection */}
                             <div
-                              key={index}
-                              className="flex items-center gap-2"
+                              className={`${
+                                status === "approved" ? "hidden" : "flex"
+                              } items-center h-5`}
                             >
-                              <div
-                                className={`${
-                                  status === "approved" ? "hidden" : " flex"
-                                } items-center h-5`}
-                              >
-                                <input
-                                  id={`radio-${index}`}
-                                  type="radio"
-                                  name="programSelection" // Same name attribute for all radio buttons
-                                  // value={prog.name} // Store the value of the selected program
-                                  onChange={() => handleEnableApprove(prog.id)} // Call a function to handle the selection
-                                  className="border-gray-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
-                                />
-                                {/* <label
+                              <input
+                                id={`radio-${index}`}
+                                type="radio"
+                                name="programSelection"
+                                onChange={() => handleEnableApprove(prog.id)}
+                                className="border-gray-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
+                              />
+                            </div>
+                            <p>{prog.name}</p>
+                          </div>
+                        ))
+                      ) : (
+                        <p>No programs available.</p>
+                      )
+                    ) : skill && skill.length > 0 ? (
+                      // Display Skills Logic
+                      skill.map((skill, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                          {/* Checkbox for Skill Selection */}
+                          <div
+                            className={`${
+                              status === "approved" ? "hidden" : "flex"
+                            } items-center h-5`}
+                          >
+                            <input
+                              id={`checkbox-${index}`}
+                              type="checkbox"
+                              name="skillSelection"
+                              onChange={() => handleSkillSelection(skill.id)}
+                              className="border-gray-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
+                            />
+                          </div>
+                          <p>{skill.name}</p>
+                        </div>
+                      ))
+                    ) : (
+                      <p>No skills available.</p>
+                    )}
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-sm text-dark-400">Locations</p>
+                  {location &&
+                    location.length > 0 &&
+                    location.map((prog, index) => (
+                      <div key={index} className="flex items-center gap-2">
+                        <div
+                          className={`${
+                            status === "approved" ? "hidden" : " flex"
+                          } items-center h-5`}
+                        >
+                          <input
+                            id={`checkbox-${index}`}
+                            type="checkbox"
+                            name="locationSelection" // Same name attribute for all radio buttons
+                            // value={prog.name} // Store the value of the selected program
+                            onChange={() => handleLocationSelect(prog.id)} // Call a function to handle the selection
+                            className="border-gray-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
+                          />
+                          {/* <label
                                 htmlFor={`radio-${index}`}
                                 className="sr-only"
                               >
                                 Select {prog.name}
                               </label> */}
-                              </div>
-                              <p>{prog.name}</p>
-                            </div>
-                          ))
-                        : skill &&
-                          skill.length > 0 &&
-                          skill.map((skill, index) => (
-                            <div
-                              key={index}
-                              className="flex items-center gap-2"
-                            >
-                              <div
-                                className={`${
-                                  status === "approved" ? "hidden" : " flex"
-                                } items-center h-5`}
-                              >
-                                <input
-                                  id={`checkbox-${index}`} // Unique ID for each checkbox
-                                  type="checkbox" // Use checkbox instead of radio
-                                  name="skillSelection" // Name attribute can be the same for checkboxes
-                                  onChange={() =>
-                                    handleSkillSelection(skill.id)
-                                  } // Call function to handle selection
-                                  className="border-gray-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
-                                />
-                              </div>
-                              <p>{skill.name}</p>
-                            </div>
-                          ))}
-                    </div>
-                  </div>
-                  <div>
-                    <p className="text-sm text-dark-400">Status</p>
-                    <div className=" py-2 whitespace-nowrap flex w-full justify-start text-sm text-surface-100 dark:text-gray-200 ">
-                      <p
-                        className={`${
-                          status === "pending"
-                            ? "bg-[#DDF8EE] text-blue-300 border border-blue-300"
-                            : "bg-[#18A07A]"
-                        }  w-[120px] text-center px-4 py-2 rounded-lg capitalize`}
-                      >
-                        {status}
-                      </p>
-                    </div>
-                  </div>
+                        </div>
+                        <p>{prog.name}</p>
+                      </div>
+                    ))}
                 </div>
               </div>
               <div

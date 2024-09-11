@@ -515,6 +515,17 @@ export const getUserByStatus = async (
   }
 };
 
+export const getUserDataByProgramIdnSkillId = async (id, selectedOption) => {
+  try {
+    const response = await axiosInstance.get(
+      `/user-process/${id}/?group_name=${selectedOption}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const userSelectionByAdmin = async (id, data) => {
   try {
     const response = await axiosInstance.patch(
@@ -612,10 +623,13 @@ export const filterByCity = async (cityname) => {
   }
 };
 
-export const getApplicationsTotalNumber = async (filteration_id) => {
+export const getApplicationsTotalNumber = async (
+  filteration_id,
+  selectedUser
+) => {
   try {
     const response = await axiosInstance.get(
-      `/application-count/${filteration_id}/`
+      `application-count/${filteration_id}/?group_name=${selectedUser}`
     );
     return response;
   } catch (error) {
@@ -641,10 +655,61 @@ export const totalUsersCount = async () => {
   }
 };
 
+export const assignSessiontoStudent = async (data) => {
+  try {
+    const response = await axiosInstance.post("/preferred-sessions/", data);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getSuggestedSessionForStudent = async (programId, locationId) => {
+  try {
+    const response = await axiosInstance.get(
+      `preferred-sessions/?${programId}&${locationId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const assignSessionToInstructor = async (data) => {
+  try {
+    const response = axiosInstance.post("/instructor-sessions/", data);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getSuggestedSessions = async (programID, locationId) => {
+  try {
+    const response = await axiosInstance.get(
+      `preferred-sessions/?${programID}&${locationId}`
+    );
+  } catch (error) {
+    throw error;
+  }
+};
+
+//get sessions
+export const getInstructorSessions = async (userId, group) => {
+  try {
+    const response = await axiosInstance.get(
+      `/user-sessions/${userId}/?group_name=${group}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 //get all skills
 export const getAllSkills = async () => {
   try {
-    const response = await axiosInstance.get(`/course/skills/`);
+    const response = await axiosInstance.get(`/techskills/`);
     return response;
   } catch (error) {
     throw error;
@@ -922,20 +987,6 @@ export const getCalendarSessions = async (userId) => {
     throw error;
   }
 };
-
-//get sessions
-export const getInstructorSessions = async (userId, group) => {
-  try {
-    const response = await axiosInstance.get(
-      `/user-sessions/${userId}/?group_name=${group}`
-    );
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-
-
 
 //get data
 export const getData = async () => {

@@ -27,6 +27,9 @@ const AdminDashboard = () => {
   const [approvedRequest, setApprovedRequest] = useState(null);
   const [pendingRequest, setPendingRequest] = useState(null);
   const [shortListRequest, setShortlisted] = useState(null);
+  const [isUserOpen, setIsUserOpen] = useState(false);
+  const [isUserSelected, setIsUserSelected] = useState(false);
+  const [selectedUser, setSelectedUser] = useState("select your user");
   const [isOpen, setIsOpen] = useState(false);
   const [isSelected, setIsSelected] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState("");
@@ -42,22 +45,26 @@ const AdminDashboard = () => {
   const [allInActiveStudents, setAllInActiveStudents] = useState(0);
   const [allInActiveInstructors, setAllInActiveInstructors] = useState(0);
   const dropdownRef = useRef(null);
+  const userDown = useRef(null);
 
   useClickOutside(dropdownRef, () => setIsProgramOpen(false));
+  useClickOutside(userDown, () => setIsUserOpen(false));
 
   const handleTotalUsers = async () => {
     try {
       const response = await totalUsersCount();
       console.log("total Counts", response?.data?.data);
       setAllUsers(response?.data?.data?.all_users_length);
-      setAllIntructors(response?.data?.data?.instructor_user_length)
-      setAllStudents(response?.data?.data?.student_user_length)
-      setAllActiveUsers(response?.data?.data?.active_users_length)
-      setAllInActiveUsers(response?.data?.data?.inactive_users_length)
-      setAllActiveInstructors(response?.data?.data?.active_instructor_length)
-      setAllInActiveInstructors(response?.data?.data?.inactive_instructor_length)
-      setAllActiveStudents(response?.data?.data?.active_student_length)
-      setAllInActiveStudents(response?.data?.data?.inactive_student_length)
+      setAllIntructors(response?.data?.data?.instructor_user_length);
+      setAllStudents(response?.data?.data?.student_user_length);
+      setAllActiveUsers(response?.data?.data?.active_users_length);
+      setAllInActiveUsers(response?.data?.data?.inactive_users_length);
+      setAllActiveInstructors(response?.data?.data?.active_instructor_length);
+      setAllInActiveInstructors(
+        response?.data?.data?.inactive_instructor_length
+      );
+      setAllActiveStudents(response?.data?.data?.active_student_length);
+      setAllInActiveStudents(response?.data?.data?.inactive_student_length);
     } catch (error) {
       console.log("error fetching the total users", error);
     }
@@ -122,8 +129,11 @@ const AdminDashboard = () => {
   useEffect(() => {
     const handlePieChatData = async () => {
       try {
-        const response = await getApplicationsTotalNumber(programId);
-        // console.log("numbers", response.data);
+        const response = await getApplicationsTotalNumber(
+          programId,
+          selectedUser
+        );
+        console.log("numbers", response.data);
         setApprovedRequest(response?.data?.data.approved);
         setPendingRequest(response?.data?.data.pending);
         setShortlisted(response?.data?.data.short_listed);
@@ -133,9 +143,17 @@ const AdminDashboard = () => {
         setLoading(false);
       }
     };
-    setLoading(true)
-    handlePieChatData();
-  }, [selectedProgram, programId, isProgramSelected]);
+    if (selectedProgram && selectedUser) {
+      setLoading(true);
+      handlePieChatData();
+    }
+  }, [
+    selectedProgram,
+    programId,
+    isProgramSelected,
+    isUserSelected,
+    selectedUser,
+  ]);
 
   const handleBarChartData = async () => {
     try {
@@ -149,6 +167,16 @@ const AdminDashboard = () => {
     }
   };
 
+  const toggleUsers = () => {
+    setIsUserOpen(true);
+  };
+
+  const handleUserSelect = (option) => {
+    setSelectedUser(option);
+    setIsUserOpen(false);
+    setIsUserSelected(true);
+  };
+
   const toggleOpen = () => {
     setIsOpen(true);
   };
@@ -158,6 +186,8 @@ const AdminDashboard = () => {
     setIsOpen(false);
     setIsSelected(true);
   };
+
+  const userOptions = ["student", "instructor"];
 
   return (
     <div
@@ -170,77 +200,76 @@ const AdminDashboard = () => {
       }}
     >
       <div className="text-[#07224D] flex flex-col gap-5">
-            <div className="flex gap-5">
-              {" "}
-              {/* Adding a unique key */}
-              <div className="bg-[#ffffff] min-w-[32%] flex justify-between p-5 rounded-xl">
-                <div className="flex flex-col text-sm h-full justify-center items-center">
-                  Total Users
-                  <span className="text-xl font-semibold font-exo text-[#32324D]">
-                    {allUsers}
-                  </span>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex flex-col text-[12px] justify-center items-center">
-                    Active Users
-                    <span className="text-base font-semibold font-exo text-[#32324D]">
-                      {allActiveUsers}
-                    </span>
-                  </div>
-                  <div className="flex flex-col text-[12px] justify-center items-center">
-                    Inactive Users
-                    <span className="text-base font-semibold font-exo text-[#32324D]">
-                      {allInActiveUsers}
-                    </span>
-                  </div>
-                </div>
+        <div className="flex gap-5">
+          {" "}
+          {/* Adding a unique key */}
+          <div className="bg-[#ffffff] min-w-[32%] flex justify-between p-5 rounded-xl">
+            <div className="flex flex-col text-sm h-full justify-center items-center">
+              Total Users
+              <span className="text-xl font-semibold font-exo text-[#32324D]">
+                {allUsers}
+              </span>
+            </div>
+            <div className="space-y-2">
+              <div className="flex flex-col text-[12px] justify-center items-center">
+                Active Users
+                <span className="text-base font-semibold font-exo text-[#32324D]">
+                  {allActiveUsers}
+                </span>
               </div>
-              <div className="bg-[#ffffff] min-w-[32%] flex justify-between p-5 rounded-xl">
-                <div className="flex flex-col text-sm h-full justify-center items-center">
-                  Total Students
-                  <span className="text-xl font-semibold font-exo text-[#32324D]">
-                    {allStudents}
-                  </span>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex flex-col text-[12px] justify-center items-center">
-                    Active Students
-                    <span className="text-base font-semibold font-exo text-[#32324D]">
-                      {allActiveStudents}
-                    </span>
-                  </div>
-                  <div className="flex flex-col text-[12px] justify-center items-center">
-                    Inactive Students
-                    <span className="text-base font-semibold font-exo text-[#32324D]">
-                      {allInActiveStudents}
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-[#ffffff] min-w-[32%] flex justify-between p-5 rounded-xl">
-                <div className="flex flex-col text-sm h-full justify-center items-center">
-                  Total Instructors
-                  <span className="text-xl font-semibold font-exo text-[#32324D]">
-                    {allInstructors}
-                  </span>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex flex-col text-[12px] justify-center items-center">
-                    Active Instructors
-                    <span className="text-base font-semibold font-exo text-[#32324D]">
-                      {allActiveInstructors}
-                    </span>
-                  </div>
-                  <div className="flex flex-col text-[12px] justify-center items-center">
-                    Inactive Instructors
-                    <span className="text-base font-semibold font-exo text-[#32324D]">
-                      {allInActiveInstructors}
-                    </span>
-                  </div>
-                </div>
+              <div className="flex flex-col text-[12px] justify-center items-center">
+                Inactive Users
+                <span className="text-base font-semibold font-exo text-[#32324D]">
+                  {allInActiveUsers}
+                </span>
               </div>
             </div>
-
+          </div>
+          <div className="bg-[#ffffff] min-w-[32%] flex justify-between p-5 rounded-xl">
+            <div className="flex flex-col text-sm h-full justify-center items-center">
+              Total Students
+              <span className="text-xl font-semibold font-exo text-[#32324D]">
+                {allStudents}
+              </span>
+            </div>
+            <div className="space-y-2">
+              <div className="flex flex-col text-[12px] justify-center items-center">
+                Active Students
+                <span className="text-base font-semibold font-exo text-[#32324D]">
+                  {allActiveStudents}
+                </span>
+              </div>
+              <div className="flex flex-col text-[12px] justify-center items-center">
+                Inactive Students
+                <span className="text-base font-semibold font-exo text-[#32324D]">
+                  {allInActiveStudents}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="bg-[#ffffff] min-w-[32%] flex justify-between p-5 rounded-xl">
+            <div className="flex flex-col text-sm h-full justify-center items-center">
+              Total Instructors
+              <span className="text-xl font-semibold font-exo text-[#32324D]">
+                {allInstructors}
+              </span>
+            </div>
+            <div className="space-y-2">
+              <div className="flex flex-col text-[12px] justify-center items-center">
+                Active Instructors
+                <span className="text-base font-semibold font-exo text-[#32324D]">
+                  {allActiveInstructors}
+                </span>
+              </div>
+              <div className="flex flex-col text-[12px] justify-center items-center">
+                Inactive Instructors
+                <span className="text-base font-semibold font-exo text-[#32324D]">
+                  {allInActiveInstructors}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div className="flex gap-5 xmd:flex-row flex-col">
           <div className="bg-[#ffffff] xmd:w-[65.5%] w-full overflow-x-auto scrollbar-webkit p-5 rounded-xl  h-[450px]">
@@ -254,63 +283,97 @@ const AdminDashboard = () => {
             </div>
           </div>
           <div className="bg-[#ffffff] min-w-[32%] p-4 rounded-xl  h-[450px]">
-            <div className="flex w-full justify-between items-center">
-            <div className="font-bold font-exo text-[#32324D] text-lg">
-              Applications Status
-            </div>
-            <div className="">
-              <div>
-                <button
-                  onClick={toggleProgramOpen}
-                  className={`${
-                    !isProgramSelected ? " text-[#92A7BE]" : "text-[#424b55]"
-                  } flex justify-between mt-1 items-center  w-[200px] gap-1 hover:text-[#0e1721] px-4 xlg:py-3 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
-                >
-                  {selectedProgram}
-                  <span className="">
-                    <IoIosArrowDown />
-                  </span>
-                </button>
-
-                {isProgramOpen && (
-                  <div
-                    ref={dropdownRef}
-                    className="absolute z-30 mt-1 w-[200px] max-h-[200px] overflow-auto scrollbar-webkit  bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+            <div className="flex w-full flex-col items-start">
+              <div className="font-bold font-exo text-[#32324D] text-lg">
+                Applications Status Overview
+              </div>
+              <div className="flex gap-2 px-2 justify-between items-center">
+                <div>
+                  <button
+                    onClick={toggleUsers}
+                    className={` flex justify-between mt-1 items-center text-[#424b55] xl:w-[200px] md:w-[170px] w-full  gap-1 hover:text-[#0e1721] px-4 xlg:py-3 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                   >
-                    {allPrograms && allPrograms.length > 0 ? (
-                      allPrograms.map((option, index) => (
+                    {selectedUser || userOptions[0]}
+                    <span className="">
+                      <IoIosArrowDown />
+                    </span>
+                  </button>
+
+                  {isUserOpen && (
+                    <div
+                      ref={userDown}
+                      className="absolute capitalize z-50 w-fit xl:w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                    >
+                      {userOptions.map((option, index) => (
                         <div
                           key={index}
-                          onClick={() => handleProgramSelect(option)}
-                          className="p-2 cursor-pointer"
+                          onClick={() => handleUserSelect(option)}
+                          className="p-2 cursor-pointer "
                         >
                           <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
-                            {option.name}
+                            {option}
                           </div>
                         </div>
-                      ))
-                    ) : (
-                      <p className="text-[12px] text-dark-400 text-center p-1">
-                        No Program found
-                      </p>
-                    )}
-                  </div>
-                )}
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <div className={`${!isUserSelected && 'hidden'}`}>
+                  <button
+                    onClick={toggleProgramOpen}
+                    className={`${
+                      !isProgramSelected ? " text-[#92A7BE]" : "text-[#424b55]"
+                    } flex justify-between mt-1 items-center  xl:w-[200px] w-full gap-1 hover:text-[#0e1721] px-4 xlg:py-3 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                  >
+                    {selectedProgram}
+                    <span className="">
+                      <IoIosArrowDown />
+                    </span>
+                  </button>
+
+                  {isProgramOpen && (
+                    <div
+                      ref={dropdownRef}
+                      className="absolute z-50 mt-1 xl:w-[200px] w-fit  max-h-[200px] overflow-auto scrollbar-webkit  bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                    >
+                      {allPrograms && allPrograms.length > 0 ? (
+                        allPrograms.map((option, index) => (
+                          <div
+                            key={index}
+                            onClick={() => handleProgramSelect(option)}
+                            className="p-2 cursor-pointer"
+                          >
+                            <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                              {option.name}
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <p className="text-[12px] text-dark-400 text-center p-1">
+                          No Program found
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
             </div>
             <div>
               {loading ? (
                 <div className="flex h-full mt-4 justify-center items-center">
                   <CircularProgress size={20} />
                 </div>
-              ) : (
+              ) : selectedProgram && selectedUser && isUserSelected ? (
                 <div>
                   <PieChart
                     approved={approvedRequest}
                     pending={pendingRequest}
                     shortlisted={shortListRequest}
                   />
+                </div>
+              ) : (
+                <div className="flex justify-center items-center text-dark-400 text-sm h-full mt-4">
+                  select the user and the program to see the results
                 </div>
               )}
             </div>
@@ -321,11 +384,11 @@ const AdminDashboard = () => {
             <h1 className="font-bold font-exo text-[#32324D] text-lg ">
               Batch Details
             </h1>
-            <div className="w-full flex items-center gap-4 mt-2">
+            {/* <div className="w-full flex items-center gap-4 mt-2">
               <div className="flex grow">
                 <input
                   type="text"
-                  placeholder="Search batch by name"
+                  placeholder="Search batch by names"
                   className="p-3 text-sm border border-[#92A7BE] rounded-lg outline-none w-full"
                 />
               </div>
@@ -361,7 +424,7 @@ const AdminDashboard = () => {
                   </div>
                 )}
               </div>
-            </div>
+            </div> */}
           </div>
           <BatchTable batches={batches} loading={loading} />
         </div>
