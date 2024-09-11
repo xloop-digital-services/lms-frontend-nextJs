@@ -181,6 +181,7 @@ const DevelopmentTable = ({
                 status={selectedUser.application_status}
                 location={selectedUser.location}
                 program={selectedUser.program}
+                resume={selectedUser.resume}
                 skill={selectedUser.skill}
                 id={selectedUser.id}
                 setStatusUpdated={setStatusUpdated}

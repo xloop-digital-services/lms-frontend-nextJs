@@ -55,22 +55,22 @@ const UserApprovalTable = ({
 //     }
 //   };
 
-  const handleGetSuggestedSessions = async () => {
-    try {
-      const response = await getSuggestedSessionForStudent(
-        approvedProgramID,
-        selectedLocationId
-      );
-      console.log("response of the suggested sessions", response.data);
-    } catch (error) {
-      console.log(error.response);
-    }
-  };
-  useEffect(() => {
-    if (selectedOption === "student") {
-      handleGetSuggestedSessions();
-    }
-  }, [approvedProgramID, selectedLocationId]);
+//   const handleGetSuggestedSessions = async () => {
+//     try {
+//       const response = await getSuggestedSessionForStudent(
+//         approvedProgramID,
+//         selectedLocationId
+//       );
+//       console.log("response of the suggested sessions", response.data);
+//     } catch (error) {
+//       console.log(error.response);
+//     }
+//   };
+//   useEffect(() => {
+//     if (selectedOption === "student") {
+//       handleGetSuggestedSessions();
+//     }
+//   }, [approvedProgramID, selectedLocationId]);
 
   //   const getUserSkills = (skillIds) => {
   //     if (selectedOption === "instructor") {

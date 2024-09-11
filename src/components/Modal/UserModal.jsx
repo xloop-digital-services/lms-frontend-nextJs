@@ -21,6 +21,7 @@ const UserModal = ({
   status,
   location,
   program,
+  resume,
   skill,
   id,
   setStatusUpdated,
@@ -192,10 +193,10 @@ const UserModal = ({
                       <td className="text-dark-400 text-center py-2">DOB</td>
                       <td className="text-center py-2">{dob || "-"}</td>
                     </tr>
-                    <tr className="border-b border-[#d7e4ee]">
+                    {/* <tr className="border-b border-[#d7e4ee]">
                       <td className="text-dark-400 text-center py-2">Area</td>
-                      <td className="text-center py-2">Gulberg</td>
-                    </tr>
+                      <td className="text-center py-2">{location.name}</td>
+                    </tr> */}
                     <tr className="border-b border-[#d7e4ee]">
                       <td className="text-dark-400 text-center py-2">City</td>
                       <td className="text-center py-2">{city || "-"}</td>
@@ -206,16 +207,22 @@ const UserModal = ({
                       </td>
                       <td className="text-center py-2">{contact || "-"}</td>
                     </tr>
-                    <tr className="">
+                    {/* <tr className="">
                       <td className="text-dark-400 text-center py-2">
                         Education
                       </td>
                       <td className="text-center py-2">BS(CS)</td>
-                    </tr>
+                    </tr> */}
+                    {selectedOption === "instructor" && (
+                      <tr>
+                        <td className="text-dark-400 text-center py-2">Resume</td>
+                        <td className="text-center py-2 px-4">{resume}</td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
 
-                <div className="space-y-2 ">
+                <div className="space-y-2  ">
                   <p className="text-sm text-dark-400">
                     {selectedOption === "student"
                       ? status === "approved"
@@ -306,6 +313,7 @@ const UserModal = ({
                     ))}
                 </div>
               </div>
+
               <div
                 className={`${
                   status === "approved" ? "hidden" : " flex"
