@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import ApprovalUserModal from "./Modal/ApprovalUserModal";
 import { FaEye } from "react-icons/fa";
 import { CircularProgress } from "@mui/material";
+import { FaArrowRightLong } from "react-icons/fa6";
+import { TiArrowForward } from "react-icons/ti";
 import { getSuggestedSessionForStudent } from "@/api/route";
 import Link from "next/link";
 
@@ -48,29 +50,29 @@ const UserApprovalTable = ({
     return locations.find((location) => location.id === locationId) || {};
   };
 
-//   const getUserProgram = (programid) => {
-//     if (selectedOption === "student") {
-//       const programId = Array.isArray(programid) ? programid[0] : null;
-//       return userPrograms.find((program) => program.id === programId);
-//     }
-//   };
+  //   const getUserProgram = (programid) => {
+  //     if (selectedOption === "student") {
+  //       const programId = Array.isArray(programid) ? programid[0] : null;
+  //       return userPrograms.find((program) => program.id === programId);
+  //     }
+  //   };
 
-//   const handleGetSuggestedSessions = async () => {
-//     try {
-//       const response = await getSuggestedSessionForStudent(
-//         approvedProgramID,
-//         selectedLocationId
-//       );
-//       console.log("response of the suggested sessions", response.data);
-//     } catch (error) {
-//       console.log(error.response);
-//     }
-//   };
-//   useEffect(() => {
-//     if (selectedOption === "student") {
-//       handleGetSuggestedSessions();
-//     }
-//   }, [approvedProgramID, selectedLocationId]);
+  //   const handleGetSuggestedSessions = async () => {
+  //     try {
+  //       const response = await getSuggestedSessionForStudent(
+  //         approvedProgramID,
+  //         selectedLocationId
+  //       );
+  //       console.log("response of the suggested sessions", response.data);
+  //     } catch (error) {
+  //       console.log(error.response);
+  //     }
+  //   };
+  //   useEffect(() => {
+  //     if (selectedOption === "student") {
+  //       handleGetSuggestedSessions();
+  //     }
+  //   }, [approvedProgramID, selectedLocationId]);
 
   //   const getUserSkills = (skillIds) => {
   //     if (selectedOption === "instructor") {
@@ -135,7 +137,7 @@ const UserApprovalTable = ({
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[16%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[16%]"
                     >
                       Status
                     </th>
@@ -148,7 +150,7 @@ const UserApprovalTable = ({
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-dark-200">
-                  {loadingUsers  ? (
+                  {loadingUsers ? (
                     <tr>
                       <td
                         colSpan="8"
@@ -170,7 +172,7 @@ const UserApprovalTable = ({
                     applications.map((user, index) => {
                       const userApplication = getUserApplication(user.email);
                       const userLocation = getUserLocation(user.location);
-                    //   const userProgram = getUserProgram(user.program);
+                      //   const userProgram = getUserProgram(user.program);
                       //   const userSkill = getUserSkills(user.required_skills);
 
                       return (
@@ -209,26 +211,35 @@ const UserApprovalTable = ({
                               </p>
                             </div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex space-x-2">
+                          <td className="px-6 py-4 whitespace-nowrap w-full text-sm flex items-center justify-center gap-3">
                             <div
-                              className="flex items-center justify-center w-full group text-[#03A1D8]"
+                              className="flex items-center justify-center  group text-[#03A1D8]"
                               title="info"
+                            >
+                              {/* <Link href={`/user-management/users/${approvedProgramID}`}> */}
+                              <FaEye
+                                size={23}
+                                className="group-hover:text-[#3c8ca7]"
+                              />
+                              {/* </Link> */}
+                            </div>
+                            <div
+                              className="flex items-center justify-center group text-[#03A1D8]"
+                              title="assign sessions"
                               onClick={() =>
                                 handleModal(
                                   user,
                                   userApplication,
-                                  userLocation,
-                                //   userProgram,
+                                  userLocation
+                                  //   userProgram,
                                   //   userSkill
                                 )
                               }
                             >
-                              {/* <Link href={`/user-management/users/${approvedProgramID}`}> */}
-                                <FaEye
-                                  size={23}
-                                  className="group-hover:text-blue-400"
-                                />
-                              {/* </Link> */}
+                              <TiArrowForward
+                                size={23}
+                                className="group-hover:text-[#3c8ca7]"
+                              />
                             </div>
                           </td>
                         </tr>

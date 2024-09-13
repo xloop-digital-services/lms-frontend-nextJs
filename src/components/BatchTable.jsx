@@ -1,5 +1,7 @@
 import { CircularProgress } from "@mui/material";
 import React from "react";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { FaRegEdit } from "react-icons/fa";
 
 const BatchTable = ({batches, loading}) => {
 
@@ -27,19 +29,19 @@ const BatchTable = ({batches, loading}) => {
                     </th> */}
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[20%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
                     >
-                      Number of Students
+                      Capacity
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[20%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
                     >
                       Start Date
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[20%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
                     >
                       End Date
                     </th>
@@ -57,9 +59,15 @@ const BatchTable = ({batches, loading}) => {
                     </th> */}
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[20%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
                     >
-                      Active Status
+                      Status
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
+                    >
+                      Actions
                     </th>
                   </tr>
                 </thead>
@@ -98,11 +106,18 @@ const BatchTable = ({batches, loading}) => {
                     {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
                       Winter
                     </td> */}
-                    <td className="px-8 py-2 whitespace-nowrap flex w-full justify-start items-center text-sm text-surface-100 dark:text-gray-200 ">
+                    <td className="px-8 py-2 whitespace-nowrap flex w-full justify-start items-center text-sm text-surface-100 ">
                       <p className="bg-[#18A07A] w-[90px] text-center px-4 py-2 text-[12px] rounded-lg">
                         Active
                       </p>
                     </td>
+                    <td className="px-8 py-2 whitespace-nowrap  text-sm ">
+                      <div className="flex gap-4">
+                        <div><FaRegEdit size={20}/></div>
+                        <div><RiDeleteBin6Line size={20} /></div>
+                      </div>
+                    </td>
+                    
                   </tr>
                     ) ) 
                     :

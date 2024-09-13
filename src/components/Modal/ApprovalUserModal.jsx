@@ -31,7 +31,16 @@ const ApprovalUserModal = ({
   const [selected, setSelected] = useState(false);
   const [loadingAssign, setLoadingAssign] = useState(false);
   const [assignedSessions, setAssignedSessions] = useState([]);
-  const [updateSession, setUpdateSessions]  = useState(0)
+  const [updateSession, setUpdateSessions] = useState(0);
+  const [selectedSessionCourse, setSelectedSessionCourse] = useState(null);
+  const [selectedSessionLocation, setSelectedSessionLocation] = useState(null);
+  const [selectedSessionEndtime, setSelectedSessionEndTime] = useState(null);
+  const [selectedSessionStartTime, setSelectedSessionStartTime] =
+    useState(null);
+  const [selectedSessionCapacity, setSelectedSessionCapacity] = useState(null);
+  const [selectedSessionStatus, setSelectedSessionStatus] = useState(null);
+  const [isSessionSelected, setIsSessionSelected] = useState(null);
+  const [loadingSelection, setLoadingSelection] = useState(false);
   const click = useRef(null);
 
   useClickOutside(click, () => setShowDropdown(false));
@@ -67,9 +76,6 @@ const ApprovalUserModal = ({
       }
     });
     setSelected(true);
-    // setAssignedSessions(
-    //   sessions.filter((session) => sessionIds.includes(session.id))
-    // );
   };
 
   const handleSessionAssign = async () => {
@@ -85,29 +91,52 @@ const ApprovalUserModal = ({
           : await assignSessionToInstructor(data);
 
       toast.success(response.data.message);
-      setUpdateSessions(updateSession+1)
-      // Update assigned sessions state
-      // setModal(false);
+      setUpdateSessions(updateSession + 1);
       setLoadingAssign(false);
     } catch (error) {
       console.log("Error in assigning", error);
+      if (error.response.status === 401) {
+        toast.error("your log in token has been expired. Please log in again!");
+      }
       setLoadingAssign(false);
     }
   };
 
   const handleUserSessions = async () => {
+    setLoadingSelection(true);
     try {
       const response = await getInstructorSessions(id, selectedOption);
-      console.log("response", response.data);
       setAssignedSessions(response?.data?.data);
+      setLoadingSelection(false);
     } catch (error) {
       console.log("error", error);
+      setLoadingSelection(false);
     }
   };
 
   useEffect(() => {
     handleUserSessions();
   }, [id, selectedOption, updateSession]);
+
+  useEffect(() => {
+    if (assignedSessions.length > 0) {
+      handleSessionInfo(assignedSessions[0]);
+    }
+  }, [assignedSessions]);
+
+  const handleSessionInfo = (session) => {
+    setSelectedSessionCourse(session.course);
+    setSelectedSessionLocation(session.location);
+    setSelectedSessionEndTime(session.end_time);
+    setSelectedSessionStartTime(session.start_time);
+    setSelectedSessionCapacity(session.no_of_students);
+    if (session.status === 1) {
+      setSelectedSessionStatus("Active");
+    } else {
+      setSelectedSessionStatus("Inactive");
+    }
+    setIsSessionSelected(session);
+  };
 
   return (
     <div className="backDropOverlay min-h-screen flex items-center">
@@ -117,7 +146,10 @@ const ApprovalUserModal = ({
             <CircularProgress size={30} />
           </div>
         )}
-        <div style={{ backgroundColor: "#EBF6FF" }} className="p-5 rounded-xl">
+        <div
+          style={{ backgroundColor: "#EBF6FF" }}
+          className="p-5 rounded-xl h-full"
+        >
           <div className="flex justify-between">
             <h1
               style={{
@@ -156,97 +188,162 @@ const ApprovalUserModal = ({
               </div>
             </div>
             <div className="w-full h-[2px] bg-dark-200"></div>
-            <div className="px-[30px] text-base flex gap-4 items-start justify-evenly">
-              <div className="flex flex-col gap-4">
-                {locations && (
-                  <div className="space-y-2">
-                    <p className="border-b border-dark-300 py-1 text-sm text-dark-400">
-                      Selected Locations
-                    </p>
-                    <p>{locations}</p>
+            {loadingSelection ? (
+              <div className="h-full w-full flex justify-center items-center">
+                <CircularProgress />
+              </div>
+            ) : (
+              <div className="px-[30px] text-base flex gap-4 h-full w-full justify-evenly">
+                {assignedSessions && assignedSessions.length > 0 && (
+                  <div className="">
+                    <h2 className=" border-b border-dark-300 py-1 mb-2 text-sm text-dark-400">
+                      Assigned Sessions:
+                    </h2>
+                    <ul className="list-disc space-y-2">
+                      {assignedSessions.map((session, index) => (
+                        <li
+                          key={index}
+                          onClick={() => handleSessionInfo(session)}
+                          className={`${
+                            isSessionSelected === session && "text-blue-300"
+                          }`}
+                        >
+                          {session.location} {session.course}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 )}
-                {selectedOption === "student"
-                  ? programs && (
-                      <div className="space-y-2">
-                        <p className="border-b border-dark-300 py-1 text-sm text-dark-400">
-                          Selected Programs
-                        </p>
-                        <p>{programs}</p>
-                      </div>
-                    )
-                  : skills && (
-                      <div className="space-y-2">
-                        <p className="border-b border-dark-300 py-1 text-sm text-dark-400">
-                          Selected Skills
-                        </p>
-
-                        <p>{skills}</p>
-                      </div>
-                    )}
-              </div>
-              
-              {assignedSessions && assignedSessions.length > 0 && (
-                <div className="">
-                  <h2 className=" border-b border-dark-300 py-1 text-sm text-dark-400">
-                    Assigned Sessions:
-                  </h2>
-                  <ul>
-                    {assignedSessions.map((session, index) => (
-                      <li key={index}>
-                        {session.location} {session.course}
-                      </li>
-                    ))}
-                  </ul>
+                <div className="w-[1.5px] h-[150px] bg-dark-200 rounded-lg"></div>
+                <div className="w-[50%]">
+                  <table className="w-full border-collapse">
+                    <tbody>
+                      <tr className="border-b border-[#d7e4ee]">
+                        <td className="text-dark-400 text-center py-2">
+                          Location
+                        </td>
+                        <td className="text-center py-2">
+                          {selectedSessionLocation || "-"}
+                        </td>
+                      </tr>
+                      <tr className="border-b border-[#d7e4ee]">
+                        <td className="text-dark-400 text-center py-2">
+                          Course
+                        </td>
+                        <td className="text-center py-2">
+                          {selectedSessionCourse || "-"}
+                        </td>
+                      </tr>
+                      <tr className="border-b border-[#d7e4ee]">
+                        <td className="text-dark-400 text-center py-2">
+                          Capacity
+                        </td>
+                        <td className="text-center py-2">
+                          {selectedSessionCapacity || "-"}
+                        </td>
+                      </tr>
+                      <tr className="border-b border-[#d7e4ee]">
+                        <td className="text-dark-400 text-center py-2">
+                          Start Time
+                        </td>
+                        <td className="text-center py-2">
+                          {selectedSessionStartTime || "-"}
+                        </td>
+                      </tr>
+                      <tr className="border-b border-[#d7e4ee]">
+                        <td className="text-dark-400 text-center py-2">
+                          End Time
+                        </td>
+                        <td className="text-center py-2">
+                          {selectedSessionEndtime || "-"}
+                        </td>
+                      </tr>
+                      <tr className="border-b border-[#d7e4ee]">
+                        <td className="text-dark-400 text-center py-2">
+                          Status
+                        </td>
+                        <td className="text-center py-2">
+                          {selectedSessionStatus || "-"}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
-              )}
-              <div>
+              </div>
+            )}
+          </div>
+          <div className="flex gap-4  items-center w-full">
+            <div className="flex flex-col justify-end  pt-5 pb-4 relative min-w-[200px]">
+              {/* <div>
+                <p className=" text-xs">Assign sessions</p>
+              </div> */}
+              <div className="relative bg-surface-100 rounded-xl">
                 <button
+                  className="flex  items-center justify-between border-dark-100 border-2 text-dark-400 text-center p-2  w-full "
                   onClick={handleToggle}
-                  className=" flex justify-between items-center gap-3 border border-dark-300 px-4 py-2 rounded-lg hover:bg-dark-100"
                 >
-                  Select Sessions
-                  <span><IoIosArrowDown /></span>
+                  <span>assign sessions</span>
+                  <span className="flex items-center">
+                    <IoIosArrowDown
+                      size={12}
+                      style={{ marginLeft: "8px", fontWeight: "800" }}
+                    />
+                  </span>
                 </button>
                 {showDropdown && (
                   <div
                     ref={click}
-                    className="absolute max-h-[100px] overflow-auto scrollbar-webkit mt-2 p-2 border border-dark-300 bg-[#ffff] rounded-xl shadow z-20"
+                    className="absolute z-10 min-w-[220px] max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                   >
-                    {loadingSessions ? (
-                      <CircularProgress size={20} />
-                    ) : (
-                      <ul className="list-none p-0 m-0">
-                        {sessions.map((session) => (
-                          <li
-                            key={session.id}
-                            className={`px-4 py-2 mb-2 hover:bg-dark-100 cursor-pointer rounded-lg ${
-                              sessionIds.includes(session.id)
-                                ? "bg-blue-100"
-                                : ""
-                            }`}
-                            onClick={() => handleSelectSession(session)}
-                          >
-                            {session.location_name} {session.course.name}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
+                    <div className="py-2">
+                      {loadingSessions ? (
+                        <div className="flex justify-center items-center">
+                          <CircularProgress size={24} />
+                        </div>
+                      ) : sessions.length > 0 ? (
+                        sessions.map((session, index) => {
+                          const isSelected = sessionIds.includes(session.id);
+                          const isAssigned = assignedSessions.includes((assigned) => assigned.id === session.id)
+
+                          return (
+                            <div
+                              key={session.id}
+                              onClick={() => handleSelectSession(session)}
+                              className={`py-2 px-4 cursor-pointer m-2 rounded-md
+                    ${isSelected ? "bg-blue-100 text-blue-800" : "bg-[#ffff]"}
+                    hover:bg-dark-200 transition-colors duration-200 ease-in-out`}
+                            >
+                              {session.location_name} - {session.course.name}
+                            </div>
+                          );
+                        })
+                      ) : (
+                        <div className="py-2 px-4 text-center text-sm text-gray-400">
+                          No sessions available
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>
-              {selected && (
-                <div>
-                  <button onClick={handleSessionAssign} type="assign session">
-                    <BsArrowUpRightSquare
-                      size={33}
-                      className="text-dark-300 hover:text-dark-400"
-                    />
-                  </button>
-                </div>
-              )}
             </div>
-            
+
+            <div className="flex w-full py-2 px-6 justify-end">
+              <button
+                className={`bg-blue-300 ${
+                  selected ? "" : "opacity-30"
+                } text-surface-100 py-2 w-[120px] text-sm h-fit rounded-md flex justify-center items-center`}
+                onClick={handleSessionAssign}
+                // disabled={!selected}
+              >
+                Save
+                <span className="flex items-center">
+                  <BsArrowUpRightSquare
+                    style={{ fontSize: "15px", marginLeft: "8px" }}
+                  />
+                </span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
