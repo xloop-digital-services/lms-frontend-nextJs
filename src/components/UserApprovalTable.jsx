@@ -6,7 +6,6 @@ import { FaArrowRightLong } from "react-icons/fa6";
 import { TiArrowForward } from "react-icons/ti";
 import { getSuggestedSessionForStudent } from "@/api/route";
 import Link from "next/link";
-
 const UserApprovalTable = ({
   users,
   loadingUsers,
@@ -28,7 +27,6 @@ const UserApprovalTable = ({
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [selectedLocationId, setSelectedLocationID] = useState("");
   //   console.log(message);
-
   const handleModal = (user, userApplication, userLocation, program, skill) => {
     setSelectedStudentLocation(userLocation.name);
     setSelectedLocationID(userLocation.id);
@@ -39,63 +37,55 @@ const UserApprovalTable = ({
     setSelectedUser(user);
     setModal(true);
   };
-
   const getUserApplication = (userEmail) => {
     console.log("userEmail", userEmail);
     return users.find((app) => app.email === userEmail) || {};
   };
-
   const getUserLocation = (userLocationId) => {
     const locationId = Array.isArray(userLocationId) ? userLocationId[0] : null;
     return locations.find((location) => location.id === locationId) || {};
   };
 
-  //   const getUserProgram = (programid) => {
-  //     if (selectedOption === "student") {
-  //       const programId = Array.isArray(programid) ? programid[0] : null;
-  //       return userPrograms.find((program) => program.id === programId);
-  //     }
-  //   };
+//   const getUserProgram = (programid) => {
+//     if (selectedOption === "student") {
+//       const programId = Array.isArray(programid) ? programid[0] : null;
+//       return userPrograms.find((program) => program.id === programId);
+//     }
+//   };
 
-  //   const handleGetSuggestedSessions = async () => {
-  //     try {
-  //       const response = await getSuggestedSessionForStudent(
-  //         approvedProgramID,
-  //         selectedLocationId
-  //       );
-  //       console.log("response of the suggested sessions", response.data);
-  //     } catch (error) {
-  //       console.log(error.response);
-  //     }
-  //   };
-  //   useEffect(() => {
-  //     if (selectedOption === "student") {
-  //       handleGetSuggestedSessions();
-  //     }
-  //   }, [approvedProgramID, selectedLocationId]);
+  const handleGetSuggestedSessions = async () => {
+    try {
+      const response = await getSuggestedSessionForStudent(
+        approvedProgramID,
+        selectedLocationId
+      );
+      console.log("response of the suggested sessions", response.data);
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+  useEffect(() => {
+    if (selectedOption === "student") {
+      handleGetSuggestedSessions();
+    }
+  }, [approvedProgramID, selectedLocationId]);
 
   //   const getUserSkills = (skillIds) => {
   //     if (selectedOption === "instructor") {
   //       // Ensure skillIds is treated as an array
   //       const idsArray = Array.isArray(skillIds) ? skillIds[0] : null;
-
   //       // Map over the skill IDs to find the corresponding skill objects from the userSkills array
   //       //   const matchedSkills = idsArray
   //       //     .map((id) => userSkills.find((skill) => skill.id === id))
   //       // Filter out any undefined values
-
   //       console.log("skilslllll jsakdsksjd", idsArray);
   //       console.log("skilslllll isdssssss", skillIds);
-
   //       return userSkills.find((skill) => skill.id === idsArray);
   //     }
   //     return [];
   //   };
-
   //   console.log("skilsllllllllllllllllllllllllllllll", selectedSkills);
-
   //   useEffect to call functions based on selectedOptionon]);
-
   return (
     <div className="flex flex-col h-full">
       <div className="-m-1.5 overflow-x-auto">
@@ -113,17 +103,17 @@ const UserApprovalTable = ({
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[14%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
                     >
                       DOB
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[14%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
                     >
                       City
                     </th>
-                    <th
+                    {/* <th
                       scope="col"
                       className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[14%]"
                     >
@@ -134,7 +124,7 @@ const UserApprovalTable = ({
                       className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[14%]"
                     >
                       Education
-                    </th>
+                    </th> */}
                     <th
                       scope="col"
                       className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[16%]"
@@ -174,7 +164,6 @@ const UserApprovalTable = ({
                       const userLocation = getUserLocation(user.location);
                       //   const userProgram = getUserProgram(user.program);
                       //   const userSkill = getUserSkills(user.required_skills);
-
                       return (
                         <tr key={index}>
                           <td className="px-6 whitespace-nowrap text-sm text-gray-800">
@@ -192,12 +181,12 @@ const UserApprovalTable = ({
                           <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800">
                             {userApplication.city || "-"}
                           </td>
-                          <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800">
+                          {/* <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800">
                             {userLocation.name || "-"}
                           </td>
                           <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800">
                             16 years
-                          </td>
+                          </td> */}
                           <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
                             <div className="whitespace-nowrap flex w-full justify-start text-sm text-surface-100">
                               <p
@@ -258,7 +247,6 @@ const UserApprovalTable = ({
                 </tbody>
               </table>
             </div>
-
             {modal && selectedUser && (
               <ApprovalUserModal
                 selectedOption={selectedOption}
@@ -280,5 +268,4 @@ const UserApprovalTable = ({
     </div>
   );
 };
-
 export default UserApprovalTable;

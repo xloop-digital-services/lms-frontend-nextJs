@@ -3,7 +3,6 @@ import { FaInfoCircle } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import UserModal from "./Modal/UserModal";
 import { CircularProgress } from "@mui/material";
-
 const DevelopmentTable = ({
   selectedOption,
   setStatusUpdated,
@@ -13,12 +12,10 @@ const DevelopmentTable = ({
 }) => {
   const [modal, setModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null); // State to store the selected user
-
   const handleModal = (user) => {
     setSelectedUser(user); // Set the clicked user as the selected user
     setModal(true);
   };
-
   return (
     <div className="flex flex-col h-full">
       <div className="-m-1.5 overflow-x-auto">
@@ -46,17 +43,17 @@ const DevelopmentTable = ({
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[14%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
                     >
                       DOB
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[14%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
                     >
                       City
                     </th>
-                    <th
+                    {/* <th
                       scope="col"
                       className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[14%]"
                     >
@@ -67,10 +64,10 @@ const DevelopmentTable = ({
                       className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[14%]"
                     >
                       Education
-                    </th>
+                    </th> */}
                     <th
                       scope="col"
-                      className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[16%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
                     >
                       Status
                     </th>
@@ -120,12 +117,12 @@ const DevelopmentTable = ({
                         <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 ">
                           {user?.city}
                         </td>
-                        <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 ">
+                        {/* <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 ">
                           Dastagir
                         </td>
                         <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 ">
                           16 years
-                        </td>
+                        </td> */}
                         <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-800 ">
                           <div className=" whitespace-nowrap flex w-full justify-start text-sm text-surface-100  ">
                             <p
@@ -166,7 +163,6 @@ const DevelopmentTable = ({
                 </tbody>
               </table>
             </div>
-
             {modal && selectedUser && (
               <UserModal
                 selectedOption={selectedOption}
@@ -194,5 +190,4 @@ const DevelopmentTable = ({
     </div>
   );
 };
-
 export default DevelopmentTable;

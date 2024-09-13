@@ -64,8 +64,6 @@ export default function Page({ params }) {
 
           {isStudent ? (
             <StudentGrading courseId={courseId} />
-          ) : isAdmin ? (
-            <Grading courseId={courseId} />
           ) : (
             <Grading courseId={courseId} />
           )}

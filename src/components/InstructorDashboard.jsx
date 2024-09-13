@@ -7,52 +7,60 @@ import image1 from "/public/assets/img/course-image.png";
 import { MdArrowRightAlt } from "react-icons/md";
 import Link from "next/link";
 import { useAuth } from "@/providers/AuthContext";
-import { getCourseByProgId, getPendingAssignments } from "@/api/route";
+import {
+  getCourseByProgId,
+  getInstructorCourses,
+  getInstructorSessions,
+  getPendingAssignments,
+} from "@/api/route";
 import { CircularProgress } from "@mui/material";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import { formatDateTime } from "./AdminDataStructure";
 
-export default function StudentDashboard() {
+export default function InstructorDashboard() {
   const { isSidebarOpen } = useSidebar();
   const { userData } = useAuth();
   const [courses, setCourses] = useState([]);
-  const [assignments, setAssignments] = useState([]);
+  const [sessions, setSessions] = useState([]);
   const [loader, setLoader] = useState(true);
   const isStudent = userData?.Group === "student";
-  const progId = userData?.User?.program?.id;
-  const userId = userData?.user?.id;
-  const regId = userData?.user_data?.registration_id;
-  // console.log(userId);
-  console.log(progId);
+  const group = userData?.Group;
+  const userId = userData?.User?.id;
+  const insId = userData?.user_data?.id;
+  const insEmailId = userData?.User?.email;
+
+  // console.log(group);
 
   useEffect(() => {
-    if (!progId) return;
-    async function fetchCourses() {
-      const response = await getCourseByProgId(progId);
+    if (!insId) return;
+    async function fetchInstructorCourses() {
+      const response = await getInstructorCourses(insId);
       setLoader(true);
       try {
         if (response.status === 200) {
-          setCourses(response.data);
+          setCourses(response.data?.data?.courses);
           setLoader(false);
-          console.log(courses);
+          // setCourseId(response?.data?.id)
+          // console.log(response.data?.data?.courses?.[0])
+          console.log(response?.data);
         } else {
-          console.error("Failed to fetch courses", response.status);
+          console.error("Failed to fetch user, status:", response.status);
         }
       } catch (error) {
         console.log("error", error);
       }
     }
 
-    fetchCourses();
-  }, [progId]);
+    fetchInstructorCourses();
+  }, [insId]);
 
   async function fetchPendingAssignments() {
-    const response = await getPendingAssignments(progId, regId);
+    const response = await getInstructorSessions(userId, group);
     setLoader(true);
     try {
       if (response.status === 200) {
-        setAssignments(response.data);
+        setSessions(response.data);
         setLoader(false);
         console.log(assignments);
       } else {
@@ -107,23 +115,22 @@ export default function StudentDashboard() {
                 </div>
 
                 <div className="flex gap-2 flex-wrap max-md:flex-nowrap max-md:flex-col">
-                  {isStudent &&
-                    courses?.data?.slice(0, courseLimit).map((course) => {
-                      return (
-                        <CourseCard
-                          id={course.id}
-                          key={course.id}
-                          image={image1}
-                          courseName={course.name}
-                          route="course"
-                          route1="courses"
-                          courseDesc={course.short_description}
-                          // progress="50%"
-                          // avatars={avatars}
-                          extraCount={50}
-                        />
-                      );
-                    })}
+                  {courses?.slice(0, courseLimit).map((course) => {
+                    return (
+                      <CourseCard
+                        id={course.id}
+                        key={course.id}
+                        image={image1}
+                        courseName={course.name}
+                        route="course"
+                        route1="courses"
+                        courseDesc={course.short_description}
+                        // progress="50%"
+                        // avatars={avatars}
+                        extraCount={50}
+                      />
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -161,23 +168,22 @@ export default function StudentDashboard() {
           <div className="flex mx-2  h-[840px] w-[30%] max-md:w-full flex-col overflow-y-auto bg-[#ffffff] p-2 rounded-xl lg:w-fit scrollbar-webkit max-md:m-4">
             <div>
               <h1 className="text-xl font-bold px-3 py-4 font-exo">
-                Recent Activities
+              Your Current sessions
               </h1>
             </div>
 
             <div className="p-2 pt-0 flex lg:flex-col gap-2 lg:flex-nowrap flex-wrap max-md:flex-nowrap max-md:flex-col resize-none ">
-              {assignments?.data?.items &&
-              assignments?.data?.items.length > 0 ? (
-                assignments.data.items.map((assignment) => {
+              {sessions?.data && sessions?.data?.length > 0 ? (
+                sessions.data.map((assignment) => {
                   return (
                     <AssignmentCard
                       key={assignment.id}
                       id={assignment.course_id}
-                      category={assignment.course_name}
-                      title={assignment.question || assignment.title}
-                      content={assignment.description}
-                      priority={formatDateTime(assignment?.due_date)}
-                      type={assignment.type}
+                      type={ `Course Name: ${assignment.course}`}
+                      // title={assignment.question || assignment.title}
+                      // content={assignment.description}
+                      priority={`Start Time: ${assignment?.start_time}\n End Time:${assignment?.end_time}`}
+                      category={`No. of students: ${assignment.no_of_students}\t\t\tLocation:${assignment.location}`}
                       // avatars={avatars}
                       // extraCount={50}
                     />

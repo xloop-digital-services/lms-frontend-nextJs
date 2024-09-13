@@ -1,5 +1,4 @@
 import React from "react";
-import { formatDateTime } from "./StudentDataStructure";
 import { CircularProgress } from "@mui/material";
 
 const StudentAttendence = ({ attendance, loader }) => {
@@ -21,7 +20,6 @@ const StudentAttendence = ({ attendance, loader }) => {
               <table className="min-w-full divide-y divide-dark-300 dark:divide-gray-700">
                 <thead className="bg-dark-100 dark:bg-gray-700">
                   <tr>
-                   
                     <th
                       scope="col"
                       className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[20%]"
@@ -59,13 +57,13 @@ const StudentAttendence = ({ attendance, loader }) => {
                     attendance.map((att, index) => (
                       <tr key={index}>
                         <td className="px-6 py-4 text-center whitespace-nowrap text-sm font-medium text-gray-800">
-                          {`Session ${att.session}`}
+                          {`Session ${index + 1}`}
                         </td>
                         <td className="px-6 py-4 text-center text-wrap whitespace-nowrap text-sm text-gray-800">
                           {att.day}
                         </td>
                         <td className="px-6 py-4 text-center text-wrap whitespace-nowrap text-sm text-gray-800">
-                          {formatDateTime(att.date)}
+                          {att.date}
                         </td>
                         <td className="px-12 py-2 whitespace-nowrap flex w-full text-center justify-center items-center text-sm text-surface-100">
                           <p
@@ -77,7 +75,11 @@ const StudentAttendence = ({ attendance, loader }) => {
                                 : "bg-mix-200 w-110px]"
                             }`}
                           >
-                            {att.status === 1 ? "Absent" : att.status === 0 ? "Present" : "Leave" }
+                            {att.status === 1
+                              ? "Absent"
+                              : att.status === 0
+                              ? "Present"
+                              : "Leave"}
                           </p>
                         </td>
                       </tr>

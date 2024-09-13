@@ -211,7 +211,7 @@ export default function CreateField({
                     <option value="" disabled>
                       Select a {list}
                     </option>
-                    {courses.map((course) => (
+                    {courses?.map((course) => (
                       <option
                         key={course.id}
                         value={course?.name || course?.skill_name}

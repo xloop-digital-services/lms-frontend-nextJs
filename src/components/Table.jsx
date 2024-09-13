@@ -1,17 +1,31 @@
 "use client";
 import {
   getAttendanceByCourseId,
+  getAttendanceByCourseIdDate,
   getStudentsByCourseId,
   markAttendanceByCourseId,
 } from "@/api/route";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
-const Table = ({ courseId }) => {
+const Table = ({ courseId, isAttendancePosted }) => {
   const [attendance, setAttendance] = useState([]);
   const [getAttendance, setGetAttendance] = useState([]);
   const [selectedAttendance, setSelectedAttendance] = useState({});
   const [loader, setLoader] = useState(false);
+  const [data, setData] = useState(null);
+  const [status, setStatus] = useState(null);
   const [id, setId] = useState();
+
+  const today = new Date();
+  const day = String(today.getDate()).padStart(2, "0");
+  const month = String(today.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+  const year = today.getFullYear();
+
+  const formattedDate = `${year}-${month}-${day}`;
+  // console.log(formattedDate);
+  // console.log(today);
+
   async function fetchAttendanceAdmin() {
     try {
       const response = await getStudentsByCourseId(courseId);
@@ -31,14 +45,14 @@ const Table = ({ courseId }) => {
   }
 
   async function fetchAttendance() {
-    const response = await getAttendanceByCourseId(courseId);
+    const response = await getAttendanceByCourseIdDate(courseId, "2024-10-10");
     setLoader(true);
     try {
       if (response.status === 200) {
         setGetAttendance(response.data);
         setLoader(false);
-        console.log(attendance);
-        console.log(response.data);
+        setStatus(response.status);
+        setData(response.data);
       } else {
         console.error("Failed to fetch attendance", response.status);
         setLoader(false);
@@ -48,9 +62,8 @@ const Table = ({ courseId }) => {
       setLoader(false);
     }
   }
-
   const handleAttendanceChange = (regId, status) => {
-    setId(regId)
+    setId(regId);
     setSelectedAttendance((prevState) => ({
       ...prevState,
       [regId]: status,
@@ -59,26 +72,45 @@ const Table = ({ courseId }) => {
 
   const handleSubmit = async () => {
     const attendanceData = {
-      student: id,
+      student: courseId,
       status: selectedAttendance[id],
     };
     try {
       const response = await markAttendanceByCourseId(courseId, attendanceData);
-
-      if (response.status === 200) {
-        console.log(`Attendance for marked successfully.`);
+      if (response.status === 200 || response.status === 201) {
+        toast.success("Attendance marked successfully");
       } else {
-        console.error(`Failed to mark attendance for student ${regId}`);
+        toast.error("Error submitting attendance", response.data.message);
       }
+      // Fetch updated attendance after submission
       fetchAttendance();
     } catch (error) {
+      toast.error("Error submitting attendance", error);
       console.log("error", error);
     }
   };
 
+  // Fetch data based on the mode (whether posting or fetching attendance)
   useEffect(() => {
-    fetchAttendanceAdmin();
-  }, []);
+    if (isAttendancePosted) {
+      fetchAttendance(); // If attendance is already posted, fetch it
+    } else {
+      fetchAttendanceAdmin(); // Otherwise, fetch students for posting attendance
+    }
+  }, [isAttendancePosted]);
+
+  // Map attendance data if fetched already
+  useEffect(() => {
+    const mappedAttendance = {};
+    getAttendance.forEach((record) => {
+      mappedAttendance[record.student] = record.status;
+    });
+    setSelectedAttendance(mappedAttendance);
+  }, [getAttendance]);
+
+  useEffect(()=>{
+    fetchAttendance()
+  },[])
 
   return (
     <div className="flex flex-col">
@@ -101,76 +133,78 @@ const Table = ({ courseId }) => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-dark-200 dark:divide-gray-700 overflow-y-scroll scrollbar-webkit">
-                  {attendance.map((att, index) => (
-                    <tr key={index}>
-                      <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
-                        {att.registration_id}
-                      </td>
-                      <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
-                        {att.full_name}
-                      </td>
-                      <td className="px-6 py-4 gap-3 flex text-center justify-center items-center whitespace-nowrap text-sm text-gray-800">
-                        <div className="space-x-2 flex items-center justify-center group">
-                          <input
-                            type="radio"
-                            name={`attendance-${att.registration_id}`}
-                            value="0"
-                            checked={
-                              selectedAttendance[att.registration_id] === 0
-                            }
-                            onChange={() =>
-                              handleAttendanceChange(att.registration_id, 0)
-                            }
-                            className="w-4 h-4 rounded-full border-2 border-[#03A1D8] group-hover:cursor-pointer"
-                          />
-                          <p className="group-hover:cursor-pointer">P</p>
-                        </div>
-                        <div className="space-x-2 flex items-center group">
-                          <input
-                            type="radio"
-                            name={`attendance-${att.registration_id}`}
-                            value="1"
-                            checked={
-                              selectedAttendance[att.registration_id] === 1
-                            }
-                            onChange={() =>
-                              handleAttendanceChange(att.registration_id, 1)
-                            }
-                            className="w-4 h-4 rounded-full border-2 border-[#03A1D8] group-hover:cursor-pointer"
-                          />
-                          <p className="group-hover:cursor-pointer">A</p>
-                        </div>
-                        <div className="space-x-2 flex items-center group">
-                          <input
-                            type="radio"
-                            name={`attendance-${att.registration_id}`}
-                            value="2"
-                            checked={
-                              selectedAttendance[att.registration_id] === 2
-                            }
-                            onChange={() =>
-                              handleAttendanceChange(att.registration_id, 2)
-                            }
-                            className="w-4 h-4 rounded-full border-2 border-[#03A1D8] group-hover:cursor-pointer"
-                          />
-                          <p className="group-hover:cursor-pointer">L</p>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                  {(isAttendancePosted ? getAttendance : attendance).map(
+                    (att, index) => (
+                      <tr key={index}>
+                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                          {att.student || att.registration_id}
+                        </td>
+                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                          {att.full_name || att.student_name}
+                        </td>
+                        <td className="px-6 py-4 gap-3 flex text-center justify-center items-center whitespace-nowrap text-sm text-gray-800">
+                          <div className="space-x-2 flex items-center justify-center group">
+                            <input
+                              type="radio"
+                              name={`attendance-${att.id}`}
+                              value="0"
+                              checked={selectedAttendance[att.student] === 0}
+                              onChange={() =>
+                                handleAttendanceChange(att.student, 0)
+                              }
+                              className="w-4 h-4 rounded-full border-2 border-[#03A1D8] group-hover:cursor-pointer"
+                              disabled={isAttendancePosted} // Disable when attendance is posted
+                            />
+                            <p className="group-hover:cursor-pointer">P</p>
+                          </div>
+                          <div className="space-x-2 flex items-center group">
+                            <input
+                              type="radio"
+                              name={`attendance-${att.id}`}
+                              value="1"
+                              checked={selectedAttendance[att.student] === 1}
+                              onChange={() =>
+                                handleAttendanceChange(att.student, 1)
+                              }
+                              className="w-4 h-4 rounded-full border-2 border-[#03A1D8] group-hover:cursor-pointer"
+                              disabled={isAttendancePosted} // Disable when attendance is posted
+                            />
+                            <p className="group-hover:cursor-pointer">A</p>
+                          </div>
+                          <div className="space-x-2 flex items-center group">
+                            <input
+                              type="radio"
+                              name={`attendance-${att.id}`}
+                              value="2"
+                              checked={selectedAttendance[att.student] === 2}
+                              onChange={() =>
+                                handleAttendanceChange(att.student, 2)
+                              }
+                              className="w-4 h-4 rounded-full border-2 border-[#03A1D8] group-hover:cursor-pointer"
+                              disabled={isAttendancePosted} // Disable when attendance is posted
+                            />
+                            <p className="group-hover:cursor-pointer">L</p>
+                          </div>
+                        </td>
+                      </tr>
+                    )
+                  )}
                 </tbody>
               </table>
             </div>
           </div>
         </div>
       </div>
-      <button
-        onClick={handleSubmit}
-        className="bg-blue-300 from-dark-600 justify-end text-surface-100 p-2 rounded-md w-20 my-2 flex justify-center"
-        type="submit"
-      >
-        Submit
-      </button>
+
+      {!isAttendancePosted && !data && (
+        <button
+          onClick={handleSubmit}
+          className="bg-blue-300 from-dark-600 justify-end text-surface-100 p-2 rounded-md w-20 my-2 flex justify-center"
+          type="submit"
+        >
+          Submit
+        </button>
+      )}
     </div>
   );
 };

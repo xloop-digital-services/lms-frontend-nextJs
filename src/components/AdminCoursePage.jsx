@@ -53,7 +53,7 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
       <div className="bg-surface-100 p-8 rounded-xl ">
         <div className="flex justify-between max-md:flex-col max-md:items-center ">
           <div className="flex flex-col">
-            <h2 className="text-xl font-bold flex pb-2 justify-start items-center">
+            <h2 className="font-exo text-xl font-bold flex pb-2 justify-start items-center">
               {title}
             </h2>
             <p className="pb-4">Select a course to view the {title}</p>
@@ -73,7 +73,7 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
             <CircularProgress />
           </div>
         ) : (
-          <div className="flex flex-wrap ">
+          <div className="flex flex-wrap max-md:w-full max-md:flex-col">
             {programs?.length > 0
               ? programs
                   ?.sort((a, b) => a.name.localeCompare(b.name))

@@ -72,7 +72,7 @@ const ShortListUserTable = ({selectedOption}) => {
                                             </div>
                                             <div className='flex items-center group text-dark-600' title="Approve">
                                                 <FaCheckCircle size={20} className='group-hover:text-[#18A07A]' />
-                                            </div>
+                                            </div>0
                                         </td>
     
                                     </tr>

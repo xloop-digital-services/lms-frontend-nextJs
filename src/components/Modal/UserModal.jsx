@@ -52,7 +52,6 @@ const UserModal = ({
     });
   };
   // console.log("skills id", skillID);
-
   const handleLocationSelect = (id) => {
     if (selectedOption === "student") {
       setStudentLocationId(id);
@@ -68,13 +67,11 @@ const UserModal = ({
       });
     }
   };
-
   useEffect(() => {
     if ((programID || skillID) && locationId) {
       setEnableApprovalButton(true);
     }
   }, [programID, locationId, skillID]);
-
   const handleUserSelection = async () => {
     setLoading(true);
     if (selectedStatus === "approved") {
