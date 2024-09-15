@@ -5,60 +5,61 @@ import { useSidebar } from "@/providers/useSidebar";
 import LocationsTable from "@/components/LocationsTable";
 import { listAllLocations } from "@/api/route";
 import LocationModal from "@/components/Modal/LocationModal";
-import cityAreas from "../../../public/data/cityAreas.json"
+import cityAreas from "../../../public/data/cityAreas.json";
 import useClickOutside from "@/providers/useClickOutside";
+import { toast } from "react-toastify";
 
 export default function Page() {
-    const { isSidebarOpen } = useSidebar();
-    const [selectedCity, setSelectedCity] = useState("Select your city");
-    const [isCityOpen, setIsCityOpen] = useState(false);
-    const [city0ptions, setCityOptions] = useState([])
-    const [isCitySelected, setIscitySelected] = useState(false)
-    const [locations, setLocations] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [openModal, setOpenModal] = useState(false)
-    const [updateLocation, setUpdateLocation] = useState(false)
-    const cityDown = useRef(null)
+  const { isSidebarOpen } = useSidebar();
+  const [selectedCity, setSelectedCity] = useState("Select your city");
+  const [isCityOpen, setIsCityOpen] = useState(false);
+  const [city0ptions, setCityOptions] = useState([]);
+  const [isCitySelected, setIscitySelected] = useState(false);
+  const [locations, setLocations] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [openModal, setOpenModal] = useState(false);
+  const [updateLocation, setUpdateLocation] = useState(false);
+  const cityDown = useRef(null);
 
-  useClickOutside(cityDown, () => setIsCityOpen(false))
+  useClickOutside(cityDown, () => setIsCityOpen(false));
 
-
-    const handleListingAllLocations = async () => {
-      try {
-        const response = await listAllLocations();
-        console.log('fetch all locations', response?.data)
-        setLocations(response?.data)
-        setLoading(false)
-      } catch (error) {
-        console.log('error, while fetching the locations', error)
-        setLoading(false)
+  const handleListingAllLocations = async () => {
+    try {
+      const response = await listAllLocations();
+      console.log("fetch all locations", response?.data);
+      setLocations(response?.data);
+      setLoading(false);
+    } catch (error) {
+      console.log("error, while fetching the locations", error);
+      if (error.response.status === 401) {
+        toast.error(error.response.data.code, ": Please Log in again");
       }
+      setLoading(false);
     }
+  };
 
-    useEffect(()=>{
-      handleListingAllLocations();
-     
-    },[updateLocation])
+  useEffect(() => {
+    handleListingAllLocations();
+  }, [updateLocation]);
 
-    useEffect(()=> { 
-      // console.log('city of areas',cityAreas)
-      setCityOptions(cityAreas)
-    }, [])
+  useEffect(() => {
+    // console.log('city of areas',cityAreas)
+    setCityOptions(cityAreas);
+  }, []);
 
-    const toggleCityOpen = () => {
-        setIsCityOpen(!isCityOpen);
-      };
-    
-      const handleCitySelect = (option) => {
-        setSelectedCity(option.name);
-        setIsCityOpen(false);
-        setIscitySelected(true)
-      };
-    
+  const toggleCityOpen = () => {
+    setIsCityOpen(!isCityOpen);
+  };
 
-      const handleLocationCreate = () => {
-        setOpenModal(true)
-      }
+  const handleCitySelect = (option) => {
+    setSelectedCity(option.name);
+    setIsCityOpen(false);
+    setIscitySelected(true);
+  };
+
+  const handleLocationCreate = () => {
+    setOpenModal(true);
+  };
 
   return (
     <div
@@ -113,14 +114,21 @@ export default function Page() {
             </div>
           </div>
         </div>
-        <LocationsTable locations={locations} loading={loading} />
+        <LocationsTable
+          locations={locations}
+          loading={loading}
+          setUpdateLocation={setUpdateLocation}
+          updateLocation={updateLocation}
+        />
       </div>
-      {openModal && <LocationModal 
-      setOpenModal={setOpenModal} 
-      setUpdateLocation={setUpdateLocation}
-      updateLocation={updateLocation}
-      city0ptions={city0ptions}
-      />}
+      {openModal && (
+        <LocationModal
+          setOpenModal={setOpenModal}
+          setUpdateLocation={setUpdateLocation}
+          updateLocation={updateLocation}
+          city0ptions={city0ptions}
+        />
+      )}
     </div>
   );
 }

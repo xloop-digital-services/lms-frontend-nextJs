@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import ApprovalUserModal from "./Modal/ApprovalUserModal";
-import { FaEye } from "react-icons/fa";
+// import { FaEye } from "react-icons/fa";
 import { CircularProgress } from "@mui/material";
-import { FaArrowRightLong } from "react-icons/fa6";
 import { TiArrowForward } from "react-icons/ti";
-import { getSuggestedSessionForStudent } from "@/api/route";
-import Link from "next/link";
+// import Link from "next/link";
 const UserApprovalTable = ({
   users,
   loadingUsers,
@@ -20,72 +18,37 @@ const UserApprovalTable = ({
 }) => {
   const [modal, setModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [appLocationId, setAppLocationId] = useState("");
   const [userID, setUserID] = useState("");
-  const [selectedStudentLocation, setSelectedStudentLocation] = useState(null);
-  const [selectedProgram, setSelectedProgram] = useState();
-  const [selectedSkills, setSelectedSkills] = useState([]);
-  const [selectedLocationId, setSelectedLocationID] = useState("");
-  //   console.log(message);
-  const handleModal = (user, userApplication, userLocation, program, skill) => {
-    setSelectedStudentLocation(userLocation.name);
-    setSelectedLocationID(userLocation.id);
-    // if (selectedOption === "student") {
-    //   setSelectedProgram(program.name);
-    // }
+
+  const handleModal = (user, userApplication) => {
     setUserID(userApplication.id);
     setSelectedUser(user);
     setModal(true);
   };
   const getUserApplication = (userEmail) => {
-    console.log("userEmail", userEmail);
     return users.find((app) => app.email === userEmail) || {};
   };
-  const getUserLocation = (userLocationId) => {
-    const locationId = Array.isArray(userLocationId) ? userLocationId[0] : null;
-    return locations.find((location) => location.id === locationId) || {};
-  };
 
-//   const getUserProgram = (programid) => {
+
+
+
+// useEffect(() => {
+//     const handleGetSuggestedSessions = async () => {
+//       try {
+//         const response = await getSuggestedSessionForStudent(
+//           approvedProgramID,
+//           selectedLocationId
+//         );
+//         console.log("response of the suggested sessions", response.data);
+//       } catch (error) {
+//         console.log(error.response);
+//       }
+//     };
 //     if (selectedOption === "student") {
-//       const programId = Array.isArray(programid) ? programid[0] : null;
-//       return userPrograms.find((program) => program.id === programId);
+//       handleGetSuggestedSessions();
 //     }
-//   };
+//   }, [approvedProgramID, selectedOption]);
 
-  const handleGetSuggestedSessions = async () => {
-    try {
-      const response = await getSuggestedSessionForStudent(
-        approvedProgramID,
-        selectedLocationId
-      );
-      console.log("response of the suggested sessions", response.data);
-    } catch (error) {
-      console.log(error.response);
-    }
-  };
-  useEffect(() => {
-    if (selectedOption === "student") {
-      handleGetSuggestedSessions();
-    }
-  }, [approvedProgramID, selectedLocationId]);
-
-  //   const getUserSkills = (skillIds) => {
-  //     if (selectedOption === "instructor") {
-  //       // Ensure skillIds is treated as an array
-  //       const idsArray = Array.isArray(skillIds) ? skillIds[0] : null;
-  //       // Map over the skill IDs to find the corresponding skill objects from the userSkills array
-  //       //   const matchedSkills = idsArray
-  //       //     .map((id) => userSkills.find((skill) => skill.id === id))
-  //       // Filter out any undefined values
-  //       console.log("skilslllll jsakdsksjd", idsArray);
-  //       console.log("skilslllll isdssssss", skillIds);
-  //       return userSkills.find((skill) => skill.id === idsArray);
-  //     }
-  //     return [];
-  //   };
-  //   console.log("skilsllllllllllllllllllllllllllllll", selectedSkills);
-  //   useEffect to call functions based on selectedOptionon]);
   return (
     <div className="flex flex-col h-full">
       <div className="-m-1.5 overflow-x-auto">
@@ -101,11 +64,17 @@ const UserApprovalTable = ({
                     >
                       {selectedOption} Name
                     </th>
-                    <th
+                    {/* <th
                       scope="col"
                       className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
                     >
                       DOB
+                    </th> */}
+                    <th
+                      scope="col"
+                      className=" py-4 pr-16 text-center text-xs font-medium text-gray-500 uppercase w-[22%]"
+                    >
+                      Email
                     </th>
                     <th
                       scope="col"
@@ -113,27 +82,21 @@ const UserApprovalTable = ({
                     >
                       City
                     </th>
-                    {/* <th
+                    <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[14%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
                     >
-                      Area
+                      Contact No.
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[14%]"
-                    >
-                      Education
-                    </th> */}
-                    <th
-                      scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[16%]"
+                      className="px-14 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
                     >
                       Status
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
+                      className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[10%]"
                     >
                       Action
                     </th>
@@ -161,9 +124,6 @@ const UserApprovalTable = ({
                   ) : applications && users && locations ? (
                     applications.map((user, index) => {
                       const userApplication = getUserApplication(user.email);
-                      const userLocation = getUserLocation(user.location);
-                      //   const userProgram = getUserProgram(user.program);
-                      //   const userSkill = getUserSkills(user.required_skills);
                       return (
                         <tr key={index}>
                           <td className="px-6 whitespace-nowrap text-sm text-gray-800">
@@ -176,15 +136,15 @@ const UserApprovalTable = ({
                             </div>
                           </td>
                           <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800">
-                            {user?.date_of_birth || "-"}
+                            {user?.email || "-"}
                           </td>
                           <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800">
                             {userApplication.city || "-"}
                           </td>
-                          {/* <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800">
-                            {userLocation.name || "-"}
-                          </td>
                           <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800">
+                            {user?.contact || "-"}
+                          </td>
+                          {/* <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800">
                             16 years
                           </td> */}
                           <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
@@ -201,17 +161,17 @@ const UserApprovalTable = ({
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap w-full text-sm flex items-center justify-center gap-3">
-                            <div
+                            {/* <div
                               className="flex items-center justify-center  group text-[#03A1D8]"
                               title="info"
                             >
-                              {/* <Link href={`/user-management/users/${approvedProgramID}`}> */}
+                              {/* <Link href={`/user-management/users/${approvedProgramID}`}> *
                               <FaEye
                                 size={23}
                                 className="group-hover:text-[#3c8ca7]"
                               />
-                              {/* </Link> */}
-                            </div>
+                              {/* </Link> *
+                            </div> */}
                             <div
                               className="flex items-center justify-center group text-[#03A1D8]"
                               title="assign sessions"
@@ -219,15 +179,13 @@ const UserApprovalTable = ({
                                 handleModal(
                                   user,
                                   userApplication,
-                                  userLocation
-                                  //   userProgram,
-                                  //   userSkill
                                 )
                               }
                             >
+                              Assign Session
                               <TiArrowForward
                                 size={23}
-                                className="group-hover:text-[#3c8ca7]"
+                                className="pl-1 group-hover:text-[#3c8ca7]"
                               />
                             </div>
                           </td>
@@ -256,9 +214,6 @@ const UserApprovalTable = ({
                 lastName={selectedUser.last_name}
                 email={selectedUser.email}
                 status={selectedUser.application_status}
-                locations={selectedStudentLocation}
-                // programs={selectedProgram}
-                // skills={selectedSkills}
                 id={userID}
               />
             )}

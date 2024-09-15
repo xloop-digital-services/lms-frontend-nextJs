@@ -9,6 +9,7 @@ const DevelopmentTable = ({
   statusUpdated,
   userByProgramID,
   loading,
+  message,
 }) => {
   const [modal, setModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null); // State to store the selected user
@@ -37,43 +38,43 @@ const DevelopmentTable = ({
                     </th> */}
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[16%]"
                     >
                       {selectedOption} Name
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
+                      className="px-[80px] py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
                     >
-                      DOB
+                      Email
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[14%]"
                     >
                       City
                     </th>
-                    {/* <th
-                      scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[14%]"
-                    >
-                      Area
-                    </th>
                     <th
                       scope="col"
                       className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[14%]"
                     >
-                      Education
+                      Year
+                    </th>
+                    {/* <th
+                      scope="col"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
+                    >
+                      Contact No.
                     </th> */}
                     <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
+                      className="px-14 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[13%]"
                     >
                       Status
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
+                      className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[14%]"
                     >
                       Action
                     </th>
@@ -87,6 +88,15 @@ const DevelopmentTable = ({
                         className="text-center py-4 text-dark-400"
                       >
                         <CircularProgress size={20} />
+                      </td>
+                    </tr>
+                  ) : message ? (
+                    <tr>
+                      <td
+                        colSpan="8"
+                        className="text-center py-4 text-dark-400"
+                      >
+                        {message}
                       </td>
                     </tr>
                   ) : userByProgramID && userByProgramID.length > 0 ? (
@@ -112,27 +122,33 @@ const DevelopmentTable = ({
                           </div>
                         </td>
                         <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 ">
-                          {user?.date_of_birth || "-"}
+                          {user?.email || "-"}
                         </td>
                         <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 ">
-                          {user?.city}
+                          {user?.city || "-"}
+                        </td>
+                        <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 ">
+                          {user?.year || "-"}
                         </td>
                         {/* <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 ">
-                          Dastagir
-                        </td>
-                        <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 ">
-                          16 years
+                          {user?.contact || '-'}
                         </td> */}
                         <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-800 ">
                           <div className=" whitespace-nowrap flex w-full justify-start text-sm text-surface-100  ">
                             <p
                               className={`${
                                 user?.application_status === "pending"
-                                  ? "bg-[#DDF8EE] text-blue-300 border border-blue-300"
-                                  : "bg-[#18A07A]"
+                                  ? "bg-mix-500"
+                                  : user?.application_status === "short_listed"
+                                  ? " bg-[#B8BBBE] "
+                                  : user?.account_status === "verified"
+                                  ? "bg-[#18A07A]"
+                                  : "bg-mix-200 "
                               }  w-[120px] text-center px-4 py-2 rounded-lg capitalize`}
                             >
-                              {user?.application_status}
+                              {user?.application_status === "approved"
+                                ? user?.account_status
+                                : user?.application_status}
                             </p>
                           </div>
                         </td>
@@ -175,8 +191,10 @@ const DevelopmentTable = ({
                 email={selectedUser.email}
                 contact={selectedUser.contact || "-"}
                 status={selectedUser.application_status}
+                approvedStatus={selectedUser.account_status}
                 location={selectedUser.location}
                 program={selectedUser.program}
+                experience={selectedUser.years_of_experience}
                 resume={selectedUser.resume}
                 skill={selectedUser.skill}
                 id={selectedUser.id}

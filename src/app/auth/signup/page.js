@@ -104,6 +104,9 @@ export default function Page() {
         draggable: true,
         progress: undefined,
       });
+      if(error.message === 'Network Error'){
+        toast.error(error.message,'Check your internet connection')
+      }
     }
   };
 

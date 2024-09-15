@@ -8,6 +8,7 @@ import { filterByCity, listAllBatches } from "@/api/route";
 import cityAreas from "../../../public/data/cityAreas.json";
 import useClickOutside from "@/providers/useClickOutside";
 import { IoIosCloseCircleOutline } from "react-icons/io";
+import { toast } from "react-toastify";
 
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
@@ -33,6 +34,9 @@ export default function Page() {
       setLoading(false);
     } catch (error) {
       console.log("error while fetching the batches", error);
+      if (error.message === "Network Error") {
+        toast.error(error.message, "Check your internet connection");
+      }
       setLoading(false);
     }
   };
@@ -42,7 +46,7 @@ export default function Page() {
 
   // useEffect(() => {
   //   console.log("city of areas", cityAreas);
-    
+
   // }, []);
 
   //filter by city
@@ -196,7 +200,12 @@ export default function Page() {
           </div>
         </div>
         <div>
-          <BatchTable batches={batches} loading={loading} />
+          <BatchTable
+            batches={batches}
+            setUpdateBatch={setUpdateBatch}
+            updateBatch={updateBatch}
+            loading={loading}
+          />
         </div>
       </div>
       <div>

@@ -124,7 +124,7 @@ function SideBar() {
                                 "font-semibold"
                               }`}
                             >
-                              Users
+                              Verified Users
                             </Link>
                           </li>
                         </ul>

@@ -70,6 +70,11 @@ export default function Page() {
         "error while fetching the session",
         error.response.data.message
       );
+      if(error.message === 'Network Error'){
+        toast.error(error.message,'Check your internet connection')
+      } else {
+        toast.error(error.response.data.message)
+      }
     } finally {
       setLoading(false);
     }
@@ -87,6 +92,9 @@ export default function Page() {
       setBatchOptions(batchOptionsArray);
     } catch (error) {
       console.log("error while fetching the batches", error);
+      if(error.message === 'Network Error'){
+        toast.error(error.message,'Check your internet connection')
+      }
     } finally {
       setLoadingBatch(false);
     }
@@ -103,6 +111,9 @@ export default function Page() {
       setLocationOptions(LocationOptionsArray);
     } catch (error) {
       console.log("error while fetching the locations", error);
+      if(error.message === 'Network Error'){
+        toast.error(error.message,'Check your internet connection')
+      }
     } finally {
       setLoadingLocation(false);
     }

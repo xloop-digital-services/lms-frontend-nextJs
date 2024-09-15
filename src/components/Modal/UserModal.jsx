@@ -19,16 +19,20 @@ const UserModal = ({
   contact,
   email,
   status,
+  approvedStatus,
   location,
   program,
   resume,
   skill,
+  experience,
   id,
   setStatusUpdated,
   statusUpdated,
 }) => {
   const modalRef = useRef(null);
   const [enableApprovalButton, setEnableApprovalButton] = useState(false);
+  const [approvalByLocation, setAprrovalByLocation] = useState(false);
+  const [approvalByskill, setApprovalBySkill] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState("");
   const [programID, setPorgramID] = useState(null);
   const [locationId, setLocationId] = useState([]);
@@ -39,6 +43,7 @@ const UserModal = ({
   // Use the custom hook for the modal
   const handleEnableApprove = (id) => {
     setPorgramID(id);
+    setEnableApprovalButton(true);
   };
   const handleSkillSelection = (id) => {
     setSkillID((prevSkillIDs) => {
@@ -50,6 +55,7 @@ const UserModal = ({
         return [...prevSkillIDs, id];
       }
     });
+    setApprovalBySkill(true);
   };
   // console.log("skills id", skillID);
   const handleLocationSelect = (id) => {
@@ -66,38 +72,57 @@ const UserModal = ({
         }
       });
     }
+    setAprrovalByLocation(true);
   };
   useEffect(() => {
-    if ((programID || skillID) && locationId) {
-      setEnableApprovalButton(true);
+    if (!((programID || skillID) && locationId)) {
+      setEnableApprovalButton(false);
+      setApprovalBySkill(false);
+      setAprrovalByLocation(false);
     }
   }, [programID, locationId, skillID]);
-  const handleUserSelection = async () => {
-    setLoading(true);
-    if (selectedStatus === "approved") {
-      if (selectedOption === "student") {
-        data = {
-          application_status: selectedStatus,
-          program_id: programID,
-          location_id: studentLocationId,
-        };
+
+  useEffect(() => {
+    const handleUserSelection = async () => {
+      setLoading(true);
+      if (selectedStatus === "approved") {
+        if (selectedOption === "student") {
+          data = {
+            application_status: selectedStatus,
+            program_id: programID,
+            location_id: studentLocationId,
+          };
+        } else {
+          data = {
+            application_status: selectedStatus,
+            skills_id: skillID,
+            locations_id: locationId,
+          };
+        }
       } else {
         data = {
           application_status: selectedStatus,
-          skills_id: skillID,
-          locations_id: locationId,
         };
       }
-    } else {
-      data = {
-        application_status: selectedStatus,
-      };
-    }
-    try {
-      const response = await userSelectionByAdmin(id, data);
-      console.log("response while selecting", response.data);
-      if (response.status === 200) {
-        toast.success(`User has been ${selectedStatus}!`, {
+      try {
+        const response = await userSelectionByAdmin(id, data);
+        console.log("response while selecting", response.data);
+        if (response.status === 200) {
+          toast.success(`User has been ${selectedStatus}!`, {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+          setLoading(false);
+          setModal(false);
+          setStatusUpdated(statusUpdated + 1);
+        }
+      } catch (error) {
+        toast.error(error.response.data.message, {
           position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
@@ -106,25 +131,11 @@ const UserModal = ({
           draggable: true,
           progress: undefined,
         });
+        console.log("error while selecting", error);
+        s;
         setLoading(false);
-        setModal(false);
-        setStatusUpdated(statusUpdated + 1);
       }
-    } catch (error) {
-      toast.error(error.response.data.message, {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      console.log("error while selecting", error);
-      setLoading(false);
-    }
-  };
-  useEffect(() => {
+    };
     if (!(selectedStatus === "")) {
       handleUserSelection();
     }
@@ -173,18 +184,22 @@ const UserModal = ({
                 <p
                   className={`${
                     status === "pending"
-                      ? "bg-[#DDF8EE] text-blue-300 border border-blue-300"
-                      : "bg-[#18A07A]"
+                      ? "bg-mix-500"
+                      : status === "short_listed"
+                      ? " bg-[#B8BBBE]"
+                      : approvedStatus === "verified"
+                      ? "bg-[#18A07A]"
+                      : "bg-mix-200  "
                   }  w-[120px] text-center px-4 py-2 rounded-lg capitalize`}
                 >
-                  {status}
+                  {status === "approved" ? approvedStatus : status}
                 </p>
               </div>
             </div>
             <div className="w-full h-[2px] bg-dark-200"></div>
             <div className="px-[40px] text-base">
               <div className="md:flex justify-evenly">
-                <table className="w-[30%] border-collapse">
+                <table className="w-[40%] border-collapse">
                   <tbody>
                     <tr className="border-b border-[#d7e4ee]">
                       <td className="text-dark-400 text-center py-2">DOB</td>
@@ -211,10 +226,22 @@ const UserModal = ({
                       <td className="text-center py-2">BS(CS)</td>
                     </tr> */}
                     {selectedOption === "instructor" && (
-                      <tr>
-                        <td className="text-dark-400 text-center py-2">Resume</td>
-                        <td className="text-center py-2 px-4">{resume}</td>
-                      </tr>
+                      <>
+                        <tr>
+                          <td className="text-dark-400 text-center py-2">
+                            Years of Experience
+                          </td>
+                          <td className="text-center py-2 px-4">
+                            {experience}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="text-dark-400 text-center py-2">
+                            Resume
+                          </td>
+                          <td className="text-center py-2 px-4">{resume}</td>
+                        </tr>
+                      </>
                     )}
                   </tbody>
                 </table>
@@ -346,7 +373,8 @@ const UserModal = ({
                 </div>
                 <div
                   className={`group relative flex justify-center items-center ${
-                    enableApprovalButton
+                    (enableApprovalButton || approvalByskill) &&
+                    approvalByLocation
                       ? "text-[#18A07A] cursor-pointer"
                       : "text-[#23e1ab] cursor-not-allowed"
                   } text-sm font-bold`}
