@@ -174,7 +174,7 @@ const UserApprovalTable = ({
                             </div> */}
                             <div
                               className="flex items-center justify-center group text-[#03A1D8]"
-                              title="assign sessions"
+                              title="assign classes"
                               onClick={() =>
                                 handleModal(
                                   user,
@@ -182,7 +182,7 @@ const UserApprovalTable = ({
                                 )
                               }
                             >
-                              Assign Session
+                              Assign a class
                               <TiArrowForward
                                 size={23}
                                 className="pl-1 group-hover:text-[#3c8ca7]"

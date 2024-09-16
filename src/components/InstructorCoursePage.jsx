@@ -62,7 +62,7 @@ export default function InstructorCoursePage({
       }`}
       style={{
         // paddingBottom: "20px",
-        width: isSidebarOpen ? "85%" : "100%",
+        width: isSidebarOpen ? "81%" : "100%",
       }}
     >
       <div className="bg-surface-100 p-8 rounded-xl ">

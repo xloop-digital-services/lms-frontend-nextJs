@@ -171,7 +171,7 @@ export default function Page() {
       className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-32 font-inter ${
         isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 xxlg:px-8 px-3"
       }`}
-      style={{ width: isSidebarOpen ? "84%" : "100%" }}
+      style={{ width: isSidebarOpen ? "81%" : "100%" }}
     >
       <div className="bg-surface-100 p-6 rounded-xl">
         <div className="w-full flex xlg:flex-row flex-col justify-between items-center gap-4">

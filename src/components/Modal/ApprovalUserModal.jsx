@@ -136,8 +136,8 @@ const ApprovalUserModal = ({
       setLoadingAssign(false);
     } catch (error) {
       console.log("Error in assigning", error);
-      if(error.response.status === 400){
-        toast.error(error.response.data.message)
+      if (error.response.status === 400) {
+        toast.error(error.response.data.message);
       }
       if (error.response.status === 401) {
         toast.error("your log in token has been expired. Please log in again!");
@@ -319,7 +319,7 @@ const ApprovalUserModal = ({
                     className="flex  items-center justify-between border-dark-200 border rounded-lg text-dark-400 text-center p-2  w-full "
                     onClick={handleToggle}
                   >
-                    <span>assign sessions</span>
+                    <span>assign classes</span>
                     <span className="flex items-center">
                       <IoIosArrowDown
                         size={12}
@@ -330,7 +330,7 @@ const ApprovalUserModal = ({
                   {showDropdown && (
                     <div
                       ref={click}
-                      className="absolute z-10 min-w-[220px] mt-1 max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                      className="absolute z-10 min-w-[200px] mt-1 max-h-[250px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                     >
                       <div className="py-2">
                         {loadingSessions ? (
@@ -340,8 +340,8 @@ const ApprovalUserModal = ({
                         ) : sessions.length > 0 ? (
                           sessions.map((session, index) => {
                             const isSelected = sessionIds.includes(session.id);
-                            const isAssigned = assignedSessions.includes(
-                              (assigned) => assigned.id === session.id
+                            const isAssigned = assignedSessions.some(
+                              (assigned) => assigned.session_id === session.id
                             );
 
                             return (
@@ -350,7 +350,7 @@ const ApprovalUserModal = ({
                                 onClick={() => handleSelectSession(session)}
                                 className={`py-2 px-4 cursor-pointer m-2 rounded-md
                              ${
-                               isSelected
+                               isAssigned
                                  ? "bg-blue-100 text-blue-800"
                                  : "bg-[#ffff]"
                              }
@@ -401,13 +401,15 @@ const ApprovalUserModal = ({
                       <h2 className="border-b border-dark-300 py-1 mb-2 text-sm text-dark-400">
                         Assigned Sessions:
                       </h2>
-                      <ul className="list-disc space-y-2 max-h-[200px] overflow-y-auto scrollbar-webkit w-full">
+                      <ul className="list-disc space-y-2 max-h-[220px] overflow-y-auto w-full scrollbar-webkit ">
                         {assignedSessions.map((session, index) => (
                           <li
                             key={index}
                             onClick={() => handleSessionInfo(session)}
-                            className={`${
-                              isSessionSelected === session && "text-blue-300"
+                            className={`cursor-pointer ${
+                              isSessionSelected === session
+                                ? "text-blue-300"
+                                : ""
                             }`}
                           >
                             {session.location} {session.course}
@@ -415,6 +417,7 @@ const ApprovalUserModal = ({
                         ))}
                       </ul>
                     </div>
+
                     <div className="w-[1.5px] h-[150px] bg-dark-200 rounded-lg"></div>
                     <div className="w-[50%]">
                       <table className="w-full border-collapse">

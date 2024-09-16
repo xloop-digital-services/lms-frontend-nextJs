@@ -234,7 +234,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
       }`}
       style={{
         paddingBottom: "24px",
-        width: isSidebarOpen ? "84%" : "100%",
+        width: isSidebarOpen ? "81%" : "100%",
         height: "100vh", // Set the height to full screen
         overflow: "hidden", // Hide any overflow from the parent container
       }}
@@ -291,7 +291,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
           </div>
         </div>
         <div
-          className="my-5 space-y-3 overflow-auto  scrollbar-webkit"
+          className="my-5 space-y-3 max-h-screen overflow-auto  scrollbar-webkit"
           style={{
             flexGrow: 1, // Allow this section to grow and take up remaining space
           }}

@@ -80,7 +80,7 @@ export default function StudentDashboard() {
         }`}
         style={{
           // paddingBottom: "20px",
-          width: isSidebarOpen ? "85%" : "100%",
+          width: isSidebarOpen ? "81%" : "100%",
         }}
       >
         <div className="flex w-[100%] max-md:flex-col">

@@ -13,7 +13,7 @@ export default function Page() {
       }`}
       style={{
         // paddingBottom: "20px",
-        width: isSidebarOpen ? "84%" : "100%",
+        width: isSidebarOpen ? "81%" : "100%",
       }}
     >
       <div className="bg-surface-100 p-4 rounded-xl">

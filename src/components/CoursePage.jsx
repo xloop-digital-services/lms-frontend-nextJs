@@ -54,7 +54,7 @@ export default function CoursePage({ path, progress, heading }) {
         }`}
         style={{
           // paddingBottom: "20px",
-          width: isSidebarOpen ? "85%" : "100%",
+          width: isSidebarOpen ? "81%" : "100%",
         }}
       >
         {loader ? (

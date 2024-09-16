@@ -79,7 +79,7 @@ export default function Page() {
           : "translate-x-0 sm:pl-5 px-4 sm:pr-5"
       }`}
       style={{
-        width: isSidebarOpen ? "84%" : "100%",
+        width: isSidebarOpen ? "81%" : "100%",
       }}
     >
       <div className="bg-surface-100 p-6 rounded-xl">

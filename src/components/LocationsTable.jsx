@@ -82,7 +82,7 @@ const LocationsTable = ({
         <div className="p-1.5 min-w-full inline-block align-middle ">
           <div className="mt-4 border border-dark-300 rounded-lg divide-y divide-dark-200 dark:border-gray-700 dark:divide-gray-700">
             <div className="overflow-hidden ">
-              <table className="min-w-full  divide-y divide-dark-200 dark:divide-gray-700 max-h-screen overflow-auto scrollbar-webkit">
+              <table className="min-w-full  divide-y divide-dark-200 ">
                 <thead className="bg-gray-50 dark:bg-gray-700">
                   <tr>
                     <th
@@ -128,7 +128,7 @@ const LocationsTable = ({
                     <CircularProgress size={30} />
                   </div>
                 )}
-                <tbody className="divide-y divide-dark-200 dark:divide-gray-700 ">
+                <tbody className="divide-y divide-dark-200 max-h-[500px] overflow-y-auto scrollbar-webkit ">
                   {loading ? ( // Show loading state while fetching locations
                     <tr>
                       <td

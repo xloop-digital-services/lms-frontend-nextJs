@@ -272,7 +272,7 @@ const AdminDashboard = () => {
       }`}
       style={{
         // paddingBottom: "20px",
-        width: isSidebarOpen ? "85%" : "100%",
+        width: isSidebarOpen ? "81%" : "100%",
       }}
     >
       <div className="text-[#07224D] flex flex-col gap-4 w-full  max-h-screen">
