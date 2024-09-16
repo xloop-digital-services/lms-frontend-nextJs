@@ -44,31 +44,17 @@ export default function Page() {
     handleListingAllBatches();
   }, [updateBatch]);
 
-  // useEffect(() => {
-  //   console.log("city of areas", cityAreas);
-
-  // }, []);
-
-  //filter by city
-  // useEffect(() => {
-  //   const handleFilterByCity = async () => {
-  //     setLoading(true);
-  //     try {
-  //       const response = await filterByCity(selectedCity);
-  //       console.log("filteration success", response);
-  //       setBatches(response?.data?.locations);
-  //       setLoading(false);
-  //     } catch (error) {
-  //       console.log("error while filtering by city", error);
-  //       setLoading(false);
-  //     }
-  //   };
-  //   handleFilterByCity();
-  // }, [selectedCity]);
+  useEffect(() => {
+    const filteredList = batches.filter((batch) =>
+      batch.city.toLowerCase().includes(selectedCity.toLowerCase())
+    );
+    setFilterCity(filteredList);
+  }, [selectedCity, batches]);
 
   const handleResetFilter = () => {
-    setSelectedCity("Select your city");
+    setSelectedCity("select city");
     setUpdateBatch(true);
+    setIscitySelected(false);
   };
 
   const toggleCityOpen = () => {
@@ -89,7 +75,7 @@ export default function Page() {
     <div
       className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-22 font-inter ${
         isSidebarOpen
-          ? "translate-x-64 pl-20 "
+          ? "translate-x-64 ml-20 "
           : "translate-x-0 sm:pl-5 px-4 sm:pr-5"
       }`}
       style={{
@@ -102,15 +88,19 @@ export default function Page() {
             <p className="font-bold text-xl">Batch Details</p>
           </div>
           <div className="flex gap-3">
-            {/* <div>
+            <div>
               <button
                 onClick={toggleCityOpen}
                 className={`${
                   !isCitySelected ? " text-[#92A7BE]" : "text-[#424b55]"
                 } flex justify-between items-center  sm:w-[200px]   hover:text-[#0e1721] sm:p-4 px-2 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
               >
-                {selectedCity || city0ptions[0] } 
-                {isCitySelected && <span className="text-dark-400" onClick={handleResetFilter}><IoIosCloseCircleOutline size={20} /></span>} 
+                {selectedCity}
+                {isCitySelected && (
+                  <span className="text-dark-400" onClick={handleResetFilter}>
+                    <IoIosCloseCircleOutline size={20} />
+                  </span>
+                )}
                 <span className="pl-1">
                   <IoIosArrowDown />
                 </span>
@@ -134,7 +124,7 @@ export default function Page() {
                   ))}
                 </div>
               )}
-            </div> */}
+            </div>
             {/* <div>
               <button
                 onClick={toggleLocationOpen}
@@ -161,8 +151,8 @@ export default function Page() {
                   ))}
                 </div>
               )}
-            </div>
-            <div>
+            </div> */}
+            {/* <div>
               <button
                 onClick={toggleBatchOpen}
                 className="flex justify-between items-center md:w-[200px] text-[#92A7BE] group-hover:text-[#0e1721] px-4 py-4 text-sm text-left bg-surface-100 border  border-[#92A7BE] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
@@ -200,12 +190,23 @@ export default function Page() {
           </div>
         </div>
         <div>
-          <BatchTable
-            batches={batches}
-            setUpdateBatch={setUpdateBatch}
-            updateBatch={updateBatch}
-            loading={loading}
-          />
+          {isCitySelected && filterCity.length > 0 ? (
+            <BatchTable
+              batches={filterCity}
+              setUpdateBatch={setUpdateBatch}
+              updateBatch={updateBatch}
+              loading={loading}
+            />
+          ) : !isCitySelected && batches.length > 0 ? (
+            <BatchTable
+              batches={batches}
+              setUpdateBatch={setUpdateBatch}
+              updateBatch={updateBatch}
+              loading={loading}
+            />
+          ) : (
+            <p>No Batch found in this city</p>
+          )}
         </div>
       </div>
       <div>

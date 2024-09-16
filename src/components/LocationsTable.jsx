@@ -79,10 +79,10 @@ const LocationsTable = ({
   return (
     <div className="flex flex-col ">
       <div className="-m-1.5 overflow-x-auto">
-        <div className="p-1.5 min-w-full inline-block align-middle">
+        <div className="p-1.5 min-w-full inline-block align-middle ">
           <div className="mt-4 border border-dark-300 rounded-lg divide-y divide-dark-200 dark:border-gray-700 dark:divide-gray-700">
             <div className="overflow-hidden ">
-              <table className="min-w-full  divide-y divide-dark-200 dark:divide-gray-700">
+              <table className="min-w-full  divide-y divide-dark-200 dark:divide-gray-700 max-h-screen overflow-auto scrollbar-webkit">
                 <thead className="bg-gray-50 dark:bg-gray-700">
                   <tr>
                     <th
@@ -128,7 +128,7 @@ const LocationsTable = ({
                     <CircularProgress size={30} />
                   </div>
                 )}
-                <tbody className="divide-y divide-dark-200 dark:divide-gray-700">
+                <tbody className="divide-y divide-dark-200 dark:divide-gray-700 ">
                   {loading ? ( // Show loading state while fetching locations
                     <tr>
                       <td
@@ -140,7 +140,7 @@ const LocationsTable = ({
                     </tr>
                   ) : locations && locations.length > 0 ? (
                     locations.map((location, index) => (
-                      <tr key={index}>
+                      <tr key={index} className={`${location.status === 2 && 'hidden'}`}>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
                           {location.city}
                         </td>

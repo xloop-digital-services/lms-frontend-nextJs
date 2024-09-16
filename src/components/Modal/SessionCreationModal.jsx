@@ -262,7 +262,7 @@ const SessionCreationModal = ({
               }}
               className="text-start  px-2 xsm:py-[10px] pb-[5px]"
             >
-              Session Creation
+              Scheduling a class
             </h1>
             <button className="px-2" onClick={() => setOpenModal(false)}>
               <IoClose size={21} />
@@ -512,13 +512,13 @@ const SessionCreationModal = ({
                 </div>
               </div>
 
-              <div className="flex items-center justify-center w-full">
+              <div className="flex items-center justify-center w-full mt-2">
                 <button
                   type="submit"
                   onClick={handleSessionCreation}
                   className="w-fit flex justify-center py-3 px-12 text-sm font-medium rounded-lg text-dark-100 bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
                 >
-                  Create
+                  Schedule
                 </button>
               </div>
             </div>

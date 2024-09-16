@@ -79,7 +79,7 @@ const BatchTable = ({ batches, loading, setUpdateBatch, updateBatch }) => {
   return (
     <div className="flex flex-col ">
       <div className="-m-1.5 overflow-x-auto">
-        <div className="p-1.5 min-w-full inline-block align-middle">
+        <div className="p-1.5 min-w-full inline-block align-middle max-h-screen overflow-auto scrollbar-webkit">
           <div className="mt-4 border border-dark-300 rounded-lg divide-y divide-dark-200 dark:border-gray-700 dark:divide-gray-700">
             <div className="overflow-hidden">
               <table className=" min-w-full divide-y divide-dark-200 dark:divide-gray-700">

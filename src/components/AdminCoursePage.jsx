@@ -43,7 +43,7 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
   return (
     <div
       className={`flex-1 transition-transform pt-[97px] space-y-4 max-md:pt-32 font-inter ${
-        isSidebarOpen ? "translate-x-64 pl-20 " : "translate-x-0 pl-10 pr-10"
+        isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 pl-10 pr-10"
       }`}
       style={{
         // paddingBottom: "20px",

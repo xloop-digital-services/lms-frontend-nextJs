@@ -154,7 +154,7 @@ function SideBar() {
                     Batch
                   </Link>
                   <Link
-                    href="/session"
+                    href="/class-scheduling"
                     className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
                       isLinkActive("/session")
                         ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100 "
@@ -162,7 +162,7 @@ function SideBar() {
                     }`}
                   >
                     <FaListAlt size={24} />
-                    Session
+                    Class Scheduling
                   </Link>
                 </div>
                 {/* <div className={`${isAdmin && "hidden"}`}> */}

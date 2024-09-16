@@ -10,7 +10,7 @@ const LocationModal = ({
   updateLocation,
   setOpenModal,
   setUpdateLocation,
-  city0ptions,
+  cityOptions,
 }) => {
   const [allLocations, setAllLocations] = useState([]);
   const [locationName, setLocationName] = useState("select your location");
@@ -32,7 +32,7 @@ const LocationModal = ({
 
   useClickOutside(modalDown, () => setOpenModal(false));
 
-  // console.log('in the modal', city0ptions)
+  // console.log('in the modal', cityOptions)
 
   const handlLocationCreation = async () => {
     setLoadingCreation(true);
@@ -146,7 +146,7 @@ const LocationModal = ({
                       ref={cityDown}
                       className="absolute z-10 w-[220px] mt-1 max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                     >
-                      {city0ptions.map((option, index) => (
+                      {cityOptions.map((option, index) => (
                         <div
                           key={index}
                           onClick={() => handleCitySelect(option)}
