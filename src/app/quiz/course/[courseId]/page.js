@@ -158,6 +158,7 @@ export default function Page({ params }) {
           instructorName="Maaz"
           progress={assignmentProgress?.progress_percentage}
           haveStatus={true}
+          program="course"
           title="Create Quiz"
           isEditing={isCreatingQuiz}
           setIsEditing={setCreatingQuiz}
@@ -277,7 +278,7 @@ export default function Page({ params }) {
         )}
 
         <div className="mt-10">
-           {isStudent ? (
+          {isStudent ? (
             <StudentDataStructure
               quizzes={assignments}
               setQuizzes={setAssignments}

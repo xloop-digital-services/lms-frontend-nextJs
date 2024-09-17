@@ -27,6 +27,7 @@ export default function Page({ params }) {
           rating="Top Instructor"
           instructorName="Maaz"
           haveStatus={true}
+          program="course"
         />
         <StudentGrading courseId={courseId} regId={regId} />
       </div>

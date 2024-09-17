@@ -22,6 +22,8 @@ export default function InstructorCoursePage({
   const { isSidebarOpen } = useSidebar();
   const { userData } = useAuth();
   const isStudent = userData?.Group === "student";
+  const inInstructor = userData?.Group === "instructor";
+  console.log(userData?.Group);
   const [courses, setCourses] = useState([]);
   const insId = userData?.user_data?.id;
   const insEmailId = userData?.User?.email;
@@ -48,7 +50,7 @@ export default function InstructorCoursePage({
       }
     }
 
-    fetchInstructorCourses();
+    inInstructor && fetchInstructorCourses();
   }, [insId]);
 
   if (loader) {

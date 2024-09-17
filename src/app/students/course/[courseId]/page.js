@@ -9,7 +9,7 @@ import { CircularProgress } from "@mui/material";
 import AdminAttendance from "@/components/AdminAttendance";
 import AdminStudentGrading from "@/components/AdminStudentGrading";
 
-export default function Page({params}) {
+export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
   const courseId = params.courseId;
   const [attendance, setAttendance] = useState([]);
@@ -90,6 +90,7 @@ export default function Page({params}) {
               rating="Top Instructor"
               instructorName="Maaz"
               haveStatus={true}
+              program="course"
             />
             <AdminStudentGrading courseId={courseId} />
           </div>

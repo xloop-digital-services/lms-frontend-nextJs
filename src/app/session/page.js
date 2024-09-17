@@ -146,9 +146,10 @@ export default function Page() {
       style={{ width: isSidebarOpen ? "84%" : "100%" }}
     >
       <div className="bg-surface-100 p-6 rounded-xl">
+      
         <div className="w-full flex xlg:flex-row flex-col justify-between items-center gap-4">
           <div>
-            <p className="font-bold text-xl">Sessions Details</p>
+            <p className="font-bold font-exo text-xl">Class Timings</p>
           </div>
           <div className="flex gap-3 sm:flex-row flex-col text-base lg:text-sm">
             <div className="flex gap-3 ">
@@ -272,7 +273,7 @@ export default function Page() {
                 className="text-[#fff] bg-[#03A1D8] md:w-[200px] px-4 xlg:py-4 py-3 w-full rounded-lg"
                 onClick={handleOpenSessionModal}
               >
-                Create a new session
+               Create a New class
               </button>
             </div>
           </div>

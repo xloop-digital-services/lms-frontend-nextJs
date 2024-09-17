@@ -151,6 +151,7 @@ export default function Page({ params }) {
           id={courseId}
           rating="Top Instructor"
           instructorName="Maaz"
+            program="course"
           progress={assignmentProgress?.progress_percentage}
           haveStatus={true}
           title="Create Assignment"

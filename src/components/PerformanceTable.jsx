@@ -54,13 +54,13 @@ const PerformanceTable = ({
                       Assignments
                     </td>
                     <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
-                      {assignmentWeightage}%
+                      {Number(assignmentWeightage || 0).toFixed(2)}%
                     </td>
                     <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
-                      {assignmentScore}
+                      {Number(assignmentScore || 0).toFixed(2)}
                     </td>
                     <td className="px-6 py-2 text-center whitespace-nowrap text-sm text-gray-100  ">
-                      {assignmentWeightedScore}
+                      {Number(assignmentWeightedScore || 0).toFixed(2)}
                     </td>
                   </tr>
 
@@ -69,13 +69,13 @@ const PerformanceTable = ({
                       Quizzes
                     </td>
                     <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
-                      {quizWeightage}%
+                      {Number(quizWeightage || 0).toFixed(2)}%
                     </td>
                     <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
-                      {quizScore}
+                      {Number(quizScore || 0).toFixed(2)}
                     </td>
                     <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
-                      {quizWeightedScore}
+                      {Number(quizWeightedScore || 0).toFixed(2)}
                     </td>
                   </tr>
 
@@ -84,13 +84,13 @@ const PerformanceTable = ({
                       Projects
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-800 ">
-                      {projectWeightage}%
+                      {Number(projectWeightage || 0).toFixed(2)}%
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-800 ">
-                      {projectScore}
+                      {Number(projectScore || 0).toFixed(2)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-800 ">
-                      {projectWeightedScore}
+                      {Number(projectWeightedScore || 0).toFixed(2)}
                     </td>
                   </tr>
 
@@ -99,13 +99,13 @@ const PerformanceTable = ({
                       Exam
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
-                      {examsWeightage}%
+                      {Number(examsWeightage).toFixed(2)}%
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
-                      {examsScore}
+                      {Number(examsScore).toFixed(2)}
                     </td>
                     <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-100 text-center ">
-                      {examsWeightedScore}
+                      {Number(examsWeightedScore).toFixed(2)}
                     </td>
                   </tr>
 
@@ -114,20 +114,29 @@ const PerformanceTable = ({
                       Total
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-800 text-center">
-                      {assignmentWeightage +
+                      {(
+                        assignmentWeightage +
                         quizWeightage +
                         examsWeightage +
-                        projectWeightage}
+                        projectWeightage
+                      ).toFixed(2)}
                       %
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-800 text-center">
-                      {assignmentScore + quizScore + examsScore + projectScore}
+                      {(
+                        assignmentScore +
+                        quizScore +
+                        examsScore +
+                        projectScore
+                      ).toFixed(2)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-100 text-center ">
-                      {assignmentWeightedScore +
+                      {(
+                        assignmentWeightedScore +
                         quizWeightedScore +
                         examsWeightedScore +
-                        projectWeightedScore}
+                        projectWeightedScore
+                      ).toFixed(2)}%
                     </td>
                   </tr>
                 </tbody>

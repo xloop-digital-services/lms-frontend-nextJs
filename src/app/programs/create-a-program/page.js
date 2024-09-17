@@ -78,7 +78,7 @@ export default function Page() {
     <div>
       <CreateField
         title="Program"
-        list="Courses"
+        list="Course"
         route="program"
         create="course"
         handleSubmit={handleSubmit}

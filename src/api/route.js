@@ -716,6 +716,17 @@ export const getAllSkills = async () => {
   }
 };
 
+
+//get all skills
+export const getAllSkillCourses = async () => {
+  try {
+    const response = await axiosInstance.get(`/course/skills/`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 //get program by id
 export const getProgramById = async (progId) => {
   try {

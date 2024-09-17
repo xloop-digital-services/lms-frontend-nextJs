@@ -25,7 +25,14 @@ export default function Page() {
       ) : isAdmin ? (
         <AdminCoursePage title="Courses" route1="courses" route="course" />
       ) : isInstructor ? (
-        <InstructorCoursePage title="Courses" route1="courses" route="course"  />
+        <>
+          <h2 className="h-[100vh] bg-blue-300"></h2>
+          <InstructorCoursePage
+            title="Courses"
+            route1="courses"
+            route="course"
+          />
+        </>
       ) : (
         <div>No data found </div>
       )}

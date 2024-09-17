@@ -89,6 +89,7 @@ export default function Page({ params }) {
             <CourseHead
               id={courseId}
               rating="Top Instructor"
+                program="course"
               instructorName="Maaz"
             />
 

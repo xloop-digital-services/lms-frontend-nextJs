@@ -12,7 +12,6 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   const [getAttendance, setGetAttendance] = useState([]);
   const [selectedAttendance, setSelectedAttendance] = useState({});
   const [loader, setLoader] = useState(false);
-  const [id, setId] = useState();
 
   const today = new Date();
   const day = String(today.getDate()).padStart(2, "0");
@@ -41,10 +40,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   async function fetchAttendance() {
     setLoader(true);
     try {
-      const response = await getAttendanceByCourseIdDate(
-        courseId,
-        formattedDate
-      );
+      const response = await getAttendanceByCourseIdDate(courseId, formattedDate);
       if (response.status === 200) {
         setGetAttendance(response.data);
         setSelectedAttendance(
@@ -64,7 +60,6 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   }
 
   const handleAttendanceChange = (regId, status) => {
-    setId(regId);
     setSelectedAttendance((prevState) => ({
       ...prevState,
       [regId]: status,
@@ -72,13 +67,13 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   };
 
   const handleSubmit = async () => {
-    const attendanceData = {
-      student: id,
-      status: selectedAttendance[id],
-    };
+    const attendanceArray = Object.keys(selectedAttendance).map((studentId) => ({
+      student: studentId,
+      status: selectedAttendance[studentId],
+    }));
+
     try {
-      const response = await markAttendanceByCourseId(courseId, attendanceData);
-      console.log(courseId)
+      const response = await markAttendanceByCourseId(courseId, attendanceArray); // Post the array of attendance
       if (response.status === 200 || response.status === 201) {
         toast.success("Attendance marked successfully");
         fetchAttendance(); // Fetch updated attendance after submission
@@ -214,17 +209,15 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
           </div>
         </div>
       </div>
-      {attendance.length > 0 &&
-        !isAttendancePosted &&
-        // getAttendance.length === 0 && (
-        (  <button
-            onClick={handleSubmit}
-            className="bg-blue-300 from-dark-600 text-surface-100 p-2 rounded-md w-20 my-2 flex justify-center"
-            type="button"
-          >
-            Submit
-          </button>
-        )}
+      {attendance.length > 0 && !isAttendancePosted && (
+        <button
+          onClick={handleSubmit}
+          className="bg-blue-300 from-dark-600 text-surface-100 p-2 rounded-md w-20 my-2 flex justify-center"
+          type="button"
+        >
+          Submit
+        </button>
+      )}
     </div>
   );
 }

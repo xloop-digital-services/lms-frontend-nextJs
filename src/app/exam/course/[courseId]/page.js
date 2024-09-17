@@ -138,6 +138,7 @@ export default function Page({ params }) {
       <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4">
         <CourseHead
           id={courseId}
+          program="course"
           rating="Top Instructor"
           instructorName="Maaz"
           // progress={assignmentProgress?.progress_percentage}

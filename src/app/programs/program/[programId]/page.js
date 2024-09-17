@@ -23,6 +23,8 @@ export default function Page({ params }) {
   const [loader, setLoader] = useState(true);
   const [inputCourses, setInputCourses] = useState([]);
   const [courses, setCourses] = useState([]);
+  const [fetch, setFetch] = useState(false);
+  const [programStatus, setProgramStatus] = useState(0);
 
   async function fetchProgramById() {
     try {
@@ -30,9 +32,10 @@ export default function Page({ params }) {
       setLoader(true);
       if (response.status === 200) {
         const program = response?.data?.data;
+        setProgramStatus(program?.status);
+        console.log(programStatus);
         setProgramData(program);
 
-        // Fetch course details by IDs
         if (program.courses && program.courses.length > 0) {
           const courses = await Promise.all(
             program.courses.map(async (courseId) => {
@@ -55,12 +58,13 @@ export default function Page({ params }) {
     try {
       const updatedProgramData = {
         ...programData,
-        courses: inputCourses, 
+        status: programStatus,
+        courses: [...programData.courses, ...inputCourses],
       };
 
       const response = await updateProgram(updatedProgramData, programId);
       if (response.status === 200) {
-        toast.success("Program updated successfully!",);
+        toast.success("Program updated successfully!");
         setIsEditing(false);
         fetchProgramById();
       } else {
@@ -125,7 +129,7 @@ export default function Page({ params }) {
   useEffect(() => {
     fetchAllCourses();
     fetchProgramById();
-  }, []);
+  }, [fetch]);
 
   // console.log(programData.short_description)
   return (
@@ -147,18 +151,53 @@ export default function Page({ params }) {
             <CourseHead
               name={programData.name}
               id={programId}
-              rating="Top Instructor"
+              chr={null}
+              program="program"
+              // rating="Top Instructor"
               instructorName="Maaz"
-              shortDesc={programData.short_description}
+              // shortDesc={programData.short_description}
+              setFetch={setFetch}
               title="Edit program"
               setIsEditing={setIsEditing}
               isEditing={isEditing}
-
             />
 
             {isEditing ? (
               <div className="flex flex-col">
-                <label className="text-lg font-bold">Program Name</label>
+                <div>
+                  <div className="flex justify-between my-2">
+                    <label className="text-lg font-exo font-bold">
+                      Program Name
+                    </label>
+
+                    <div className="flex items-center">
+                      <span className="mr-4 text-md">Program Status</span>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={programStatus === 1}
+                          onChange={() =>
+                            setProgramStatus((prevStatus) =>
+                              prevStatus === 0 ? 1 : 0
+                            )
+                          }
+                          className="sr-only"
+                        />
+                        <div className="w-11 h-6 bg-blue-600 rounded-full"></div>
+                        <div
+                          className={`absolute w-4 h-4 bg-blue-300 rounded-full shadow-md transform transition-transform ${
+                            programStatus === 1
+                              ? "translate-x-5"
+                              : "translate-x-1"
+                          }`}
+                        ></div>
+                      </label>
+                      <span className="ml-4 text-md">
+                        {programStatus === 1 ? "Active" : "Inactive"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
                 <input
                   className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
                   value={programData.name}
@@ -190,12 +229,28 @@ export default function Page({ params }) {
                 />
 
                 <div className="relative flex flex-wrap items-center gap-2 bg-white outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 shadow-sm ring-1 ring-inset focus:ring-inset p-2 sm:text-sm sm:leading-6">
+                  {courseData?.map((courseId) => {
+                    return (
+                      <div
+                        key={courseId.id}
+                        value={courseId.courses}
+                        className="flex items-center space-x-2 px-3 py-1 bg-blue-600 border border-blue-300 rounded-full"
+                      >
+                        <span>{courseId?.name}</span>
+                        <FaTimes
+                          className="cursor-pointer"
+                          onClick={() => removeCourse(courseId.id)}
+                        />
+                      </div>
+                    );
+                  })}
+
                   {inputCourses?.map((courseId) => {
                     const course = courses.find((c) => c.id === courseId);
                     return (
                       <div
                         key={courseId}
-                        value={programData.courses}
+                        // value={programData.courses}
                         className="flex items-center space-x-2 px-3 py-1 bg-blue-600 border border-blue-300 rounded-full"
                       >
                         <span>{course?.name}</span>
@@ -206,7 +261,6 @@ export default function Page({ params }) {
                       </div>
                     );
                   })}
-
                   <input
                     id="courses-names"
                     disabled
@@ -265,6 +319,7 @@ export default function Page({ params }) {
                     image={courseImg}
                     route={`course`}
                     route1="courses"
+                    status={course.status}
                   />
                 ))}
               </div>

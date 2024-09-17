@@ -2,6 +2,7 @@
 import {
   createModule,
   createSkill,
+  getAllSkillCourses,
   getAllSkills,
   getCourseById,
   getModuleByCourseId,
@@ -70,9 +71,12 @@ export default function Page({ params }) {
   const [courses, setCourses] = useState([]);
   const [skillbyID, setSkillbyID] = useState("");
   const [skillId, setSkillId] = useState("");
+  const [fetch, setFetch] = useState(false);
+  const [courseStatus, setCourseStatus] = useState(0);
+
   const [skill, setSkill] = useState();
   // console.log(isAdmin)
-  // const [skillName, setSkillName] = useState("");
+  const [skillName, setSkillName] = useState("");
 
   async function fetchCoursesById() {
     const response = await getCourseById(courseId);
@@ -80,6 +84,7 @@ export default function Page({ params }) {
     try {
       if (response.status === 200) {
         setCourseData(response?.data?.data);
+        setCourseStatus(response?.data?.data?.status);
         const skillNames = courseData?.skills?.map((skillId) => {
           const skill = courseData.find((item) => item.id === skillId);
           return skill ? skill.skill_name : "Unknown skill";
@@ -125,12 +130,12 @@ export default function Page({ params }) {
   };
 
   async function fetchSkillbyId() {
-    const response = await getAllSkills();
+    const response = await getAllSkillCourses();
     setLoader(true);
     try {
       if (response.status === 200) {
         setSkillbyID(response?.data?.data);
-        console.log(response?.data?.data)
+        console.log(response?.data?.data);
         setLoader(false);
       } else {
         console.error("Failed to fetch skills, status:", response.status);
@@ -159,7 +164,7 @@ export default function Page({ params }) {
   }
   async function fetchAllSkills() {
     try {
-      const response = await getAllSkills();
+      const response = await getAllSkillCourses();
       if (response.status === 200) {
         setCourses(response.data?.data);
       } else {
@@ -256,6 +261,7 @@ export default function Page({ params }) {
   async function handleSave() {
     const updatedCourseData = {
       ...courseData,
+      status: courseStatus,
       skills: inputCourses,
     };
 
@@ -336,26 +342,7 @@ export default function Page({ params }) {
     }
     fetchAllSkills();
   }, []);
-
-  const [isActive, setIsActive] = useState(courseData?.status);
-  console.log(courseData.status);
-
-  useEffect(() => {
-    setIsActive(courseData.status === "1");
-  }, [courseData?.status]);
-
-  const handleToggle = () => {
-    setIsActive((prevState) => {
-      const newStatus = !prevState;
-
-      setCourseData((prevData) => ({
-        ...prevData,
-        status: newStatus ? "1" : "0",
-      }));
-      return newStatus;
-    });
-  };
-
+  // console.log(courseData?.status);
   useEffect(() => {
     if (courseData?.skills?.length > 0) {
       fetchAllSkills();
@@ -384,36 +371,55 @@ export default function Page({ params }) {
           <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4">
             <CourseHead
               id={courseId}
-              name={courseData.name}
-              rating="Top Instructor"
-              instructorName="Maaz"
+              program="course"
+              setFetch={setFetch}
+              // name={courseData.name}
+              // rating="Top Instructor"
+              // instructorName="Maaz"
+
               progress={courseProgress?.progress_percentage}
               setIsEditing={setIsEditing}
-              shortDesc={courseData.short_description}
+              // shortDesc={courseData.short_description}
               isEditing={isEditing}
               title="Edit course"
-              chr={`${courseData.theory_credit_hours}+ ${courseData.lab_credit_hours}`}
+              // chr={`${courseData.theory_credit_hours}+ ${courseData.lab_credit_hours}`}
             />
 
             {isEditing ? (
               <div className="flex flex-col">
-                <div className="flex">
-                  <label className="text-lg font-exo font-bold">Course Name</label>
-                  {/* <div
-                    onClick={handleToggle}
-                    className={`w-16 h-8 flex items-center rounded-full p-1 cursor-pointer bg-blue-600 ${
-                      isActive ? "bg-blue-300" : "bg-blue-600"
-                    }`}
-                  >
-                    <div
-                      className={`bg-white w-6 h-6 rounded-full shadow-md transform transition-transform bg-blue-300 ${
-                        isActive ? "translate-x-8" : ""
-                      }`}
-                    />
-                    <span className="ml-2 text-sm text-white">
-                      {isActive ? "On" : "Off"}
-                    </span>
-                  </div> */}
+                <div>
+                  <div className="flex justify-between my-2">
+                    <label className="text-lg font-exo font-bold">
+                      Course Name
+                    </label>
+
+                    <div className="flex items-center">
+                      <span className="mr-4 text-md">Course Status</span>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={courseStatus === 1}
+                          onChange={() =>
+                            setCourseStatus((prevStatus) =>
+                              prevStatus === 0 ? 1 : 0
+                            )
+                          }
+                          className="sr-only"
+                        />
+                        <div className="w-11 h-6 bg-blue-600 rounded-full"></div>
+                        <div
+                          className={`absolute w-4 h-4 bg-blue-300 rounded-full shadow-md transform transition-transform ${
+                            courseStatus === 1
+                              ? "translate-x-5"
+                              : "translate-x-1"
+                          }`}
+                        ></div>
+                      </label>
+                      <span className="ml-4 text-md">
+                        {courseStatus === 1 ? "Active" : "Inactive"}
+                      </span>
+                    </div>
+                  </div>
                 </div>
                 <input
                   className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
@@ -423,7 +429,8 @@ export default function Page({ params }) {
                   }
                 />
                 <label className="text-lg font-exo font-bold">
-                  Short Description</label>
+                  Short Description
+                </label>
                 <input
                   className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
                   value={courseData.short_description}
@@ -447,7 +454,9 @@ export default function Page({ params }) {
                 />
 
                 <div className="my-4 sm:mb-0">
-                <label className="text-lg font-exo font-bold">Credit Hours</label>
+                  <label className="text-lg font-exo font-bold">
+                    Credit Hours
+                  </label>
                   <div className="sm:pr-4">
                     <div className="relative w-full h-12 px-2 gap-4 flex items-center border-dark-400 rounded-md border mt-2 py-1.5">
                       Theory Hours and
@@ -491,7 +500,9 @@ export default function Page({ params }) {
                     </div>
                   </div>
                   <div className="my-4 sm:mb-0">
-                  <label className="text-lg font-exo font-bold">Skills Names</label>
+                    <label className="text-lg font-exo font-bold">
+                      Skills Names
+                    </label>
                     <div className="sm:pr-4">
                       <div className="relative flex flex-wrap items-center gap-2 bg-white outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 shadow-sm ring-1 ring-inset focus:ring-inset p-2 sm:text-sm sm:leading-6">
                         {inputCourses?.map((courseId) => {
@@ -535,7 +546,7 @@ export default function Page({ params }) {
                           <option value="" disabled>
                             Select a skill
                           </option>
-                          {courses.map((course) => (
+                          {courses?.map((course) => (
                             <option key={course.id} value={course?.skill_name}>
                               {course?.skill_name}
                             </option>
@@ -557,7 +568,9 @@ export default function Page({ params }) {
               <>
                 <div className="flex flex-col">
                   <div className="flex justify-between max-md:flex-col">
-                    <h2 className="text-xl font-exo font-bold">About the Course</h2>
+                    <h2 className="text-xl font-exo font-bold">
+                      About the Course
+                    </h2>
                   </div>
                   <p className="mt-2 mb-2 text-dark-500 text-justify">
                     {courseData.about}
@@ -565,11 +578,13 @@ export default function Page({ params }) {
                 </div>
                 <div className="flex flex-col">
                   <div className="flex justify-between max-md:flex-col mt-8 mb-4">
-                    <h2 className="text-xl font-exo font-bold">Skills You gain</h2>
+                    <h2 className="text-xl font-exo font-bold">
+                      Skills You gain
+                    </h2>
                   </div>
                   <div className="flex gap-2 max-md:flex-col">
-                    {skills?.length > 0 ? (
-                      skills.map((skillName, index) => (
+                    {skillbyID?.length > 0 ? (
+                      skillbyID.map((skillName, index) => (
                         <div
                           key={index}
                           className="flex bg-blue-600 w-fit py-[9px] px-5 rounded-lg items-center space-x-2 max-md:mt-2"

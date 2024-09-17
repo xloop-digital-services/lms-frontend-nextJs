@@ -64,10 +64,12 @@ export default function CoursePage({ path, progress, heading }) {
         ) : (
           <>
             <div className="bg-surface-100 p-8 rounded-xl ">
-              <h2 className="text-xl font-bold pb-1 font-exo">{heading}</h2>
-              <p className="pb-6">
-                Select a course to view the {heading}
-              </p>
+              {!heading === "program" && (
+                <>
+                  <h2 className="text-xl font-bold pb-1 font-exo">{heading}</h2>
+                  <p className="pb-6">Select a course to view the {heading}</p>
+                </>
+              )}
               <div className="flex flex-col w-full gap-4">
                 {courses?.map((course) => {
                   return (
@@ -77,7 +79,7 @@ export default function CoursePage({ path, progress, heading }) {
                       courseName={course.name}
                       courseDesc={course.short_description}
                       // progress={courseProgress?.progress_percentage}
-                      durationOfCourse={course.credit_hours}
+                      durationOfCourse={`${course.theory_credit_hours}+${course.lab_credit_hours}`}
                       route={`${path}/course/${course.id}`}
                     />
                   );

@@ -3,6 +3,7 @@ import {
   createCourse,
   createProgram,
   getAllCourses,
+  getAllSkillCourses,
   getAllSkills,
 } from "@/api/route";
 import CreateField from "@/components/CreateField";
@@ -24,7 +25,7 @@ export default function Page() {
 
   async function fetchAllSkills() {
     try {
-      const response = await getAllSkills();
+      const response = await getAllSkillCourses();
       if (response.status === 200) {
         setCourses(response.data?.data);
       } else {
@@ -34,6 +35,7 @@ export default function Page() {
       console.error("Error fetching courses:", error);
     }
   }
+
 
   // console.log(courses);
   const handleSubmit = async (event) => {

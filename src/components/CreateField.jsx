@@ -41,6 +41,7 @@ export default function CreateField({
   const [courseId, setCourseId] = "";
   const [skill, setSkill] = useState();
   const [skillName, setSkillName] = useState("");
+  const [classSession, setClassTiming] = useState();
 
   const handleAddModule = () => {
     setAddModule(!addModule);
@@ -92,6 +93,10 @@ export default function CreateField({
   };
   const handleSkills = () => {
     setSkill(!skill);
+  };
+
+  const handleSession = () => {
+    setClassTiming(!classSession);
   };
 
   return (
@@ -182,7 +187,7 @@ export default function CreateField({
                   <input
                     id="courses-names"
                     disabled
-                    placeholder={`Select ${list}s`}
+                    placeholder={`Select ${list}`}
                     className="flex-grow outline-none bg-surface-100 placeholder-dark-300"
                   />
                   {create === "course" ? (
@@ -194,7 +199,7 @@ export default function CreateField({
                     </Link>
                   ) : (
                     <button
-                     type="button"
+                      type="button"
                       className="text-surface-100  px-2 py-1.5  rounded-md bg-blue-300"
                       onClick={handleSkills}
                     >
@@ -249,6 +254,23 @@ export default function CreateField({
                     </div>
                   </div>
                 </div>
+              </>
+            )}
+            <button
+              className="text-surface-100 px-2 py-1.5 rounded-md bg-blue-300"
+              onClick={handleSession}
+            >
+              {" "}
+              Create class session
+            </button>
+
+            {classSession && (
+              <>
+                <label>Location</label>
+                <select>
+                  hello
+                  <option> hello world</option>
+                </select>
               </>
             )}
 
