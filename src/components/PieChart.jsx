@@ -2,7 +2,7 @@ import React from "react";
 import { Chart as ChartJS } from "chart.js/auto";
 import { Doughnut } from "react-chartjs-2";
 
-const PieChart = ({approved, pending, shortlisted}) => {
+const PieChart = ({verified, unverified, pending, shortlisted}) => {
   return (
     <div
       style={{ height: "326px", width: "100%" }}
@@ -10,11 +10,11 @@ const PieChart = ({approved, pending, shortlisted}) => {
     >
       <Doughnut
         data={{
-          labels: ["Approved", "Pending", "Shortlist"],
+          labels: ["Verified", 'Unverified', "Pending", "Shortlist"],
           datasets: [
             {
-              data: [approved,pending, shortlisted],
-              backgroundColor: ["#18A07A", "#F29D41", "#D84848"],
+              data: [verified, unverified ,pending, shortlisted],
+              backgroundColor: ["#18A07A", "#d84848", "#f29d41", '#B8BBBE'],
             },
           ],
         }}

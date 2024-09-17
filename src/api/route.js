@@ -526,6 +526,16 @@ export const getUserDataByProgramIdnSkillId = async (id, selectedOption) => {
   }
 };
 
+export const getApplicationUserDetails = async (userId, selectedOption) => {
+  try {
+    const response = await axiosInstance.get(`user-details/${userId}/?group_name=${selectedOption}`)
+    return response;
+
+  } catch (error) {
+   throw error; 
+  }
+}
+
 export const userSelectionByAdmin = async (id, data) => {
   try {
     const response = await axiosInstance.patch(
@@ -594,6 +604,25 @@ export const createBatch = async (data) => {
   }
 };
 
+export const UpdateBatch = async (selectedBatch,data) => {
+  try {
+    const response = await axiosInstance.put(`/batch/${selectedBatch}/`, data);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const DeleteBatch = async (selectedBatch) => {
+  try {
+    const response = await axiosInstance.delete(`/batch/${selectedBatch}/`,);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
 export const createSession = async (data) => {
   try {
     const response = await axiosInstance.post("/session/", data);
@@ -606,6 +635,23 @@ export const createSession = async (data) => {
 export const createLocation = async (data) => {
   try {
     const response = await axiosInstance.post("/location/", data);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const UpdateLocation = async (id,data) => {
+  try {
+    const response = await axiosInstance.put(`/location/${id}/`, data);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const DeleteLocation = async (id) => {
+  try {
+    const response = await axiosInstance.delete(`/location/${id}/`);
     return response;
   } catch (error) {
     throw error;

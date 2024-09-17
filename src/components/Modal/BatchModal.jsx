@@ -27,8 +27,18 @@ const BatchModal = ({
   const [loadingCreation, setLoadingCreation] = useState(false);
   const [isCitySelected, setIsCitySelected] = useState(false);
   const [cityShortName, setCityShortName] = useState("");
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("select category");
+  const categoryOptions = [
+    { name: "Fall" },
+    { name: "Winter" },
+    { name: "Spring" },
+    { name: "Summer" },
+    { name: "Annual" },
+  ];
   const cityDown = useRef(null);
   const modalDown = useRef(null);
+  const categoryRef = useRef();
 
   useClickOutside(cityDown, () => setIsCityOpen(false));
 
@@ -36,7 +46,16 @@ const BatchModal = ({
 
   const handleBatchCreation = async () => {
     setLoadingCreation(true);
-    if (!errorMessage) {
+    if (
+      !errorMessage &&
+      selectedCity &&
+      cityShortName &&
+      year &&
+      studentCapacity &&
+      startDate &&
+      endDate &&
+      selectedCategory
+    ) {
       try {
         const data = {
           city: selectedCity,
@@ -45,6 +64,7 @@ const BatchModal = ({
           no_of_students: studentCapacity,
           start_date: startDate,
           end_date: endDate,
+          term: selectedCategory,
         };
 
         const response = await createBatch(data);
@@ -55,13 +75,25 @@ const BatchModal = ({
         setUpdateBatch(!updateBatch);
       } catch (error) {
         console.log("error is occuring", error.response);
+        if (error.response.status === 500) {
+          toast.error("Change your city, category, and");
+        }
         // toast.error(error?.response?.data?.error[0])
         setLoadingCreation(false);
       }
     } else {
-      toast.warn("select the correct time");
+      toast.warn("Properly select the fields!");
       setLoadingCreation(false);
     }
+  };
+
+  const toggleCategoryOpen = () => {
+    setIsCategoryOpen((prev) => !prev);
+  };
+
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category.name);
+    setIsCategoryOpen(false);
   };
 
   const handleStartDate = (event) => {
@@ -73,13 +105,13 @@ const BatchModal = ({
     //   console.log("formated start date", formattedDate);
     // } else {
     //   toast.error("Invalid date selected");
-        setstartDate(event.target.value);
-        // }
-      };
-      
-      const handleEndDateChange = (event) => {
-        // if (date instanceof Date && !isNaN(date)) {
-          //   const formattedDate = date.toISOString().split("T")[0]; // Extract the date part
+    setstartDate(event.target.value);
+    // }
+  };
+
+  const handleEndDateChange = (event) => {
+    // if (date instanceof Date && !isNaN(date)) {
+    //   const formattedDate = date.toISOString().split("T")[0]; // Extract the date part
     //   setendDate(formattedDate); // Set the end date
     //   // console.log('end date,', date)
     //   console.log("formated end date", formattedDate);
@@ -91,7 +123,6 @@ const BatchModal = ({
       setErrorMessage("");
     }
   };
-  
 
   // Handle adding a new location
   const handleAddLocation = () => {
@@ -188,7 +219,7 @@ const BatchModal = ({
                 {isCityOpen && (
                   <div
                     ref={cityDown}
-                    className="absolute z-10 xsm:w-[461px] w-[83%] max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
+                    className="absolute z-10 min-w-[220px] max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
                   >
                     {cityOptions.map((option, index) => (
                       <div
@@ -203,6 +234,17 @@ const BatchModal = ({
                     ))}
                   </div>
                 )}
+              </div>
+              <div className="space-y-2 text-[15px] w-full">
+                <p>Number of Students</p>
+                <input
+                  type="number"
+                  className="border border-dark-300 outline-none p-3 rounded-lg w-full "
+                  placeholder="number of students"
+                  value={studentCapacity}
+                  min={0}
+                  onChange={(e) => setStudentCapacity(e.target.value)}
+                />
               </div>
             </div>
 
@@ -250,17 +292,42 @@ const BatchModal = ({
                   )}
                 </div>
               </div> */}
-              <div className="space-y-2 text-[15px] w-full">
-                <p>Number of Students</p>
-                <input
-                  type="number"
-                  className="border border-dark-300 outline-none p-3 rounded-lg w-full "
-                  placeholder="number of students"
-                  value={studentCapacity}
-                  min={0}
-                  onChange={(e) => setStudentCapacity(e.target.value)}
-                />
+              <div className="space-y-2 text-[15px] w-full relative">
+                <p>Category</p>
+                <button
+                  onClick={toggleCategoryOpen}
+                  className={`${
+                    selectedCategory === "select category"
+                      ? " text-[#92A7BE]"
+                      : "text-[#424b55]"
+                  } flex justify-between items-center w-full hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                >
+                  {selectedCategory}
+                  <span>
+                    <IoIosArrowDown />
+                  </span>
+                </button>
+
+                {isCategoryOpen && (
+                  <div
+                    ref={categoryRef}
+                    className="absolute z-10 w-full max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                  >
+                    {categoryOptions.map((option, index) => (
+                      <div
+                        key={index}
+                        onClick={() => handleCategorySelect(option)}
+                        className="p-2 cursor-pointer"
+                      >
+                        <div className="px-4 py-1 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                          {option.name}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
+
               <div className="space-y-2 text-[15px] w-full">
                 <p>Year</p>
                 <input
@@ -310,16 +377,7 @@ const BatchModal = ({
               </div>
             </div>
 
-            <div className="flex gap-3 mx-auto w-full justify-between">
-              {/* <div className="space-y-2 text-[15px] w-full">
-                <p>Category</p>
-                <input
-                  type="text"
-                  className="border border-dark-300 outline-none p-3 rounded-lg w-full "
-                  placeholder="capacity"
-                />
-              </div> */}
-            </div>
+            <div className="flex gap-3 mx-auto w-full justify-between"></div>
             <div className="flex w-full justify-center items-center">
               <button
                 type="submit"

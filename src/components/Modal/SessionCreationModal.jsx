@@ -224,6 +224,21 @@ const SessionCreationModal = ({
     }
   };
 
+  const handleSelectAllWeekdays = (e) => {
+    const { checked } = e.target;
+
+    if (checked) {
+      // Select all weekdays except Sunday (key "6")
+      const weekdaysExceptSunday = Object.keys(WEEKDAYS).filter(
+        (key) => key !== "6"
+      );
+      setSelectedDays(weekdaysExceptSunday);
+    } else {
+      // Uncheck all weekdays except Sunday
+      setSelectedDays([]);
+    }
+  };
+
   return (
     <div className="backDropOverlay h-screen flex justify-center items-center">
       <div className=" w-[550px] z-[1000] mx-auto my-20 overflow-auto scrollbar-webkit">
@@ -247,7 +262,7 @@ const SessionCreationModal = ({
               }}
               className="text-start  px-2 xsm:py-[10px] pb-[5px]"
             >
-              Session Creation
+              Scheduling a class
             </h1>
             <button className="px-2" onClick={() => setOpenModal(false)}>
               <IoClose size={21} />
@@ -453,29 +468,57 @@ const SessionCreationModal = ({
               <div className="space-y-2 text-[15px] w-full">
                 <p>Week Days</p>
                 <div className="flex flex-wrap gap-3">
+                  {/* Individual checkboxes for each day */}
                   {Object.entries(WEEKDAYS).map(
                     ([key, [fullName, shortName]]) => (
-                      <label key={key} className="flex items-center ">
+                      <label
+                        key={key}
+                        className={`flex items-center ${
+                          selectedDays.includes(key)
+                            ? "text-[#424b55]"
+                            : "text-[#92A7BE]"
+                        }`}
+                      >
                         <input
                           type="checkbox"
                           value={key}
                           onChange={handleCheckboxChange}
+                          checked={selectedDays.includes(key)}
                           className="mr-2"
-                          required
                         />
                         {fullName} ({shortName})
                       </label>
                     )
                   )}
+
+                  {/* Checkbox to select all weekdays except Sunday */}
+                  <label
+                    className={`flex items-center ${
+                      selectedDays.length === Object.keys(WEEKDAYS).length - 1
+                        ? "text-[#424b55]"
+                        : "text-[#92A7BE]"
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      onChange={handleSelectAllWeekdays}
+                      checked={
+                        selectedDays.length === Object.keys(WEEKDAYS).length - 1
+                      } // Check if all weekdays except Sunday are selected
+                      className="mr-2"
+                    />
+                    Select All Weekdays (Mon-Sat)
+                  </label>
                 </div>
               </div>
-              <div className="flex items-center justify-center w-full">
+
+              <div className="flex items-center justify-center w-full mt-2">
                 <button
                   type="submit"
                   onClick={handleSessionCreation}
                   className="w-fit flex justify-center py-3 px-12 text-sm font-medium rounded-lg text-dark-100 bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
                 >
-                  Create
+                  Schedule
                 </button>
               </div>
             </div>

@@ -84,11 +84,11 @@ export default function InstructorDashboard() {
     <>
       <div
         className={`flex-1 transition-transform pt-[97px] space-y-4 max-md:pt-32 font-inter ${
-          isSidebarOpen ? "translate-x-64 pl-20 " : "translate-x-0 pl-10 "
+          isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 pl-10 "
         }`}
         style={{
           // paddingBottom: "20px",
-          width: isSidebarOpen ? "85%" : "100%",
+          width: isSidebarOpen ? "81%" : "100%",
         }}
       >
         <h2 className="ml-2 font-exo text-3xl font-bold">Instructor Dashboard</h2>

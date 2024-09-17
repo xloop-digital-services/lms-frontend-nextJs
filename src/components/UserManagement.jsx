@@ -29,6 +29,8 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   const [userByProgramID, setUserByProgramID] = useState([]);
   const [loading, setLoading] = useState(false);
   const [approvedRequest, setApprovedRequest] = useState(null);
+  const [verifiedRequest, setverfiedRequest] = useState(null);
+  const [unverifiedRequest, setUnverifiedRequest] = useState(null)
   const [pendingRequest, setPendingRequest] = useState(null);
   const [shortListRequest, setShortlisted] = useState(null);
   const [skills, setSkills] = useState([]);
@@ -44,7 +46,6 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   const [userPrograms, setUserPrograms] = useState([]);
   const [userSkills, setUserSkills] = useState([]);
   const [users, setUsers] = useState([]);
-  const [userId, setUserId] = useState(null);
   const [message, setMessage] = useState("");
   const [count, setCount] = useState(0);
 
@@ -76,8 +77,6 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
           setCount(response?.data?.data.count);
 
           // console.log(response?.data?.data?.[0].?id)
-          const getUserId = users.map((user) => user.id);
-          setUserId(users.map((user) => user.id));
           setLoadingUsers(false);
         } // console.log("response from both idss", response.data);
       } catch (error) {
@@ -125,6 +124,8 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
           setLoading(false);
         } catch (error) {
           console.log(error);
+            setMessage("no data found");
+    
           setLoading(false);
         }
       };
@@ -140,7 +141,9 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
           selectedOption
         );
         // console.log("numbers", response.data);
-        setApprovedRequest(response?.data?.data.approved);
+        setApprovedRequest(response?.data?.data.approved)
+        setverfiedRequest(response?.data?.data.verified);
+          setUnverifiedRequest(response?.data?.data.unverified)
         setPendingRequest(response?.data?.data.pending);
         setShortlisted(response?.data?.data.short_listed);
         // console.log('short:',response?.data?.data.short_listed)
@@ -227,11 +230,11 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   return (
     <div
       className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-32 font-inter ${
-        isSidebarOpen ? "translate-x-64 pl-20 " : "translate-x-0 pl-10 pr-4"
+        isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 pl-10 pr-4"
       }`}
       style={{
         paddingBottom: "24px",
-        width: isSidebarOpen ? "84%" : "100%",
+        width: isSidebarOpen ? "81%" : "100%",
         height: "100vh", // Set the height to full screen
         overflow: "hidden", // Hide any overflow from the parent container
       }}
@@ -288,7 +291,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
           </div>
         </div>
         <div
-          className="my-5 space-y-3 overflow-auto  scrollbar-webkit"
+          className="my-5 space-y-3 max-h-screen overflow-auto  scrollbar-webkit"
           style={{
             flexGrow: 1, // Allow this section to grow and take up remaining space
           }}
@@ -322,15 +325,18 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                           isProgramSectionOpen &&
                           programSection === program.name ? (
                             selectedStatus === "pending" ? (
-                              <p>({pendingRequest})</p>
+                              <p>( {pendingRequest} )</p>
                             ) : selectedStatus === "approved" ? (
-                              <p>({approvedRequest})</p>
+                              <p className="tracking-wide flex gap-2">
+                                <span>( {approvedRequest} )</span>
+                                <span>(verified: {verifiedRequest}, unverified: {unverifiedRequest})</span>
+                              </p>
                             ) : (
-                              <p>({shortListRequest})</p>
+                              <p>( {shortListRequest} )</p>
                             )
                           ) : (
                             isProgramSectionOpen &&
-                            programSection === program.name && <p>({count})</p>
+                            programSection === program.name && <p>( {count} )</p>
                           )}
                         </div>
                       </div>
@@ -389,6 +395,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                                 selectedStatus={selectedStatus}
                                 selectedOption={selectedOption}
                                 userByProgramID={userByProgramID}
+                                message={message}
                                 setStatusUpdated={setStatusUpdated}
                                 statusUpdated={statusUpdated}
                               />
@@ -438,13 +445,16 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                         {heading === "Applicants" && 
                           isSkillSectionOpen &&
                           skillSection === skill.name ? (
-                          selectedStatus === "pending" ? (
-                            <p>( {pendingRequest} )</p>
-                          ) : selectedStatus === "approved" ? (
-                            <p>( {approvedRequest} )</p>
-                          ) : (
-                            <p>( {shortListRequest} )</p>
-                          )
+                            selectedStatus === "pending" ? (
+                              <p>( {pendingRequest} )</p>
+                            ) : selectedStatus === "approved" ? (
+                              <p className="tracking-wide flex gap-2">
+                                <span>( {approvedRequest} )</span>
+                                <span>(verified: {verifiedRequest}, unverified: {unverifiedRequest})</span>
+                              </p>
+                            ) : (
+                              <p>( {shortListRequest} )</p>
+                            )
                         ) : (
                           isSkillSectionOpen &&
                           skillSection === skill.name && <p>( {count} )</p>

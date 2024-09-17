@@ -6,50 +6,69 @@ import { IoIosArrowDown } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 import { toast } from "react-toastify";
 
-const LocationModal = ({ updateLocation ,setOpenModal, setUpdateLocation, city0ptions }) => {
-  const [allLocations, setAllLocations] = useState([])
+const LocationModal = ({
+  updateLocation,
+  setOpenModal,
+  setUpdateLocation,
+  cityOptions,
+}) => {
+  const [allLocations, setAllLocations] = useState([]);
   const [locationName, setLocationName] = useState("select your location");
   const [locationCode, setLocationCode] = useState("");
   const [city, setCity] = useState("select your city");
-  const [isCityOpen ,setIsCityOpen] = useState(false)
-  const [isCitySelected ,setIscitySelected] = useState(false)
-  const [isLocationOpen ,setIsLocationOpen] = useState(false)
-  const [isLocationSelected ,setIsLocationSelected] = useState(false)
+  const [isCityOpen, setIsCityOpen] = useState(false);
+  const [isCitySelected, setIscitySelected] = useState(false);
+  const [isLocationOpen, setIsLocationOpen] = useState(false);
+  const [isLocationSelected, setIsLocationSelected] = useState(false);
   const [capacity, setCapacity] = useState();
   const [loadingCreation, setLoadingCreation] = useState(false);
   const cityDown = useRef(null);
   const modalDown = useRef(null);
 
   useClickOutside(cityDown, () => {
-    setIsCityOpen(false)
-    setIsLocationOpen(false)
-  })
+    setIsCityOpen(false);
+    setIsLocationOpen(false);
+  });
 
-  useClickOutside(modalDown, () => setOpenModal(false))
+  useClickOutside(modalDown, () => setOpenModal(false));
 
-  // console.log('in the modal', city0ptions)
+  // console.log('in the modal', cityOptions)
 
   const handlLocationCreation = async () => {
     setLoadingCreation(true);
-    try {
-      const data = {
-        name: locationName,
-        shortname: locationCode,
-        capacity: capacity,
-        city: city,
-      };
-      const response = await createLocation(data);
-      console.log("location created", response?.data?.message);
-      toast.success(response?.data?.message);
-      setLoadingCreation(false);
-      setOpenModal(false);
-      setUpdateLocation(!updateLocation);
-    } catch (error) {
-      console.log(
-        "error while location creation",
-        error?.response?.data?.message
-      );
-      setLoadingCreation(false);
+    if(city && capacity && locationName && locationCode){
+
+      try {
+        const data = {
+          name: locationName,
+          shortname: locationCode,
+          capacity: capacity,
+          city: city,
+        };
+        const response = await createLocation(data);
+        if (response.data.status_code === 201) {
+          console.log("location created", response?.data?.message);
+          toast.success(response?.data?.message);
+          setLoadingCreation(false);
+          setOpenModal(false);
+          setUpdateLocation(!updateLocation);
+        }
+  
+        if (response.data.code === "token_not_valid") {
+          toast.error("Your session has been expired. Log In again!");
+          setLoadingCreation(false);
+          setOpenModal(false);
+        }
+      } catch (error) {
+        console.log(
+          "error while location creation",
+          error?.response?.data?.message
+        );
+        setLoadingCreation(false);
+      }
+    } else {
+      toast.error('All fields are required!')
+      setLoadingCreation(false)
     }
   };
 
@@ -59,22 +78,22 @@ const LocationModal = ({ updateLocation ,setOpenModal, setUpdateLocation, city0p
 
   const handleCitySelect = (option) => {
     setCity(option.name);
-    setLocationName('select your location')
+    setLocationName("select your location");
     setIsCityOpen(false);
-    setIscitySelected(true)
-    setAllLocations(option.areas)
+    setIscitySelected(true);
+    setAllLocations(option.areas);
   };
 
   const toggleLocationOpen = () => {
-    setIsLocationOpen(!isLocationOpen)
-  }
+    setIsLocationOpen(!isLocationOpen);
+  };
 
   const handleLocationSelect = (option) => {
-    setLocationName(option.name)
-    setLocationCode(option.shortName)
-    setIsLocationOpen(false)
-    setIsLocationSelected(true)
-  }
+    setLocationName(option.name);
+    setLocationCode(option.shortName);
+    setIsLocationOpen(false);
+    setIsLocationSelected(true);
+  };
 
   return (
     <div className="backDropOverlay h-screen flex justify-center items-center">
@@ -84,7 +103,11 @@ const LocationModal = ({ updateLocation ,setOpenModal, setUpdateLocation, city0p
             <CircularProgress size={30} />
           </div>
         )}
-        <div ref={modalDown} style={{ backgroundColor: "#EBF6FF" }} className="p-5 rounded-xl">
+        <div
+          ref={modalDown}
+          style={{ backgroundColor: "#EBF6FF" }}
+          className="p-5 rounded-xl"
+        >
           <div className="flex justify-between">
             <h1
               style={{
@@ -104,77 +127,91 @@ const LocationModal = ({ updateLocation ,setOpenModal, setUpdateLocation, city0p
           <div className={`bg-surface-100 p-6 rounded-xl space-y-5`}>
             <div className="flex gap-3 mx-auto w-full justify-between">
               <div className="space-y-2 text-[15px] w-full">
-              <p>City</p>
-              <div>
-              <button
-                onClick={toggleCityOpen}
-                className={`${
-                  !isCitySelected ? " text-[#92A7BE]" : "text-[#424b55]"
-                } flex justify-between items-center  md:w-[220px]  w-[80%]  hover:text-[#0e1721] p-4 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}              >
-                {city }
-                <span className="">
-                  <IoIosArrowDown />
-                </span>
-              </button>
+                <p>City</p>
+                <div>
+                  <button
+                    onClick={toggleCityOpen}
+                    className={`${
+                      !isCitySelected ? " text-[#92A7BE]" : "text-[#424b55]"
+                    } flex justify-between items-center  md:w-[220px]  w-[80%]  hover:text-[#0e1721] p-4 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                  >
+                    {city}
+                    <span className="">
+                      <IoIosArrowDown />
+                    </span>
+                  </button>
 
-              {isCityOpen && (
-                <div ref={cityDown} className="absolute z-10 w-[220px] mt-1 max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out">
-                  {city0ptions.map((option, index) => (
+                  {isCityOpen && (
                     <div
-                      key={index}
-                      onClick={() => handleCitySelect(option)}
-                      className="p-2 cursor-pointer "
+                      ref={cityDown}
+                      className="absolute z-10 w-[220px] mt-1 max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                     >
-                      <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
-                        {option.name}
-                      </div>
+                      {cityOptions.map((option, index) => (
+                        <div
+                          key={index}
+                          onClick={() => handleCitySelect(option)}
+                          className="p-2 cursor-pointer "
+                        >
+                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                            {option.name}
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  )}
                 </div>
-              )}
-            </div>
               </div>
               <div className="space-y-2 text-[15px] w-full">
                 <p>Location</p>
                 <div>
-              <button
-                onClick={toggleLocationOpen}
-                className={`${
-                  !isLocationSelected ? " text-[#92A7BE]" : "text-[#424b55]"
-                } flex justify-between items-center  md:w-[220px]  w-[80%]  hover:text-[#0e1721] p-4 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}              >
-                {locationName }
-                <span className="">
-                  <IoIosArrowDown />
-                </span>
-              </button>
+                  <button
+                    onClick={toggleLocationOpen}
+                    className={`${
+                      !isLocationSelected ? " text-[#92A7BE]" : "text-[#424b55]"
+                    } flex justify-between items-center  md:w-[220px]  w-[80%]  hover:text-[#0e1721] p-4 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                  >
+                    {locationName}
+                    <span className="">
+                      <IoIosArrowDown />
+                    </span>
+                  </button>
 
-              {(isLocationOpen && allLocations.length > 0 )? (
-                <div ref={cityDown}  className="absolute z-10 w-[220px] mt-1 max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out">
-                  {allLocations.map((option, index) => (
+                  {isLocationOpen && allLocations.length > 0 ? (
                     <div
-                      key={index}
-                      onClick={() => handleLocationSelect(option)}
-                      className="p-2 cursor-pointer "
+                      ref={cityDown}
+                      className="absolute z-10 w-[220px] mt-1 max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                     >
-                      <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
-                        {option.name}
-                      </div>
+                      {allLocations.map((option, index) => (
+                        <div
+                          key={index}
+                          onClick={() => handleLocationSelect(option)}
+                          className="p-2 cursor-pointer "
+                        >
+                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                            {option.name}
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  ) : (
+                    isLocationOpen &&
+                    allLocations.length == 0 && (
+                      <div
+                        ref={cityDown}
+                        className="absolute z-10 w-[220px] mt-1 max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                      >
+                        <p className="text-[12px] text-dark-400 text-center p-1">
+                          select your city first
+                        </p>
+                      </div>
+                    )
+                  )}
                 </div>
-              ): isLocationOpen && allLocations.length == 0 &&
-              <div ref={cityDown} className="absolute z-10 w-[220px] mt-1 max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out">
-                <p className="text-[12px] text-dark-400 text-center p-1">select your city first</p>
-              </div>
-              }
-            </div>
               </div>
             </div>
             <div className="flex gap-3 mx-auto w-full justify-between">
               <div className="space-y-2 text-[15px] w-full">
-                <p>
-                  Location Code
-                </p>
+                <p>Location Code</p>
                 <input
                   type="text"
                   className="border border-dark-300 outline-none p-3 rounded-lg w-full "

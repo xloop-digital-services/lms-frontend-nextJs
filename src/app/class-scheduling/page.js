@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { IoIosArrowDown } from "react-icons/io";
+import { IoIosArrowDown, IoMdClose } from "react-icons/io";
 import SessionsTable from "@/components/SessionsTable";
 import SessionCreationModal from "@/components/Modal/SessionCreationModal";
 import { useSidebar } from "@/providers/useSidebar";
@@ -11,11 +11,11 @@ export default function Page() {
   const { isSidebarOpen } = useSidebar();
   const [selectedLocationId, setSelectedLocationId] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 845);
-  const [selectedCity, setSelectedCity] = useState("Select your city");
+  const [selectedCity, setSelectedCity] = useState("select city");
   const [selectedLocation, setSelectedLocation] = useState(
-    "Select your location"
+    "select location"
   );
-  const [selectedBatch, setSelectedBatch] = useState("Select your batch");
+  const [selectedBatch, setSelectedBatch] = useState("select batch");
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [isBatchOpen, setIsBatchOpen] = useState(false);
@@ -30,6 +30,7 @@ export default function Page() {
   const [loading, setLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [updateSession, setUpdateSession] = useState(false);
+  const [filterLocation, setfilterLocation] = useState([]);
   const dropdownRef = useRef(null);
 
   // Update states based on screen size
@@ -70,10 +71,22 @@ export default function Page() {
         "error while fetching the session",
         error.response.data.message
       );
+      if (error.message === "Network Error") {
+        toast.error(error.message, "Check your internet connection");
+      } else {
+        toast.error(error.response.data.message);
+      }
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const filteredList = sessions.filter((session) =>
+      session.location_name.toLowerCase().includes(selectedLocation.toLowerCase())
+    );
+    setfilterLocation(filteredList);
+  }, [selectedLocation, sessions]);
 
   useEffect(() => {
     handleListingAllSessions();
@@ -87,6 +100,9 @@ export default function Page() {
       setBatchOptions(batchOptionsArray);
     } catch (error) {
       console.log("error while fetching the batches", error);
+      if (error.message === "Network Error") {
+        toast.error(error.message, "Check your internet connection");
+      }
     } finally {
       setLoadingBatch(false);
     }
@@ -99,10 +115,14 @@ export default function Page() {
       const LocationOptionsArray = response?.data.map((location) => ({
         id: location.id,
         name: location.name,
+        city: location.city,
       }));
       setLocationOptions(LocationOptionsArray);
     } catch (error) {
       console.log("error while fetching the locations", error);
+      if (error.message === "Network Error") {
+        toast.error(error.message, "Check your internet connection");
+      }
     } finally {
       setLoadingLocation(false);
     }
@@ -117,23 +137,31 @@ export default function Page() {
   const toggleLocationOpen = () => setIsLocationOpen(!isLocationOpen);
   const toggleBatchOpen = () => setIsBatchOpen(!isBatchOpen);
 
+  useEffect(() => {}, []);
+
   const handleCitySelect = (city) => {
     setSelectedCity(city);
     setIsCityOpen(false);
-    setIsCitySelected(true)
+    setIsCitySelected(true);
   };
 
   const handleLocationSelect = (location) => {
     setSelectedLocation(location.name);
     setSelectedLocationId(location.id); // Store the ID for later use
     setIsLocationOpen(false);
-    setIsLocationSelected(true)
+    setIsLocationSelected(true);
   };
 
   const handleBatchSelect = (batch) => {
     setSelectedBatch(batch.name);
     setIsBatchOpen(false);
-    setIsBatchSelected(true)
+    setIsBatchSelected(true);
+  };
+
+  const clearLocationFilter = () => {
+    setSelectedLocation("select location");
+    setIsLocationSelected(false);
+    setIsLocationOpen(false);
   };
 
   const handleOpenSessionModal = () => setOpenModal(true);
@@ -141,15 +169,15 @@ export default function Page() {
   return (
     <div
       className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-32 font-inter ${
-        isSidebarOpen ? "translate-x-64 pl-20 " : "translate-x-0 xxlg:px-8 px-3"
+        isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 xxlg:px-8 px-3"
       }`}
-      style={{ width: isSidebarOpen ? "84%" : "100%" }}
+      style={{ width: isSidebarOpen ? "81%" : "100%" }}
     >
       <div className="bg-surface-100 p-6 rounded-xl">
       
         <div className="w-full flex xlg:flex-row flex-col justify-between items-center gap-4">
           <div>
-            <p className="font-bold font-exo text-xl">Class Timings</p>
+            <p className="font-bold text-xl">Class Details</p>
           </div>
           <div className="flex gap-3 sm:flex-row flex-col text-base lg:text-sm">
             <div className="flex gap-3 ">
@@ -159,43 +187,63 @@ export default function Page() {
                   onClick={toggleCityOpen}
                   className={`${
                     !isCitySelected ? " text-[#92A7BE]" : "text-[#424b55]"
-                  } flex justify-between items-center w-full  lg:w-[200px] gap-1  hover:text-[#0e1721] px-4 xlg:py-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
-                  >
+                  } flex justify-between items-center md:w-[200px] w-[80%] hover:text-[#0e1721] p-4 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                >
                   {selectedCity}
-                  <span className="">
+                  {isCitySelected && (
+                    <span
+                      onClick={clearCityFilter}
+                      className="ml-2 text-red-500 cursor-pointer"
+                    >
+                      <IoMdClose />
+                    </span>
+                  )}
+                  <span
+                    className={`ml-auto ${
+                      isCityOpen ? "rotate-180 duration-300" : "duration-300"
+                    }`}
+                  >
                     <IoIosArrowDown />
                   </span>
                 </button>
 
                 {isCityOpen && (
                   <div
-                    ref={dropdownRef}
+                    ref={cityDown}
                     className="absolute z-10 w-[200px] mt-1 bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                   >
-                    {["Karachi", "Lahore"].map((option, index) => (
+                    {cityOptions.map((option, index) => (
                       <div
                         key={index}
                         onClick={() => handleCitySelect(option)}
                         className="p-2 cursor-pointer"
                       >
                         <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
-                          {option}
+                          {option.name}
                         </div>
                       </div>
                     ))}
                   </div>
                 )}
-              </div>
+              </div> */}
 
-              {/* Location Dropdown */}
-              {/* <div>
+              {/* Location Dropdown  */}
+              <div>
                 <button
                   onClick={toggleLocationOpen}
                   className={`${
                     !isLocationSelected ? " text-[#92A7BE]" : "text-[#424b55]"
                   } flex justify-between items-center w-full  lg:w-[200px] gap-1 hover:text-[#0e1721] px-4 xlg:py-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
-                  >
+                >
                   {selectedLocation}
+                  {isLocationSelected && (
+                    <span
+                      onClick={clearLocationFilter}
+                      className="ml-2 text-red-500 cursor-pointer"
+                    >
+                      <IoMdClose />
+                    </span>
+                  )}
                   <span className="">
                     <IoIosArrowDown />
                   </span>
@@ -214,7 +262,7 @@ export default function Page() {
                           className="p-2 cursor-pointer"
                         >
                           <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
-                            {option.name}
+                            {option.name}, {option.city}
                           </div>
                         </div>
                       ))
@@ -225,7 +273,7 @@ export default function Page() {
                     )}
                   </div>
                 )}
-              </div> */}
+              </div>
 
               {/* Batch Dropdown *
               <div>
@@ -273,7 +321,7 @@ export default function Page() {
                 className="text-[#fff] bg-[#03A1D8] md:w-[200px] px-4 xlg:py-4 py-3 w-full rounded-lg"
                 onClick={handleOpenSessionModal}
               >
-               Create a New class
+                Schedule a new class
               </button>
             </div>
           </div>
@@ -281,7 +329,13 @@ export default function Page() {
 
         {/* Sessions Table */}
         <div>
-          <SessionsTable sessions={sessions} loading={loading} />
+          {isLocationSelected && filterLocation.length > 0 ? (
+            <SessionsTable sessions={filterLocation} loading={loading} />
+          ) : !isLocationSelected && sessions.length > 0 ? (
+            <SessionsTable sessions={sessions} loading={loading} />
+          ) : (
+            <p>No class is schedule in this lcoation</p>
+          )}
         </div>
       </div>
 

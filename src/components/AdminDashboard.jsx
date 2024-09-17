@@ -8,6 +8,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import useClickOutside from "@/providers/useClickOutside";
 import {
   getAllPrograms,
+  getAllSkills,
   getApplicationsTotalNumber,
   getCityStatistics,
   listAllBatches,
@@ -24,7 +25,13 @@ const AdminDashboard = () => {
   const [programId, setProgramId] = useState(null);
   const [isProgramOpen, setIsProgramOpen] = useState(false);
   const [isProgramSelected, setIsProgramSelected] = useState(false);
-  const [approvedRequest, setApprovedRequest] = useState(null);
+  const [allSkills, setAllSkills] = useState([]);
+  const [selectedSkill, setSelectedSkill] = useState("");
+  const [skillId, setSkillId] = useState(null);
+  const [isSkillOpen, setIsSkillOpen] = useState(false);
+  const [isSkillSelected, setIsSkillSelected] = useState(false);
+  const [verfiedRequest, setverfiedRequest] = useState(null);
+  const [unverifiedRequest, setUnverifiedRequest] = useState(null)
   const [pendingRequest, setPendingRequest] = useState(null);
   const [shortListRequest, setShortlisted] = useState(null);
   const [isUserOpen, setIsUserOpen] = useState(false);
@@ -44,11 +51,36 @@ const AdminDashboard = () => {
   const [allInActiveUsers, setAllInActiveUsers] = useState(0);
   const [allInActiveStudents, setAllInActiveStudents] = useState(0);
   const [allInActiveInstructors, setAllInActiveInstructors] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredBatches, setFilteredBatches] = useState([]);
+
   const dropdownRef = useRef(null);
   const userDown = useRef(null);
 
   useClickOutside(dropdownRef, () => setIsProgramOpen(false));
   useClickOutside(userDown, () => setIsUserOpen(false));
+
+  
+  // Apply filtering whenever search term or dropdown status changes
+  useEffect(() => {
+    const handleFilter = () => {
+      const filteredData = batches.filter((batch) => {
+        const matchesSearchTerm = batch.batch
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+    
+        const matchesStatus =
+          selectedStatus === "Show All" ||
+          (selectedStatus === "Active" && batch.status === 1) ||
+          (selectedStatus === "Inactive" && batch.status === 0);
+    
+        return matchesSearchTerm && matchesStatus;
+      });
+    
+      setFilteredBatches(filteredData);
+    };
+    handleFilter();
+  }, [searchTerm, selectedStatus, batches]);
 
   const handleTotalUsers = async () => {
     try {
@@ -85,6 +117,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     handleListingAllBatches();
     handleGetAllPrograms();
+    handleGetAllSkills();
     handleBarChartData();
     handleTotalUsers();
   }, []);
@@ -99,11 +132,24 @@ const AdminDashboard = () => {
       }
       if (response?.data?.status_code === 404) {
         setLoading(false);
+        toast.error(response?.data?.message);
         // console.log("ab aya error");
       }
     } catch (err) {
       setLoading(false);
       console.error("error while fetching the programs", err);
+    }
+  };
+
+  const handleGetAllSkills = async () => {
+    try {
+      const response = await getAllSkills();
+      console.log("fetching skills", response.data);
+      setAllSkills(response?.data);
+      setLoading(false);
+    } catch (error) {
+      console.log("error fetching the list of skills");
+      setLoading(false);
     }
   };
 
@@ -113,10 +159,25 @@ const AdminDashboard = () => {
       setProgramId(allPrograms[0].id);
       setIsProgramSelected(true); // Set the first program's name as default
     }
-  }, [allPrograms]);
+    if (allSkills && allSkills.length > 0) {
+      setSelectedSkill(allSkills[0].name);
+      setSkillId(allSkills[0].id);
+      setIsSkillSelected(true);
+    }
+  }, [allPrograms, allSkills]);
 
   const toggleProgramOpen = () => {
     setIsProgramOpen((prev) => !prev);
+  };
+  const toggleSkillOpen = () => {
+    setIsSkillOpen((prev) => !prev);
+  };
+
+  const handleSkillSelect = (option) => {
+    setSelectedSkill(option.name);
+    setSkillId(option.id);
+    setIsSkillSelected(true);
+    setIsSkillOpen(false);
   };
 
   const handleProgramSelect = (option) => {
@@ -129,14 +190,27 @@ const AdminDashboard = () => {
   useEffect(() => {
     const handlePieChatData = async () => {
       try {
-        const response = await getApplicationsTotalNumber(
-          programId,
-          selectedUser
-        );
-        console.log("numbers", response.data);
-        setApprovedRequest(response?.data?.data.approved);
-        setPendingRequest(response?.data?.data.pending);
-        setShortlisted(response?.data?.data.short_listed);
+        if (selectedUser === "student") {
+          const response = await getApplicationsTotalNumber(
+            programId,
+            selectedUser
+          );
+          setverfiedRequest(response?.data?.data.verified);
+          setUnverifiedRequest(response?.data?.data.unverified)
+          setPendingRequest(response?.data?.data.pending);
+          setShortlisted(response?.data?.data.short_listed);
+        } else if (selectedUser === "instructor") {
+          const response = await getApplicationsTotalNumber(
+            skillId,
+            selectedUser
+          );
+          setverfiedRequest(response?.data?.data.verified);
+           setUnverifiedRequest(response?.data?.data.unverified)
+          setPendingRequest(response?.data?.data.pending);
+          setShortlisted(response?.data?.data.short_listed);
+        }
+        // console.log("numbers", response.data);
+
         setLoading(false);
       } catch (error) {
         console.log("error while fetching number of applications", error);
@@ -151,6 +225,8 @@ const AdminDashboard = () => {
     selectedProgram,
     programId,
     isProgramSelected,
+    selectedSkill,
+    skillId,
     isUserSelected,
     selectedUser,
   ]);
@@ -191,12 +267,12 @@ const AdminDashboard = () => {
 
   return (
     <div
-      className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-32 font-inter ${
-        isSidebarOpen ? "translate-x-64 pl-20 " : "translate-x-0 pl-10 pr-4"
+      className={`flex-1 transition-transform pt-[100px] space-y-4 max-md:pt-32 font-inter ${
+        isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 pl-10 pr-4"
       }`}
       style={{
         // paddingBottom: "20px",
-        width: isSidebarOpen ? "84%" : "100%",
+        width: isSidebarOpen ? "81%" : "100%",
       }}
     >
       <div className="text-[#07224D] flex flex-col gap-5">
@@ -204,7 +280,7 @@ const AdminDashboard = () => {
         <div className="flex gap-5">
           {" "}
           {/* Adding a unique key */}
-          <div className="bg-[#ffffff] min-w-[32%] flex justify-between p-5 rounded-xl">
+          <div className="bg-[#ffffff] min-w-[32%] flex justify-between px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
             <div className="flex flex-col text-sm h-full justify-center items-center">
               Total Users
               <span className="text-xl font-semibold font-exo text-[#32324D]">
@@ -226,7 +302,7 @@ const AdminDashboard = () => {
               </div>
             </div>
           </div>
-          <div className="bg-[#ffffff] min-w-[32%] flex justify-between p-5 rounded-xl">
+          <div className="bg-[#ffffff] min-w-[32%] flex justify-between px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
             <div className="flex flex-col text-sm h-full justify-center items-center">
               Total Students
               <span className="text-xl font-semibold font-exo text-[#32324D]">
@@ -248,7 +324,7 @@ const AdminDashboard = () => {
               </div>
             </div>
           </div>
-          <div className="bg-[#ffffff] min-w-[32%] flex justify-between p-5 rounded-xl">
+          <div className="bg-[#ffffff] min-w-[32%] flex justify-between px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
             <div className="flex flex-col text-sm h-full justify-center items-center">
               Total Instructors
               <span className="text-xl font-semibold font-exo text-[#32324D]">
@@ -272,7 +348,7 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        <div className="flex gap-5 xmd:flex-row flex-col">
+        <div className="flex gap-4 xmd:flex-row flex-col">
           <div className="bg-[#ffffff] xmd:w-[65.5%] w-full overflow-x-auto scrollbar-webkit p-5 rounded-xl  h-[450px]">
             <div className="border border-dark-300 rounded-xl p-3 h-full w-full">
               <div className="font-bold font-exo text-[#32324D] text-lg pb-2">
@@ -319,44 +395,87 @@ const AdminDashboard = () => {
                     </div>
                   )}
                 </div>
-                <div className={`${!isUserSelected && 'hidden'}`}>
-                  <button
-                    onClick={toggleProgramOpen}
-                    className={`${
-                      !isProgramSelected ? " text-[#92A7BE]" : "text-[#424b55]"
-                    } flex justify-between mt-1 items-center  xl:w-[200px] w-full gap-1 hover:text-[#0e1721] px-4 xlg:py-3 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
-                  >
-                    {selectedProgram}
-                    <span className="">
-                      <IoIosArrowDown />
-                    </span>
-                  </button>
-
-                  {isProgramOpen && (
-                    <div
-                      ref={dropdownRef}
-                      className="absolute z-50 mt-1 xl:w-[200px] w-fit  max-h-[200px] overflow-auto scrollbar-webkit  bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                {selectedUser === "student" ? (
+                  <div className={`${!isUserSelected && "hidden"}`}>
+                    <button
+                      onClick={toggleProgramOpen}
+                      className={`${
+                        !isProgramSelected
+                          ? " text-[#92A7BE]"
+                          : "text-[#424b55]"
+                      } flex justify-between mt-1 items-center  xl:w-[200px] w-full gap-1 hover:text-[#0e1721] px-4 xlg:py-3 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                     >
-                      {allPrograms && allPrograms.length > 0 ? (
-                        allPrograms.map((option, index) => (
-                          <div
-                            key={index}
-                            onClick={() => handleProgramSelect(option)}
-                            className="p-2 cursor-pointer"
-                          >
-                            <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
-                              {option.name}
+                      {selectedProgram}
+                      <span className="">
+                        <IoIosArrowDown />
+                      </span>
+                    </button>
+
+                    {isProgramOpen && (
+                      <div
+                        ref={dropdownRef}
+                        className="absolute z-50 mt-1 xl:w-[200px] w-fit  max-h-[200px] overflow-auto scrollbar-webkit  bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                      >
+                        {allPrograms && allPrograms.length > 0 ? (
+                          allPrograms.map((option, index) => (
+                            <div
+                              key={index}
+                              onClick={() => handleProgramSelect(option)}
+                              className="p-2 cursor-pointer"
+                            >
+                              <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                                {option.name}
+                              </div>
                             </div>
-                          </div>
-                        ))
-                      ) : (
-                        <p className="text-[12px] text-dark-400 text-center p-1">
-                          No Program found
-                        </p>
-                      )}
-                    </div>
-                  )}
-                </div>
+                          ))
+                        ) : (
+                          <p className="text-[12px] text-dark-400 text-center p-1">
+                            No Program found
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className={`${!isUserSelected && "hidden"}`}>
+                    <button
+                      onClick={toggleSkillOpen}
+                      className={`${
+                        !isSkillSelected ? " text-[#92A7BE]" : "text-[#424b55]"
+                      } flex justify-between mt-1 items-center  xl:w-[200px] w-full gap-1 hover:text-[#0e1721] px-4 xlg:py-3 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                    >
+                      {selectedSkill}
+                      <span className="">
+                        <IoIosArrowDown />
+                      </span>
+                    </button>
+
+                    {isSkillOpen && (
+                      <div
+                        ref={dropdownRef}
+                        className="absolute z-50 mt-1 xl:w-[200px] w-fit  max-h-[200px] overflow-auto scrollbar-webkit  bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                      >
+                        {allSkills && allSkills.length > 0 ? (
+                          allSkills.map((option) => (
+                            <div
+                              key={option.id}
+                              onClick={() => handleSkillSelect(option)}
+                              className="p-2 cursor-pointer"
+                            >
+                              <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                                {option.name}
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <p className="text-[12px] text-dark-400 text-center p-1">
+                            No Skill found
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
             <div>
@@ -364,33 +483,50 @@ const AdminDashboard = () => {
                 <div className="flex h-full mt-4 justify-center items-center">
                   <CircularProgress size={20} />
                 </div>
-              ) : selectedProgram && selectedUser && isUserSelected ? (
-                <div>
-                  <PieChart
-                    approved={approvedRequest}
-                    pending={pendingRequest}
-                    shortlisted={shortListRequest}
-                  />
-                </div>
+              ) : selectedProgram &&
+                selectedSkill &&
+                selectedUser &&
+                isUserSelected ? (
+                verfiedRequest === 0 &&
+                unverifiedRequest === 0 &&
+                pendingRequest === 0 &&
+                shortListRequest === 0 ? (
+                  <div className="flex justify-center items-center text-dark-400 text-sm h-full mt-4">
+                    No applications found
+                  </div>
+                ) : (
+                  <div>
+                    <PieChart
+                      verified={verfiedRequest}
+                      unverified={unverifiedRequest}
+                      pending={pendingRequest}
+                      shortlisted={shortListRequest}
+                    />
+                  </div>
+                )
               ) : (
                 <div className="flex justify-center items-center text-dark-400 text-sm h-full mt-4">
-                  select the user and the program to see the results
+                  Select the user and the program to see the results
                 </div>
               )}
             </div>
           </div>
         </div>
-        <div className="bg-[#ffffff] rounded-xl p-5">
+        <div className="bg-[#ffffff] rounded-xl p-5 max-h-[260px] overflow-auto scrollbar-webkit">
           <div>
             <h1 className="font-bold font-exo text-[#32324D] text-lg ">
               Batch Details
             </h1>
-            {/* <div className="w-full flex items-center gap-4 mt-2">
-              <div className="flex grow">
+            <div className="w-full flex items-center gap-4 mt-2">
+              <div className="flex-grow">
+                {" "}
+                {/* Ensure the container is growable */}
                 <input
                   type="text"
                   placeholder="Search batch by names"
-                  className="p-3 text-sm border border-[#92A7BE] rounded-lg outline-none w-full"
+                  className="p-3 text-sm border border-[#92A7BE] rounded-lg outline-none w-full" // w-full ensures full width
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
               <div>
@@ -398,7 +534,7 @@ const AdminDashboard = () => {
                   onClick={toggleOpen}
                   className={` ${
                     !isSelected ? " text-[#92A7BE]" : "text-[#424b55]"
-                  } flex justify-between text-sm z-50 items-center w-full gap-1 md:w-[200px] hover:text-[#0e1721] px-4 py-3 text-left bg-white border  border-[#92A7BE] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                  } flex justify-between text-sm z-50 items-center w-full md:w-[200px] hover:text-[#0e1721] px-4 py-3 text-left bg-white border border-[#92A7BE] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
                   {selectedStatus || options[0]}
                   <span className="">
@@ -409,13 +545,13 @@ const AdminDashboard = () => {
                 {isOpen && (
                   <div
                     ref={dropdownRef}
-                    className="absolute capitalize z-50 w-fit md:w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                    className="absolute capitalize z-50 w-full md:w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                   >
                     {options.map((option, index) => (
                       <div
                         key={index}
                         onClick={() => handleOptionSelect(option)}
-                        className="p-2 cursor-pointer "
+                        className="p-2 cursor-pointer"
                       >
                         <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
                           {option}
@@ -425,9 +561,15 @@ const AdminDashboard = () => {
                   </div>
                 )}
               </div>
-            </div> */}
+            </div>
           </div>
-          <BatchTable batches={batches} loading={loading} />
+          {filteredBatches.length > 0 ? (
+            <BatchTable batches={filteredBatches} loading={loading} />
+          ) : batches.length > 0 ? (
+            <BatchTable batches={batches} loading={loading} />
+          ) : (
+            <p>No batches available</p>
+          )}
         </div>
       </div>
     </div>

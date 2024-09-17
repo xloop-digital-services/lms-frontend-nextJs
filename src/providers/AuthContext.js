@@ -88,6 +88,9 @@ export function AuthProvider({ children }) {
         progress: undefined,
       });
       setLoading(false)
+      if(error.message === 'Network Error'){
+        toast.error(error.message,'Check your internet connection')
+      }
     }
   };
 
