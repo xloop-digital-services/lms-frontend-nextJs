@@ -7,7 +7,7 @@ import InstructorCoursePage from "@/components/InstructorCoursePage";
 import { CircularProgress } from "@mui/material";
 
 export default function Page() {
-  const [loader, setLoader] = useState(true);
+  const [loader, setLoader] = useState(false);
   const { userData } = useAuth();
   const isStudent = userData?.Group === "student";
   const isAdmin = userData?.Group === "admin";
@@ -16,30 +16,30 @@ export default function Page() {
   return (
     <>
       {loader ? (
-        <div className="flex h-screen justify-center items-center">
+        <div className="absolute inset-0 w-full p-2 flex items-center justify-center  z-[1100]">
           <CircularProgress />
         </div>
       ) : (
-    <>
-      {isStudent ? (
-        <CoursePage path="attendance" heading="Attendance" />
-      ) : isAdmin ? (
-        <AdminCoursePage
-          title="Attendance"
-          route="course"
-          route1="attendance"
-        />
-      ) : isInstructor ? (
-        <InstructorCoursePage
-          title="Attendance"
-          route="course"
-          route1="attendance"
-        />
-      ) : (
-        <div className="" >No data found </div>
+        <>
+          {isStudent ? (
+            <CoursePage path="attendance" heading="Attendance" />
+          ) : isAdmin ? (
+            <AdminCoursePage
+              title="Attendance"
+              route="course"
+              route1="attendance"
+            />
+          ) : isInstructor ? (
+            <InstructorCoursePage
+              title="Attendance"
+              route="course"
+              route1="attendance"
+            />
+          ) : (
+            <div className="">No data found </div>
+          )}
+        </>
       )}
     </>
-    )}
-     </>
   );
 }

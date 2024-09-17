@@ -83,7 +83,7 @@ export default function StudentDashboard() {
           width: isSidebarOpen ? "81%" : "100%",
         }}
       >
-        <h2 className=" font-exo text-3xl font-bold">Student Dashboard</h2>
+        {/* <h2 className=" font-exo text-3xl font-bold">Student Dashboard</h2> */}
         <div className="flex w-[100%] max-md:flex-col">
           <div className="flex-col mx-2 w-[70%] max-md:w-full flex-wrap">
             <div className="w-full">

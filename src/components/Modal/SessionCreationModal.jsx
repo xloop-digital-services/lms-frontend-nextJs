@@ -86,11 +86,11 @@ const SessionCreationModal = ({
             "error while session creation",
             error.response.data.message
           );
-          toast.error("error in session creation");
+          toast.error("error in class scheduling");
           setLoadingCreation(false);
         }
       } else {
-        toast.error("properly select the fields to create a session");
+        toast.error("properly select the fields to schedule a class");
         setLoadingCreation(false);
       }
     } else {

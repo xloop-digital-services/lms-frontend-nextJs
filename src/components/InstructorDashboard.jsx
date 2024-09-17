@@ -91,7 +91,7 @@ export default function InstructorDashboard() {
           width: isSidebarOpen ? "81%" : "100%",
         }}
       >
-        <h2 className="ml-2 font-exo text-3xl font-bold">Instructor Dashboard</h2>
+        {/* <h2 className="ml-2 font-exo text-3xl font-bold">Instructor Dashboard</h2> */}
         <div className="flex w-[100%] max-md:flex-col">
           <div className="flex-col mx-2 w-[70%] max-md:w-full flex-wrap">
             <div className="w-full">

@@ -19,7 +19,7 @@ export default function CoursePage({ path, progress, heading }) {
   const progId = userData?.User?.program?.id;
   const [loader, setLoader] = useState(true);
   // console.log(progId)
-  // const [courseId, setCourseId] = useState();
+  // const [courseId, setCourseId] = useState([]);
   useEffect(() => {
     if (!progId) return;
     async function fetchCourses() {
@@ -29,7 +29,7 @@ export default function CoursePage({ path, progress, heading }) {
         if (response.status === 200) {
           setCourses(response.data?.data);
           setLoader(false);
-          // setCourseId(response?.data?.id)
+          // setCourseId(response?.data?.data.map((course) => course.id))
           console.log(response?.data);
         } else {
           console.error("Failed to fetch user, status:", response.status);
@@ -45,6 +45,7 @@ export default function CoursePage({ path, progress, heading }) {
   if (loader) {
     <CircularProgress />;
   }
+  console.log('courses idddsss', courseId)
 
   return (
     <>
@@ -64,7 +65,7 @@ export default function CoursePage({ path, progress, heading }) {
         ) : (
           <>
             <div className="bg-surface-100 p-8 rounded-xl ">
-              {!heading === "program" && (
+              {!(heading === "program") && (
                 <>
                   <h2 className="text-xl font-bold pb-1 font-exo">{heading}</h2>
                   <p className="pb-6">Select a course to view the {heading}</p>

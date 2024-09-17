@@ -19,7 +19,9 @@ import { useAuth } from "@/providers/AuthContext";
 function Profile() {
   const { isSidebarOpen } = useSidebar();
   const [firstName, setFirstName] = useState("");
+  const [editFirstName, setEditFirstName] = useState(firstName)
   const [lastName, setLastName] = useState("");
+  const [editLastName, setEditLastName] = useState(lastName)
   const [email, setEmail] = useState("");
   const [contactNumber, setContactNumber] = useState("");
   const [program, setProgram] = useState("");
@@ -50,6 +52,8 @@ function Profile() {
           setUser(userData);
           setFirstName(userData.first_name || "");
           setLastName(userData.last_name || "");
+          setEditFirstName(userData.first_name || "")
+          setEditLastName(userData.last_name || "")
           setEmail(userData.email || "");
           setContactNumber(userData.contact || "");
           setProgram(userData.program?.name || "");
@@ -98,10 +102,12 @@ function Profile() {
   };
 
   const handleSubmit = async (event) => {
+    setFirstName(editFirstName)
+    setLastName(editLastName)
     event.preventDefault();
     const userData = {
-      first_name: firstName,
-      last_name: lastName,
+      first_name: editFirstName,
+      last_name: editLastName,
       contact: contactNumber,
       program,
       email,
@@ -307,8 +313,8 @@ function Profile() {
                       <input
                         id="first-name"
                         disabled={isDisabled}
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
+                        value={editFirstName}
+                        onChange={(e) => setEditFirstName(e.target.value)}
                         name="first-name"
                         type="text"
                         placeholder="Enter your first name"
@@ -328,8 +334,8 @@ function Profile() {
                     <input
                       id="last-name"
                       disabled={isDisabled}
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
+                      value={editLastName}
+                      onChange={(e) => setEditLastName(e.target.value)}
                       name="last-name"
                       type="text"
                       placeholder="Enter your last name"

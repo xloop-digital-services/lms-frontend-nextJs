@@ -55,7 +55,9 @@ const SessionsTable = ({ sessions, loading }) => {
                       </td>
                     </tr>
                   ) : sessions && sessions.length > 0 ? (
-                    sessions.map((session, index) => {
+                    sessions
+                    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                    .map((session, index) => {
                       return (
                         <tr key={index}>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">

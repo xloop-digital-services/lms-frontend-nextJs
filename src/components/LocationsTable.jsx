@@ -1,4 +1,4 @@
-import { DeleteBatch, DeleteLocation, UpdateBatch, UpdateLocation } from "@/api/route";
+import { DeleteLocation, UpdateLocation } from "@/api/route";
 import { CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
@@ -139,7 +139,9 @@ const LocationsTable = ({
                       </td>
                     </tr>
                   ) : locations && locations.length > 0 ? (
-                    locations.map((location, index) => (
+                    locations
+                    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                    .map((location, index) => (
                       <tr key={index} className={`${location.status === 2 && 'hidden'}`}>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
                           {location.city}

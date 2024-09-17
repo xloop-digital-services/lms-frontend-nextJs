@@ -12,6 +12,7 @@ import {
 import { CircularProgress } from "@mui/material";
 import useClickOutside from "@/providers/useClickOutside";
 import UserApprovalTable from "./UserApprovalTable";
+import { toast } from "react-toastify";
 
 const UserManagement = ({ heading, program, loadingProgram }) => {
   const { isSidebarOpen } = useSidebar();
@@ -30,7 +31,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   const [loading, setLoading] = useState(false);
   const [approvedRequest, setApprovedRequest] = useState(null);
   const [verifiedRequest, setverfiedRequest] = useState(null);
-  const [unverifiedRequest, setUnverifiedRequest] = useState(null)
+  const [unverifiedRequest, setUnverifiedRequest] = useState(null);
   const [pendingRequest, setPendingRequest] = useState(null);
   const [shortListRequest, setShortlisted] = useState(null);
   const [skills, setSkills] = useState([]);
@@ -57,40 +58,44 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   useEffect(() => {
     const handleApprovedUsers = async () => {
       setMessage("");
-      try {
-        setLoadingUsers(true);
-        const response = await getUserDataByProgramIdnSkillId(
-          approvedProgramID,
-          selectedOption
-        );
-
-        if (response.data.status_code === 200) {
-          setApplications(
-            response?.data?.data.data.map((data) => data.application)
+      if (approvedProgramID !== null) {
+        try {
+          setLoadingUsers(true);
+          const response = await getUserDataByProgramIdnSkillId(
+            approvedProgramID,
+            selectedOption
           );
-          setLocations(response?.data?.data.data.map((data) => data.location));
-          setUserSkills(response?.data?.data.data.map((data) => data.skills));
-          setUserPrograms(
-            response?.data?.data.data.map((data) => data.program)
-          );
-          setUsers(response?.data?.data.data.map((data) => data.user));
-          setCount(response?.data?.data.count);
 
-          // console.log(response?.data?.data?.[0].?id)
+          if (response.data.status_code === 200) {
+            setApplications(
+              response?.data?.data.data.map((data) => data.application)
+            );
+            setLocations(
+              response?.data?.data.data.map((data) => data.location)
+            );
+            setUserSkills(response?.data?.data.data.map((data) => data.skills));
+            setUserPrograms(
+              response?.data?.data.data.map((data) => data.program)
+            );
+            setUsers(response?.data?.data.data.map((data) => data.user));
+            setCount(response?.data?.data.count);
+
+            // console.log(response?.data?.data?.[0].?id)
+            setLoadingUsers(false);
+          } // console.log("response from both idss", response.data);
+        } catch (error) {
+          console.log("error is occuring while both", error);
+          // setMessage(response.data.message);
+          setMessage("no data found");
+
           setLoadingUsers(false);
-        } // console.log("response from both idss", response.data);
-      } catch (error) {
-        console.log("error is occuring while both", error);
-        // setMessage(response.data.message);
-        setMessage("no data found");
-
-        setLoadingUsers(false);
-      }
+        }
+      } 
     };
     if (heading === "Verified Users") {
       handleApprovedUsers();
     }
-  }, [heading, approvedProgramID, selectedOption]);
+  }, [ approvedProgramID, selectedOption]);
 
   useEffect(() => {
     const handleGetAllSkills = async () => {
@@ -120,12 +125,12 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
             selectedOption,
             selectedStatus
           );
-          setUserByProgramID(response.data?.data || []);
+          setUserByProgramID(response?.data?.data);
           setLoading(false);
         } catch (error) {
           console.log(error);
-            setMessage("no data found");
-    
+          // setMessage("no data found");
+
           setLoading(false);
         }
       };
@@ -141,9 +146,9 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
           selectedOption
         );
         // console.log("numbers", response.data);
-        setApprovedRequest(response?.data?.data.approved)
+        setApprovedRequest(response?.data?.data.approved);
         setverfiedRequest(response?.data?.data.verified);
-          setUnverifiedRequest(response?.data?.data.unverified)
+        setUnverifiedRequest(response?.data?.data.unverified);
         setPendingRequest(response?.data?.data.pending);
         setShortlisted(response?.data?.data.short_listed);
         // console.log('short:',response?.data?.data.short_listed)
@@ -329,14 +334,19 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                             ) : selectedStatus === "approved" ? (
                               <p className="tracking-wide flex gap-2">
                                 <span>( {approvedRequest} )</span>
-                                <span>(verified: {verifiedRequest}, unverified: {unverifiedRequest})</span>
+                                <span>
+                                  (verified: {verifiedRequest}, unverified:{" "}
+                                  {unverifiedRequest})
+                                </span>
                               </p>
                             ) : (
                               <p>( {shortListRequest} )</p>
                             )
                           ) : (
                             isProgramSectionOpen &&
-                            programSection === program.name && <p>( {count} )</p>
+                            programSection === program.name && (
+                              <p>( {count} )</p>
+                            )
                           )}
                         </div>
                       </div>
@@ -442,19 +452,22 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                         className="mt-1 text-[12px] text-blue-300 font-bold"
                         title={`number of ${selectedStatus} applications`}
                       >
-                        {heading === "Applicants" && 
-                          isSkillSectionOpen &&
-                          skillSection === skill.name ? (
-                            selectedStatus === "pending" ? (
-                              <p>( {pendingRequest} )</p>
-                            ) : selectedStatus === "approved" ? (
-                              <p className="tracking-wide flex gap-2">
-                                <span>( {approvedRequest} )</span>
-                                <span>(verified: {verifiedRequest}, unverified: {unverifiedRequest})</span>
-                              </p>
-                            ) : (
-                              <p>( {shortListRequest} )</p>
-                            )
+                        {heading === "Applicants" &&
+                        isSkillSectionOpen &&
+                        skillSection === skill.name ? (
+                          selectedStatus === "pending" ? (
+                            <p>( {pendingRequest} )</p>
+                          ) : selectedStatus === "approved" ? (
+                            <p className="tracking-wide flex gap-2">
+                              <span>( {approvedRequest} )</span>
+                              <span>
+                                (verified: {verifiedRequest}, unverified:{" "}
+                                {unverifiedRequest})
+                              </span>
+                            </p>
+                          ) : (
+                            <p>( {shortListRequest} )</p>
+                          )
                         ) : (
                           isSkillSectionOpen &&
                           skillSection === skill.name && <p>( {count} )</p>

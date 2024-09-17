@@ -64,11 +64,11 @@ export default function Page() {
     setLoading(true);
     try {
       const response = await listAllSessions();
-      console.log("session fetching", response?.data);
+      // console.log("session fetching", response?.data);
       setSessions(response?.data);
     } catch (error) {
       console.log(
-        "error while fetching the session",
+        "error while fetching the class schedules",
         error.response.data.message
       );
       if (error.message === "Network Error") {
@@ -177,7 +177,7 @@ export default function Page() {
       
         <div className="w-full flex xlg:flex-row flex-col justify-between items-center gap-4">
           <div>
-            <p className="font-bold text-xl">Class Details</p>
+            <p className="font-bold text-xl font-exo">Class Details</p>
           </div>
           <div className="flex gap-3 sm:flex-row flex-col text-base lg:text-sm">
             <div className="flex gap-3 ">

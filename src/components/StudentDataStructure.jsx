@@ -18,7 +18,7 @@ const StudentDataStructure = ({
   status,
   remarks,
   setQuizzes,
-  setUpdateStatus
+  setUpdateStatus,
 }) => {
   const [uploadFile, setUploadFile] = useState(false);
   const [edit, setEdit] = useState(false);
@@ -154,17 +154,21 @@ const StudentDataStructure = ({
                                 </>
                               ) : (
                                 <>
-                                  <a
-                                    href="#"
-                                    className="cursor-pointer flex justify-center items-center text-black hover:text-[#2563eb] hover:underline"
-                                    title="download"
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      downloadFile(quiz.content);
-                                    }}
-                                  >
-                                    {quiz.question || quiz.title}
-                                  </a>
+                                  {quiz.submitted_file === null ? (
+                                    quiz.question || quiz.title
+                                  ) : (
+                                    <a
+                                      href="#"
+                                      className="cursor-pointer flex justify-center items-center text-black hover:text-[#2563eb] hover:underline"
+                                      title="download"
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        downloadFile(quiz.content);
+                                      }}
+                                    >
+                                      {quiz.question || quiz.title}
+                                    </a>
+                                  )}
                                 </>
                               )}
                             </td>
@@ -252,7 +256,7 @@ const StudentDataStructure = ({
                               <div className="flex items-center justify-center gap-4 ">
                                 <div>
                                   <MdRemoveRedEye
-                                    title="view"
+                                    title="pdf view"
                                     className="cursor-pointer"
                                     size={23}
                                   />

@@ -157,7 +157,9 @@ const BatchTable = ({ batches, loading, setUpdateBatch, updateBatch }) => {
                       </td>
                     </tr>
                   ) : batches && batches.length > 0 ? (
-                    batches.map((batch, index) => (
+                    batches
+                    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                    .map((batch, index) => (
                       <tr
                         key={index}
                         className={`${batch.status === 2 && "hidden"}`}

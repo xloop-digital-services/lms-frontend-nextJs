@@ -276,7 +276,7 @@ const AdminDashboard = () => {
       }}
     >
       <div className="text-[#07224D] flex flex-col gap-5">
-      <h2 className=" font-exo text-3xl font-bold">Admin Dashboard</h2>
+      {/* <h2 className=" font-exo text-3xl font-bold">Admin Dashboard</h2> */}
         <div className="flex gap-5">
           {" "}
           {/* Adding a unique key */}
