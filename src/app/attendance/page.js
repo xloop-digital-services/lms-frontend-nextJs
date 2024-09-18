@@ -14,32 +14,32 @@ export default function Page() {
   const isInstructor = userData?.Group === "instructor";
 
   return (
+    // <>
+    //   {loader ? (
+    //     <div className="flex h-screen justify-center items-center">
+    //       <CircularProgress />
+    //     </div>
+    //   ) : (
     <>
-      {loader ? (
-        <div className="absolute inset-0 w-full p-2 flex items-center justify-center  z-[1100]">
-          <CircularProgress />
-        </div>
+      {isStudent ? (
+        <CoursePage path="attendance" heading="Attendance" />
+      ) : isAdmin ? (
+        <AdminCoursePage
+          title="Attendance"
+          route="course"
+          route1="attendance"
+        />
+      ) : isInstructor ? (
+        <InstructorCoursePage
+          title="Attendance"
+          route="course"
+          route1="attendance"
+        />
       ) : (
-        <>
-          {isStudent ? (
-            <CoursePage path="attendance" heading="Attendance" />
-          ) : isAdmin ? (
-            <AdminCoursePage
-              title="Attendance"
-              route="course"
-              route1="attendance"
-            />
-          ) : isInstructor ? (
-            <InstructorCoursePage
-              title="Attendance"
-              route="course"
-              route1="attendance"
-            />
-          ) : (
-            <div className="">No data found </div>
-          )}
-        </>
+        <div className="" >No data found </div>
       )}
     </>
+    // )}
+    //  </>
   );
 }

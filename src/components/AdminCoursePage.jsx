@@ -101,6 +101,7 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
                       image={courseImg}
                       route={route}
                       route1={route1}
+                      chr={`${course.theory_credit_hours}+${course.lab_credit_hours}`}
                       status={course.status}
                     />
                   ))}

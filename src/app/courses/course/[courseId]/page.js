@@ -1,13 +1,12 @@
 "use client";
+import React, { useEffect, useState } from "react";
 import {
   createModule,
   createSkill,
   getAllSkillCourses,
-  getAllSkills,
   getCourseById,
   getModuleByCourseId,
   getProgressForCourse,
-  getSkillbyId,
   updateCourse,
   updateModule,
 } from "@/api/route";
@@ -15,17 +14,11 @@ import CourseHead from "@/components/CourseHead";
 import { useSidebar } from "@/providers/useSidebar";
 import { CircularProgress } from "@mui/material";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
 import {
-  FaAddressBook,
   FaCheck,
-  FaCross,
   FaEdit,
-  FaFile,
   FaFileDownload,
-  FaFilePdf,
   FaPlus,
-  FaTicketAlt,
   FaTimes,
   FaUpload,
 } from "react-icons/fa";
@@ -83,14 +76,20 @@ export default function Page({ params }) {
     setLoader(true);
     try {
       if (response.status === 200) {
-        setCourseData(response?.data?.data);
-        setCourseStatus(response?.data?.data?.status);
-        const skillNames = courseData?.skills?.map((skillId) => {
-          const skill = courseData.find((item) => item.id === skillId);
-          return skill ? skill.skill_name : "Unknown skill";
+        const courseData = response?.data?.data;
+        setCourseData(courseData);
+        setCourseStatus(courseData?.status);
+
+        const skillsArray = courseData?.skills ?? [];
+        const skillResponse = await getAllSkillCourses();
+        const allSkills = skillResponse?.data?.data ?? [];
+
+        const matchedSkills = skillsArray.map((skillId) => {
+          const foundSkill = allSkills.find((skill) => skill.id === skillId);
+          return foundSkill ? foundSkill.skill_name : "Unknown skill";
         });
 
-        setSkills(skillNames);
+        setSkills(matchedSkills);
         setLoader(false);
       } else {
         console.error("Failed to fetch course, status:", response.status);
@@ -195,7 +194,6 @@ export default function Page({ params }) {
     setInputCourses(inputCourses.filter((course) => course !== courseToRemove));
   };
 
-  // console.log(skills);
   async function fetchModules() {
     const response = await getModuleByCourseId(courseId);
     setLoader(true);
@@ -262,7 +260,7 @@ export default function Page({ params }) {
     const updatedCourseData = {
       ...courseData,
       status: courseStatus,
-      skills: inputCourses,
+      skills: [...courseData.skills, ...inputCourses],
     };
 
     try {
@@ -273,11 +271,9 @@ export default function Page({ params }) {
         fetchCoursesById();
       } else {
         toast.error("Failed to update course, status:", response.status);
-        // console.error("Failed to update course, status:", response.status);
       }
     } catch (error) {
       toast.error("Error updating course:", error);
-      // console.log("Error updating course:", error);
     }
   }
 
@@ -336,6 +332,7 @@ export default function Page({ params }) {
   useEffect(() => {
     fetchCoursesById();
     fetchModules();
+    fetchAllSkills();
     // fetchSkillbyId();
     {
       isStudent && fetchCourseProgress();
@@ -343,12 +340,12 @@ export default function Page({ params }) {
     fetchAllSkills();
   }, []);
   // console.log(courseData?.status);
-  useEffect(() => {
-    if (courseData?.skills?.length > 0) {
-      fetchAllSkills();
-    }
-    // console.log(courseData?.skills);
-  }, [courseData]);
+  // useEffect(() => {
+  //   // if (courseData?.skills?.length > 0) {
+   
+
+  //   // console.log(courseData?.skills);
+  // }, []);
 
   return (
     <>
@@ -513,7 +510,7 @@ export default function Page({ params }) {
                               value={courseData.courses}
                               className="flex items-center space-x-2 px-3 py-1 bg-blue-600 border border-blue-300 rounded-full"
                             >
-                              <span>{course?.skill_name}</span>
+                              <span>{course?.skill_name}</span>{" "}
                               <FaTimes
                                 className="cursor-pointer"
                                 onClick={() => removeCourse(courseId)}
@@ -531,21 +528,21 @@ export default function Page({ params }) {
 
                         <button
                           type="button"
-                          className="text-surface-100  px-2 py-1.5  rounded-md bg-blue-300"
+                          className="text-surface-100 px-2 py-1.5 rounded-md bg-blue-300"
                           onClick={handleSkills}
                         >
-                          {" "}
                           Create a Skill
                         </button>
 
                         <select
                           value=""
                           onChange={handleSelectChange}
-                          className=" flex items-center bg-surface-100 outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 py-1 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-8 p-2 sm:text-sm sm:leading-6"
+                          className="flex items-center bg-surface-100 outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 py-1 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-8 p-2 sm:text-sm sm:leading-6"
                         >
                           <option value="" disabled>
                             Select a skill
                           </option>
+
                           {courses?.map((course) => (
                             <option key={course.id} value={course?.skill_name}>
                               {course?.skill_name}
@@ -556,7 +553,6 @@ export default function Page({ params }) {
                     </div>
                   </div>
                 </div>
-
                 <button
                   className=" flex justify-center my-2 items-center w-32 gap-2  text-surface-100 bg-blue-300 px-2 py-3 rounded-xl mr-4 hover:bg-[#4296b3]"
                   onClick={handleSave}
@@ -583,8 +579,8 @@ export default function Page({ params }) {
                     </h2>
                   </div>
                   <div className="flex gap-2 max-md:flex-col">
-                    {skillbyID?.length > 0 ? (
-                      skillbyID.map((skillName, index) => (
+                    {skills?.length > 0 ? (
+                      skills.map((skillName, index) => (
                         <div
                           key={index}
                           className="flex bg-blue-600 w-fit py-[9px] px-5 rounded-lg items-center space-x-2 max-md:mt-2"
@@ -598,8 +594,6 @@ export default function Page({ params }) {
                       <p>No skills available</p>
                     )}
                   </div>
-
-                  {/* </div> */}
                 </div>
               </>
             )}
@@ -683,10 +677,8 @@ export default function Page({ params }) {
                       type="file"
                       className="hidden"
                       onChange={handleFileUpload}
-                      // onChange={(e) => setFile(e.target.files[0])}
                     />
                     <button
-                      // onChange={handleFileUpload}
                       className="flex justify-center items-center gap-2 mt-4 text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-[#4296b3]"
                       onClick={() =>
                         document.querySelector('input[type="file"]').click()
@@ -730,12 +722,10 @@ export default function Page({ params }) {
                             {moduleId === module.id ? (
                               <p className="flex justify-center items-center gap-2">
                                 <FaTimes />
-                                {/* Cancel Edit */}
                               </p>
                             ) : (
                               <p className="flex justify-center items-center gap-2">
                                 <FaEdit />
-                                {/* Edit Module */}
                               </p>
                             )}
                           </button>

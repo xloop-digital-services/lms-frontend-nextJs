@@ -45,24 +45,29 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
     setIsOpen(false);
   };
 
+  async function fetchOverallProgress() {
+    const response = await getOverallProgress(courseId, regId);
+    // setLoader(true);
+    try {
+      if (response.status === 200) {
+        setProgress(response.data);
+        // setLoader(false);
+        // console.log(progress);
+        // console.log(response.data);
+      } else {
+        console.error("Failed to fetch courses", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
   useEffect(() => {
     if (!regId) return;
-    async function fetchOverallProgress() {
-      const response = await getOverallProgress(courseId, regId);
-      // setLoader(true);
-      try {
-        if (response.status === 200) {
-          setProgress(response.data);
-          // setLoader(false);
-          // console.log(progress);
-          // console.log(response.data);
-        } else {
-          console.error("Failed to fetch courses", response.status);
-        }
-      } catch (error) {
-        console.log("error", error);
-      }
-    }
+    fetchOverallProgress();
+  }, []);
+
+  useEffect(() => {
     if (!regId) return;
     async function fetchAssignmentProgress() {
       const response = await getAssignmentProgress(courseId, regId);
@@ -299,7 +304,9 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
           examsWeightedScore={progress?.exams?.percentage}
         />
       ) : (
-        <p>Loading...</p>
+        <p className="text-blue-300 h-12 w-full flex justify-center items-center">
+          No Weightages for this course assigned yet
+        </p>
       )}
     </>
   );

@@ -16,6 +16,7 @@ export function AuthProvider({ children }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
   const router = useRouter();
   const API = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -32,16 +33,18 @@ export function AuthProvider({ children }) {
       Cookies.set("userData", JSON.stringify(userData));
       const group = userData?.Group;
       Cookies.set("userGroup", group);
+
     }
   }, [userData]);
-
+  const isInstructor = Cookies.get("userGroup") === "instructor";
+  console.log(isInstructor);
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
   const logInUser = async (event) => {
     event.preventDefault();
-    setLoading(true)
+    setLoading(true);
     try {
       const response = await axios.post(
         `${API}/login/`,
@@ -63,7 +66,7 @@ export function AuthProvider({ children }) {
           draggable: true,
           progress: undefined,
         });
-        setLoading(false)
+        setLoading(false);
       } else {
         toast.error("Login failed. Please check your credentials.", {
           position: "top-right",
@@ -74,7 +77,7 @@ export function AuthProvider({ children }) {
           draggable: true,
           progress: undefined,
         });
-        setLoading(false)
+        setLoading(false);
       }
     } catch (error) {
       console.error("Error during login:", error);
@@ -87,9 +90,9 @@ export function AuthProvider({ children }) {
         draggable: true,
         progress: undefined,
       });
-      setLoading(false)
-      if(error.message === 'Network Error'){
-        toast.error(error.message,'Check your internet connection')
+      setLoading(false);
+      if (error.message === "Network Error") {
+        toast.error(error.message, "Check your internet connection");
       }
     }
   };
@@ -97,8 +100,8 @@ export function AuthProvider({ children }) {
   const logOutUser = () => {
     // console.log("Logging out user...");
     setUserData(null);
-    setEmail('')
-    setPassword('')
+    setEmail("");
+    setPassword("");
     Cookies.remove("userData");
     Cookies.remove("userGroup");
     Cookies.remove("access_token");
@@ -120,6 +123,7 @@ export function AuthProvider({ children }) {
         userData,
         loading,
         handleShowPassword,
+        isInstructor
       }}
     >
       {children}

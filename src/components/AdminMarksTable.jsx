@@ -6,7 +6,6 @@ import {
   updateProjectGrading,
   updateQuizGrading,
 } from "@/api/route";
-import { FaCheck } from "react-icons/fa";
 import { toast } from "react-toastify";
 
 const AdminMarksTable = ({ assessments, courseId, setFetch, title }) => {
@@ -28,6 +27,8 @@ const AdminMarksTable = ({ assessments, courseId, setFetch, title }) => {
       total_marks: assessment?.total_marks || 0,
       marks_obtain: assessment?.marks_obtain || 0,
       remarks: assessment?.remarks || "-",
+      assignment_id: assessment?.assignment || null,
+      // registration_id: assessment?.registration_id || null,
     });
   };
 
@@ -39,22 +40,25 @@ const AdminMarksTable = ({ assessments, courseId, setFetch, title }) => {
     }));
   };
 
-  const handleSave = async (id, type) => {
+  const handleSave = async (id, status) => {
     try {
       const data = {
         total_grade: editData.total_marks,
         grade: editData.marks_obtain,
         feedback: editData.remarks,
+        // assignment: editData.assignment_id,
+        registration_id: editData.registration_id,
+        submission: id,
+        // submission_id: status === "Submitted" && id ? id : null,
       };
 
-      // Dynamically set the correct submission key based on the type
-      if (title === "Quiz") {
+      if (title === "Quiz" && id) {
         data.quiz_submissions = id;
       } else if (title === "Assignment") {
-        data.submission = id;
-      } else if (title === "Exam") {
+        data.submission = id || null;
+      } else if (title === "Exam" && id) {
         data.exam_submission = id;
-      } else if (title === "Project") {
+      } else if (title === "Project" && id) {
         data.project_submissions = id;
       }
 
@@ -107,15 +111,11 @@ const AdminMarksTable = ({ assessments, courseId, setFetch, title }) => {
                         Student Name
                       </th>
                       <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
-                        Total Marks
-                      </th>
-                      <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
                         Obtained Marks
                       </th>
                       <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
                         Remarks
                       </th>
-
                       <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
                         Status
                       </th>
@@ -124,7 +124,6 @@ const AdminMarksTable = ({ assessments, courseId, setFetch, title }) => {
                       </th>
                     </tr>
                   </thead>
-
                   <tbody className="divide-y divide-dark-200 dark:divide-gray-700">
                     {assessments && assessments.length > 0 ? (
                       assessments.map((assessment, index) => (
@@ -135,28 +134,11 @@ const AdminMarksTable = ({ assessments, courseId, setFetch, title }) => {
                           <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
                             {assessment?.student_name}
                           </td>
-
-                          {/* Total Marks */}
                           <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
                             {isEditing === assessment.submission_id &&
-                            assessment?.status === "Submitted" ? (
-                              <input
-                                type="number"
-                                min={0}
-                                name="total_marks"
-                                value={editData.total_marks}
-                                onChange={handleChange}
-                                className="py-3 px-4 block w-full outline-none border-b border-dark-500 text-sm focus:border-blue-300 focus:ring-[#03A1D8]"
-                              />
-                            ) : (
-                              assessment?.total_grade || 0
-                            )}
-                          </td>
-
-                          {/* Obtained Marks */}
-                          <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
-                            {isEditing === assessment.submission_id &&
-                            assessment?.status === "Submitted" ? (
+                            assessment?.status === "Submitted" &&
+                            (!assessment?.marks_obtain ||
+                              assessment?.marks_obtain === 0) ? (
                               <input
                                 type="number"
                                 min={0}
@@ -169,11 +151,11 @@ const AdminMarksTable = ({ assessments, courseId, setFetch, title }) => {
                               assessment?.grade || 0
                             )}
                           </td>
-
-                          {/* Remarks */}
                           <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
                             {isEditing === assessment.submission_id &&
-                            assessment?.status === "Submitted" ? (
+                            assessment?.status === "Submitted" &&
+                            (!assessment?.marks_obtain ||
+                              assessment?.marks_obtain === 0) ? (
                               <input
                                 type="text"
                                 name="remarks"
@@ -185,44 +167,61 @@ const AdminMarksTable = ({ assessments, courseId, setFetch, title }) => {
                               assessment?.remarks || "-"
                             )}
                           </td>
-
-                          <td className="px-12 py-2  whitespace-nowrap text-sm text-surface-100">
+                          <td className="px-12 py-2 whitespace-nowrap text-sm text-surface-100">
                             <p
                               className={`w-[110px] text-center px-4 py-2 text-[12px] rounded-lg ${
                                 assessment?.status === "Submitted"
-                                  ? "bg-mix-300 w-110px]"
+                                  ? "bg-mix-300"
                                   : assessment?.status === "Pending"
-                                  ? "bg-mix-500 text-[#fff] w-[110px]"
-                                  : "bg-mix-200 w-110px]"
+                                  ? "bg-mix-500 text-[#fff]"
+                                  : "bg-mix-200"
                               }`}
                             >
                               {assessment?.status}
                             </p>
                           </td>
-
                           <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
-                            {gradedAssessments[assessment.submission_id] ? (
-                              <button className="w-[110px] text-center px-4 py-2 text-[12px] rounded-lg  text-sm bg-mix-300 text-surface-200 ">
+                            {assessment?.grade > 0 &&
+                            assessment.status === "Submitted" ? (
+                              <button className="w-[110px] text-center px-4 py-2 text-[12px] rounded-lg text-sm bg-mix-300 text-surface-200">
                                 Graded
+                              </button>
+                            ) : assessment?.status !== "Submitted" ? (
+                              <button className=" text-center px-4 py-2 text-[12px] rounded-lg text-sm bg-gray-300 text-blue-300">
+                                You can't grade right now
                               </button>
                             ) : isEditing === assessment.submission_id ? (
                               <button
-                                className="w-[110px] text-center px-4 py-2 text-[12px] rounded-lg  text-sm bg-mix-300 text-surface-200 "
+                                className="w-[110px] text-center px-4 py-2 text-[12px] rounded-lg text-sm bg-mix-300 text-surface-200"
                                 onClick={() =>
-                                  handleSave(assessment.submission_id)
+                                  handleSave(
+                                    assessment.submission_id,
+                                    // ||
+                                    //   (assessment.assignment &&
+                                    //   assessment.registration_id
+
+                                    //     ? assessment.assignment
+                                    //     : null),
+                                    assessment.status
+                                  )
                                 }
                               >
-                                  Grade
+                                Grade
                               </button>
                             ) : (
                               <button
                                 onClick={() =>
                                   handleEditClick(
                                     assessment.submission_id,
+                                    // ||
+                                    //   (assessment.assignment &&
+                                    //   assessment.registration_id
+                                    //     ? assessment.assignment
+                                    //     : null),
                                     assessment
                                   )
                                 }
-                                className="w-[110px] text-center px-4 py-2 text-[12px] rounded-lg  text-sm bg-blue-300 text-surface-200 "
+                                className="w-[110px] text-center px-4 py-2 text-[12px] rounded-lg text-sm bg-blue-300 text-surface-200"
                               >
                                 Grade
                               </button>

@@ -33,28 +33,28 @@ const BatchTable = ({ batches, loading, setUpdateBatch, updateBatch }) => {
       if (status === null || updating) return;
 
       setUpdating(true); // Set updating to true when status is being updated
-        try {
-          const data = {
-            batch: selectedBatch,
-            city: batch.city,
-            city_abb: batch.city_abb,
-            year: batch.year,
-            no_of_students: batch.no_of_students,
-            start_date: batch.start_date,
-            end_date: batch.end_date,
-            status: status,
-          };
+      try {
+        const data = {
+          batch: selectedBatch,
+          city: batch.city,
+          city_abb: batch.city_abb,
+          year: batch.year,
+          no_of_students: batch.no_of_students,
+          start_date: batch.start_date,
+          end_date: batch.end_date,
+          status: status,
+          term: batch.term,
+        };
 
-          const response = await UpdateBatch(selectedBatch, data);
-          console.log("batch updated", response);
-          setEdit(false);
-          setUpdateBatch(!updateBatch);
-        } catch (error) {
-          console.log("error while updating status", error);
-        } finally {
-          setUpdating(false); // Set updating to false after the update is complete
-        }
-      
+        const response = await UpdateBatch(selectedBatch, data);
+        console.log("batch updated", response);
+        setEdit(false);
+        setUpdateBatch(!updateBatch);
+      } catch (error) {
+        console.log("error while updating status", error);
+      } finally {
+        setUpdating(false); // Set updating to false after the update is complete
+      }
     };
     handleUpdate();
   }, [status]);
@@ -69,9 +69,8 @@ const BatchTable = ({ batches, loading, setUpdateBatch, updateBatch }) => {
       const response = await DeleteBatch(selectedBatch);
       console.log("deleting the batch", response);
       setUpdateBatch(!updateBatch);
-      setConfirmDelete(false)
+      setConfirmDelete(false);
     } catch (error) {
-  
       console.log("error while deleting the batch", error);
     }
   };
@@ -158,101 +157,104 @@ const BatchTable = ({ batches, loading, setUpdateBatch, updateBatch }) => {
                     </tr>
                   ) : batches && batches.length > 0 ? (
                     batches
-                    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-                    .map((batch, index) => (
-                      <tr
-                        key={index}
-                        className={`${batch.status === 2 && "hidden"}`}
-                      >
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
-                          {batch.batch || "-"}
-                        </td>
-                        {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                      .sort(
+                        (a, b) =>
+                          new Date(b.created_at) - new Date(a.created_at)
+                      )
+                      .map((batch, index) => (
+                        <tr
+                          key={index}
+                          className={`${batch.status === 2 && "hidden"}`}
+                        >
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
+                            {batch.batch || "-"}
+                          </td>
+                          {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
                       {batch.city_id || '-'}
                     </td> */}
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                          {batch.no_of_students || "-"}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                          {batch.start_date || "-"}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                          {batch.end_date || "-"}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                          {batch.year || "-"}
-                        </td>
-                        {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                            {batch.no_of_students || "-"}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                            {batch.start_date || "-"}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                            {batch.end_date || "-"}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                            {batch.year || "-"}
+                          </td>
+                          {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
                       Winter
                     </td> */}
-                        <td className="px-6 py-2 whitespace-nowrap flex w-full justify-start items-center text-sm text-surface-100">
-                          <p
-                            className={`${
-                              edit && selectedBatch === batch.batch
-                                ? "py-0"
-                                : "py-2"
-                            } ${
-                              batch.status === 1
-                                ? "bg-[#18A07A]"
-                                : "bg-[#D84848]"
-                            }  w-[100px] text-center text-[12px] rounded-lg`}
-                          >
-                            {!(edit && selectedBatch === batch.batch) ? ( // Check if the current index is selected for editing
-                              (batch.status === 1 && "Active") ||
-                              (batch.status === 0 && "Inactive")
-                            ) : (
-                              <th
-                                scope="col"
-                                className=" text-center p-1 text-xs font-medium  text-gray-500 uppercase "
-                              >
-                                <select
-                                  className="bg-dark-300 bg-opacity-0 block p-2 w-full  border border-dark-200 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-[#1e785e] transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                                  defaultValue={
-                                    batch.status === 1 ? "active" : "inactive"
-                                  }
-                                  onChange={(e) =>
-                                    handleSetStatus(e.target.value)
-                                  } // Handle status change here
+                          <td className="px-6 py-2 whitespace-nowrap flex w-full justify-start items-center text-sm text-surface-100">
+                            <p
+                              className={`${
+                                edit && selectedBatch === batch.batch
+                                  ? "py-0"
+                                  : "py-2"
+                              } ${
+                                batch.status === 1
+                                  ? "bg-[#18A07A]"
+                                  : "bg-[#D84848]"
+                              }  w-[100px] text-center text-[12px] rounded-lg`}
+                            >
+                              {!(edit && selectedBatch === batch.batch) ? ( // Check if the current index is selected for editing
+                                (batch.status === 1 && "Active") ||
+                                (batch.status === 0 && "Inactive")
+                              ) : (
+                                <th
+                                  scope="col"
+                                  className=" text-center p-1 text-xs font-medium  text-gray-500 uppercase "
                                 >
-                                  <option
-                                    value="active"
-                                    className="py-2 text-dark-900"
+                                  <select
+                                    className="bg-dark-300 bg-opacity-0 block p-2 w-full  border border-dark-200 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-[#1e785e] transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                                    defaultValue={
+                                      batch.status === 1 ? "active" : "inactive"
+                                    }
+                                    onChange={(e) =>
+                                      handleSetStatus(e.target.value)
+                                    } // Handle status change here
                                   >
-                                    Active
-                                  </option>
-                                  <option
-                                    value="inactive"
-                                    className="py-2 text-dark-900"
-                                  >
-                                    Inactive
-                                  </option>
-                                </select>
-                              </th>
-                            )}
-                          </p>
-                        </td>
-                        <td className="px-8 py-2 whitespace-nowrap text-[#03A1D8] ">
-                          <div className="flex gap-4">
-                            <div>
-                              <FaEdit
-                                size={20}
-                                className="cursor-pointer hover:opacity-30"
-                                onClick={() => handleUpdateStatus(batch)}
-                                title="update"
-                              />
+                                    <option
+                                      value="active"
+                                      className="py-2 text-dark-900"
+                                    >
+                                      Active
+                                    </option>
+                                    <option
+                                      value="inactive"
+                                      className="py-2 text-dark-900"
+                                    >
+                                      Inactive
+                                    </option>
+                                  </select>
+                                </th>
+                              )}
+                            </p>
+                          </td>
+                          <td className="px-8 py-2 whitespace-nowrap text-[#03A1D8] ">
+                            <div className="flex gap-4">
+                              <div>
+                                <FaEdit
+                                  size={20}
+                                  className="cursor-pointer hover:opacity-30"
+                                  onClick={() => handleUpdateStatus(batch)}
+                                  title="update"
+                                />
+                              </div>
+                              <div>
+                                <FaTrash
+                                  size={20}
+                                  className="cursor-pointer hover:opacity-30"
+                                  onClick={() => handleDeleteBatch(batch)}
+                                  title="delete"
+                                />
+                              </div>
                             </div>
-                            <div>
-                              <FaTrash
-                                size={20}
-                                className="cursor-pointer hover:opacity-30"
-                                onClick={() => handleDeleteBatch(batch)}
-                                title="delete"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
+                          </td>
+                        </tr>
+                      ))
                   ) : (
                     <tr>
                       <td
@@ -272,7 +274,7 @@ const BatchTable = ({ batches, loading, setUpdateBatch, updateBatch }) => {
           <DeleteConfirmationPopup
             setConfirmDelete={setConfirmDelete}
             handleDelete={handleDelete}
-            field='batch'
+            field="batch"
           />
         )}
       </div>

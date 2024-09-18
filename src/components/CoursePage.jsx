@@ -45,7 +45,7 @@ export default function CoursePage({ path, progress, heading }) {
   if (loader) {
     <CircularProgress />;
   }
-  console.log('courses idddsss', courseId)
+  // console.log('courses idddsss', courseId)
 
   return (
     <>

@@ -129,7 +129,7 @@ export default function Page({ params }) {
   useEffect(() => {
     fetchAllCourses();
     fetchProgramById();
-  }, [fetch]);
+  }, []);
 
   // console.log(programData.short_description)
   return (

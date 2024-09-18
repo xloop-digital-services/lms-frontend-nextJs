@@ -154,7 +154,7 @@ const StudentDataStructure = ({
                                 </>
                               ) : (
                                 <>
-                                  {quiz.submitted_file === null ? (
+                                  {quiz.content === null ? (
                                     quiz.question || quiz.title
                                   ) : (
                                     <a

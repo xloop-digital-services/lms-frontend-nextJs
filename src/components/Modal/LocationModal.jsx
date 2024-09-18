@@ -201,7 +201,7 @@ const LocationModal = ({
                         className="absolute z-10 w-[220px] mt-1 max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                       >
                         <p className="text-[12px] text-dark-400 text-center p-1">
-                          select your city first
+                          Select your city first
                         </p>
                       </div>
                     )

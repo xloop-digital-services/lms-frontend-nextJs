@@ -36,8 +36,6 @@ export default function Page() {
     }
   }
 
-
-  // console.log(courses);
   const handleSubmit = async (event) => {
     event.preventDefault();
     const courseData = {

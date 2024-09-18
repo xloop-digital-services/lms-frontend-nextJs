@@ -114,7 +114,7 @@ const StudentMarksTable = ({ field, assessments }) => {
                     })
                   ) : (
                     <tr>
-                      <td colSpan="3" className="text-center w-full py-4">
+                      <td colSpan="10" className="text-center w-full py-4">
                         No data found
                       </td>
                     </tr>

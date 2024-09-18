@@ -52,6 +52,14 @@ export default function Page() {
     } catch (error) {
       toast.error(`Error creating program: ${error.message}`);
     }
+    localStorage.removeItem("programName");
+    localStorage.removeItem("shortDesc");
+    localStorage.removeItem("about");
+
+    // Optionally, reset the state if needed
+    setProgramName("");
+    setShortDesc("");
+    setAbout("");
   };
 
   const handleSelectChange = (event) => {

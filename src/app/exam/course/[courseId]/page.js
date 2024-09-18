@@ -31,11 +31,14 @@ export default function Page({ params }) {
   const isStudent = userData?.Group === "student";
   const [isCreatingQuiz, setCreatingQuiz] = useState(false);
   const [question, setQuestion] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
   const [loading, setLoading] = useState(false);
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [quiz, setQuiz] = useState("");
   const [file, setFile] = useState(null);
+  const [totalGrade, setTotalGrade] = useState("");
   const [resubmission, setResubmission] = useState("");
   const [updateStatus, setUpdateStatus] = useState(false);
   const [assignmentStatus, setAssignmentStatus] = useState(0);
@@ -67,6 +70,9 @@ export default function Page({ params }) {
     formData.append("due_date", dueDate);
     // formData.append("no_of_resubmissions_allowed", resubmission);
     formData.append("status", assignmentStatus);
+    formData.append("start_time", startTime);
+    formData.append("end_time", endTime);
+    formData.append("total_grade", totalGrade);
 
     try {
       const response = currentAssignment
@@ -85,8 +91,11 @@ export default function Page({ params }) {
         setDescription("");
         setQuestion("");
         setDueDate("");
+        setStartTime("");
+        setEndTime("");
         setFile(null);
         // setResubmission("");
+        setTotalGrade("");
         setCreatingQuiz(false);
         setCurrentAssignment(null);
         fetchAssignments();
@@ -119,6 +128,9 @@ export default function Page({ params }) {
     setQuestion(assignmentToEdit.question);
     setDescription(assignmentToEdit.description);
     setDueDate(assignmentToEdit.due_date);
+    setStartTime(assignmentToEdit.startTime);
+    setEndTime(assignmentToEdit.endTime);
+    setTotalGrade(assignmentToEdit.totalGrade);
     // setResubmission(assignmentToEdit.no_of_resubmissions_allowed);
     setFile(assignmentToEdit.content);
     setCreatingQuiz(true);
@@ -248,22 +260,7 @@ export default function Page({ params }) {
                 />
               </div>
               <div className="flex gap-2 my-2 sm:flex-row flex-col lg:w-[100%]">
-                {/* <div className="mb-4 sm:mb-0 lg:w-[50%] md:w-[50%]">
-                  <label className="text-md">No. of resubmission allowed</label>
-
-                  <input
-                    type="number"
-                    min={0}
-                    className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
-                    value={resubmission}
-                    onChange={(e) =>
-                      setResubmission(
-                        e.target.value === "" ? 0 : Number(e.target.value)
-                      )
-                    }
-                  />
-                </div> */}
-                <div className="mb-4 sm:mb-0 w-full">
+                <div className="mb-2 sm:mb-0 w-full">
                   <label className="text-md">Upload Exam</label>
                   <input
                     required
@@ -272,7 +269,42 @@ export default function Page({ params }) {
                     onChange={(e) => setFile(e.target.files[0])}
                   />
                 </div>
+                <div className="mb-2 sm:mb-0 w-full">
+                  <label className="text-md">Total Marks</label>
+
+                  <input
+                    type="grade"
+                    min={0}
+                    className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                    value={totalGrade}
+                    onChange={(e) =>
+                      setTotalGrade(e.target.value)
+                    }
+                  />
+                </div>
               </div>
+              <div className="flex w-full gap-x-4 max-md:flex-col">
+                <div className="my-2 flex-1 ">
+                  <label className="text-md">Exam Start Time</label>
+                  <input
+                    type="time"
+                    className="w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                    value={startTime}
+                    onChange={(e) => setStartTime(e.target.value)}
+                  />
+                </div>
+
+                <div className="my-2 flex-1">
+                  <label className="text-md">Exam End Time</label>
+                  <input
+                    type="time"
+                    className="w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                    value={endTime}
+                    onChange={(e) => setEndTime(e.target.value)}
+                  />
+                </div>
+              </div>
+
               <button
                 type="submit"
                 onClick={handleAssignmentCreation}

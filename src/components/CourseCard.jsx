@@ -18,6 +18,7 @@ const CourseCard = ({
   status,
   id,
   route,
+  chr,
   route1,
 }) => {
   const { userData } = useAuth();
@@ -45,12 +46,22 @@ const CourseCard = ({
             </p>
           </div>
           <div className="space-y-3 text-sm px-4 pt-[6px]">
-            <div className="flex bg-[#EBF6FF] w-fit py-[9px] px-5 rounded-lg items-center space-x-2">
-              <p className="bg-[#03A1D8] w-2 h-2 rounded-full"></p>
-              <p className="text-[#03A1D8] h-4 uppercase text-[12px] font-semibold line-clamp-1">
-                {courseName}
-              </p>
+            <div className="flex justify-between">
+              <div className="flex bg-[#EBF6FF] w-fit py-[9px] px-5 rounded-lg items-center space-x-2">
+                <p className="bg-[#03A1D8] w-2 h-2 rounded-full"></p>
+                <p className="text-[#03A1D8] h-4 uppercase text-[12px] font-semibold line-clamp-1">
+                  {courseName}
+                </p>{" "}
+              </div>
+              {chr && (
+                <div className="flex bg-[#EBF6FF] w-fit py-[9px] px-5 rounded-lg items-center space-x-2">
+                  <p className="text-[#03A1D8] h-4 uppercase text-[12px] font-semibold line-clamp-1">
+                    Cr. Hr: {chr}
+                  </p>
+                </div>
+              )}
             </div>
+
             <div>
               <p className="line-clamp-2">{courseDesc}</p>
             </div>
@@ -78,6 +89,7 @@ const CourseCard = ({
                   ) : null}  */}
                 {/* </div> */}
               </div>
+
               {isStudent ? (
                 <Link
                   href={`/${route}s/${route}/${id}`}

@@ -18,6 +18,9 @@ export const GradingSection = ({ title, options, courseId }) => {
   const [examGrading, setExamGrading] = useState([]);
   const [projectGrading, setProjectGrading] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [selectedValue, setSelectedValue] = useState(null);
+  const [selectedDesc, setSelectedDesc] = useState(null);
+  const [totalMarks, setTotalMarks] = useState(null);
   const [fetch, setFetch] = useState(false);
 
   const toggleOpen = (e) => {
@@ -28,10 +31,25 @@ export const GradingSection = ({ title, options, courseId }) => {
   const handleSelect = (id) => {
     setSelected(id);
     setIsOpen(false);
+    // setSelectedDesc("")
+    // setTotalMarks("")
   };
 
   const handleToggleSection = (section) => {
-    setOpenSection(openSection === section ? null : section);
+    if (openSection === section) {
+      setSelected(null);
+      setSelectedValue(null);
+      setSelectedDesc(null);
+      setTotalMarks(null);
+      setQuizGrading([]);
+      setAssignmentGrading([]);
+      setExamGrading([]);
+      setProjectGrading([]);
+      setIsOpen(false);
+      setOpenSection(null);
+    } else {
+      setOpenSection(section);
+    }
   };
 
   async function fetchQuizzesGrading() {
@@ -66,19 +84,37 @@ export const GradingSection = ({ title, options, courseId }) => {
     }
   }
 
+  // async function fetchExamGrading() {
+  //   setLoading(true);
+  //   const response = await getExamGrading(courseId, selected);
+  //   try {
+  //     if (response.status === 200) {
+  //       setLoading(false);
+  //       setExamGrading(response?.data?.data?.students);
+  //       console.log(examGrading);
+  //     } else {
+  //       console.error("Failed to fetch exams, status:", response.status);
+  //     }
+  //   } catch (error) {
+  //     console.log("error", error);
+  //   }
+  // }
+
   async function fetchExamGrading() {
     setLoading(true);
-    const response = await getExamGrading(courseId, selected);
     try {
+      const response = await getExamGrading(courseId, selected);
       if (response.status === 200) {
+        const examData = response?.data?.data;
         setLoading(false);
-        setExamGrading(response?.data?.data?.students);
-        console.log(examGrading);
+        setExamGrading(examData?.students);
+        setTotalMarks(examData?.total_grade || 0);
+        console.log("Exam Grading Data: ", examData);
       } else {
         console.error("Failed to fetch exams, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      console.error("Error fetching exam grading:", error);
     }
   }
 
@@ -111,13 +147,28 @@ export const GradingSection = ({ title, options, courseId }) => {
     }
   }, [selected, fetch, title]);
 
+  // console.log(selected);
+  // console.log(selectedValue);
+
   return (
     <div className="border my-3 border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
       <div
         className="flex justify-between items-center"
         onClick={() => handleToggleSection(title)}
       >
-        <p className="text-[17px] font-semibold font-exo">{title}</p>
+        <div className="flex flex-col">
+          <p className="text-[17px] font-semibold font-exo">{title}</p>
+          {selectedValue && (
+            <div>
+              <p className="font-semibold text-sm text-blue-300">
+                Description: {selectedDesc}
+              </p>
+              <p className="font-semibold text-sm text-blue-300">
+                Total Marks: {totalMarks ? totalMarks : 0}
+              </p>
+            </div>
+          )}
+        </div>
         <div className="flex gap-2 items-center">
           <div
             className={`transition-container ${
@@ -130,7 +181,8 @@ export const GradingSection = ({ title, options, courseId }) => {
                   onClick={toggleOpen}
                   className="flex justify-between z-30 items-center min-w-[200px] text-[#92A7BE] hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border  border-[#92A7BE] rounded-lg  focus:outline-none  transition duration-300 ease-in-out"
                 >
-                  Select {title}
+                  {selectedValue ? selectedValue : `Select ${title}`}
+                  {/* Select {title} */}
                   <span
                     className={`${
                       !isOpen ? "rotate-180 duration-300" : "duration-300"
@@ -149,7 +201,12 @@ export const GradingSection = ({ title, options, courseId }) => {
                       options.map((option) => (
                         <div
                           key={option.id}
-                          onClick={() => handleSelect(option.id)}
+                          onClick={() => {
+                            handleSelect(option.id);
+                            setSelectedValue(option.question || option.title);
+                            setSelectedDesc(option.description);
+                            setTotalMarks(option.total_grade || 0); // Update total marks for selected option
+                          }}
                           className="p-2 cursor-pointer"
                         >
                           <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">

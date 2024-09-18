@@ -1,5 +1,5 @@
 "use client";
-import { createSkill } from "@/api/route";
+import { createSkill, listAllLocations } from "@/api/route";
 import { useSidebar } from "@/providers/useSidebar";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -42,6 +42,39 @@ export default function CreateField({
   const [skill, setSkill] = useState();
   const [skillName, setSkillName] = useState("");
   const [classSession, setClassTiming] = useState();
+  const [locations, setLocations] = useState([]);
+  const [cityOptions, setCityOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    if (title === "Program") {
+      const storedProgramName = localStorage.getItem("programName");
+      const storedShortDesc = localStorage.getItem("shortDesc");
+      const storedAbout = localStorage.getItem("about");
+
+      if (storedProgramName) setProgramName(storedProgramName);
+      if (storedShortDesc) setShortDesc(storedShortDesc);
+      if (storedAbout) setAbout(storedAbout);
+    }
+    
+  }, [title]);
+
+  useEffect(() => {
+    if (title === "Program") {
+      localStorage.setItem("programName", programName);
+    }
+  }, [programName, title]);
+
+  useEffect(() => {
+    if (title === "Program") {
+      localStorage.setItem("shortDesc", shortDesc);
+    }
+  }, [shortDesc, title]);
+
+  useEffect(() => {
+    if (title === "Program") {
+      localStorage.setItem("about", about);
+    }
+  }, [about, title]);
 
   const handleAddModule = () => {
     setAddModule(!addModule);
@@ -68,6 +101,22 @@ export default function CreateField({
       }
     } catch (error) {
       toast.error(`Error creating course: ${error.message}`);
+    }
+  };
+
+  const handleListingAllLocations = async () => {
+    try {
+      const response = await listAllLocations();
+      setLocations(response?.data);
+      setCityOptions(cityAreas);
+      console.log(cityOptions);
+      setLoading(false);
+    } catch (error) {
+      console.log("Error fetching locations", error);
+      if (error?.response?.status === 401) {
+        toast.error(error?.response?.data?.code, ": Please Log in again");
+      }
+      setLoading(false);
     }
   };
 
@@ -99,13 +148,17 @@ export default function CreateField({
     setClassTiming(!classSession);
   };
 
+  useEffect(() => {
+    handleListingAllLocations();
+  }, []);
+
   return (
     <div
       className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-32 font-inter ${
         isSidebarOpen ? "translate-x-64 ml-20" : "translate-x-0 pl-10 pr-4"
       }`}
       style={{
-        width: isSidebarOpen ? "84%" : "100%",
+        width: isSidebarOpen ? "81%" : "100%",
       }}
     >
       <div className="bg-surface-100 flex flex-col p-8 rounded-xl">
@@ -256,21 +309,63 @@ export default function CreateField({
                 </div>
               </>
             )}
-            <button
-              className="text-surface-100 px-2 py-1.5 rounded-md bg-blue-300"
-              onClick={handleSession}
-            >
-              {" "}
-              Create class session
-            </button>
 
-            {classSession && (
+            {/* {route !== "courses" && (
+              <button
+                className="flex text-center justify-center items-center gap-2 text-surface-100 bg-blue-300 py-2 px-4 mt-4 rounded-md mr-4 hover:bg-[#4296b3]"
+                onClick={handleSession}
+              >
+                {" "}
+                Schedule a class session
+              </button>
+            )} */}
+
+            {route !== "courses" && classSession && (
               <>
-                <label>Location</label>
-                <select>
-                  hello
-                  <option> hello world</option>
-                </select>
+                <div className="sm:pr-4 ">
+                  <div className="relative w-full flex-col p-4 gap-4 flex  border-dark-400 rounded-md border mt-2 ">
+                    <div className="flex flex-col">
+                      <label>Location</label>
+
+                      <select className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5">
+                        hello
+                        <option> hello world</option>
+                      </select>
+                    </div>
+                    {inputCourses?.map((courseId) => {
+                      const course = courses.find((c) => c.id === courseId);
+                      return (
+                        <>
+                          <div className="flex w-full gap-2">
+                            <div
+                              key={courseId}
+                              className=" w-full outline-dark-300 flex items-center space-x-2 px-3   border-blue-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                              // className="w-full flex items-center space-x-2 px-3  bg-blue-600 border border-blue-300 rounded-md"
+                            >
+                              {course?.name || course?.skill_name}
+                            </div>
+                            <input
+                              key={courseId}
+                              placeholder=""
+                              className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                            />
+                            <select className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5">
+                              hello
+                              <option> hello world</option>
+                            </select>
+                            {/* <div className="flex flex-col"> */}
+                            {/* <label>Location</label> */}
+                            <select className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5">
+                              hello
+                              <option> hello world</option>
+                            </select>
+                          </div>
+                          {/* </div> */}
+                        </>
+                      );
+                    })}
+                  </div>
+                </div>
               </>
             )}
 

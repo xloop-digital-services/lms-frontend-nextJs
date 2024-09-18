@@ -15,6 +15,7 @@ import {
   totalUsersCount,
 } from "@/api/route";
 import { CircularProgress } from "@mui/material";
+import Link from "next/link";
 
 const AdminDashboard = () => {
   const { isSidebarOpen } = useSidebar();
@@ -31,7 +32,7 @@ const AdminDashboard = () => {
   const [isSkillOpen, setIsSkillOpen] = useState(false);
   const [isSkillSelected, setIsSkillSelected] = useState(false);
   const [verfiedRequest, setverfiedRequest] = useState(null);
-  const [unverifiedRequest, setUnverifiedRequest] = useState(null)
+  const [unverifiedRequest, setUnverifiedRequest] = useState(null);
   const [pendingRequest, setPendingRequest] = useState(null);
   const [shortListRequest, setShortlisted] = useState(null);
   const [isUserOpen, setIsUserOpen] = useState(false);
@@ -60,7 +61,6 @@ const AdminDashboard = () => {
   useClickOutside(dropdownRef, () => setIsProgramOpen(false));
   useClickOutside(userDown, () => setIsUserOpen(false));
 
-  
   // Apply filtering whenever search term or dropdown status changes
   useEffect(() => {
     const handleFilter = () => {
@@ -68,15 +68,15 @@ const AdminDashboard = () => {
         const matchesSearchTerm = batch.batch
           .toLowerCase()
           .includes(searchTerm.toLowerCase());
-    
+
         const matchesStatus =
           selectedStatus === "Show All" ||
           (selectedStatus === "Active" && batch.status === 1) ||
           (selectedStatus === "Inactive" && batch.status === 0);
-    
+
         return matchesSearchTerm && matchesStatus;
       });
-    
+
       setFilteredBatches(filteredData);
     };
     handleFilter();
@@ -196,7 +196,7 @@ const AdminDashboard = () => {
             selectedUser
           );
           setverfiedRequest(response?.data?.data.verified);
-          setUnverifiedRequest(response?.data?.data.unverified)
+          setUnverifiedRequest(response?.data?.data.unverified);
           setPendingRequest(response?.data?.data.pending);
           setShortlisted(response?.data?.data.short_listed);
         } else if (selectedUser === "instructor") {
@@ -205,7 +205,7 @@ const AdminDashboard = () => {
             selectedUser
           );
           setverfiedRequest(response?.data?.data.verified);
-           setUnverifiedRequest(response?.data?.data.unverified)
+          setUnverifiedRequest(response?.data?.data.unverified);
           setPendingRequest(response?.data?.data.pending);
           setShortlisted(response?.data?.data.short_listed);
         }
@@ -276,32 +276,34 @@ const AdminDashboard = () => {
       }}
     >
       <div className="text-[#07224D] flex flex-col gap-5">
-      {/* <h2 className=" font-exo text-3xl font-bold">Admin Dashboard</h2> */}
+        {/* <h2 className=" font-exo text-3xl font-bold">Admin Dashboard</h2> */}
         <div className="flex gap-5">
           {" "}
           {/* Adding a unique key */}
-          <div className="bg-[#ffffff] min-w-[32%] flex justify-between px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
-            <div className="flex flex-col text-sm h-full justify-center items-center">
-              Total Users
-              <span className="text-xl font-semibold font-exo text-[#32324D]">
-                {allUsers}
-              </span>
-            </div>
-            <div className="space-y-2">
-              <div className="flex flex-col text-[12px] justify-center items-center">
-                Active Users
-                <span className="text-base font-semibold font-exo text-[#32324D]">
-                  {allActiveUsers}
+          <Link href="/user-management/users" className="w-full">
+            <div className="bg-[#ffffff] min-w-[32%] flex justify-between px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
+              <div className="flex flex-col text-sm h-full justify-center items-center">
+                Total Users
+                <span className="text-xl font-semibold font-exo text-[#32324D]">
+                  {allUsers}
                 </span>
               </div>
-              <div className="flex flex-col text-[12px] justify-center items-center">
-                Inactive Users
-                <span className="text-base font-semibold font-exo text-[#32324D]">
-                  {allInActiveUsers}
-                </span>
+              <div className="space-y-2">
+                <div className="flex flex-col text-[12px] justify-center items-center">
+                  Active Users
+                  <span className="text-base font-semibold font-exo text-[#32324D]">
+                    {allActiveUsers}
+                  </span>
+                </div>
+                <div className="flex flex-col text-[12px] justify-center items-center">
+                  Inactive Users
+                  <span className="text-base font-semibold font-exo text-[#32324D]">
+                    {allInActiveUsers}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
+          </Link>
           <div className="bg-[#ffffff] min-w-[32%] flex justify-between px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
             <div className="flex flex-col text-sm h-full justify-center items-center">
               Total Students
