@@ -632,6 +632,23 @@ export const createSession = async (data) => {
   }
 };
 
+export const UpdateSession = async (selectedSession,data) => {
+  try {
+    const response = await axiosInstance.put(`/session/${selectedSession}/`, data);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const DeleteSession = async (id) => {
+  try {
+    const response = await axiosInstance.delete(`/session/${id}/`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const createLocation = async (data) => {
   try {
     const response = await axiosInstance.post("/location/", data);

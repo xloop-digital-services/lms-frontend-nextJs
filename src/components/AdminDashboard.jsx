@@ -402,10 +402,14 @@ const AdminDashboard = () => {
                     <button
                       onClick={toggleProgramOpen}
                       className={`${
-                        !isProgramSelected
-                          ? " text-[#92A7BE]"
-                          : "text-[#424b55]"
-                      } flex justify-between mt-1 items-center  xl:w-[200px] w-full gap-1 hover:text-[#0e1721] px-4 xlg:py-3 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                        !isProgramSelected ? "text-[#92A7BE]" : "text-[#424b55]"
+                      } flex justify-between items-center xl:max-w-[240px] min-w-[220px] truncate px-4 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                      style={{
+                        // maxWidth: "220px", // Set the maximum width of the button
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
                     >
                       {selectedProgram}
                       <span className="">

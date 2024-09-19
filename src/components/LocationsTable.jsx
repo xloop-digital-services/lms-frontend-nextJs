@@ -3,6 +3,7 @@ import { CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import DeleteConfirmationPopup from "./Modal/DeleteConfirmationPopUp";
+import { IoCheckmark, IoClose } from "react-icons/io5";
 
 const LocationsTable = ({
   locations,
@@ -16,9 +17,12 @@ const LocationsTable = ({
   const [edit, setEdit] = useState(false);
   const [status, setStatus] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [editCapacity, setEditCapacity] = useState(null);
 
   const handleUpdateStatus = (location) => {
+    setEditCapacity(location.capacity);
     setSelectedLocation(location.id);
+    setStatus(location.status)
     setLocation(location);
     setEdit(!edit);
   };
@@ -31,37 +35,32 @@ const LocationsTable = ({
     }
   };
 
-  useEffect(() => {
-    const handleUpdate = async () => {
-      if (status === null || updating) return;
+  const handleUpdate = async () => {
+    if (status === null || updating) return;
+    setUpdating(true); // Set updating to true when status is being updated
+    try {
+      const data = {
+        capacity: editCapacity,
+        city: location.city,
+        name: location.name,
+        shortname: location.shortname,
+        status: status,
+      };
 
-      setUpdating(true); // Set updating to true when status is being updated
-      try {
-        const data = {
-          capacity: location.capacity,
-          city: location.city,
-          name: location.name,
-          shortname: location.shortname,
-          status: status,
-        };
-
-        const response = await UpdateLocation(selectedLocation, data);
-        console.log("location updated", response);
-        setEdit(false);
-        setUpdateLocation(!updateLocation);
-      } catch (error) {
-        console.log("error while updating status", error);
-      } finally {
-        setUpdating(false); // Set updating to false after the update is complete
-      }
-    };
-
-    handleUpdate();
-  }, [status]);
+      const response = await UpdateLocation(selectedLocation, data);
+      console.log("location updated", response);
+      setEdit(false);
+      setUpdateLocation(!updateLocation);
+    } catch (error) {
+      console.log("error while updating status", error);
+    } finally {
+      setUpdating(false); // Set updating to false after the update is complete
+    }
+  };
 
   const handleDeleteLocation = (location) => {
     setSelectedLocation(location.id);
-    setConfirmDelete(true)
+    setConfirmDelete(true);
   };
 
   const handleDelete = async () => {
@@ -69,9 +68,8 @@ const LocationsTable = ({
       const response = await DeleteLocation(selectedLocation);
       console.log("deleting the location", response);
       setUpdateLocation(!updateLocation);
-      setConfirmDelete(false)
+      setConfirmDelete(false);
     } catch (error) {
-  
       console.log("error while deleting the lcoation", error);
     }
   };
@@ -140,91 +138,139 @@ const LocationsTable = ({
                     </tr>
                   ) : locations && locations.length > 0 ? (
                     locations
-                    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-                    .map((location, index) => (
-                      <tr key={index} className={`${location.status === 2 && 'hidden'}`}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
-                          {location.city}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                          {location.name}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                          {location.shortname}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                          {location.capacity}
-                        </td>
-                        <td className="px-6 py-2 whitespace-nowrap flex w-full justify-start items-center text-sm text-surface-100">
-                          <p
+                      .sort(
+                        (a, b) =>
+                          new Date(b.created_at) - new Date(a.created_at)
+                      )
+                      .map((location, index) => (
+                        <tr
+                          key={index}
+                          className={`${location.status === 2 && "hidden"}`}
+                        >
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
+                            {location.city}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                            {location.name}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                            {location.shortname}
+                          </td>
+                          <td
                             className={`${
-                              edit && selectedLocation === location.id
-                                ? "py-0"
-                                : "py-2"
-                            } ${
-                              location.status === 1
-                                ? "bg-[#18A07A]"
-                                : "bg-[#D84848]"
-                            }  w-[100px] text-center text-[12px] rounded-lg`}
+                              !(edit && selectedLocation === location.id)
+                                ? "py-4 px-6"
+                                : "py-1 px-4"
+                            }  whitespace-nowrap text-sm text-gray-800 dark:text-gray-200`}
                           >
-                            {!(edit && selectedLocation === location.id) ? ( // Check if the current index is selected for editing
-                              (location.status === 1 && "Active") ||
-                              (location.status === 0 && "Inactive")
+                            {!(edit && selectedLocation === location.id) ? (
+                              location.capacity
                             ) : (
-                              <th
-                                scope="col"
-                                className=" text-center p-1 text-xs font-medium  text-gray-500 uppercase "
-                              >
-                                <select
-                                  className="bg-dark-300 bg-opacity-0 block p-2 w-full  border border-dark-200 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-[#1e785e] transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                                  defaultValue={
-                                    location.status === 1
-                                      ? "active"
-                                      : "inactive"
-                                  }
-                                  onChange={(e) =>
-                                    handleSetStatus(e.target.value)
-                                  } // Handle status change here
-                                >
-                                  <option
-                                    value="active"
-                                    className="py-2 text-dark-900"
-                                  >
-                                    Active
-                                  </option>
-                                  <option
-                                    value="inactive"
-                                    className="py-2 text-dark-900"
-                                  >
-                                    Inactive
-                                  </option>
-                                </select>
-                              </th>
+                              <input
+                                type="number"
+                                value={editCapacity}
+                                onChange={(e) =>
+                                  setEditCapacity(e.target.value)
+                                }
+                                className=" px-2 py-3 border border-dark-300 outline-none rounded-lg w-full"
+                                placeholder={location.capacity}
+                                min={0}
+                              />
                             )}
-                          </p>
-                        </td>
-                        <td className="px-8 py-2 whitespace-nowrap text-[#03A1D8] ">
-                          <div className="flex gap-4">
-                            <div>
-                              <FaEdit
-                                size={20}
-                                className="cursor-pointer hover:opacity-30"
-                                onClick={() => handleUpdateStatus(location)}
-                                title="update"
-                              />
+                          </td>
+                          <td className="px-6 py-2 whitespace-nowrap flex w-full justify-start items-center text-sm text-surface-100">
+                            <p
+                              className={`${
+                                edit && selectedLocation === location.id
+                                  ? "py-0"
+                                  : "py-2"
+                              } ${
+                                location.status === 1
+                                  ? "bg-[#18A07A]"
+                                  : "bg-[#D84848]"
+                              }  w-[100px] text-center text-[12px] rounded-lg`}
+                            >
+                              {!(edit && selectedLocation === location.id) ? ( // Check if the current index is selected for editing
+                                (location.status === 1 && "Active") ||
+                                (location.status === 0 && "Inactive")
+                              ) : (
+                                <th
+                                  scope="col"
+                                  className=" text-center p-1 text-xs font-medium  text-gray-500 uppercase "
+                                >
+                                  <select
+                                    className="bg-dark-300 bg-opacity-0 block p-2 w-full  border border-dark-200 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-[#1e785e] transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                                    defaultValue={
+                                      location.status === 1
+                                        ? "active"
+                                        : "inactive"
+                                    }
+                                    onChange={(e) =>
+                                      handleSetStatus(e.target.value)
+                                    } // Handle status change here
+                                  >
+                                    <option
+                                      value="active"
+                                      className="py-2 text-dark-900"
+                                    >
+                                      Active
+                                    </option>
+                                    <option
+                                      value="inactive"
+                                      className="py-2 text-dark-900"
+                                    >
+                                      Inactive
+                                    </option>
+                                  </select>
+                                </th>
+                              )}
+                            </p>
+                          </td>
+                          <td className="px-8 py-2 whitespace-nowrap text-[#03A1D8] ">
+                            <div className="flex gap-4">
+                              <div>
+                                {!(edit && selectedLocation === location.id) ? (
+                                  <FaEdit
+                                    size={20}
+                                    className="cursor-pointer hover:opacity-30"
+                                    onClick={() => handleUpdateStatus(location)}
+                                    title="update"
+                                  />
+                                ) : (
+                                  <div className="flex gap-4">
+                                    <IoCheckmark
+                                      size={20}
+                                      title="confirm update"
+                                      onClick={handleUpdate}
+                                      className="cursor-pointer hover:border-2 border-mix-300 hover:text-mix-300 font-bold rounded-full"
+                                    />
+                                    <IoClose
+                                      size={19}
+                                      title="cancel"
+                                      onClick={(e) => setEdit(false)}
+                                      className="cursor-pointer hover:border-2 border-mix-200 hover:text-mix-200 font-bold rounded-full"
+                                    />
+                                  </div>
+                                )}
+                              </div>
+                              <div>
+                                {!(
+                                  edit && selectedLocation === location.id
+                                ) && (
+                                  <FaTrash
+                                    size={20}
+                                    className="cursor-pointer hover:opacity-30"
+                                    onClick={() =>
+                                      handleDeleteLocation(location)
+                                    }
+                                    title="delete"
+                                  />
+                                )}
+                              </div>
                             </div>
-                            <div>
-                              <FaTrash
-                                size={20}
-                                className="cursor-pointer hover:opacity-30"
-                                onClick={() => handleDeleteLocation(location)}
-                                title="delete"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
+                          </td>
+                        </tr>
+                      ))
                   ) : (
                     <tr>
                       <td
@@ -244,7 +290,7 @@ const LocationsTable = ({
           <DeleteConfirmationPopup
             setConfirmDelete={setConfirmDelete}
             handleDelete={handleDelete}
-            field='location'
+            field="location"
           />
         )}
       </div>

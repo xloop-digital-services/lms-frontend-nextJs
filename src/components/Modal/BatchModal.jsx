@@ -236,7 +236,7 @@ const BatchModal = ({
                 )}
               </div>
               <div className="space-y-2 text-[15px] w-full">
-                <p>Number of Students</p>
+                <p>Capacity</p>
                 <input
                   type="number"
                   className="border border-dark-300 outline-none p-3 rounded-lg w-full "

@@ -20,7 +20,7 @@ const LocationModal = ({
   const [isCitySelected, setIscitySelected] = useState(false);
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [isLocationSelected, setIsLocationSelected] = useState(false);
-  const [capacity, setCapacity] = useState();
+  const [capacity, setCapacity] = useState(null);
   const [loadingCreation, setLoadingCreation] = useState(false);
   const cityDown = useRef(null);
   const modalDown = useRef(null);
@@ -228,7 +228,7 @@ const LocationModal = ({
                   placeholder="number of students"
                   min={0}
                   value={capacity}
-                  onChange={(e) => setCapacity(e.target.value)}
+                  onChange={(e) => setCapacity(parseInt(e.target.value, 10) || 0)}
                   required
                 />
               </div>

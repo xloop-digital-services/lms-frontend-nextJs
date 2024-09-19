@@ -215,13 +215,15 @@ const SessionCreationModal = ({
 
   const handleCheckboxChange = (event) => {
     const { value, checked } = event.target;
-    if (checked) {
-      setSelectedDays((prev) => [...prev, value]);
-      console.log("checked", selectedDays);
-      // console.log('event', event.target) // Add day if checked
-    } else {
-      setSelectedDays((prev) => prev.filter((day) => day !== value)); // Remove day if unchecked
-    }
+    const dayValue = parseInt(value, 10); // Convert the value to an integer
+
+    setSelectedDays((prev) => {
+      if (checked) {
+        return [...prev, dayValue]; // Add day if checked
+      } else {
+        return prev.filter((day) => day !== dayValue); // Remove day if unchecked
+      }
+    });
   };
 
   const handleSelectAllWeekdays = (e) => {
@@ -323,13 +325,19 @@ const SessionCreationModal = ({
                   onClick={toggleCourseOpen}
                   className={`${
                     !isCourseSelected ? "text-[#92A7BE]" : "text-[#424b55]"
-                  } flex justify-between items-center w-full hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                  } flex justify-between items-center w-full truncate px-4 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                  style={{
+                    maxWidth: "220px", // Set the maximum width of the button
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
                 >
                   {selectedCourseName ? selectedCourseName : "select a course"}
                   <span
                     className={`${
                       isCourseOpen ? "rotate-180 duration-300" : "duration-300"
-                    } `}
+                    }`}
                   >
                     <IoIosArrowDown />
                   </span>
@@ -474,7 +482,7 @@ const SessionCreationModal = ({
                       <label
                         key={key}
                         className={`flex items-center ${
-                          selectedDays.includes(key)
+                          selectedDays.includes(parseInt(key, 10))
                             ? "text-[#424b55]"
                             : "text-[#92A7BE]"
                         }`}
@@ -483,7 +491,7 @@ const SessionCreationModal = ({
                           type="checkbox"
                           value={key}
                           onChange={handleCheckboxChange}
-                          checked={selectedDays.includes(key)}
+                          checked={selectedDays.includes(parseInt(key, 10))}
                           className="mr-2"
                         />
                         {fullName} ({shortName})
@@ -492,7 +500,7 @@ const SessionCreationModal = ({
                   )}
 
                   {/* Checkbox to select all weekdays except Sunday */}
-                  <label
+                  {/* <label
                     className={`flex items-center ${
                       selectedDays.length === Object.keys(WEEKDAYS).length - 1
                         ? "text-[#424b55]"
@@ -508,7 +516,7 @@ const SessionCreationModal = ({
                       className="mr-2"
                     />
                     Select All Weekdays (Mon-Sat)
-                  </label>
+                  </label> */}
                 </div>
               </div>
 
