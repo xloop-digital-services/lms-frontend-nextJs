@@ -196,12 +196,12 @@ const SessionsTable = ({ sessions, loading }) => {
                     >
                       Status
                     </th>
-                    {/* <th
+                    <th
                       scope="col"
                       className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
                     >
                       Actions
-                    </th> */}
+                    </th>
                   </tr>
                 </thead>
                 {/* Set max height and overflow for the table body */}
@@ -356,7 +356,7 @@ const SessionsTable = ({ sessions, loading }) => {
                                 )}
                               </p>
                             </td>
-                            {/* <td className="px-8 py-2 whitespace-nowrap text-[#03A1D8] ">
+                            <td className="px-8 py-2 whitespace-nowrap text-[#03A1D8] ">
                               <div className="flex gap-4">
                                 <div>
                                   {!(edit && selectedSession === session.id) ? (
@@ -398,9 +398,9 @@ const SessionsTable = ({ sessions, loading }) => {
                                       title="delete"
                                     />
                                   )}
-                                </div> 
+                                </div> */}
                               </div>
-                            </td> */}
+                            </td> 
                           </tr>
                         );
                       })

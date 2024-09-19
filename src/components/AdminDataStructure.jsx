@@ -89,10 +89,32 @@ const AdminDataStructure = ({
                       </th>
                       <th
                         scope="col"
+                        className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
+                      >
+                        Total Marks
+                      </th>
+                      <th
+                        scope="col"
                         className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
                       >
                         Due Date
                       </th>
+                      {assessment === "Exam" && (
+                        <>
+                          <th
+                            scope="col"
+                            className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
+                          >
+                            Start Time
+                          </th>
+                          <th
+                            scope="col"
+                            className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
+                          >
+                            End Time
+                          </th>
+                        </>
+                      )}
                       {isStudent && (
                         <th
                           scope="col"
@@ -176,9 +198,22 @@ const AdminDataStructure = ({
                           <td className="px-6 py-4  text-center whitespace-nowrap text-sm text-gray-800">
                             {formatDateTime(quiz?.created_at)}
                           </td>
+                          <td className="px-6 py-4  text-center whitespace-nowrap text-sm text-gray-800">
+                            {quiz?.total_grade || "-"}
+                          </td>
                           <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
                             {formatDateTime(quiz?.due_date)}
                           </td>
+                          {assessment === "Exam" && (
+                            <>
+                              <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                                {quiz?.start_time}
+                              </td>
+                              <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                                {quiz?.end_time}
+                              </td>
+                            </>
+                          )}
                           {isStudent && (
                             <td className="px-6 py-4  text-center whitespace-nowrap text-sm text-gray-800">
                               {quiz?.submitted_at

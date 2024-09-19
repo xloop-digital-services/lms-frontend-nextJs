@@ -27,31 +27,43 @@ export default function InstructorCoursePage({
   const [courses, setCourses] = useState([]);
   const insId = userData?.user_data?.id;
   const insEmailId = userData?.User?.email;
-  console.log(insEmailId)
+  console.log(insEmailId);
   const [loader, setLoader] = useState(true);
   console.log(insId);
   // const [courseId, setCourseId] = useState();
-  useEffect(() => {
-    if (!insId) return;
-    async function fetchInstructorCourses() {
-      const response = await getInstructorCourses(insId);
-      setLoader(true);
-      try {
-        if (response.status === 200) {
-          setCourses(response.data?.data?.courses);
-          setLoader(false);
-          // setCourseId(response?.data?.id)
-          console.log(response?.data);
-        } else {
-          console.error("Failed to fetch user, status:", response.status);
-        }
-      } catch (error) {
-        console.log("error", error);
-      }
-    }
+  // useEffect(() => {
+  //   if (!insId) return;
+  //   async function fetchInstructorCourses() {
+  //     const response = await getInstructorCourses(insId);
+  //     setLoader(true);
+  //     try {
+  //       if (response.status === 200) {
+  //         setCourses(response.data?.data?.courses);
+  //         setLoader(false);
+  //         // setCourseId(response?.data?.id)
+  //         console.log(response?.data);
+  //       } else {
+  //         console.error("Failed to fetch user, status:", response.status);
+  //       }
+  //     } catch (error) {
+  //       console.log("error", error);
+  //     }
+  //   }
 
-    inInstructor && fetchInstructorCourses();
-  }, [insId]);
+  //   inInstructor && fetchInstructorCourses();
+  // }, [insId]);
+
+  useEffect(() => {
+    if (userData?.session) {
+      const sessionCourses = userData?.session?.map(
+        (session) => session.course
+      );
+      setCourses(sessionCourses);
+      setLoader(false);
+    } else {
+      setLoader(true);
+    }
+  }, [userData]);
 
   if (loader) {
     <CircularProgress />;

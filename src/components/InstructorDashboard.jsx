@@ -32,28 +32,40 @@ export default function InstructorDashboard() {
 
   // console.log(group);
 
-  useEffect(() => {
-    if (!insId) return;
-    async function fetchInstructorCourses() {
-      const response = await getInstructorCourses(insId);
-      setLoader(true);
-      try {
-        if (response.status === 200) {
-          setCourses(response.data?.data?.courses);
-          setLoader(false);
-          // setCourseId(response?.data?.id)
-          // console.log(response.data?.data?.courses?.[0])
-          console.log(response?.data);
-        } else {
-          console.error("Failed to fetch user, status:", response.status);
-        }
-      } catch (error) {
-        console.log("error", error);
-      }
-    }
+  // useEffect(() => {
+  //   if (!insId) return;
+  //   async function fetchInstructorCourses() {
+  //     const response = await getInstructorCourses(insId);
+  //     setLoader(true);
+  //     try {
+  //       if (response.status === 200) {
+  //         setCourses(response.data?.data?.courses);
+  //         setLoader(false);
+  //         // setCourseId(response?.data?.id)
+  //         // console.log(response.data?.data?.courses?.[0])
+  //         console.log(response?.data);
+  //       } else {
+  //         console.error("Failed to fetch user, status:", response.status);
+  //       }
+  //     } catch (error) {
+  //       console.log("error", error);
+  //     }
+  //   }
 
-    fetchInstructorCourses();
-  }, [insId]);
+  //   fetchInstructorCourses();
+  // }, [insId]);
+
+  useEffect(() => {
+    if (userData?.session) {
+      const sessionCourses = userData?.session?.map(
+        (session) => session.course
+      );
+      setCourses(sessionCourses);
+      setLoader(false);
+    } else {
+      setLoader(true);
+    }
+  }, [userData]);
 
   async function fetchPendingAssignments() {
     const response = await getInstructorSessions(userId, group);

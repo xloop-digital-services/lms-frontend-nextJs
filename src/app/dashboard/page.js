@@ -5,6 +5,7 @@ import StudentDashboard from "@/components/StudentDashboard";
 import AdminDashboard from "@/components/AdminDashboard";
 import { useAuth } from "@/providers/AuthContext";
 import InstructorDashboard from "@/components/InstructorDashboard";
+import NoSessionPage from "@/components/NoSessionPage";
 
 export default function Page() {
   const [loader, setLoader] = useState(true);
@@ -12,7 +13,7 @@ export default function Page() {
   const isStudent = userData?.Group === "student";
   const isAdmin = userData?.Group === "admin";
   const isInstructor = userData?.Group === "instructor";
-
+  // console.log(userData?.session);
   // console.log(isStudent);
   // console.log(userData?.Group);
 
@@ -25,11 +26,23 @@ export default function Page() {
       ) : ( */}
       <>
         {isStudent ? (
-          <StudentDashboard />
+          userData.session === null ? (
+            <>
+              <NoSessionPage />
+            </>
+          ) : (
+            <StudentDashboard />
+          )
         ) : isAdmin ? (
           <AdminDashboard />
         ) : isInstructor ? (
-          <InstructorDashboard />
+          userData.session === null ? (
+            <>
+              <NoSessionPage />
+            </>
+          ) : (
+            <InstructorDashboard />
+          )
         ) : (
           <div>No data found </div>
         )}

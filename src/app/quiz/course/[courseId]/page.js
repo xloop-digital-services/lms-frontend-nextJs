@@ -32,6 +32,7 @@ export default function Page({ params }) {
   const [loading, setLoading] = useState(false);
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState("");
+  const [totalGrade, setTotalGrade] = useState("");
   const [quiz, setQuiz] = useState("");
   const [file, setFile] = useState(null);
   const [resubmission, setResubmission] = useState("");
@@ -82,6 +83,7 @@ export default function Page({ params }) {
     formData.append("due_date", dueDate);
     formData.append("no_of_resubmissions_allowed", resubmission);
     formData.append("status", assignmentStatus);
+    formData.append("total_grade", totalGrade);
 
     try {
       const response = currentAssignment
@@ -102,6 +104,7 @@ export default function Page({ params }) {
         setDueDate("");
         setFile(null);
         setResubmission("");
+        setTotalGrade("");
         setCreatingQuiz(false);
         setCurrentAssignment(null);
         fetchAssignments();
@@ -137,6 +140,7 @@ export default function Page({ params }) {
     setResubmission(assignmentToEdit.no_of_resubmissions_allowed);
     setFile(assignmentToEdit.content);
     setCreatingQuiz(true);
+    setTotalGrade(assignmentToEdit.total_grade);
   };
 
   useEffect(() => {
@@ -215,14 +219,27 @@ export default function Page({ params }) {
                   onChange={(e) => setDescription(e.target.value)}
                 />
               </div>
-              <div className="my-2">
-                <label className="text-md">Due Date</label>
-                <input
-                  type="datetime-local"
-                  className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
-                  value={dueDate}
-                  onChange={(e) => setDueDate(e.target.value)}
-                />
+              <div className="flex w-full gap-2 my-2 sm:flex-row flex-col lg:w-[100%]">
+                <div className="my-2 w-full">
+                  <label className=" text-md">Due Date</label>
+                  <input
+                    type="datetime-local"
+                    className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                    value={dueDate}
+                    onChange={(e) => setDueDate(e.target.value)}
+                  />
+                </div>
+                <div className="my-2 sm:mb-0 w-full">
+                  <label className="text-md">Total Marks</label>
+
+                  <input
+                    type="number"
+                    min={0}
+                    className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                    value={totalGrade}
+                    onChange={(e) => setTotalGrade(e.target.value)}
+                  />
+                </div>
               </div>
               <div className="flex gap-2 my-2 sm:flex-row flex-col lg:w-[100%]">
                 <div className="mb-4 sm:mb-0 lg:w-[50%] md:w-[50%]">

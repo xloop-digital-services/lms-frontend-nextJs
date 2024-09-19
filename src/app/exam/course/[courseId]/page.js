@@ -19,7 +19,9 @@ import {
 import { useAuth } from "@/providers/AuthContext";
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
-import AdminDataStructure from "@/components/AdminDataStructure";
+import AdminDataStructure, {
+  formatDateTime,
+} from "@/components/AdminDataStructure";
 
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
@@ -127,12 +129,12 @@ export default function Page({ params }) {
     setCurrentAssignment(assignmentToEdit);
     setQuestion(assignmentToEdit.question);
     setDescription(assignmentToEdit.description);
-    setDueDate(assignmentToEdit.due_date);
-    setStartTime(assignmentToEdit.startTime);
-    setEndTime(assignmentToEdit.endTime);
-    setTotalGrade(assignmentToEdit.totalGrade);
+    setDueDate(formatDateTime(assignmentToEdit.due_date));
+    setStartTime(assignmentToEdit.start_time);
+    setEndTime(assignmentToEdit.end_time);
+    setTotalGrade(assignmentToEdit.total_grade);
     // setResubmission(assignmentToEdit.no_of_resubmissions_allowed);
-    setFile(assignmentToEdit.content);
+    setFile(assignmentToEdit.exam_submitted_file);
     setCreatingQuiz(true);
   };
 
@@ -190,13 +192,20 @@ export default function Page({ params }) {
         </ul>
         <p className="pt-2 text-mix-200">Note: No Resubmissions allowed*</p>
 
-        <hr className="my-8 text-dark-200 "></hr>
-        <div className="flex mb-8">
-          <p> Time: 09:00 AM - 12:00 AM</p>
-          <p className="text-dark-400 text-sm flex items-center px-4">
+        <hr className="my-4 text-dark-200 "></hr>
+        <div className="flex">
+          {/* {assignments.map((assign, index) => {
+            return (
+              <p key={index}>
+                {" "}
+                Time: {assign.start_time}- {assign.end_time}
+              </p>
+            );
+          })} */}
+          {/* <p className="text-dark-400 text-sm flex items-center px-4">
             {" "}
             Total Marks: 100
-          </p>
+          </p> */}
         </div>
         {isCreatingQuiz && (
           <>
@@ -273,13 +282,11 @@ export default function Page({ params }) {
                   <label className="text-md">Total Marks</label>
 
                   <input
-                    type="grade"
+                    type="number"
                     min={0}
                     className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
                     value={totalGrade}
-                    onChange={(e) =>
-                      setTotalGrade(e.target.value)
-                    }
+                    onChange={(e) => setTotalGrade(e.target.value)}
                   />
                 </div>
               </div>

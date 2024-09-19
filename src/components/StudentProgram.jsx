@@ -6,13 +6,14 @@ import courseImg from "/public/assets/img/course-image.png";
 import {
   getCourseByProgId,
   getCourses,
+  getProgramById,
   getProgramByRegId,
   getProgressForCourse,
 } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
 import { CircularProgress } from "@mui/material";
 
-export default function StudentProgram({ path, progress, heading }) {
+export default function StudentProgram({ path, progress, heading, role }) {
   const { isSidebarOpen } = useSidebar();
   const { userData } = useAuth();
   const isStudent = userData?.Group === "student";
@@ -24,7 +25,7 @@ export default function StudentProgram({ path, progress, heading }) {
   useEffect(() => {
     if (!regId) return;
     async function fetchStudentProgram() {
-      const response = await getProgramByRegId(regId);
+      const response = await getProgramById(progId);
       setLoader(true);
       try {
         if (response.status === 200) {
@@ -50,14 +51,14 @@ export default function StudentProgram({ path, progress, heading }) {
   return (
     <>
       <div
-      className={`flex-1 transition-transform pt-[97px] space-y-4 max-md:pt-32 font-inter ${
-        isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 pl-10 pr-10"
-      }`}
-      style={{
-        // paddingBottom: "20px",
-        width: isSidebarOpen ? "81%" : "100%",
-      }}
-    >
+        className={`flex-1 transition-transform pt-[97px] space-y-4 max-md:pt-32 font-inter ${
+          isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 pl-10 pr-10"
+        }`}
+        style={{
+          // paddingBottom: "20px",
+          width: isSidebarOpen ? "81%" : "100%",
+        }}
+      >
         {loader ? (
           <div className="flex h-screen justify-center items-center ">
             <CircularProgress />

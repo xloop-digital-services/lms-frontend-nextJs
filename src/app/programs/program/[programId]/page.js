@@ -13,9 +13,13 @@ import React, { useEffect, useState } from "react";
 import courseImg from "/public/assets/img/course-image.png";
 import { toast } from "react-toastify";
 import { FaTimes } from "react-icons/fa";
+import { useAuth } from "@/providers/AuthContext";
+import Link from "next/link";
 
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
+  const { userData } = useAuth();
+  const isStudent = userData?.Group === "student";
   const programId = params.programId;
   const [isEditing, setIsEditing] = useState(false);
   const [programData, setProgramData] = useState({});
@@ -309,6 +313,7 @@ export default function Page({ params }) {
                 </h2>
               </div>
 
+              {/* {isStudent ? ( */}
               <div className="flex gap-3 flex-wrap">
                 {courseData?.map((course, index) => (
                   <CourseCard
@@ -323,6 +328,28 @@ export default function Page({ params }) {
                   />
                 ))}
               </div>
+              {/* </div>
+              ) : (
+                <div className="flex gap-3 flex-wrap">
+                  {courseData?.map((course, index) => (
+                    <Link
+                      key={course.id}
+                      href={`/courses/course/${course.id}`}
+                      className="mx-1"
+                    >
+                      <CourseCard
+                        id={course.id}
+                        courseName={course.name}
+                        courseDesc={course.short_description}
+                        image={courseImg}
+                        // route={`course`}
+                        // route1="courses"
+                        status={course.status}
+                      />
+                    </Link>
+                  ))}
+                </div>
+              )} */}
             </div>
           </div>
         </div>

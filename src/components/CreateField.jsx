@@ -42,6 +42,7 @@ export default function CreateField({
   const [skill, setSkill] = useState();
   const [skillName, setSkillName] = useState("");
   const [classSession, setClassTiming] = useState();
+  const [selectedDays, setSelectedDays] = useState([]);
   const [locations, setLocations] = useState([]);
   const [cityOptions, setCityOptions] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -55,8 +56,44 @@ export default function CreateField({
       if (storedShortDesc) setShortDesc(storedShortDesc);
       if (storedAbout) setAbout(storedAbout);
     }
-    
   }, [title]);
+
+  const WEEKDAYS = {
+    0: ["Monday", "Mon"],
+    1: ["Tuesday", "Tue"],
+    2: ["Wednesday", "Wed"],
+    3: ["Thursday", "Thu"],
+    4: ["Friday", "Fri"],
+    5: ["Saturday", "Sat"],
+    6: ["Sunday", "Sun"],
+  };
+  const handleSelectAllWeekdays = (e) => {
+    const { checked } = e.target;
+
+    if (checked) {
+      // Select all weekdays except Sunday (key "6")
+      const weekdaysExceptSunday = Object.keys(WEEKDAYS).filter(
+        (key) => key !== "6"
+      );
+      setSelectedDays(weekdaysExceptSunday);
+    } else {
+      // Uncheck all weekdays except Sunday
+      setSelectedDays([]);
+    }
+  };
+
+  const handleCheckboxChange = (event) => {
+    const { value, checked } = event.target;
+    const dayValue = parseInt(value, 10); // Convert the value to an integer
+
+    setSelectedDays((prev) => {
+      if (checked) {
+        return [...prev, dayValue]; // Add day if checked
+      } else {
+        return prev.filter((day) => day !== dayValue); // Remove day if unchecked
+      }
+    });
+  };
 
   useEffect(() => {
     if (title === "Program") {
@@ -108,8 +145,8 @@ export default function CreateField({
     try {
       const response = await listAllLocations();
       setLocations(response?.data);
-      setCityOptions(cityAreas);
-      console.log(cityOptions);
+      // setCityOptions(cityAreas);
+      // console.log(cityOptions);
       setLoading(false);
     } catch (error) {
       console.log("Error fetching locations", error);
@@ -218,66 +255,70 @@ export default function CreateField({
             </div>
 
             <div className="my-4 sm:mb-0">
-              <label htmlFor="courses-names">{list}s Names</label>
+              <label>Courses Names</label>
               <div className="sm:pr-4">
-                <div className="relative flex flex-wrap items-center gap-2 bg-white outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 shadow-sm ring-1 ring-inset focus:ring-inset p-2 sm:text-sm sm:leading-6">
-                  {inputCourses?.map((courseId) => {
-                    const course = courses.find((c) => c.id === courseId);
-                    return (
-                      <div
-                        key={courseId}
-                        className="flex items-center space-x-2 px-3 py-1 bg-blue-600 border border-blue-300 rounded-full"
-                      >
-                        <span>{course?.name || course?.skill_name}</span>
-                        <FaTimes
-                          className="cursor-pointer"
-                          onClick={() => removeCourse(courseId)}
-                        />
-                      </div>
-                    );
-                  })}
+                <div className="rounded-md relative flex flex-col gap-2 bg-white outline-dark-300 focus:outline-blue-300 font-sans border-0 mt-2 py-1.5 shadow-sm ring-1 ring-inset focus:ring-inset p-2 sm:text-sm sm:leading-6">
+                  <div className="flex flex-wrap items-center gap-2">
+                    {inputCourses?.map((courseId) => {
+                      const course = courses.find((c) => c.id === courseId);
+                      return (
+                        <div
+                          key={courseId}
+                          className="flex items-center space-x-2 px-3 py-1 bg-blue-600 border border-blue-300 rounded-full"
+                        >
+                          <span>{course?.name || course?.skill_name}</span>
+                          <FaTimes
+                            className="cursor-pointer"
+                            onClick={() => removeCourse(courseId)}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
 
-                  <input
-                    id="courses-names"
-                    disabled
-                    placeholder={`Select ${list}`}
-                    className="flex-grow outline-none bg-surface-100 placeholder-dark-300"
-                  />
-                  {create === "course" ? (
-                    <Link href={`/${create}s/create-a-${create}`}>
-                      <button className="text-surface-100 px-2 py-1.5 rounded-md bg-blue-300">
-                        {" "}
-                        Create a {list}
-                      </button>
-                    </Link>
-                  ) : (
-                    <button
-                      type="button"
-                      className="text-surface-100  px-2 py-1.5  rounded-md bg-blue-300"
-                      onClick={handleSkills}
+                  <div className="flex items-center gap-2">
+                    <input
+                      id="courses-names"
+                      disabled
+                      placeholder={`Select ${list}`}
+                      className="flex-grow outline-none bg-surface-100 placeholder-dark-300"
+                    />
+                    <div className="">
+                      {create === "course" ? (
+                        <Link href={`/${create}s/create-a-${create}`}>
+                          <button className="text-surface-100 px-2 py-1.5 rounded-md bg-blue-300">
+                            Create a {list}
+                          </button>
+                        </Link>
+                      ) : (
+                        <button
+                          type="button"
+                          className="text-surface-100 px-2 py-1.5 rounded-md bg-blue-300"
+                          onClick={handleSkills}
+                        >
+                          Create a {list}
+                        </button>
+                      )}
+                    </div>
+
+                    <select
+                      value=""
+                      onChange={handleSelectChange}
+                      className="w-34 bg-surface-100 outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 py-1 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-8 p-2 sm:text-sm sm:leading-6"
                     >
-                      {" "}
-                      Create a {list}
-                    </button>
-                  )}
-
-                  <select
-                    value=""
-                    onChange={handleSelectChange}
-                    className=" flex items-center bg-surface-100 outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 py-1 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-8 p-2 sm:text-sm sm:leading-6"
-                  >
-                    <option value="" disabled>
-                      Select a {list}
-                    </option>
-                    {courses?.map((course) => (
-                      <option
-                        key={course.id}
-                        value={course?.name || course?.skill_name}
-                      >
-                        {course?.name || course?.skill_name}
+                      <option value="" disabled>
+                        Select a {list}
                       </option>
-                    ))}
-                  </select>
+                      {courses?.map((course) => (
+                        <option
+                          key={course.id}
+                          value={course?.name || course?.skill_name}
+                        >
+                          {course?.name || course?.skill_name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>
@@ -310,15 +351,16 @@ export default function CreateField({
               </>
             )}
 
-            {/* {route !== "courses" && (
+            {route !== "courses" && (
               <button
+                type="button"
                 className="flex text-center justify-center items-center gap-2 text-surface-100 bg-blue-300 py-2 px-4 mt-4 rounded-md mr-4 hover:bg-[#4296b3]"
                 onClick={handleSession}
               >
                 {" "}
                 Schedule a class session
               </button>
-            )} */}
+            )}
 
             {route !== "courses" && classSession && (
               <>
@@ -326,17 +368,18 @@ export default function CreateField({
                   <div className="relative w-full flex-col p-4 gap-4 flex  border-dark-400 rounded-md border mt-2 ">
                     <div className="flex flex-col">
                       <label>Location</label>
-
                       <select className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5">
-                        hello
-                        <option> hello world</option>
+                        {locations?.map((loc) => (
+                          <option key={loc.id}>{loc.name}</option>
+                        ))}
                       </select>
                     </div>
+
                     {inputCourses?.map((courseId) => {
                       const course = courses.find((c) => c.id === courseId);
                       return (
                         <>
-                          <div className="flex w-full gap-2">
+                          <div className="flex w-full gap-2 ">
                             <div
                               key={courseId}
                               className=" w-full outline-dark-300 flex items-center space-x-2 px-3   border-blue-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
@@ -345,22 +388,51 @@ export default function CreateField({
                               {course?.name || course?.skill_name}
                             </div>
                             <input
-                              key={courseId}
-                              placeholder=""
+                              type="number"
+                              min={0}
+                              placeholder="capacity"
                               className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
                             />
-                            <select className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5">
-                              hello
-                              <option> hello world</option>
-                            </select>
-                            {/* <div className="flex flex-col"> */}
-                            {/* <label>Location</label> */}
-                            <select className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5">
-                              hello
-                              <option> hello world</option>
-                            </select>
+                            <input
+                              type="time"
+                              className="w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                            />{" "}
+                            <input
+                              type="time"
+                              className="w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                            />
                           </div>
-                          {/* </div> */}
+                          <div className="flex flex-wrap gap-3">
+                            {Object.entries(WEEKDAYS).map(
+                              ([key, [fullName, shortName]]) => (
+                                <label
+                                  key={key}
+                                  className={`flex items-center ${
+                                    selectedDays.includes(parseInt(key, 10))
+                                      ? "text-[#424b55]"
+                                      : "text-[#92A7BE]"
+                                  }`}
+                                >
+                                  <input
+                                    type="checkbox"
+                                    value={key}
+                                    onChange={handleCheckboxChange}
+                                    checked={selectedDays.includes(
+                                      parseInt(key, 10)
+                                    )}
+                                    className="mr-2"
+                                  />
+                                  {fullName} ({shortName})
+                                </label>
+                              )
+                            )}
+                          </div>
+                          <button
+                            type="button"
+                            className="bg-blue-300 p-2 w-20 text-surface-100 rounded-md flex items-center justify-center"
+                          >
+                            Create
+                          </button>
                         </>
                       );
                     })}
