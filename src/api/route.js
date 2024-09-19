@@ -730,7 +730,7 @@ export const assignSessiontoStudent = async (data) => {
 export const getSuggestedSessionForStudent = async (programId, locationId) => {
   try {
     const response = await axiosInstance.get(
-      `preferred-sessions/?${programId}&${locationId}`
+      `preferred-sessions/?program_id=${programId}&location_id=${locationId}`
     );
     return response;
   } catch (error) {

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import DeleteConfirmationPopup from "./Modal/DeleteConfirmationPopUp";
 import { IoCheckmark, IoClose } from "react-icons/io5";
+import { toast } from "react-toastify";
 
 const LocationsTable = ({
   locations,
@@ -48,6 +49,7 @@ const LocationsTable = ({
       };
 
       const response = await UpdateLocation(selectedLocation, data);
+      toast.success(response.data.message)
       console.log("location updated", response);
       setEdit(false);
       setUpdateLocation(!updateLocation);
@@ -68,6 +70,7 @@ const LocationsTable = ({
       const response = await DeleteLocation(selectedLocation);
       console.log("deleting the location", response);
       setUpdateLocation(!updateLocation);
+      toast.success(response.data.message)
       setConfirmDelete(false);
     } catch (error) {
       console.log("error while deleting the lcoation", error);

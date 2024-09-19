@@ -6,15 +6,14 @@ import SessionCreationModal from "@/components/Modal/SessionCreationModal";
 import { useSidebar } from "@/providers/useSidebar";
 import { listAllSessions, listAllLocations, listAllBatches } from "@/api/route";
 import useClickOutside from "@/providers/useClickOutside";
+import { CircularProgress } from "@mui/material";
 
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
   const [selectedLocationId, setSelectedLocationId] = useState(null);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 845);
+  // const [isMobile, setIsMobile] = useState(window.innerWidth <= 845);
   const [selectedCity, setSelectedCity] = useState("select city");
-  const [selectedLocation, setSelectedLocation] = useState(
-    "select location"
-  );
+  const [selectedLocation, setSelectedLocation] = useState("select location");
   const [selectedBatch, setSelectedBatch] = useState("select batch");
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [isLocationOpen, setIsLocationOpen] = useState(false);
@@ -37,7 +36,7 @@ export default function Page() {
   useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth <= 845;
-      setIsMobile(mobile);
+      // setIsMobile(mobile);
       // Update initial states based on screen size
       setSelectedCity(mobile ? "city" : "Select your city");
       setSelectedLocation(mobile ? "location" : "Select your location");
@@ -65,7 +64,7 @@ export default function Page() {
     try {
       const response = await listAllSessions();
       // console.log("session fetching", response?.data);
-      setSessions(response?.data);
+      setSessions(response?.data.data);
     } catch (error) {
       console.log(
         "error while fetching the class schedules",
@@ -83,10 +82,12 @@ export default function Page() {
 
   useEffect(() => {
     const filteredList = sessions.filter((session) =>
-      session.location_name.toLowerCase().includes(selectedLocation.toLowerCase())
+      session.location_name
+        .toLowerCase()
+        .includes(selectedLocation.toLowerCase())
     );
     setfilterLocation(filteredList);
-  }, [selectedLocation, sessions]);
+  }, [selectedLocation]);
 
   useEffect(() => {
     handleListingAllSessions();
@@ -174,7 +175,6 @@ export default function Page() {
       style={{ width: isSidebarOpen ? "81%" : "100%" }}
     >
       <div className="bg-surface-100 p-6 rounded-xl">
-      
         <div className="w-full flex xlg:flex-row flex-col justify-between items-center gap-4">
           <div>
             <p className="font-bold text-xl font-exo">Class Details</p>
@@ -329,12 +329,26 @@ export default function Page() {
 
         {/* Sessions Table */}
         <div>
-          {isLocationSelected && filterLocation.length > 0 ? (
-            <SessionsTable sessions={filterLocation} loading={loading} />
+          {loading ? (
+            <div className="flex max-h-screen justify-center items-center w-full">
+              <CircularProgress />
+            </div>
+          ) : isLocationSelected && filterLocation.length > 0 ? (
+            <SessionsTable
+              sessions={filterLocation}
+              loading={loading}
+              setUpdateSession={setUpdateSession}
+              updateSession={updateSession}
+            />
           ) : !isLocationSelected && sessions.length > 0 ? (
-            <SessionsTable sessions={sessions} loading={loading} />
+            <SessionsTable
+              sessions={sessions}
+              loading={loading}
+              setUpdateSession={setUpdateSession}
+              updateSession={updateSession}
+            />
           ) : (
-            <p>No class is schedule in this lcoation</p>
+            <p>No class is scheduled in this location</p>
           )}
         </div>
       </div>

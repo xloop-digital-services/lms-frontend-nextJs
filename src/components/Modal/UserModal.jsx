@@ -117,9 +117,9 @@ const UserModal = ({
             draggable: true,
             progress: undefined,
           });
+          setStatusUpdated(!statusUpdated);
           setLoading(false);
           setModal(false);
-          setStatusUpdated(statusUpdated + 1);
         }
       } catch (error) {
         toast.error(error.response.data.message, {

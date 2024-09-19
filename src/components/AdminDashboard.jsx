@@ -56,9 +56,16 @@ const AdminDashboard = () => {
   const [filteredBatches, setFilteredBatches] = useState([]);
 
   const dropdownRef = useRef(null);
+  const statusDown = useRef(null);
   const userDown = useRef(null);
 
-  useClickOutside(dropdownRef, () => setIsProgramOpen(false));
+  useClickOutside(statusDown, () => setIsOpen(false));
+
+  useClickOutside(
+    dropdownRef,
+    () => setIsProgramOpen(false),
+    () => setIsSkillOpen(false)
+  );
   useClickOutside(userDown, () => setIsUserOpen(false));
 
   // Apply filtering whenever search term or dropdown status changes
@@ -76,7 +83,6 @@ const AdminDashboard = () => {
 
         return matchesSearchTerm && matchesStatus;
       });
-
       setFilteredBatches(filteredData);
     };
     handleFilter();
@@ -190,19 +196,19 @@ const AdminDashboard = () => {
   useEffect(() => {
     const handlePieChatData = async () => {
       try {
-        if (selectedUser === "student") {
+        if (selectedUser.toLowerCase() === "student") {
           const response = await getApplicationsTotalNumber(
             programId,
-            selectedUser
+            selectedUser.toLowerCase()
           );
           setverfiedRequest(response?.data?.data.verified);
           setUnverifiedRequest(response?.data?.data.unverified);
           setPendingRequest(response?.data?.data.pending);
           setShortlisted(response?.data?.data.short_listed);
-        } else if (selectedUser === "instructor") {
+        } else if (selectedUser.toLowerCase() === "instructor") {
           const response = await getApplicationsTotalNumber(
             skillId,
-            selectedUser
+            selectedUser.toLowerCase()
           );
           setverfiedRequest(response?.data?.data.verified);
           setUnverifiedRequest(response?.data?.data.unverified);
@@ -217,7 +223,7 @@ const AdminDashboard = () => {
         setLoading(false);
       }
     };
-    if (selectedProgram && selectedUser) {
+    if (selectedProgram && selectedUser.toLowerCase()) {
       setLoading(true);
       handlePieChatData();
     }
@@ -228,6 +234,7 @@ const AdminDashboard = () => {
     selectedSkill,
     skillId,
     isUserSelected,
+    selectedUser.toLowerCase(),
     selectedUser,
   ]);
 
@@ -263,7 +270,7 @@ const AdminDashboard = () => {
     setIsSelected(true);
   };
 
-  const userOptions = ["student", "instructor"];
+  const userOptions = ["Student", "Instructor"];
 
   return (
     <div
@@ -370,7 +377,7 @@ const AdminDashboard = () => {
                 <div>
                   <button
                     onClick={toggleUsers}
-                    className={` flex justify-between mt-1 items-center text-[#424b55] xl:w-[200px] md:w-[170px] w-full  gap-1 hover:text-[#0e1721] px-4 xlg:py-3 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                    className={`flex justify-between mt-1 items-center text-[#424b55] xl:max-w-[200px] md:max-w-[170px] w-full  gap-1 hover:text-[#0e1721] px-4 xlg:py-3 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                   >
                     {selectedUser || userOptions[0]}
                     <span className="">
@@ -397,13 +404,13 @@ const AdminDashboard = () => {
                     </div>
                   )}
                 </div>
-                {selectedUser === "student" ? (
+                {selectedUser.toLowerCase() === "student" ? (
                   <div className={`${!isUserSelected && "hidden"}`}>
                     <button
                       onClick={toggleProgramOpen}
                       className={`${
                         !isProgramSelected ? "text-[#92A7BE]" : "text-[#424b55]"
-                      } flex justify-between items-center xl:max-w-[240px] min-w-[220px] truncate px-4 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                      } flex justify-between items-center md:max-w-[280px] w-full truncate px-4 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                       style={{
                         // maxWidth: "220px", // Set the maximum width of the button
                         whiteSpace: "nowrap",
@@ -420,7 +427,13 @@ const AdminDashboard = () => {
                     {isProgramOpen && (
                       <div
                         ref={dropdownRef}
-                        className="absolute z-50 mt-1 xl:w-[200px] w-fit  max-h-[200px] overflow-auto scrollbar-webkit  bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                        className="absolute z-50 mt-1  md:max-w-[280px] w-full truncate  max-h-[240px] overflow-auto scrollbar-webkit  bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                        style={{
+                          // maxWidth: "220px", // Set the maximum width of the button
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          // textOverflow: "ellipsis",
+                        }}
                       >
                         {allPrograms && allPrograms.length > 0 ? (
                           allPrograms.map((option, index) => (
@@ -518,10 +531,12 @@ const AdminDashboard = () => {
             </div>
           </div>
         </div>
-        <div className="bg-[#ffffff] rounded-xl p-5 max-h-[260px] overflow-auto scrollbar-webkit">
+        <div className="bg-[#ffffff] rounded-xl p-5 max-h-[240px] ">
           <div>
-            <h1 className="font-bold font-exo text-[#32324D] text-lg ">
-              Batch Details
+            <h1 className="font-bold font-exo text-[#32324D] text-lg  ">
+              <Link href="/batch" className="w-fit">
+                Batch Details
+              </Link>
             </h1>
             <div className="w-full flex items-center gap-4 mt-2">
               <div className="flex-grow">
@@ -550,16 +565,16 @@ const AdminDashboard = () => {
 
                 {isOpen && (
                   <div
-                    ref={dropdownRef}
-                    className="absolute capitalize z-50 w-full md:w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                    ref={statusDown}
+                    className="absolute capitalize z-50 w-full md:w-[200px] max-h-[150px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                   >
                     {options.map((option, index) => (
                       <div
                         key={index}
                         onClick={() => handleOptionSelect(option)}
-                        className="p-2 cursor-pointer"
+                        className="p-1 cursor-pointer"
                       >
-                        <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                        <div className="px-4 py-1 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
                           {option}
                         </div>
                       </div>
@@ -569,13 +584,15 @@ const AdminDashboard = () => {
               </div>
             </div>
           </div>
-          {filteredBatches.length > 0 ? (
-            <BatchTable batches={filteredBatches} loading={loading} />
-          ) : batches.length > 0 ? (
-            <BatchTable batches={batches} loading={loading} />
-          ) : (
-            <p>No batches available</p>
-          )}
+          <div className=" max-h-[120px] overflow-y-auto overflow-x-hidden  scrollbar-webkit">
+            {filteredBatches.length > 0 ? (
+              <BatchTable batches={filteredBatches} loading={loading} />
+            ) : batches.length > 0 ? (
+              <BatchTable batches={batches} loading={loading} />
+            ) : (
+              <p>No batches available</p>
+            )}
+          </div>
         </div>
       </div>
     </div>

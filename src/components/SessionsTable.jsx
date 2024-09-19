@@ -1,11 +1,19 @@
 import { DeleteSession, UpdateBatch, UpdateSession } from "@/api/route";
 import { CircularProgress } from "@mui/material";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { IoCheckmark, IoClose, IoCloseCircle } from "react-icons/io5";
 import DeleteConfirmationPopup from "./Modal/DeleteConfirmationPopUp";
+import { toast } from "react-toastify";
+import { IoIosArrowDown } from "react-icons/io";
+import useClickOutside from "@/providers/useClickOutside";
 
-const SessionsTable = ({ sessions, loading }) => {
+const SessionsTable = ({
+  sessions,
+  loading,
+  updateSession,
+  setUpdateSession,
+}) => {
   const [selectedSession, setSelectedSession] = useState(null);
   const [session, setSession] = useState(null);
   const [edit, setEdit] = useState(false);
@@ -15,7 +23,12 @@ const SessionsTable = ({ sessions, loading }) => {
   const [editEndTime, setEditEndTime] = useState(null);
   const [editStartTime, setEditStartTime] = useState(null);
   const [editCapacity, setEditCapacity] = useState(null);
-  const [updateSession, setUpdateSession] = useState(false)
+  // const [updateSession, setUpdateSession] = useState(false)
+  const [toggleWeek, setToggleWeek] = useState(false);
+  const [selectedDays, setSelectedDays] = useState([]);
+  const weekRef = useRef(null);
+
+  useClickOutside(weekRef, () => setToggleWeek(false));
 
   const WEEKDAYS = {
     0: ["Monday", "Mon"],
@@ -27,21 +40,37 @@ const SessionsTable = ({ sessions, loading }) => {
     6: ["Sunday", "Sun"],
   };
 
+  const handleToggleWeekdays = () => {
+    setToggleWeek(true);
+  };
+
+  const handleDaySelect = (day) => {
+    setSelectedDays(
+      (prevSelected) =>
+        prevSelected.includes(parseInt(day))
+          ? prevSelected.filter((d) => d !== parseInt(day)) // Deselect the day
+          : [...prevSelected, parseInt(day)] // Select the day
+    );
+  };
+
   const handleUpdateStatus = (session) => {
     setSelectedSession(session.id);
-    setEditCapacity(session.no_of_students)
-    setEditEndTime(session.end_time)
-    setEditStartTime(session.start_time)
-    setStatus(session.status)
+    setEditCapacity(session.no_of_students);
+    setEditEndTime(session.end_time);
+    setEditStartTime(session.start_time);
+    setStatus(session.status);
+    setSelectedDays(session.days_of_week);
     setSession(session);
     setEdit(!edit);
   };
 
   const handleSetStatus = (status) => {
-    if (status === "active") {
+    console.log(status);
+    if (status === "Active") {
       setStatus(1);
     } else {
       setStatus(0);
+      console.log("ye zaero hogaya");
     }
   };
 
@@ -92,52 +121,49 @@ const SessionsTable = ({ sessions, loading }) => {
   const handleUpdate = async () => {
     if (status === null || updating) return;
     if (editStartTime && editEndTime <= editStartTime) {
-      toast.error("End date should be greater than start date");
-    }
-      else {
-        setUpdating(true)
-        try {
-          const data = {
-            batch: session.batch,
-            course: session.course.id,
-            location: session.location,
-            no_of_students: editCapacity,
-            start_date: editStartTime,
-            end_date: editEndTime,
-            status: status,
-            days_of_week: session.days_of_week,
-          };
-  
-          const response = await UpdateSession(selectedSession, data);
-          console.log("batch updated", response);
-          setEdit(false);
-          setUpdateSession(!updateSession);
-        } catch (error) {
-          console.log("error while updating status", error);
-        } finally {
-          setUpdating(false); // Set updating to false after the update is complete
-        }
-      }
-  }
-
-  const handleDeleteSession = (session)=>{
-    
-      setSelectedSession(session.id);
-      setConfirmDelete(true);
-    };
-  
-    const handleDelete = async () => {
+      toast.error("End time should be greater than start time");
+    } else {
+      setUpdating(true);
       try {
-        const response = await DeleteSession(selectedSession);
-        console.log("deleting the session", response);
+        const data = {
+          batch: session.batch,
+          course: session.course.id,
+          location: session.location,
+          no_of_students: editCapacity,
+          start_date: editStartTime,
+          end_date: editEndTime,
+          status: status,
+          days_of_week: selectedDays,
+        };
+
+        const response = await UpdateSession(selectedSession, data);
+        console.log("session updated", response);
+        setEdit(false);
+        toast.success(response.data.message);
         setUpdateSession(!updateSession);
-        setConfirmDelete(false);
       } catch (error) {
-        console.log("error while deleting the lcoation", error);
+        console.log("error while updating status", error);
+      } finally {
+        setUpdating(false); // Set updating to false after the update is complete
       }
-    };
+    }
+  };
 
+  const handleDeleteSession = (session) => {
+    setSelectedSession(session.id);
+    setConfirmDelete(true);
+  };
 
+  const handleDelete = async () => {
+    try {
+      const response = await DeleteSession(selectedSession);
+      console.log("deleting the session", response);
+      setUpdateSession(!updateSession);
+      setConfirmDelete(false);
+    } catch (error) {
+      console.log("error while deleting the lcoation", error);
+    }
+  };
 
   return (
     <div className="flex flex-col ">
@@ -148,12 +174,12 @@ const SessionsTable = ({ sessions, loading }) => {
               <table className="min-w-full divide-y divide-dark-200 dark:divide-gray-700">
                 <thead className="bg-gray-50 dark:bg-gray-700">
                   <tr>
-                    <th
+                    {/* <th
                       scope="col"
                       className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
                     >
                       Batch
-                    </th>
+                    </th> */}
                     <th
                       scope="col"
                       className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
@@ -182,14 +208,15 @@ const SessionsTable = ({ sessions, loading }) => {
                       scope="col"
                       className="px-3 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[14%]"
                     >
-                      Days
+                      Remaining Spots
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[16%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
                     >
-                      Remaining Spots
+                      Days
                     </th>
+
                     <th
                       scope="col"
                       className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
@@ -208,12 +235,12 @@ const SessionsTable = ({ sessions, loading }) => {
                 <tbody className="divide-y divide-dark-200 max-h-[500px] overflow-y-auto scrollbar-webkit">
                   {loading && sessions.length == 0 ? (
                     <tr>
-                      <td
+                      {/* <td
                         colSpan="8"
                         className="text-center py-4 text-dark-400"
                       >
                         <CircularProgress size={20} />
-                      </td>
+                      </td> */}
                     </tr>
                   ) : sessions && sessions.length > 0 ? (
                     sessions
@@ -224,9 +251,9 @@ const SessionsTable = ({ sessions, loading }) => {
                       .map((session, index) => {
                         return (
                           <tr key={index}>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                            {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
                               {session.batch}
-                            </td>
+                            </td> */}
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
                               {session.location_name}
                             </td>
@@ -246,7 +273,7 @@ const SessionsTable = ({ sessions, loading }) => {
                                   onChange={(e) =>
                                     setEditCapacity(e.target.value)
                                   }
-                                  className=" px-2 py-3 border border-dark-300 outline-none rounded-lg w-full"
+                                  className=" px-2 py-2 border border-dark-300 outline-none rounded-lg w-full"
                                   placeholder={session.no_of_students}
                                   min={0}
                                 />
@@ -266,7 +293,7 @@ const SessionsTable = ({ sessions, loading }) => {
                                   type="time"
                                   value={editStartTime}
                                   onChange={handleStartTimeChange}
-                                  className=" px-2 py-3 border border-dark-300 outline-none  rounded-lg w-full"
+                                  className=" px-2 py-2 border border-dark-300 outline-none  rounded-lg w-full"
                                   placeholder={session.start_time}
                                 />
                               )}
@@ -285,15 +312,25 @@ const SessionsTable = ({ sessions, loading }) => {
                                   type="time"
                                   value={editEndTime}
                                   onChange={handleEndTimeChange}
-                                  className="border border-dark-300  outline-none  px-2 py-3  rounded-lg w-full"
+                                  className="border border-dark-300  outline-none  px-2 py-2  rounded-lg w-full"
                                   placeholder={session.end_time}
                                 />
                               )}
                             </td>
-                            <td className="py-4 px-6 whitespace-nowrap text-sm">
-                              {session.days_of_week &&
-                              session.days_of_week.length > 0
-                                ? session.days_of_week.map((day, index) => (
+                            <td className="py-4 px-6 whitespace-nowrap  text-sm ">
+                              {session.remaining_spots}
+                            </td>
+                            <td
+                              className={`${
+                                !(edit && selectedSession === session.id)
+                                  ? "py-4 px-6"
+                                  : "py-1 px-4"
+                              }  whitespace-nowrap text-sm`}
+                            >
+                              {!(edit && selectedSession === session.id) ? (
+                                session.days_of_week &&
+                                session.days_of_week.length > 0 ? (
+                                  session.days_of_week.map((day, index) => (
                                     <span key={index}>
                                       {WEEKDAYS[day][1]}{" "}
                                       {/* Display the short name */}
@@ -303,11 +340,57 @@ const SessionsTable = ({ sessions, loading }) => {
                                       {/* Add comma separator except for the last item */}
                                     </span>
                                   ))
-                                : "-"}
+                                ) : (
+                                  "-"
+                                )
+                              ) : (
+                                <div className="space-y-2 text-[13px] w-full relative">
+                                  <button
+                                    onClick={handleToggleWeekdays}
+                                    className={`flex justify-between text-[#424b55] items-center min-w-[180px] hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                                  >
+                                    <div className="flex overflow-x-auto scrollbar-webkit whitespace-nowrap">
+                                      {selectedDays.length > 0
+                                        ? selectedDays
+                                            .map((day) => WEEKDAYS[day][1])
+                                            .join(", ")
+                                        : "Select days"}
+                                    </div>
+                                    <span>
+                                      <IoIosArrowDown />
+                                    </span>
+                                  </button>
+
+                                  {toggleWeek && (
+                                    <div
+                                      ref={weekRef}
+                                      className="absolute z-10  w-full max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                                    >
+                                      {Object.entries(WEEKDAYS).map(
+                                        ([key, [fullName]]) => (
+                                          <div
+                                            key={key}
+                                            onClick={() => handleDaySelect(key)}
+                                            className={`m-1 cursor-pointer hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg ${
+                                              selectedDays.includes(
+                                                parseInt(key)
+                                              )
+                                                ? "bg-blue-100"
+                                                : ""
+                                            }`}
+                                          >
+                                            <p className=" px-3 py-2">
+                                              {fullName}
+                                            </p>
+                                          </div>
+                                        )
+                                      )}
+                                    </div>
+                                  )}
+                                </div>
+                              )}
                             </td>
-                            <td  className="py-4 px-6 whitespace-nowrap  text-sm ">
-                                  {session.remaining_spots}
-                            </td>
+
                             <td className="px-6 py-2 whitespace-nowrap flex w-full justify-start items-center text-sm text-surface-100">
                               <p
                                 className={`${
@@ -332,21 +415,21 @@ const SessionsTable = ({ sessions, loading }) => {
                                       className="bg-dark-300 bg-opacity-0 block p-2 w-full  border border-dark-200 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-[#1e785e] transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                                       defaultValue={
                                         session.status === 1
-                                          ? "active"
-                                          : "inactive"
+                                          ? "Active"
+                                          : "Inactive"
                                       }
                                       onChange={(e) =>
                                         handleSetStatus(e.target.value)
                                       } // Handle status change here
                                     >
                                       <option
-                                        value="active"
+                                        value="Active"
                                         className="py-2 text-dark-900"
                                       >
                                         Active
                                       </option>
                                       <option
-                                        value="inactive"
+                                        value="Inactive"
                                         className="py-2 text-dark-900"
                                       >
                                         Inactive

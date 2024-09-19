@@ -14,7 +14,7 @@ const PieChart = ({verified, unverified, pending, shortlisted}) => {
           datasets: [
             {
               data: [verified, unverified ,pending, shortlisted],
-              backgroundColor: ["#18A07A", "#d84848", "#f29d41", '#B8BBBE'],
+              backgroundColor: ["#18A07A", "#d84848", "#f29d41", '#03a1d8'],
             },
           ],
         }}
@@ -25,7 +25,7 @@ const PieChart = ({verified, unverified, pending, shortlisted}) => {
               position: "bottom", // Position the legend at the bottom
               labels: {
                 boxWidth: 20, // Width of the color box
-                padding: 30, // Padding between the legend and chart
+                padding: 20, // Padding between the legend and chart
               },
             },
           },

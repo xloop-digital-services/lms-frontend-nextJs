@@ -16,9 +16,9 @@ import { toast } from "react-toastify";
 
 const UserManagement = ({ heading, program, loadingProgram }) => {
   const { isSidebarOpen } = useSidebar();
-  const [selectedOption, setSelectedOption] = useState("student");
+  const [selectedOption, setSelectedOption] = useState("Student");
   const [selectedStatus, setSelectedStatus] = useState("pending");
-  const [statusUpdated, setStatusUpdated] = useState(0);
+  const [statusUpdated, setStatusUpdated] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [statusOpen, setStatusOpen] = useState(false);
   const [programSection, setProgramSection] = useState(null);
@@ -52,8 +52,10 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
 
   const dropdownRef = useRef(null);
   const dropProgram = useRef(null);
+  const dropStatus = useRef(null);
   useClickOutside(dropdownRef, () => setIsOpen(false));
   useClickOutside(dropProgram, () => setIsProgramSectionOpen(false));
+  useClickOutside(dropStatus, () => setStatusOpen(false));
 
   useEffect(() => {
     const handleApprovedUsers = async () => {
@@ -63,7 +65,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
           setLoadingUsers(true);
           const response = await getUserDataByProgramIdnSkillId(
             approvedProgramID,
-            selectedOption
+            selectedOption.toLowerCase()
           );
 
           if (response.data.status_code === 200) {
@@ -90,12 +92,12 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
 
           setLoadingUsers(false);
         }
-      } 
+      }
     };
     if (heading === "Verified Users") {
       handleApprovedUsers();
     }
-  }, [ approvedProgramID, selectedOption]);
+  }, [approvedProgramID, selectedOption]);
 
   useEffect(() => {
     const handleGetAllSkills = async () => {
@@ -110,26 +112,30 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
         setLoadingSkills(false);
       }
     };
-    if (selectedOption !== "student") {
+    if (selectedOption.toLowerCase() !== "student") {
       handleGetAllSkills(); // Fetch skills only when selectedOption is not 'student'
     }
-  }, [selectedOption]);
+  }, [selectedOption.toLowerCase(), selectedOption]);
 
   useEffect(() => {
+    console.log("userUpdate", statusUpdated);
+    setMessage("");
     if (programID) {
+      setLoading(true);
       const handleUserByStatus = async () => {
-        setLoading(true);
         try {
           const response = await getUserByStatus(
             programID,
-            selectedOption,
+            selectedOption.toLowerCase(),
             selectedStatus
           );
           setUserByProgramID(response?.data?.data);
           setLoading(false);
         } catch (error) {
           console.log(error);
-          // setMessage("no data found");
+          if (error.response.status === 404) {
+            setMessage("no data found");
+          }
 
           setLoading(false);
         }
@@ -143,7 +149,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
       try {
         const response = await getApplicationsTotalNumber(
           programID,
-          selectedOption
+          selectedOption.toLowerCase()
         );
         // console.log("numbers", response.data);
         setApprovedRequest(response?.data?.data.approved);
@@ -157,7 +163,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
       }
     };
     handleApplicationsNumber();
-  }, [selectedStatus, programID, selectedOption]);
+  }, [selectedStatus, programID, selectedOption, statusUpdated]);
 
   useEffect(() => {
     const handleCoursesByPrograms = async () => {
@@ -184,8 +190,8 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
     //   setPorgramID(null);
     //   setProgramSection(null);
     // }
-    setIsProgramSectionOpen(false);
-    setIsSkillSectionOpen(false);
+    // setIsProgramSectionOpen(false);
+    // setIsSkillSectionOpen(false);
     setUserByProgramID([]);
     setUsers([]);
     setApplications([]);
@@ -197,7 +203,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
     } else {
       setapprovedProgramID(id);
     }
-    if (selectedOption === "student") {
+    if (selectedOption.toLowerCase() === "student") {
       setProgramSection(section);
       setIsProgramSectionOpen(true);
     } else {
@@ -220,7 +226,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
 
   const toggleStatusOpen = (e) => {
     e.stopPropagation();
-    setStatusOpen(!statusOpen);
+    setStatusOpen(true);
   };
 
   const handleStatusSelect = (option) => {
@@ -230,7 +236,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
 
   const status = ["pending", "approved", "short_listed"];
 
-  const options = ["student", "instructor"];
+  const options = ["Student", "Instructor"];
 
   return (
     <div
@@ -306,7 +312,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
               <div className="w-full h-full flex items-center justify-center">
                 <CircularProgress />
               </div>
-            ) : selectedOption === "student" ? (
+            ) : selectedOption.toLowerCase() === "student" ? (
               program && program.length > 0 ? (
                 // Display Program Logic
                 program.map((program) => (
@@ -367,7 +373,10 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                               </button>
 
                               {statusOpen && (
-                                <div className="absolute capitalize z-40 min-w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out">
+                                <div
+                                  // ref={dropStatus}
+                                  className="absolute  z-40 min-w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                                >
                                   {status.map((option, index) => (
                                     <div
                                       key={index}
@@ -403,7 +412,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                               <DevelopmentTable
                                 loading={loading}
                                 selectedStatus={selectedStatus}
-                                selectedOption={selectedOption}
+                                selectedOption={selectedOption.toLowerCase()}
                                 userByProgramID={userByProgramID}
                                 message={message}
                                 setStatusUpdated={setStatusUpdated}
@@ -412,7 +421,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                             ) : (
                               <UserApprovalTable
                                 loadingUsers={loadingUsers}
-                                selectedOption={selectedOption}
+                                selectedOption={selectedOption.toLowerCase()}
                                 applications={applications}
                                 locations={locations}
                                 userPrograms={userPrograms}
@@ -526,7 +535,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                           <DevelopmentTable
                             loading={loading}
                             selectedStatus={selectedStatus}
-                            selectedOption={selectedOption}
+                            selectedOption={selectedOption.toLowerCase()}
                             userByProgramID={userByProgramID}
                             setStatusUpdated={setStatusUpdated}
                             statusUpdated={statusUpdated}
@@ -534,7 +543,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                         ) : (
                           <UserApprovalTable
                             loadingUsers={loadingUsers}
-                            selectedOption={selectedOption}
+                            selectedOption={selectedOption.toLowerCase()}
                             applications={applications}
                             locations={locations}
                             userPrograms={userPrograms}

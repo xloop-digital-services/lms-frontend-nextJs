@@ -37,7 +37,7 @@ export function AuthProvider({ children }) {
     }
   }, [userData]);
   const isInstructor = Cookies.get("userGroup") === "instructor";
-  console.log(isInstructor);
+  // console.log(isInstructor);
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };

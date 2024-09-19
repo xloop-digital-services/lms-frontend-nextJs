@@ -39,7 +39,7 @@ const ApprovalUserModal = ({
   const [selectedSessionEndtime, setSelectedSessionEndTime] = useState(null);
   const [selectedSessionStartTime, setSelectedSessionStartTime] =
     useState(null);
-  const [selectedSessionCapacity, setSelectedSessionCapacity] = useState(null);
+  // const [selectedSessionCapacity, setSelectedSessionCapacity] = useState(null);
   const [selectedSessionStatus, setSelectedSessionStatus] = useState(null);
   const [isSessionSelected, setIsSessionSelected] = useState(null);
   const [loadingSelection, setLoadingSelection] = useState(false);
@@ -47,7 +47,20 @@ const ApprovalUserModal = ({
   const [userProgramId, setUserPorgramId] = useState(null);
   const [userProgramCourses, setUserPorgramCourses] = useState([]);
   const [userLocations, setUserLocations] = useState([]);
+  const [userLocationID, setUserLocationID] = useState(null);
   const [userSkills, setUserSkills] = useState([]);
+  const [weekDays, setWeekDays] = useState([]);
+  const [studentSessions, setStudentSessions] = useState([]);
+
+  const WEEKDAYS = {
+    0: ["Monday", "Mon"],
+    1: ["Tuesday", "Tue"],
+    2: ["Wednesday", "Wed"],
+    3: ["Thursday", "Thu"],
+    4: ["Friday", "Fri"],
+    5: ["Saturday", "Sat"],
+    6: ["Sunday", "Sun"],
+  };
 
   const click = useRef(null);
 
@@ -61,6 +74,10 @@ const ApprovalUserModal = ({
         setUserPrograms(response?.data?.data?.programs);
         setUserLocations(response?.data?.data.locations);
         setUserSkills(response?.data.data.skills);
+
+        setUserLocationID(
+          response?.data?.data.locations.map((location) => location.id)
+        );
 
         setUserPorgramId(
           response?.data?.data?.programs.map((program) => program.id)
@@ -119,6 +136,24 @@ const ApprovalUserModal = ({
     setSelected(true);
   };
 
+  useEffect(() => {
+    const handleGetSuggestedSessions = async () => {
+      try {
+        const response = await getSuggestedSessionForStudent(
+          userProgramId,
+          userLocationID
+        );
+        setStudentSessions(response.data.data.sessions);
+        console.log("response of the suggested sessions", response.data);
+      } catch (error) {
+        console.log("error while fetching suggested sessions", error.response);
+      }
+    };
+    if (selectedOption === "student") {
+      handleGetSuggestedSessions();
+    }
+  }, [userProgramId, userLocationID]);
+
   const handleSessionAssign = async () => {
     setLoadingAssign(true);
     const data = {
@@ -133,15 +168,18 @@ const ApprovalUserModal = ({
 
       toast.success(response.data.message);
       setUpdateSessions(updateSession + 1);
+      setSessionIds([])
       setLoadingAssign(false);
     } catch (error) {
       console.log("Error in assigning", error);
       if (error.response.status === 400) {
         toast.error(error.response.data.message);
+        
       }
       if (error.response.status === 401) {
         toast.error("your log in token has been expired. Please log in again!");
       }
+      setSessionIds([])
       setLoadingAssign(false);
     }
   };
@@ -176,7 +214,7 @@ const ApprovalUserModal = ({
     setSelectedSessionLocation(session.location);
     setSelectedSessionEndTime(session.end_time);
     setSelectedSessionStartTime(session.start_time);
-    setSelectedSessionCapacity(session.no_of_students);
+    setWeekDays(session.days_of_week);
     if (session.status === 1) {
       setSelectedSessionStatus("Active");
     } else {
@@ -310,7 +348,7 @@ const ApprovalUserModal = ({
               </div>
             </div>
             <div className="flex gap-4 pl-[50px] justify-start items-center w-full">
-              <div className="flex flex-col justify-end  pt-2  relative min-w-[200px]">
+              <div className="flex flex-col justify-end  pt-2  relative min-w-[250px]">
                 {/* <div>
                 <p className=" text-xs">Assign sessions</p>
               </div> */}
@@ -337,12 +375,13 @@ const ApprovalUserModal = ({
                           <div className="flex justify-center items-center">
                             <CircularProgress size={24} />
                           </div>
-                        ) : sessions.length > 0 ? (
+                        ) : selectedOption === "instructor" &&
+                          sessions.length > 0 ? (
                           sessions.map((session, index) => {
                             const isSelected = sessionIds.includes(session.id);
-                            const isAssigned = assignedSessions.some(
-                              (assigned) => assigned.session_id === session.id
-                            );
+                            // const isAssigned = assignedSessions.some(
+                            //   (assigned) => assigned.session_id === session.id
+                            // );
 
                             return (
                               <div
@@ -350,11 +389,28 @@ const ApprovalUserModal = ({
                                 onClick={() => handleSelectSession(session)}
                                 className={`py-2 px-4 cursor-pointer m-2 rounded-md
                              ${
-                               isAssigned
+                               isSelected
                                  ? "bg-blue-100 text-blue-800"
                                  : "bg-[#ffff]"
                              }
                     hover:bg-dark-200 transition-colors duration-200 ease-in-out`}
+                              >
+                                {session.location_name} - {session.course.name}
+                              </div>
+                            );
+                          })
+                        ) : studentSessions && studentSessions.length > 0 ? (
+                          studentSessions.map((session) => {
+                            const isSelected = sessionIds.includes(session.id);
+                            return (
+                              <div
+                                key={session.id}
+                                onClick={() => handleSelectSession(session)}
+                                className={`py-2 px-4 cursor-pointer m-2 rounded-md
+                       ${
+                         isSelected ? "bg-blue-100 text-blue-800" : "bg-[#ffff]"
+                       }
+              hover:bg-dark-200 transition-colors duration-200 ease-in-out`}
                               >
                                 {session.location_name} - {session.course.name}
                               </div>
@@ -460,6 +516,21 @@ const ApprovalUserModal = ({
                             </td>
                             <td className="text-center py-2">
                               {selectedSessionEndtime || "-"}
+                            </td>
+                          </tr>
+                          <tr className="border-b border-[#d7e4ee]">
+                            <td className="text-dark-400 text-center py-2">
+                              Days
+                            </td>
+                            <td className="text-center py-2">
+                              {weekDays.map((day, index) => (
+                                <span key={index}>
+                                  {WEEKDAYS[day][1]}{" "}
+                                  {/* Display the short name */}
+                                  {index < weekDays.length - 1 && ", "}{" "}
+                                  {/* Add comma separator except for the last item */}
+                                </span>
+                              ))}{" "}
                             </td>
                           </tr>
                           <tr className="border-b border-[#d7e4ee]">

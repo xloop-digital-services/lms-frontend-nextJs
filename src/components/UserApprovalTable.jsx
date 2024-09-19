@@ -10,11 +10,7 @@ const UserApprovalTable = ({
   selectedOption,
   applications,
   locations,
-  userPrograms,
-  userSkills,
   message,
-  count,
-  approvedProgramID,
 }) => {
   const [modal, setModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -29,25 +25,6 @@ const UserApprovalTable = ({
     return users.find((app) => app.email === userEmail) || {};
   };
 
-
-
-
-// useEffect(() => {
-//     const handleGetSuggestedSessions = async () => {
-//       try {
-//         const response = await getSuggestedSessionForStudent(
-//           approvedProgramID,
-//           selectedLocationId
-//         );
-//         console.log("response of the suggested sessions", response.data);
-//       } catch (error) {
-//         console.log(error.response);
-//       }
-//     };
-//     if (selectedOption === "student") {
-//       handleGetSuggestedSessions();
-//     }
-//   }, [approvedProgramID, selectedOption]);
 
   return (
     <div className="flex flex-col h-full">

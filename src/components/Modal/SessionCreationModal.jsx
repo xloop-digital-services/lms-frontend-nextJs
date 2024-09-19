@@ -43,6 +43,9 @@ const SessionCreationModal = ({
   const mouseClick = useRef(null);
   const modalClose = useRef(null);
 
+
+  
+
   useClickOutside(mouseClick, () => {
     setIsLocationOpen(false);
     setIsBatchOpen(false);
@@ -272,7 +275,7 @@ const SessionCreationModal = ({
           </div>
           <div className="bg-surface-100 xsm:p-6 px-3 py-4 rounded-xl xsm:space-y-5 space-y-2">
             <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
-              <div className="space-y-2 text-[15px] w-full">
+              {/* <div className="space-y-2 text-[15px] w-full">
                 <p>Batch</p>
                 <button
                   onClick={toggleBatchOpen}
@@ -318,7 +321,7 @@ const SessionCreationModal = ({
                     )}
                   </div>
                 )}
-              </div>
+              </div> */}
               <div className="space-y-2 text-[15px] w-full">
                 <p>Course</p>
                 <button

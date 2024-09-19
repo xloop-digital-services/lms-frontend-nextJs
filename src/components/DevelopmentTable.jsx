@@ -140,7 +140,7 @@ const DevelopmentTable = ({
                                 user?.application_status === "pending"
                                   ? "bg-mix-500"
                                   : user?.application_status === "short_listed"
-                                  ? " bg-[#B8BBBE] "
+                                  ? " bg-blue-300 "
                                   : user?.account_status === "verified"
                                   ? "bg-[#18A07A]"
                                   : "bg-mix-200 "

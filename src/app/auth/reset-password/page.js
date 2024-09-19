@@ -19,7 +19,7 @@ export default function Page() {
 
   const handleResetPassword = async (event) => {
     setLoading(true);
-    console.log(email);
+    // console.log(email);
     event.preventDefault();
     const formData = new FormData();
     formData.append("email", email);
