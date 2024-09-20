@@ -1045,7 +1045,7 @@ export const getStudentsByCourseId = async (courseId) => {
 export const getAttendanceBySessionId = async (sessionId) => {
   try {
     const response = await axiosInstance.get(
-      `api/sessions/${sessionId}/students/`
+      `/sessions/${sessionId}/students/`
     );
     return response;
   } catch (error) {

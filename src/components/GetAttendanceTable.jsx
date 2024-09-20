@@ -1,6 +1,7 @@
 "use client";
 import {
   getAttendanceByCourseIdDate,
+  getAttendanceBySessionId,
   getInstructorSessions,
   getStudentsByCourseId,
   markAttendanceByCourseId,
@@ -49,27 +50,27 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
     }
   }
 
+  // async function fetchAttendanceIns() {
+  //   try {
+  //     const response = await getAttendanceBySessionId(selectedSessionId);
+  //     if (response.status === 200) {
+  //       const initialAttendance = response.data.reduce((acc, student) => {
+  //         acc[student.registration_id] = 0;
+  //         return acc;
+  //       }, {});
+  //       setAttendance(response.data);
+  //       setSelectedAttendance(initialAttendance);
+  //     } else {
+  //       console.error("Failed to fetch attendance, status:", response.status);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching attendance:", error);
+  //   }
+  // }
+
   async function fetchAttendanceIns() {
     try {
       const response = await getAttendanceBySessionId(selectedSessionId);
-      if (response.status === 200) {
-        const initialAttendance = response.data.reduce((acc, student) => {
-          acc[student.registration_id] = 0;
-          return acc;
-        }, {});
-        setAttendance(response.data);
-        setSelectedAttendance(initialAttendance);
-      } else {
-        console.error("Failed to fetch attendance, status:", response.status);
-      }
-    } catch (error) {
-      console.error("Error fetching attendance:", error);
-    }
-  }
-
-  async function fetchAttendanceAdmin() {
-    try {
-      const response = await getStudentsByCourseId(courseId);
       if (response.status === 200) {
         const initialAttendance = response.data.reduce((acc, student) => {
           acc[student.registration_id] = 0;
@@ -149,10 +150,10 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
       fetchSessions();
     }
     if (isAttendancePosted) {
-      // fetchAttendance();
-      fetchAttendanceIns();
+      fetchAttendance();
+      // fetchAttendanceIns();
     } else {
-      fetchAttendanceAdmin();
+      fetchAttendanceIns();
     }
   }, [isAttendancePosted, courseId, group, userId, selectedSessionId]);
 
@@ -180,7 +181,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
             {Array.isArray(sessions.data) &&
               sessions.data.map((session) => (
                 <option key={session.session_id} value={session.session_id}>
-                  {session.location} - {session.course} {session.no_of_students}{" "}
+                  {session.location} - {session.course} - {session.no_of_student}{" "}
                   - {session.start_time} - {session.end_time}
                 </option>
               ))}

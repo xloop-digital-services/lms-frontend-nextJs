@@ -45,7 +45,6 @@ export default function CreateField({
   const [classSession, setClassTiming] = useState();
   const [selectedDays, setSelectedDays] = useState([]);
   const [locations, setLocations] = useState([]);
-  const [cityOptions, setCityOptions] = useState([]);
   const [selectedId, setSelectedId] = useState();
   const [loading, setLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -70,33 +69,7 @@ export default function CreateField({
     5: ["Saturday", "Sat"],
     6: ["Sunday", "Sun"],
   };
-  const handleSelectAllWeekdays = (e) => {
-    const { checked } = e.target;
 
-    if (checked) {
-      // Select all weekdays except Sunday (key "6")
-      const weekdaysExceptSunday = Object.keys(WEEKDAYS).filter(
-        (key) => key !== "6"
-      );
-      setSelectedDays(weekdaysExceptSunday);
-    } else {
-      // Uncheck all weekdays except Sunday
-      setSelectedDays([]);
-    }
-  };
-
-  const handleCheckboxChange = (event) => {
-    const { value, checked } = event.target;
-    const dayValue = parseInt(value, 10); // Convert the value to an integer
-
-    setSelectedDays((prev) => {
-      if (checked) {
-        return [...prev, dayValue]; // Add day if checked
-      } else {
-        return prev.filter((day) => day !== dayValue); // Remove day if unchecked
-      }
-    });
-  };
 
   useEffect(() => {
     if (title === "Program") {
@@ -146,36 +119,11 @@ export default function CreateField({
     }
   };
 
-  const handleSessionCreation = async () => {
-    // setSelectedId(id);
-    // console.log(id);
-    setLoading(true);
-    try {
-      const data = {
-        location: selectedLocationId,
-        no_of_students: capacity,
-        start_time: startTime,
-        end_time: endTime,
-        course_id: selectedId,
-        days_of_week: selectedDays,
-      };
-      const response = await createSession(data);
-      toast.success(response.data.message);
-      setLoading(false);
-      setOpenModal(false);
-      setUpdateSession(!updateSession);
-    } catch (error) {
-      toast.error("Error scheduling class");
-      setLoading(false);
-    }
-  };
-
   const handleListingAllLocations = async () => {
     try {
       const response = await listAllLocations();
       setLocations(response?.data);
-      // setCityOptions(cityAreas);
-      // console.log(cityOptions);
+
       setLoading(false);
     } catch (error) {
       console.log("Error fetching locations", error);
@@ -384,7 +332,10 @@ export default function CreateField({
               <>
                 <button
                   type="button"
-                  onClick={handleOpenSessionModal}
+                  onClick={(e) => {
+                    e.preventDefault(); 
+                    handleOpenSessionModal();
+                  }}
                   className="flex text-center justify-center items-center gap-2 text-surface-100 bg-blue-300 py-2 px-4 mt-4 rounded-md mr-4 hover:bg-[#4296b3]"
                   // onClick={handleSession}
                 >
@@ -408,86 +359,7 @@ export default function CreateField({
               </>
             )}
 
-            {/* {route !== "courses" && classSession && ( */}
-            <>
-              {/* <div className="sm:pr-4 ">
-                  <div className="relative w-full flex-col p-4 gap-4 flex  border-dark-400 rounded-md border mt-2 ">
-                    <div className="flex flex-col">
-                      <label>Location</label>
-                      <select className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5">
-                        {locations?.map((loc) => (
-                          <option key={loc.id}>{loc.name}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    {inputCourses?.map((courseId) => {
-                      const course = courses.find((c) => c.id === courseId);
-                      return (
-                        <>
-                          <div className="flex w-full gap-2 ">
-                            <div
-                              key={courseId}
-                              className=" w-full outline-dark-300 flex items-center space-x-2 px-3   border-blue-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
-                              // className="w-full flex items-center space-x-2 px-3  bg-blue-600 border border-blue-300 rounded-md"
-                            >
-                              {course?.name || course?.skill_name}
-                            </div>
-                            <input
-                              type="number"
-                              min={0}
-                              placeholder="Capacity"
-                              className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
-                            />
-                            <input
-                              type="time"
-                              className="w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
-                            />{" "}
-                            <input
-                              type="time"
-                              className="w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
-                            />
-                          </div>
-                          <div className="flex flex-wrap gap-3">
-                            {Object.entries(WEEKDAYS).map(
-                              ([key, [fullName, shortName]]) => (
-                                <label
-                                  key={key}
-                                  className={`flex items-center ${
-                                    selectedDays.includes(parseInt(key, 10))
-                                      ? "text-[#424b55]"
-                                      : "text-[#92A7BE]"
-                                  }`}
-                                >
-                                  <input
-                                    type="checkbox"
-                                    value={key}
-                                    onChange={handleCheckboxChange}
-                                    checked={selectedDays.includes(
-                                      parseInt(key, 10)
-                                    )}
-                                    className="mr-2"
-                                  />
-                                  {fullName} ({shortName})
-                                </label>
-                              )
-                            )}
-                          </div>
-                          <button
-                            onClick={handleSessionCreation}
-                            type="button"
-                            className="bg-blue-300 p-2 w-20 text-surface-100 rounded-md flex items-center justify-center"
-                          >
-                            Create
-                          </button>
-                        </>
-                      );
-                    })} 
-                  </div>
-                </div>*/}
-            </>
-            {/* )} */}
-
+     
             {route === "courses" && (
               <>
                 <div className="my-4 sm:mb-0">

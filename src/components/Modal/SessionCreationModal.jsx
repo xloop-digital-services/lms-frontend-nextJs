@@ -43,9 +43,6 @@ const SessionCreationModal = ({
   const mouseClick = useRef(null);
   const modalClose = useRef(null);
 
-
-  
-
   useClickOutside(mouseClick, () => {
     setIsLocationOpen(false);
     setIsBatchOpen(false);
@@ -59,7 +56,7 @@ const SessionCreationModal = ({
     if (!errorMessage) {
       if (
         selectedLocation &&
-        selectedBatch &&
+        // selectedBatch &&
         selectedCourseName &&
         capacity &&
         startTime &&
@@ -69,7 +66,7 @@ const SessionCreationModal = ({
         try {
           // Format time to "hh:mm:ss" or "hh:mm:ss.uuuuuu" (24-hour format) before sending to backend
           const data = {
-            batch: selectedBatch,
+            // batch: selectedBatch,
             location: selectedLocationId,
             no_of_students: capacity,
             start_time: startTime,
@@ -435,7 +432,7 @@ const SessionCreationModal = ({
                   value={capacity}
                   min={0}
                   onChange={(e) => setCapacity(e.target.value)}
-                  required
+                  // required
                 />
               </div>
             </div>
