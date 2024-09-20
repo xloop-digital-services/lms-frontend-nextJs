@@ -167,7 +167,7 @@ const AdminMarksTable = ({ assessments, courseId, setFetch, title }) => {
                               assessment?.remarks || "-"
                             )}
                           </td>
-                          <td className="px-12 py-2 whitespace-nowrap text-sm text-surface-100">
+                          <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-surface-100">
                             <p
                               className={`w-[110px] text-center px-4 py-2 text-[12px] rounded-lg ${
                                 assessment?.status === "Submitted"

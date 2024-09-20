@@ -8,6 +8,7 @@ import { useAuth } from "@/providers/AuthContext";
 import { CircularProgress } from "@mui/material";
 import AdminAttendance from "@/components/AdminAttendance";
 import { toast } from "react-toastify";
+import InstructorAttendance from "@/components/InstructorAttendance";
 
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
@@ -17,6 +18,7 @@ export default function Page({ params }) {
   const { userData } = useAuth();
   const isStudent = userData?.Group === "student";
   const isAdmin = userData?.Group === "admin";
+  const isInstructor = userData?.Group === "instructor";
   const [loader, setLoader] = useState(false);
   const regId = userData?.user_data?.registration_id;
 
@@ -92,14 +94,17 @@ export default function Page({ params }) {
               program="course"
               instructorName="Maaz"
             />
-
             {isStudent ? (
               <StudentAttendence
                 attendance={attendanceStudent}
                 loader={loader}
               />
-            ) : (
+            ) : isAdmin ? (
               <AdminAttendance courseId={courseId} />
+            ) : isInstructor ? (
+              <InstructorAttendance courseId={courseId} />
+            ) : (
+              <div>No group</div>
             )}
           </div>
         </div>

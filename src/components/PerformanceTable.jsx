@@ -99,13 +99,13 @@ const PerformanceTable = ({
                       Exam
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
-                      {Number(examsWeightage).toFixed(2)}%
+                      {Number(examsWeightage || 0).toFixed(2)}%
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
-                      {Number(examsScore).toFixed(2)}
+                      {Number(examsScore || 0).toFixed(2)}
                     </td>
                     <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-100 text-center ">
-                      {Number(examsWeightedScore).toFixed(2)}
+                      {Number(examsWeightedScore || 0).toFixed(2)}
                     </td>
                   </tr>
 
@@ -114,29 +114,30 @@ const PerformanceTable = ({
                       Total
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-800 text-center">
-                      {(
-                        assignmentWeightage +
+                      {
+                        (assignmentWeightage +
                         quizWeightage +
                         examsWeightage +
-                        projectWeightage
+                        projectWeightage||0
                       ).toFixed(2)}
                       %
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-800 text-center">
                       {(
                         assignmentScore +
-                        quizScore +
-                        examsScore +
-                        projectScore
+                          quizScore +
+                          examsScore +
+                          projectScore || 0
                       ).toFixed(2)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-100 text-center ">
                       {(
                         assignmentWeightedScore +
-                        quizWeightedScore +
-                        examsWeightedScore +
-                        projectWeightedScore
-                      ).toFixed(2)}%
+                          quizWeightedScore +
+                          examsWeightedScore +
+                          projectWeightedScore || 0
+                      ).toFixed(2)}
+                      %
                     </td>
                   </tr>
                 </tbody>

@@ -330,7 +330,7 @@ const SessionCreationModal = ({
                     !isCourseSelected ? "text-[#92A7BE]" : "text-[#424b55]"
                   } flex justify-between items-center w-full truncate px-4 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                   style={{
-                    maxWidth: "220px", // Set the maximum width of the button
+                    // maxWidth: "220px", // Set the maximum width of the button
                     whiteSpace: "nowrap",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
@@ -349,7 +349,7 @@ const SessionCreationModal = ({
                 {isCourseOpen && (
                   <div
                     ref={mouseClick}
-                    className="absolute z-10 min-w-[240px] mt-1 bg-surface-100 max-h-[200px] overflow-auto scrollbar-webkit border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
+                    className="absolute z-10 w-[450px] mt-1 bg-surface-100 max-h-[200px] overflow-auto scrollbar-webkit border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
                   >
                     {loadingCourses && courseNames.length === 0 ? (
                       <div className="w-full flex items-center justify-center p-1">

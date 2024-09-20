@@ -237,6 +237,11 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   
 
   const status = ["pending", "approved", "short_listed"];
+  const statusDisplayMap = {
+    pending: "Pending",
+    approved: "Approved",
+    short_listed: "Short Listed",
+  };
 
   const options = ["Student", "Instructor"];
 
@@ -368,7 +373,10 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                                 onClick={toggleStatusOpen}
                                 className="flex justify-between z-30 items-center min-w-[200px] text-[#92A7BE] hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-[#92A7BE] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
                               >
-                                {selectedStatus || status[0]}
+                                {/* {selectedStatus || status[0]} */}
+                                {selectedStatus
+                                  ? statusDisplayMap[selectedStatus]
+                                  : statusDisplayMap[status[0]]}
                                 <span className="">
                                   <IoIosArrowDown />
                                 </span>
@@ -379,17 +387,26 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                                   // ref={dropStatus}
                                   className="absolute  z-40 min-w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                                 >
-                                  {status.map((option, index) => (
-                                    <div
-                                      key={index}
-                                      onClick={() => handleStatusSelect(option)}
-                                      className="p-2 cursor-pointer"
-                                    >
-                                      <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
-                                        {option}
-                                      </div>
-                                    </div>
-                                  ))}
+                                  {Object.entries(statusDisplayMap).length >
+                                  0 ? (
+                                    Object.entries(statusDisplayMap).map(
+                                      ([key, value], index) => (
+                                        <div
+                                          key={index}
+                                          onClick={() =>
+                                            handleStatusSelect(key)
+                                          }
+                                          className="p-2 cursor-pointer"
+                                        >
+                                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                                            {value}{" "}
+                                          </div>
+                                        </div>
+                                      )
+                                    )
+                                  ) : (
+                                    <div>No status available</div>
+                                  )}
                                 </div>
                               )}
                             </div>
@@ -495,7 +512,10 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                               onClick={toggleStatusOpen}
                               className="flex justify-between z-30 items-center min-w-[200px] text-[#92A7BE] hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-[#92A7BE] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
                             >
-                              {selectedStatus || status[0]}
+                              {/* {selectedStatus || status[0]} */}
+                              {selectedStatus
+                                ? statusDisplayMap[selectedStatus]
+                                : statusDisplayMap[status[0]]}
                               <span className="">
                                 <IoIosArrowDown />
                               </span>
@@ -503,17 +523,23 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
 
                             {statusOpen && (
                               <div className="absolute capitalize z-40 min-w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out">
-                                {status.map((option, index) => (
-                                  <div
-                                    key={index}
-                                    onClick={() => handleStatusSelect(option)}
-                                    className="p-2 cursor-pointer"
-                                  >
-                                    <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
-                                      {option}
-                                    </div>
-                                  </div>
-                                ))}
+                                {Object.entries(statusDisplayMap).length > 0 ? (
+                                  Object.entries(statusDisplayMap).map(
+                                    ([key, value], index) => (
+                                      <div
+                                        key={index}
+                                        onClick={() => handleStatusSelect(key)}
+                                        className="p-2 cursor-pointer"
+                                      >
+                                        <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                                          {value}{" "}
+                                        </div>
+                                      </div>
+                                    )
+                                  )
+                                ) : (
+                                  <div>No status available</div>
+                                )}
                               </div>
                             )}
                           </div>

@@ -528,13 +528,14 @@ export const getUserDataByProgramIdnSkillId = async (id, selectedOption) => {
 
 export const getApplicationUserDetails = async (userId, selectedOption) => {
   try {
-    const response = await axiosInstance.get(`user-details/${userId}/?group_name=${selectedOption}`)
+    const response = await axiosInstance.get(
+      `user-details/${userId}/?group_name=${selectedOption}`
+    );
     return response;
-
   } catch (error) {
-   throw error; 
+    throw error;
   }
-}
+};
 
 export const userSelectionByAdmin = async (id, data) => {
   try {
@@ -604,7 +605,7 @@ export const createBatch = async (data) => {
   }
 };
 
-export const UpdateBatch = async (selectedBatch,data) => {
+export const UpdateBatch = async (selectedBatch, data) => {
   try {
     const response = await axiosInstance.put(`/batch/${selectedBatch}/`, data);
     return response;
@@ -615,13 +616,12 @@ export const UpdateBatch = async (selectedBatch,data) => {
 
 export const DeleteBatch = async (selectedBatch) => {
   try {
-    const response = await axiosInstance.delete(`/batch/${selectedBatch}/`,);
+    const response = await axiosInstance.delete(`/batch/${selectedBatch}/`);
     return response;
   } catch (error) {
     throw error;
   }
 };
-
 
 export const createSession = async (data) => {
   try {
@@ -632,9 +632,12 @@ export const createSession = async (data) => {
   }
 };
 
-export const UpdateSession = async (selectedSession,data) => {
+export const UpdateSession = async (selectedSession, data) => {
   try {
-    const response = await axiosInstance.put(`/session/${selectedSession}/`, data);
+    const response = await axiosInstance.put(
+      `/session/${selectedSession}/`,
+      data
+    );
     return response;
   } catch (error) {
     throw error;
@@ -658,7 +661,7 @@ export const createLocation = async (data) => {
   }
 };
 
-export const UpdateLocation = async (id,data) => {
+export const UpdateLocation = async (id, data) => {
   try {
     const response = await axiosInstance.put(`/location/${id}/`, data);
     return response;
@@ -778,7 +781,6 @@ export const getAllSkills = async () => {
     throw error;
   }
 };
-
 
 //get all skills
 export const getAllSkillCourses = async () => {
@@ -1023,7 +1025,7 @@ export const getAttendanceByCourseIdDate = async (courseId, date) => {
 
     return response;
   } catch (error) {
-    throw error;  
+    throw error;
   }
 };
 
@@ -1032,6 +1034,18 @@ export const getStudentsByCourseId = async (courseId) => {
   try {
     const response = await axiosInstance.get(
       `/course-students/?course_id=${courseId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//get attenance by sessionId
+export const getAttendanceBySessionId = async (sessionId) => {
+  try {
+    const response = await axiosInstance.get(
+      `api/sessions/${sessionId}/students/`
     );
     return response;
   } catch (error) {

@@ -9,7 +9,10 @@ import { useAuth } from "@/providers/AuthContext";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify"; // Ensure you have react-toastify installed
 
-export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
+export default function GetAttendanceAdminTable({
+  courseId,
+  isAttendancePosted,
+}) {
   const { userData } = useAuth();
   const [attendance, setAttendance] = useState([]);
   const [getAttendance, setGetAttendance] = useState([]);
@@ -17,8 +20,6 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   const [loader, setLoader] = useState(false);
   const [sessions, setSessions] = useState([]);
   const group = userData?.Group;
-  const isAdmin = userData?.Group === "admin";
-  const isInstructor = userData?.Group === "instructor";
   const userId = userData?.user_data?.id;
   // console.log(group);
   // console.log(userData);
@@ -27,43 +28,23 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   const month = String(today.getMonth() + 1).padStart(2, "0");
   const year = today.getFullYear();
   const formattedDate = `${year}-${month}-${day}`;
-
-  const [selectedSessionId, setSelectedSessionId] = useState("");
-
-  const handleChange = (e) => {
-    setSelectedSessionId(e.target.value);
-  };
   // console.log(group, userId);
   async function fetchSessions() {
-    const response = await getInstructorSessions(userId, group); // Assuming userId and group are available
+    const response = await getInstructorSessions(userId, group);
     setLoader(true);
     try {
       if (response.status === 200) {
-        setSessions(response.data); // Store the sessions data
+        setSessions(response.data);
         setLoader(false);
+        // console.log(assignments);
       } else {
-        console.error("Failed to fetch sessions, status:", response.status);
+        console.error(
+          "Failed to fetch pending assignments, status:",
+          response.status
+        );
       }
     } catch (error) {
       console.log("error", error);
-    }
-  }
-
-  async function fetchAttendanceIns() {
-    try {
-      const response = await getAttendanceBySessionId(selectedSessionId);
-      if (response.status === 200) {
-        const initialAttendance = response.data.reduce((acc, student) => {
-          acc[student.registration_id] = 0;
-          return acc;
-        }, {});
-        setAttendance(response.data);
-        setSelectedAttendance(initialAttendance);
-      } else {
-        console.error("Failed to fetch attendance, status:", response.status);
-      }
-    } catch (error) {
-      console.error("Error fetching attendance:", error);
     }
   }
 
@@ -144,50 +125,18 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
 
   useEffect(() => {
     fetchAttendance();
-
     if (group && userId) {
       fetchSessions();
     }
     if (isAttendancePosted) {
-      // fetchAttendance();
-      fetchAttendanceIns();
+      fetchAttendance();
     } else {
       fetchAttendanceAdmin();
     }
-  }, [isAttendancePosted, courseId, group, userId, selectedSessionId]);
-
-  // console.log(selectedSessionId);
+  }, [isAttendancePosted, courseId, group, userId]);
 
   return (
     <div className="flex flex-col">
-      {isInstructor && (
-        <div>
-          <label>Select Session</label>
-
-          <select
-            value={selectedSessionId}
-            onChange={handleChange}
-            className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-          >
-            <option
-              className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-              value=""
-              disabled
-              selected
-            >
-              Select a session
-            </option>
-            {Array.isArray(sessions.data) &&
-              sessions.data.map((session) => (
-                <option key={session.session_id} value={session.session_id}>
-                  {session.location} - {session.course} {session.no_of_students}{" "}
-                  - {session.start_time} - {session.end_time}
-                </option>
-              ))}
-          </select>
-        </div>
-      )}
-
       <div className="-m-1.5 overflow-x-auto">
         <div className="p-1.5 min-w-full inline-block align-middle">
           <div className="border border-dark-300 rounded-lg divide-y divide-dark-200 dark:border-gray-700 dark:divide-gray-700">

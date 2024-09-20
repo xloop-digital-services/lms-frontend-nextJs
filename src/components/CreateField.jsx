@@ -5,6 +5,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { FaPlus, FaTimes } from "react-icons/fa";
 import { toast } from "react-toastify";
+import SessionCreationModal from "./Modal/SessionCreationModal";
 
 export default function CreateField({
   title,
@@ -45,7 +46,9 @@ export default function CreateField({
   const [selectedDays, setSelectedDays] = useState([]);
   const [locations, setLocations] = useState([]);
   const [cityOptions, setCityOptions] = useState([]);
+  const [selectedId, setSelectedId] = useState();
   const [loading, setLoading] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   useEffect(() => {
     if (title === "Program") {
       const storedProgramName = localStorage.getItem("programName");
@@ -57,7 +60,6 @@ export default function CreateField({
       if (storedAbout) setAbout(storedAbout);
     }
   }, [title]);
-
 
   const WEEKDAYS = {
     0: ["Monday", "Mon"],
@@ -118,6 +120,8 @@ export default function CreateField({
     setAddModule(!addModule);
   };
 
+  const handleOpenSessionModal = () => setOpenModal(true);
+
   const handleCreateModule = async (event) => {
     event.preventDefault();
     const moduleData = {
@@ -142,8 +146,9 @@ export default function CreateField({
     }
   };
 
-  const handleSessionCreation = async (id) => {
-    console.log(id);
+  const handleSessionCreation = async () => {
+    // setSelectedId(id);
+    // console.log(id);
     setLoading(true);
     try {
       const data = {
@@ -151,7 +156,7 @@ export default function CreateField({
         no_of_students: capacity,
         start_time: startTime,
         end_time: endTime,
-        course_id: id,
+        course_id: selectedId,
         days_of_week: selectedDays,
       };
       const response = await createSession(data);
@@ -212,7 +217,7 @@ export default function CreateField({
   useEffect(() => {
     handleListingAllLocations();
   }, []);
- 
+
   return (
     <div
       className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-32 font-inter ${
@@ -376,19 +381,36 @@ export default function CreateField({
             )}
 
             {route !== "courses" && (
-              <button
-                type="button"
-                className="flex text-center justify-center items-center gap-2 text-surface-100 bg-blue-300 py-2 px-4 mt-4 rounded-md mr-4 hover:bg-[#4296b3]"
-                onClick={handleSession}
-              >
-                {" "}
-                Schedule a class session
-              </button>
+              <>
+                <button
+                  type="button"
+                  onClick={handleOpenSessionModal}
+                  className="flex text-center justify-center items-center gap-2 text-surface-100 bg-blue-300 py-2 px-4 mt-4 rounded-md mr-4 hover:bg-[#4296b3]"
+                  // onClick={handleSession}
+                >
+                  {" "}
+                  Schedule a class session
+                </button>
+
+                <div>
+                  {openModal && (
+                    <SessionCreationModal
+                      setOpenModal={setOpenModal}
+                      LocationOptions={locations}
+                      // batchOptions={batchOptions}
+                      // loadingLocation={loadingLocation}
+                      // setUpdateSession={setUpdateSession}
+                      // updateSession={updateSession}
+                      // loadingBatch={loadingBatch}
+                    />
+                  )}
+                </div>
+              </>
             )}
 
-            {route !== "courses" && classSession && (
-              <>
-                <div className="sm:pr-4 ">
+            {/* {route !== "courses" && classSession && ( */}
+            <>
+              {/* <div className="sm:pr-4 ">
                   <div className="relative w-full flex-col p-4 gap-4 flex  border-dark-400 rounded-md border mt-2 ">
                     <div className="flex flex-col">
                       <label>Location</label>
@@ -414,7 +436,7 @@ export default function CreateField({
                             <input
                               type="number"
                               min={0}
-                              placeholder="capacity"
+                              placeholder="Capacity"
                               className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
                             />
                             <input
@@ -452,7 +474,7 @@ export default function CreateField({
                             )}
                           </div>
                           <button
-                            onClick={handleSessionCreation(courseId)}
+                            onClick={handleSessionCreation}
                             type="button"
                             className="bg-blue-300 p-2 w-20 text-surface-100 rounded-md flex items-center justify-center"
                           >
@@ -460,11 +482,11 @@ export default function CreateField({
                           </button>
                         </>
                       );
-                    })}
+                    })} 
                   </div>
-                </div>
-              </>
-            )}
+                </div>*/}
+            </>
+            {/* )} */}
 
             {route === "courses" && (
               <>
