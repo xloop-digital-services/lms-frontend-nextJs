@@ -1023,7 +1023,7 @@ export const getAttendanceByCourseIdDate = async (courseId, date) => {
 
     return response;
   } catch (error) {
-    throw error;
+    throw error;  
   }
 };
 

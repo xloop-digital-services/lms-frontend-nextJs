@@ -58,6 +58,7 @@ export default function CreateField({
     }
   }, [title]);
 
+
   const WEEKDAYS = {
     0: ["Monday", "Mon"],
     1: ["Tuesday", "Tue"],
@@ -141,6 +142,29 @@ export default function CreateField({
     }
   };
 
+  const handleSessionCreation = async (id) => {
+    console.log(id);
+    setLoading(true);
+    try {
+      const data = {
+        location: selectedLocationId,
+        no_of_students: capacity,
+        start_time: startTime,
+        end_time: endTime,
+        course_id: id,
+        days_of_week: selectedDays,
+      };
+      const response = await createSession(data);
+      toast.success(response.data.message);
+      setLoading(false);
+      setOpenModal(false);
+      setUpdateSession(!updateSession);
+    } catch (error) {
+      toast.error("Error scheduling class");
+      setLoading(false);
+    }
+  };
+
   const handleListingAllLocations = async () => {
     try {
       const response = await listAllLocations();
@@ -188,7 +212,7 @@ export default function CreateField({
   useEffect(() => {
     handleListingAllLocations();
   }, []);
-
+ 
   return (
     <div
       className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-32 font-inter ${
@@ -428,6 +452,7 @@ export default function CreateField({
                             )}
                           </div>
                           <button
+                            onClick={handleSessionCreation(courseId)}
                             type="button"
                             className="bg-blue-300 p-2 w-20 text-surface-100 rounded-md flex items-center justify-center"
                           >

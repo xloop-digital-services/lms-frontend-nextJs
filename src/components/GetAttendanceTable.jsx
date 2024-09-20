@@ -1,23 +1,49 @@
 "use client";
 import {
   getAttendanceByCourseIdDate,
+  getInstructorSessions,
   getStudentsByCourseId,
   markAttendanceByCourseId,
 } from "@/api/route";
+import { useAuth } from "@/providers/AuthContext";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify"; // Ensure you have react-toastify installed
 
 export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
+  const { userData } = useAuth();
   const [attendance, setAttendance] = useState([]);
   const [getAttendance, setGetAttendance] = useState([]);
   const [selectedAttendance, setSelectedAttendance] = useState({});
   const [loader, setLoader] = useState(false);
-
+  const [sessions, setSessions] = useState([]);
+  const group = userData?.Group;
+  const userId = userData?.user_data?.id;
+  // console.log(group);
+  // console.log(userData);
   const today = new Date();
   const day = String(today.getDate()).padStart(2, "0");
   const month = String(today.getMonth() + 1).padStart(2, "0");
   const year = today.getFullYear();
   const formattedDate = `${year}-${month}-${day}`;
+  // console.log(group, userId);
+  async function fetchSessions() {
+    const response = await getInstructorSessions(userId, group);
+    setLoader(true);
+    try {
+      if (response.status === 200) {
+        setSessions(response.data);
+        setLoader(false);
+        // console.log(assignments);
+      } else {
+        console.error(
+          "Failed to fetch pending assignments, status:",
+          response.status
+        );
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
 
   async function fetchAttendanceAdmin() {
     try {
@@ -40,7 +66,10 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   async function fetchAttendance() {
     setLoader(true);
     try {
-      const response = await getAttendanceByCourseIdDate(courseId, formattedDate);
+      const response = await getAttendanceByCourseIdDate(
+        courseId,
+        formattedDate
+      );
       if (response.status === 200) {
         setGetAttendance(response.data);
         setSelectedAttendance(
@@ -67,13 +96,18 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   };
 
   const handleSubmit = async () => {
-    const attendanceArray = Object.keys(selectedAttendance).map((studentId) => ({
-      student: studentId,
-      status: selectedAttendance[studentId],
-    }));
+    const attendanceArray = Object.keys(selectedAttendance).map(
+      (studentId) => ({
+        student: studentId,
+        status: selectedAttendance[studentId],
+      })
+    );
 
     try {
-      const response = await markAttendanceByCourseId(courseId, attendanceArray); // Post the array of attendance
+      const response = await markAttendanceByCourseId(
+        courseId,
+        attendanceArray
+      ); // Post the array of attendance
       if (response.status === 200 || response.status === 201) {
         toast.success("Attendance marked successfully");
         fetchAttendance(); // Fetch updated attendance after submission
@@ -88,15 +122,30 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
 
   useEffect(() => {
     fetchAttendance();
+    if (group && userId) {
+      fetchSessions();
+    }
     if (isAttendancePosted) {
       fetchAttendance();
     } else {
       fetchAttendanceAdmin();
     }
-  }, [isAttendancePosted, courseId]);
+  }, [isAttendancePosted, courseId, group, userId]);
 
   return (
     <div className="flex flex-col">
+      <label>Select Session</label>
+      <select className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5">
+        <select className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5">
+          {Array.isArray(sessions) &&
+            sessions.map((session) => (
+              <option key={session.session_id}>
+                {session.course} - {session.location}
+              </option>
+            ))}
+        </select>
+      </select>
+
       <div className="-m-1.5 overflow-x-auto">
         <div className="p-1.5 min-w-full inline-block align-middle">
           <div className="border border-dark-300 rounded-lg divide-y divide-dark-200 dark:border-gray-700 dark:divide-gray-700">

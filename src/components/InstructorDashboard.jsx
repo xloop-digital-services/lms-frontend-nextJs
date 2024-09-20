@@ -196,7 +196,7 @@ export default function InstructorDashboard() {
                       // title={assignment.question || assignment.title}
                       // content={assignment.description}
                       priority={`Start Time: ${assignment?.start_time}\n End Time:${assignment?.end_time}`}
-                      category={`No. of students: ${assignment.no_of_students}\t\t\tLocation:${assignment.location}`}
+                      category={`Capacity: ${assignment.no_of_student}\t\t\tLocation:${assignment.location}`}
                       // avatars={avatars}
                       // extraCount={50}
                     />
