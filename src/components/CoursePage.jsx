@@ -50,16 +50,24 @@ export default function CoursePage({ path, heading }) {
           </>
         )}
         <div className="flex flex-col w-full gap-4">
-          {courses.map((course) => (
-            <MainCourseCard
-              key={course.id}
-              courseImg={courseImg}
-              courseName={course.name}
-              courseDesc={course.short_description}
-              durationOfCourse={`${course.theory_credit_hours}+${course.lab_credit_hours}`}
-              route={`${path}/course/${course.id}`}
-            />
-          ))}
+          {courses.map((course) => {
+            // Find the session related to the current course
+            const session = userData?.session?.find(
+              (s) => s.course?.id === course.id
+            );
+
+            return (
+              <MainCourseCard
+                instructor={session?.instructor?.instructor_name} // Get the instructor name from the session
+                key={course.id}
+                courseImg={courseImg}
+                courseName={course.name}
+                courseDesc={course.short_description}
+                durationOfCourse={`${course.theory_credit_hours}+${course.lab_credit_hours}`}
+                route={`${path}/course/${course.id}`}
+              />
+            );
+          })}
         </div>
       </div>
     </div>

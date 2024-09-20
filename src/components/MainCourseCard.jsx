@@ -16,6 +16,7 @@ export default function MainCourseCard({
   courseName,
   courseDesc,
   progress,
+  instructor,
   durationOfCourse,
   route,
 }) {
@@ -47,6 +48,10 @@ export default function MainCourseCard({
                   <p className="line-clamp-4 ">{courseDesc}</p>
                   {progress ? <p className="text-blue-300">50</p> : null}
                 </div>
+                <p>
+                  Instructor Name:{" "}
+                  <span className="text-blue-300">{instructor}</span>
+                </p>
 
                 {progress ? <Progress progress={progress} /> : null}
               </div>

@@ -84,7 +84,7 @@ const SessionCreationModal = ({
         } catch (error) {
           console.log(
             "error while session creation",
-            error.response.data.message
+            error.response?.data.message
           );
           toast.error("error in class scheduling");
           setLoadingCreation(false);

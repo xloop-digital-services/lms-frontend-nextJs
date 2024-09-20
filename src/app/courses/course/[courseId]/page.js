@@ -42,6 +42,7 @@ export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
   const { userData } = useAuth();
   const courseId = params.courseId;
+  const session = userData?.session?.find((s) => s.courseId);
   const isStudent = userData?.Group === "student";
   const isAdmin = userData?.Group === "admin";
   const [courseData, setCourseData] = useState([]);
@@ -342,7 +343,6 @@ export default function Page({ params }) {
   // console.log(courseData?.status);
   // useEffect(() => {
   //   // if (courseData?.skills?.length > 0) {
-   
 
   //   // console.log(courseData?.skills);
   // }, []);
@@ -372,7 +372,7 @@ export default function Page({ params }) {
               setFetch={setFetch}
               // name={courseData.name}
               // rating="Top Instructor"
-              // instructorName="Maaz"
+              // instructorName={instructor}
 
               progress={courseProgress?.progress_percentage}
               setIsEditing={setIsEditing}
@@ -403,6 +403,8 @@ export default function Page({ params }) {
                           }
                           className="sr-only"
                         />
+
+                     
                         <div className="w-11 h-6 bg-blue-600 rounded-full"></div>
                         <div
                           className={`absolute w-4 h-4 bg-blue-300 rounded-full shadow-md transform transition-transform ${
