@@ -235,12 +235,12 @@ const SessionsTable = ({
                 <tbody className="divide-y divide-dark-200 max-h-[500px] overflow-y-auto scrollbar-webkit">
                   {loading && sessions.length == 0 ? (
                     <tr>
-                      {/* <td
+                      <td
                         colSpan="8"
                         className="text-center py-4 text-dark-400"
                       >
                         <CircularProgress size={20} />
-                      </td> */}
+                      </td>
                     </tr>
                   ) : sessions && sessions.length > 0 ? (
                     sessions

@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { IoIosArrowDown, IoMdClose } from "react-icons/io";
+import { IoIosArrowDown, IoIosCloseCircleOutline, IoMdClose } from "react-icons/io";
 import SessionsTable from "@/components/SessionsTable";
 import SessionCreationModal from "@/components/Modal/SessionCreationModal";
 import { useSidebar } from "@/providers/useSidebar";
@@ -241,7 +241,7 @@ export default function Page() {
                       onClick={clearLocationFilter}
                       className="ml-2 text-red-500 cursor-pointer"
                     >
-                      <IoMdClose />
+                      <IoIosCloseCircleOutline size={20} />
                     </span>
                   )}
                   <span className="">
@@ -329,11 +329,7 @@ export default function Page() {
 
         {/* Sessions Table */}
         <div>
-          {loading ? (
-            <div className="flex max-h-screen justify-center items-center w-full">
-              <CircularProgress />
-            </div>
-          ) : isLocationSelected && filterLocation.length > 0 ? (
+          {isLocationSelected && filterLocation.length > 0 ? (
             <SessionsTable
               sessions={filterLocation}
               loading={loading}

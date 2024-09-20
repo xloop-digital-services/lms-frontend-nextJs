@@ -22,6 +22,8 @@ const UserApprovalTable = ({
     setModal(true);
   };
   const getUserApplication = (userEmail) => {
+    console.log('userEmail', userEmail)
+    console.log('users',users)
     return users.find((app) => app.email === userEmail) || {};
   };
 
@@ -116,7 +118,7 @@ const UserApprovalTable = ({
                             {user?.email || "-"}
                           </td>
                           <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800">
-                            {userApplication.city || "-"}
+                            {user?.city || "-"}
                           </td>
                           <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800">
                             {user?.contact || "-"}

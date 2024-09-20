@@ -108,7 +108,7 @@ const ApprovalUserModal = ({
     try {
       const response = await listAllSessions();
       setLoadingSessions(false);
-      setSessions(response.data);
+      setSessions(response.data.data);
     } catch (error) {
       console.log("Error while fetching the sessions", error);
       setLoadingSessions(false);

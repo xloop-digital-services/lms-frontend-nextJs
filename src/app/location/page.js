@@ -7,7 +7,7 @@ import LocationModal from "@/components/Modal/LocationModal";
 import cityAreas from "../../../public/data/cityAreas.json";
 import useClickOutside from "@/providers/useClickOutside";
 import { toast } from "react-toastify";
-import { IoIosArrowDown, IoMdClose } from "react-icons/io";
+import { IoIosArrowDown, IoIosCloseCircleOutline, IoMdClose } from "react-icons/io";
 
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
@@ -98,7 +98,7 @@ export default function Page() {
                     onClick={clearCityFilter}
                     className="ml-2 text-red-500 cursor-pointer"
                   >
-                    <IoMdClose />
+                    <IoIosCloseCircleOutline size={20}  />
                   </span>
                 )}
                 <span
