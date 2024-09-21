@@ -4,12 +4,19 @@ import { IoIosArrowDown } from "react-icons/io";
 import {
   getAssignmentGrading,
   getExamGrading,
+  getInstructorSessions,
   getProjectGrading,
   getQuizGrading,
+  listAllSessions,
+  listSessionByCourseId,
 } from "@/api/route";
 import AdminMarksTable from "./AdminMarksTable";
+import { useAuth } from "@/providers/AuthContext";
 
 export const GradingSection = ({ title, options, courseId }) => {
+  const { userData } = useAuth();
+  const isAdmin = userData?.Group === "admin";
+  const isInstructor = userData?.Group === "instructor";
   const [isOpen, setIsOpen] = useState(false);
   const [openSection, setOpenSection] = useState(null);
   const [selected, setSelected] = useState(null);
@@ -22,6 +29,16 @@ export const GradingSection = ({ title, options, courseId }) => {
   const [selectedDesc, setSelectedDesc] = useState(null);
   const [totalMarks, setTotalMarks] = useState(null);
   const [fetch, setFetch] = useState(false);
+  const [selectedSessionId, setSelectedSessionId] = useState("");
+  const [sessions, setSessions] = useState([]);
+  const [loader, setLoader] = useState(false);
+  const userId = userData?.user_data?.id;
+  const group = userData?.Group;
+
+  // console.log(isAdmin);
+  const handleChange = (e) => {
+    setSelectedSessionId(e.target.value);
+  };
 
   const toggleOpen = (e) => {
     e.stopPropagation();
@@ -54,7 +71,11 @@ export const GradingSection = ({ title, options, courseId }) => {
 
   async function fetchQuizzesGrading() {
     setLoading(true);
-    const response = await getQuizGrading(courseId, selected);
+    const response = await getQuizGrading(
+      courseId,
+      selected,
+      selectedSessionId
+    );
     try {
       if (response.status === 200) {
         setLoading(false);
@@ -70,7 +91,11 @@ export const GradingSection = ({ title, options, courseId }) => {
 
   async function fetchAssignmentsGrading() {
     setLoading(true);
-    const response = await getAssignmentGrading(courseId, selected);
+    const response = await getAssignmentGrading(
+      courseId,
+      selected,
+      selectedSessionId
+    );
     try {
       if (response.status === 200) {
         setLoading(false);
@@ -83,6 +108,8 @@ export const GradingSection = ({ title, options, courseId }) => {
       console.log("error", error);
     }
   }
+
+  console.log(selectedSessionId);
 
   // async function fetchExamGrading() {
   //   setLoading(true);
@@ -103,7 +130,11 @@ export const GradingSection = ({ title, options, courseId }) => {
   async function fetchExamGrading() {
     setLoading(true);
     try {
-      const response = await getExamGrading(courseId, selected);
+      const response = await getExamGrading(
+        courseId,
+        selected,
+        selectedSessionId
+      );
       if (response.status === 200) {
         const examData = response?.data?.data;
         setLoading(false);
@@ -120,7 +151,11 @@ export const GradingSection = ({ title, options, courseId }) => {
 
   async function fetchProjectGrading() {
     setLoading(true);
-    const response = await getProjectGrading(courseId, selected);
+    const response = await getProjectGrading(
+      courseId,
+      selected,
+      selectedSessionId
+    );
     try {
       if (response.status === 200) {
         setLoading(false);
@@ -134,7 +169,44 @@ export const GradingSection = ({ title, options, courseId }) => {
     }
   }
 
+  async function fetchSessions() {
+    const response = await getInstructorSessions(userId, group); 
+    setLoader(true);
+    try {
+      if (response.status === 200) {
+        setSessions(response.data); 
+        setLoader(false);
+      } else {
+        console.error("Failed to fetch sessions, status:", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
+  async function fetchSessionsAdmin() {
+    const response = await listSessionByCourseId(courseId); 
+    setLoader(true);
+    try {
+      if (response.status === 200) {
+        setSessions(response.data); 
+        setLoader(false);
+      } else {
+        console.error("Failed to fetch sessions, status:", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
   useEffect(() => {
+    if (isInstructor) {
+      fetchSessions();
+    }
+
+    if (isAdmin) {
+      fetchSessionsAdmin();
+    }
     if (!selected) return;
     if (title === "Assignment") {
       fetchAssignmentsGrading();
@@ -145,7 +217,7 @@ export const GradingSection = ({ title, options, courseId }) => {
     } else if (title === "Project") {
       fetchProjectGrading();
     }
-  }, [selected, fetch, title]);
+  }, [selected, fetch, title, isAdmin, isInstructor]);
 
   // console.log(selected);
   // console.log(selectedValue);
@@ -222,6 +294,64 @@ export const GradingSection = ({ title, options, courseId }) => {
               </div>
             )}
           </div>
+
+          {isInstructor && (
+            <div>
+              <select
+                value={selectedSessionId}
+                onChange={handleChange}
+                
+                className="bg-surface-100 cursor-pointer text-[#92A7BE] block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+              >
+                <option
+                  className="bg-surface-100 text-[#92A7BE] block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                  value=""
+                  disabled
+                  selected
+                >
+                  Select a session
+                </option>
+                {Array.isArray(sessions.data) &&
+                  sessions.data.map((session) => (
+                    <option className="px-4 py-2 w-40 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg" key={session.session_id} value={session.session_id}>
+                      {session.location} - {session.course} -{" "}
+                      {session.no_of_student} - {session.start_time} -{" "}
+                      {session.end_time}
+                    </option>
+                  ))}
+              </select>
+            </div>
+          )}
+          {isAdmin && (
+            <div>
+              <select
+                value={selectedSessionId}
+                onChange={handleChange}
+                className="bg-surface-100 cursor-pointer text-[#92A7BE] block w-[200px] my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+              >
+                <option
+                  className="bg-surface-100 text-[#92A7BE] block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                  value=""
+                  disabled
+                  selected
+                >
+                  Select a session
+                </option>
+                {Array.isArray(sessions.data) &&
+                  sessions.data.map((session) => (
+                    <option
+                      key={session.id} // Use the session id
+                      value={session.id} // Set value as session id
+                    >
+                      {session.location_name} - {session.course.name} -{" "}
+                      {session.no_of_students} Students - {session.start_time} -{" "}
+                      {session.end_time}
+                    </option>
+                  ))}
+              </select>
+            </div>
+          )}
+
           <span
             className={`${
               openSection ? "rotate-180 duration-300" : "duration-300"
@@ -231,6 +361,7 @@ export const GradingSection = ({ title, options, courseId }) => {
           </span>
         </div>
       </div>
+
       {selected && openSection === title && (
         <div className="mt-3">
           <AdminMarksTable

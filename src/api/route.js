@@ -252,10 +252,10 @@ export const getOverallProgress = async (courseId, regId) => {
 };
 
 //get quizzes Grading (admin)
-export const getQuizGrading = async (courseId, quizId) => {
+export const getQuizGrading = async (courseId, quizId, sessionId) => {
   try {
     const response = await axiosInstance.get(
-      `course/courses/${courseId}/quizzes/${quizId}/students/`
+      `/course/quizzes/${quizId}/courses/${courseId}/sessions/${sessionId}/students/`
     );
     return response;
   } catch (error) {
@@ -274,10 +274,10 @@ export const updateQuizGrading = async (quizData) => {
 };
 
 //get assignments Grading (admin)
-export const getAssignmentGrading = async (courseId, assignId) => {
+export const getAssignmentGrading = async (courseId, assignId, sessionId) => {
   try {
     const response = await axiosInstance.get(
-      `course/courses/${courseId}/assignments/${assignId}/students/`
+      `/course/assignments/${assignId}/courses/${courseId}/sessions/${sessionId}/students/`
     );
     return response;
   } catch (error) {
@@ -299,10 +299,10 @@ export const updateAssignmentGrading = async (assignData) => {
 };
 
 //get project Grading (admin)
-export const getProjectGrading = async (courseId, projId) => {
+export const getProjectGrading = async (courseId, projId, sessionId) => {
   try {
     const response = await axiosInstance.get(
-      `course/courses/${courseId}/projects/${projId}/students/`
+      `/course/projects/${projId}/courses/${courseId}/sessions/${sessionId}/students/`
     );
     return response;
   } catch (error) {
@@ -346,10 +346,10 @@ export const getWeightages = async (courseId) => {
 };
 
 //get exam Grading (admin)
-export const getExamGrading = async (courseId, examId) => {
+export const getExamGrading = async (courseId, examId, sessionId) => {
   try {
     const response = await axiosInstance.get(
-      `course/courses/${courseId}/exams/${examId}/students/`
+      `/course/exams/${examId}/courses/${courseId}/sessions/${sessionId}/students/`
     );
     return response;
   } catch (error) {
@@ -572,6 +572,15 @@ export const getAllPrograms = async () => {
 export const listAllSessions = async () => {
   try {
     const response = await axiosInstance.get("/session/");
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const listSessionByCourseId = async (courseId) => {
+  try {
+    const response = await axiosInstance.get(`/session/?course=${courseId}`);
     return response;
   } catch (error) {
     throw error;

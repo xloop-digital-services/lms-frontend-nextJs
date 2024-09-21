@@ -36,7 +36,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   };
   // console.log(group, userId);
   async function fetchSessions() {
-    const response = await getInstructorSessions(userId, group); // Assuming userId and group are available
+    const response = await getInstructorSessions(userId, group);
     setLoader(true);
     try {
       if (response.status === 200) {
@@ -72,12 +72,15 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
     try {
       const response = await getAttendanceBySessionId(selectedSessionId);
       if (response.status === 200) {
-        const initialAttendance = response.data.reduce((acc, student) => {
-          acc[student.registration_id] = 0;
-          return acc;
-        }, {});
+        // const initialAttendance = response.data.reduce((acc, student) => {
+        //   acc[student.registration_id] = 0;
+        //   return acc;
+        // }, {});
+
         setAttendance(response.data);
-        setSelectedAttendance(initialAttendance);
+        console.log(response.data.data);
+        // setSelectedAttendance(initialAttendance);
+        console.log(response.data);
       } else {
         console.error("Failed to fetch attendance, status:", response.status);
       }
@@ -95,6 +98,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
       );
       if (response.status === 200) {
         setGetAttendance(response.data);
+
         setSelectedAttendance(
           response.data.reduce((acc, record) => {
             acc[record.student] = record.status;
@@ -130,10 +134,10 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
       const response = await markAttendanceByCourseId(
         courseId,
         attendanceArray
-      ); // Post the array of attendance
+      );
       if (response.status === 200 || response.status === 201) {
         toast.success("Attendance marked successfully");
-        fetchAttendance(); // Fetch updated attendance after submission
+        fetchAttendance();
       } else {
         toast.error(`Error submitting attendance: ${response.data.message}`);
       }
@@ -181,8 +185,9 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
             {Array.isArray(sessions.data) &&
               sessions.data.map((session) => (
                 <option key={session.session_id} value={session.session_id}>
-                  {session.location} - {session.course} - {session.no_of_student}{" "}
-                  - {session.start_time} - {session.end_time}
+                  {session.location} - {session.course} -{" "}
+                  {session.no_of_student} - {session.start_time} -{" "}
+                  {session.end_time}
                 </option>
               ))}
           </select>
@@ -208,93 +213,106 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-dark-200 dark:divide-gray-700 overflow-y-scroll scrollbar-webkit">
-                  {getAttendance.length > 0
-                    ? getAttendance.map((att, index) => (
-                        <tr key={index}>
-                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
-                            {att.student || att.registration_id}
-                          </td>
-                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
-                            {att.full_name || att.student_name}
-                          </td>
-                          <td className="px-6 py-4 gap-3 flex text-center justify-center items-center whitespace-nowrap text-sm text-gray-800">
-                            {["0", "1", "2"].map((status) => (
-                              <div
-                                key={status}
-                                className="space-x-2 flex items-center group"
-                              >
-                                <input
-                                  type="radio"
-                                  name={`attendance-${att.id}`}
-                                  value={status}
-                                  checked={
-                                    selectedAttendance[att.student] ===
+                  {Array.isArray(attendance) && attendance.length > 0 ? (
+                    attendance.map((att, index) => (
+                      <tr key={index}>
+                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                          {att.registration_id}{" "}
+                          {/* Adjusted to match API response */}
+                        </td>
+                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                          {att.user} {/* Adjusted to match API response */}
+                        </td>
+                        <td className="px-6 py-4 gap-3 flex text-center justify-center items-center whitespace-nowrap text-sm text-gray-800">
+                          {["0", "1", "2"].map((status) => (
+                            <div
+                              key={status}
+                              className="space-x-2 flex items-center group"
+                            >
+                              <input
+                                type="radio"
+                                name={`attendance-${att.registration_id}`}
+                                value={status}
+                                checked={
+                                  selectedAttendance[att.registration_id] ===
+                                  parseInt(status)
+                                }
+                                onChange={() =>
+                                  handleAttendanceChange(
+                                    att.registration_id,
                                     parseInt(status)
-                                  }
-                                  onChange={() =>
-                                    handleAttendanceChange(
-                                      att.registration_id,
-                                      parseInt(status)
-                                    )
-                                  }
-                                  className="w-4 h-4 rounded-full border-2 border-[#03A1D8] group-hover:cursor-pointer"
-                                  disabled={isAttendancePosted}
-                                />
-                                <p className="group-hover:cursor-pointer">
-                                  {status === "0"
-                                    ? "P"
-                                    : status === "1"
-                                    ? "A"
-                                    : "L"}
-                                </p>
-                              </div>
-                            ))}
-                          </td>
-                        </tr>
-                      ))
-                    : attendance.map((att, index) => (
-                        <tr key={index}>
-                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
-                            {att.registration_id}
-                          </td>
-                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
-                            {att.full_name}
-                          </td>
-                          <td className="px-6 py-4 gap-3 flex text-center justify-center items-center whitespace-nowrap text-sm text-gray-800">
-                            {["0", "1", "2"].map((status) => (
-                              <div
-                                key={status}
-                                className="space-x-2 flex items-center group"
-                              >
-                                <input
-                                  type="radio"
-                                  name={`attendance-${att.registration_id}`}
-                                  value={status}
-                                  checked={
-                                    selectedAttendance[att.registration_id] ===
+                                  )
+                                }
+                                className="w-4 h-4 rounded-full border-2 border-[#03A1D8] group-hover:cursor-pointer"
+                                disabled={isAttendancePosted}
+                              />
+                              <p className="group-hover:cursor-pointer">
+                                {status === "0"
+                                  ? "P"
+                                  : status === "1"
+                                  ? "A"
+                                  : "L"}
+                              </p>
+                            </div>
+                          ))}
+                        </td>
+                      </tr>
+                    ))
+                  ) : Array.isArray(attendance) && attendance.length > 0 ? (
+                    attendance.map((att, index) => (
+                      <tr key={index}>
+                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                          {att.student || att.registration_id}
+                        </td>
+                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                          {att.full_name || att.user}
+                        </td>
+                        <td className="px-6 py-4 gap-3 flex text-center justify-center items-center whitespace-nowrap text-sm text-gray-800">
+                          {["0", "1", "2"].map((status) => (
+                            <div
+                              key={status}
+                              className="space-x-2 flex items-center group"
+                            >
+                              <input
+                                type="radio"
+                                name={`attendance-${att.registration_id}`}
+                                value={status}
+                                checked={
+                                  selectedAttendance[
+                                    att.student || att.registration_id
+                                  ] === parseInt(status)
+                                }
+                                onChange={() =>
+                                  handleAttendanceChange(
+                                    att.registration_id,
                                     parseInt(status)
-                                  }
-                                  onChange={() =>
-                                    handleAttendanceChange(
-                                      att.registration_id,
-                                      parseInt(status)
-                                    )
-                                  }
-                                  className="w-4 h-4 rounded-full border-2 border-[#03A1D8] group-hover:cursor-pointer"
-                                  disabled={isAttendancePosted}
-                                />
-                                <p className="group-hover:cursor-pointer">
-                                  {status === "0"
-                                    ? "P"
-                                    : status === "1"
-                                    ? "A"
-                                    : "L"}
-                                </p>
-                              </div>
-                            ))}
-                          </td>
-                        </tr>
-                      ))}
+                                  )
+                                }
+                                className="w-4 h-4 rounded-full border-2 border-[#03A1D8] group-hover:cursor-pointer"
+                                disabled={isAttendancePosted}
+                              />
+                              <p className="group-hover:cursor-pointer">
+                                {status === "0"
+                                  ? "P"
+                                  : status === "1"
+                                  ? "A"
+                                  : "L"}
+                              </p>
+                            </div>
+                          ))}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan="3"
+                        className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800"
+                      >
+                        No attendance data available
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
