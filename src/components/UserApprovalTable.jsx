@@ -192,6 +192,7 @@ const UserApprovalTable = ({
                 firstName={selectedUser.first_name}
                 lastName={selectedUser.last_name}
                 email={selectedUser.email}
+                resume={selectedUser.resume}
                 status={selectedUser.application_status}
                 id={userID}
               />

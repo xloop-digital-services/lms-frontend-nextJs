@@ -227,19 +227,33 @@ const UserModal = ({
                     </tr> */}
                     {selectedOption === "instructor" && (
                       <>
-                        <tr>
+                        <tr className="border-b border-[#d7e4ee]">
                           <td className="text-dark-400 text-center py-2">
                             Years of Experience
                           </td>
                           <td className="text-center py-2 px-4">
-                            {experience}
+                            {experience || "-"}
                           </td>
                         </tr>
                         <tr>
                           <td className="text-dark-400 text-center py-2">
                             Resume
                           </td>
-                          <td className="text-center py-2 px-4">{resume}</td>
+                          <td className="text-center py-2 px-4">
+                            {resume ? (
+                              <a
+                                href={resume}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className=" hover:text-blue-300 hover:underline"
+                              >
+                                {resume.split("/").pop()}{" "}
+                                {/* Display only the filename */}
+                              </a>
+                            ) : (
+                              "-"
+                            )}
+                          </td>
                         </tr>
                       </>
                     )}

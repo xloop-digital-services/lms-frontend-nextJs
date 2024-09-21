@@ -23,6 +23,7 @@ const ApprovalUserModal = ({
   firstName,
   lastName,
   email,
+  resume,
   status,
   id,
 }) => {
@@ -51,6 +52,7 @@ const ApprovalUserModal = ({
   const [userSkills, setUserSkills] = useState([]);
   const [weekDays, setWeekDays] = useState([]);
   const [studentSessions, setStudentSessions] = useState([]);
+  const [errorUpdate, setErrorUpdate] = useState(false)
 
   const WEEKDAYS = {
     0: ["Monday", "Mon"],
@@ -133,7 +135,11 @@ const ApprovalUserModal = ({
         return [...prevSelected, session.id];
       }
     });
-    setSelected(true);
+    if (session.id) {
+      setSelected(true);
+    } else {
+      setSelected(false);
+    }
   };
 
   useEffect(() => {
@@ -168,18 +174,21 @@ const ApprovalUserModal = ({
 
       toast.success(response.data.message);
       setUpdateSessions(updateSession + 1);
-      setSessionIds([])
+      setSelected(false);
+      setSessionIds([]);
       setLoadingAssign(false);
     } catch (error) {
       console.log("Error in assigning", error);
-      if (error.response.status === 400) {
+      if (error.message === "Network Error") {
+        toast.error(error.message);
+      } else if (error.response.status === 400) {
+        setErrorUpdate(!errorUpdate)
         toast.error(error.response.data.message);
-        
-      }
-      if (error.response.status === 401) {
+      } else if (error.response.status === 401) {
         toast.error("your log in token has been expired. Please log in again!");
       }
-      setSessionIds([])
+      setSelected(false);
+      setSessionIds([]);
       setLoadingAssign(false);
     }
   };
@@ -233,7 +242,7 @@ const ApprovalUserModal = ({
 
   return (
     <div className="backDropOverlay w-full min-h-screen flex items-center">
-      <div className="min-w-[70%] z-[1000] mx-auto my-20 relative">
+      <div className="min-w-[70%] z-[1000] mx-auto my-20 relative cursor-default">
         {loadingAssign && (
           <div className="absolute inset-0 flex items-center justify-center bg-surface-100 bg-opacity-30 z-[1100]">
             <CircularProgress size={30} />
@@ -334,7 +343,9 @@ const ApprovalUserModal = ({
               </div>
             </div>
             <div className="absolute top-[60px] right-[50px]">
-              <p className="text-sm text-dark-400 text-center">Status</p>
+              <p className="text-sm text-dark-400 text-center pb-1 border-b border-dark-300">
+                Status
+              </p>
               <div className="py-2 whitespace-nowrap flex w-full justify-start text-sm text-surface-100 dark:text-gray-200">
                 <p
                   className={`${
@@ -347,8 +358,40 @@ const ApprovalUserModal = ({
                 </p>
               </div>
             </div>
-            <div className="flex gap-4 pl-[50px] justify-start items-center w-full">
-              <div className="flex flex-col justify-end  pt-2  relative min-w-[250px]">
+            {selectedOption === "instructor" && (
+              <div className="absolute top-[61px] left-[50px]">
+                <p className="text-sm text-dark-400 text-center pb-1 border-b border-dark-300">
+                  Resume
+                </p>
+                <div className="px-4">
+                  {resume ? (
+                    <p className="max-w-[140px] truncate pt-[2px] text-[#43434a] text-sm">
+                      <a
+                        href={resume}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className=" hover:text-blue-300 hover:underline"
+                      >
+                        {resume.split("/").pop()}{" "}
+                        {/* Display only the filename */}
+                      </a>
+                    </p>
+                  ) : (
+                    <p className="text-[12px]  pt-[2px] text-dark-300">
+                      no file uploaded
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+            <div
+              className={`${
+                selectedOption === "instructor"
+                  ? " justify-end "
+                  : "justify-start"
+              } flex gap-3 pl-[50px] items-center w-full`}
+            >
+              <div className="flex flex-col justify-end  pt-4  relative min-w-[250px]">
                 {/* <div>
                 <p className=" text-xs">Assign sessions</p>
               </div> */}
@@ -427,11 +470,12 @@ const ApprovalUserModal = ({
                 </div>
               </div>
 
-              <div className="flex  py-2 px-5 justify-end">
+              <div className=" pt-4 px-5 ">
                 <button
+                  disabled={!selected}
                   className={`bg-blue-300 ${
                     selected ? "" : "opacity-30"
-                  } text-surface-100 py-2 w-[100px] text-sm h-fit rounded-md flex justify-center items-center`}
+                  } text-surface-100 py-[10px] w-[100px] text-sm h-fit rounded-md flex justify-center items-center`}
                   onClick={handleSessionAssign}
                   // disabled={!selected}
                 >
@@ -455,7 +499,7 @@ const ApprovalUserModal = ({
                   <>
                     <div>
                       <h2 className="border-b border-dark-300 py-1 mb-2 text-sm text-dark-400">
-                        Assigned Sessions:
+                        Assigned Classes:
                       </h2>
                       <ul className="list-disc space-y-2 max-h-[220px] overflow-y-auto w-full scrollbar-webkit ">
                         {assignedSessions.map((session, index) => (

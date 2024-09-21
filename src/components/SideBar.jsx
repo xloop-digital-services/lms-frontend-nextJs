@@ -156,7 +156,7 @@ function SideBar() {
                   <Link
                     href="/class-scheduling"
                     className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
-                      isLinkActive("/session")
+                      isLinkActive("/class-scheduling")
                         ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100 "
                         : "text-dark-600"
                     }`}
