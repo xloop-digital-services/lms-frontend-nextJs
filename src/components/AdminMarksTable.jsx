@@ -188,7 +188,7 @@ const AdminMarksTable = ({ assessments, courseId, setFetch, title }) => {
                               </button>
                             ) : assessment?.status !== "Submitted" ? (
                               <button className=" text-center px-4 py-2 text-[12px] rounded-lg text-sm bg-gray-300 text-blue-300">
-                                You can't grade right now
+                                You cant grade right now
                               </button>
                             ) : isEditing === assessment.submission_id ? (
                               <button
