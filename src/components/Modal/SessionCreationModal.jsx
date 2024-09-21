@@ -56,7 +56,7 @@ const SessionCreationModal = ({
     if (!errorMessage) {
       if (
         selectedLocation &&
-        // selectedBatch &&
+        selectedBatch &&
         selectedCourseName &&
         capacity &&
         startTime &&
@@ -66,7 +66,7 @@ const SessionCreationModal = ({
         try {
           // Format time to "hh:mm:ss" or "hh:mm:ss.uuuuuu" (24-hour format) before sending to backend
           const data = {
-            // batch: selectedBatch,
+            batch: selectedBatch,
             location: selectedLocationId,
             no_of_students: capacity,
             start_time: startTime,
@@ -86,7 +86,7 @@ const SessionCreationModal = ({
             "error while session creation",
             error.response?.data.message
           );
-          toast.error("error in class scheduling");
+          // toast.error("error in class scheduling");
           setLoadingCreation(false);
         }
       } else {
