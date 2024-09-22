@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { IoIosArrowDown } from "react-icons/io";
+import { FaListCheck, FaLocationDot } from "react-icons/fa6";
 import {
   FaBars,
   FaBookOpen,
@@ -85,7 +86,10 @@ function SideBar() {
                       onClick={ToggleOptions}
                     >
                       <div className="flex gap-4">
-                        <FaListAlt size={24} />
+                        <FaListCheck
+                          size={24}
+                          className="text-surface-100 bg-dark-600 p-1 rounded-md"
+                        />{" "}
                         <p
                           className={`flex-grow text-center ${
                             isLinkActive("/user-management") && "font-semibold"
@@ -139,7 +143,7 @@ function SideBar() {
                         : "text-dark-600"
                     }`}
                   >
-                    <FaListAlt size={24} />
+                    <FaLocationDot size={24} />
                     Location
                   </Link>
                   <Link
@@ -161,7 +165,10 @@ function SideBar() {
                         : "text-dark-600"
                     }`}
                   >
-                    <FaListAlt size={24} />
+                    <FaListCheck
+                      size={24}
+                      className="text-surface-100 bg-dark-600 p-1 rounded-md"
+                    />
                     Class Scheduling
                   </Link>
                 </div>
