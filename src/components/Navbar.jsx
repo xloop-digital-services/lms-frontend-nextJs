@@ -159,7 +159,7 @@ export default function Navbar() {
                     onClick={toggleDropdown}
                     ref={dropdownRef}
                   >
-                    <div className="w-[50px] h-[50px] rounded-full mr-2 flex justify-center items-center text-surface-100 bg-blue-300">
+                    <div className="w-[50px] h-[50px] uppercase rounded-full mr-2 flex justify-center items-center text-surface-100 bg-blue-300">
                       {firstWord}
                       {/* <Image
                         src={userIcon}
@@ -173,7 +173,7 @@ export default function Navbar() {
                     <div>
                       <div className="flex justify-end items-center">
                         <div className={``} style={{ color: "#07224D" }}>
-                          <p className="text-md">{`${user?.first_name} ${user?.last_name}`}</p>
+                          <p className="text-md capitalize">{`${user?.first_name} ${user?.last_name}`}</p>
                           <p className="text-xs uppercase">{user?.registration_id}</p>
                         </div>
                         <div className={`ml-1`} onClick={toggleDropdown}>

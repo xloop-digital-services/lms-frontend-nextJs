@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useSidebar } from "@/providers/useSidebar";
 import StudentAttendence from "@/components/StudentAttendence";
 import CourseHead from "@/components/CourseHead";
-import { getStudentAttendance, getStudentsByCourseId } from "@/api/route";
+import { getStudentsByCourseId } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
 import { CircularProgress } from "@mui/material";
 import AdminAttendance from "@/components/AdminAttendance";
@@ -43,29 +43,29 @@ export default function Page({ params }) {
     fetchAttendance();
   }, []);
 
-  useEffect(() => {
-    if (!regId) return;
-    async function fetchAttendance() {
-      const response = await getStudentAttendance(courseId, regId);
-      setLoader(true);
-      try {
-        if (response.status === 200) {
-          setAttendanceStudent(response.data);
-          setLoader(false);
-          console.log(attendance);
-          console.log(response.data);
-        } else {
-          console.error("Failed to fetch courses", response.status);
-          setLoader(false);
-        }
-      } catch (error) {
-        console.log("error", error);
-        setLoader(false);
-      }
-    }
+  // useEffect(() => {
+  //   if (!regId) return;
+  //   async function fetchAttendance() {
+  //     const response = await getStudentAttendance(courseId, regId);
+  //     setLoader(true);
+  //     try {
+  //       if (response.status === 200) {
+  //         setAttendanceStudent(response.data);
+  //         setLoader(false);
+  //         console.log(attendance);
+  //         console.log(response.data);
+  //       } else {
+  //         console.error("Failed to fetch courses", response.status);
+  //         setLoader(false);
+  //       }
+  //     } catch (error) {
+  //       console.log("error", error);
+  //       setLoader(false);
+  //     }
+  //   }
 
-    fetchAttendance();
-  }, [regId]);
+  //   fetchAttendance();
+  // }, [regId]);
   return (
     <>
       {loader ? (

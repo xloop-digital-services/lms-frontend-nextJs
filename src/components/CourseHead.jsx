@@ -18,7 +18,7 @@ const CourseHead = ({
   title,
   program,
   haveStatus,
-  setFetch,
+  // setFetch,
 }) => {
   const { userData } = useAuth();
   const isStudent = userData?.Group === "student";
@@ -26,7 +26,7 @@ const CourseHead = ({
   // const session = userData?.session;
   // const session = userData?.session?.find((s) => s.course.id === id);
   const session = userData?.session;
-  const instructorName =
+  const studentInstructorName =
     session?.length > 0 ? session[0].instructor?.instructor_name : null;
 
   console.log(session);
@@ -39,7 +39,7 @@ const CourseHead = ({
     try {
       if (response.status === 200) {
         setCourseData(response?.data?.data);
-        setFetch(true);
+        // setFetch(true);
         console.log(courseData);
       } else {
         console.error("Failed to fetch user, status:", response.status);
@@ -57,7 +57,7 @@ const CourseHead = ({
         const program = response?.data?.data;
         setProgramData(program);
         // console.log(program);
-        setFetch(true);
+        // setFetch(true);
         // if (program.courses && program.courses.length > 0) {
         //   const courses = await Promise.all(
         //     program.courses.map(async (courseId) => {
@@ -82,6 +82,7 @@ const CourseHead = ({
     program === "course" && fetchCoursesById();
     program === "program" && fetchProgramById();
   }, [isEditing]);
+
 
   // console.log(progress);
 
@@ -170,8 +171,13 @@ const CourseHead = ({
         </div>
       )}
 
-      {program === "program" ? null : (
-        <p className="flex items-center"> Instructor: {instructorName}</p>
+      {program === "program"  ? null : (
+        isStudent &&
+        <p className="flex items-center">
+          {" "}
+          Instructor:{" "}
+          { studentInstructorName }
+        </p>
       )}
       {progress ? <Progress progress={progress} /> : null}
 
