@@ -47,14 +47,12 @@ export default function Page({ params }) {
   }, []);
 
   useEffect(() => {
-    // if (!regId) return;
     async function fetchAttendance() {
-      const response = await getStudentAttendance(courseId);
       setLoader(true);
       try {
+        const response = await getStudentAttendance(courseId);
         if (response.status === 200) {
-
-          console.log('student attendence', response.data.data.attendance)
+          console.log("student attendence", response.data.data.attendance);
           setAttendanceStudent(response.data.data.attendance);
           setLoader(false);
           console.log(attendance);
@@ -68,10 +66,10 @@ export default function Page({ params }) {
         setLoader(false);
       }
     }
-
-    fetchAttendance();
+    if (isStudent) {
+      fetchAttendance();
+    }
   }, [courseId]);
-
 
   return (
     <>

@@ -5,6 +5,7 @@ import {
   getStudentAttendanceForAdmin,
   getStudentsByCourseId,
   listAllSessions,
+  listSessionByCourseId,
   markAttendanceByCourseId,
 } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
@@ -26,7 +27,7 @@ export default function GetAttendanceAdminTable({
   const [sessions, setSessions] = useState([]);
   const group = userData?.Group;
   const userId = userData?.user_data?.id;
-  // console.log(group);
+  // console.log(courseId,'course id');
   // console.log(userData);
   const today = new Date();
   const day = String(today.getDate()).padStart(2, "0");
@@ -144,8 +145,8 @@ export default function GetAttendanceAdminTable({
 
   const fetchAllSessions = async () => {
     try {
-      const response = await listAllSessions();
-      console.log('sessions', response.data.data)
+      const response = await listSessionByCourseId(courseId);
+      // console.log('sessions in attendence', response.data.data)
       setSessions(response?.data?.data)
     } catch (error) {
       console.log('fetching sessions', error)
@@ -174,7 +175,7 @@ export default function GetAttendanceAdminTable({
     fetchAllSessions()
   },[])
   useEffect(() => {
-    if (group === "admin") {
+    if (group === "admin" && selectedSessionId) {
       handleAdminStudentAttendence();
     }
   }, [selectedSessionId]);

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useSidebar } from "@/providers/useSidebar";
 import StudentAttendence from "@/components/StudentAttendence";
 import CourseHead from "@/components/CourseHead";
-import { getStudentAttendance, getStudentsByCourseId } from "@/api/route";
+import { getStudentsByCourseId } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
 import { CircularProgress } from "@mui/material";
 import AdminAttendance from "@/components/AdminAttendance";

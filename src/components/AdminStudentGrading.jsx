@@ -86,7 +86,8 @@ const AdminStudentGrading = ({ courseId }) => {
 
   const fetchAllSessions = async () => {
     try {
-      const response = await listAllSessions();
+      const response = await listSessionByCourseId(courseId);
+      // console.log('admin sessions', response.data )
       setAdminSessions(response.data.data);
     } catch (error) {
       console.log("fetching sessions", error);
