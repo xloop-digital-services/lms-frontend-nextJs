@@ -68,9 +68,9 @@ const StudentAttendence = ({ attendance, loader }) => {
                         <td className="px-12 py-2 whitespace-nowrap flex w-full text-center justify-center items-center text-sm text-surface-100">
                           <p
                             className={`w-[110px] text-center px-4 py-2 text-[12px] rounded-lg ${
-                              att.status === "Present"
+                              att.status === 0
                                 ? "bg-mix-300 w-110px]"
-                                : att.status === "Late"
+                                : att.status === "2"
                                 ? "bg-mix-500 text-[#fff] w-[110px]"
                                 : "bg-mix-200 w-110px]"
                             }`}

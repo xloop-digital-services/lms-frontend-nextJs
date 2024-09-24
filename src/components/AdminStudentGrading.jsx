@@ -4,10 +4,12 @@ import {
   getAttendanceBySessionId,
   getInstructorSessions,
   getStudentsByCourseId,
+  listAllSessions,
   listSessionByCourseId,
   markAttendanceByCourseId,
 } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
+import { Try } from "@mui/icons-material";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
@@ -17,7 +19,8 @@ const AdminStudentGrading = ({ courseId }) => {
   const [getAttendance, setGetAttendance] = useState([]);
   const [selectedAttendance, setSelectedAttendance] = useState({});
   const [loader, setLoader] = useState(false);
-  const [sessions, setSessions] = useState([]);
+  const [instructorSessions, setInstructorSessions] = useState([]);
+  const [adminSessions, setAdminSessions] = useState([]);
   const [id, setId] = useState();
   const group = userData?.Group;
   const isAdmin = userData?.Group === "admin";
@@ -26,6 +29,7 @@ const AdminStudentGrading = ({ courseId }) => {
 
   const [selectedSessionId, setSelectedSessionId] = useState("");
   const handleChange = (e) => {
+    console.log('chal rahi he', e.target.value)
     setSelectedSessionId(e.target.value);
   };
 
@@ -34,7 +38,7 @@ const AdminStudentGrading = ({ courseId }) => {
     setLoader(true);
     try {
       if (response.status === 200) {
-        setSessions(response.data); // Store the sessions data
+        setInstructorSessions(response.data); // Store the sessions data
         setLoader(false);
       } else {
         console.error("Failed to fetch sessions, status:", response.status);
@@ -49,7 +53,8 @@ const AdminStudentGrading = ({ courseId }) => {
       const response = await getAttendanceBySessionId(selectedSessionId);
       if (response.status === 200) {
         // Assuming response.data is the object returned by the API
-        setAttendance(response.data); // Set attendance directly to the data array
+        console.log("attendence in students", response.data.data.students);
+        setAttendance(response.data.data.students); // Set attendance directly to the data array
       } else {
         console.error("Failed to fetch attendance, status:", response.status);
       }
@@ -58,31 +63,44 @@ const AdminStudentGrading = ({ courseId }) => {
     }
   }
 
-  async function fetchStudentsbySession() {
-    try {
-      const response = await listSessionByCourseId(selectedSessionId);
-      if (response.status === 200) {
-        // const initialAttendance = response.data.reduce((acc, student) => {
-        //   acc[student.registration_id] = 0;
-        //   return acc;
-        // }, {});
+  // async function fetchStudentsbySession() {
+  //   try {
+  //     const response = await listSessionByCourseId(selectedSessionId);
+  //     if (response.status === 200) {
+  //       // const initialAttendance = response.data.reduce((acc, student) => {
+  //       //   acc[student.registration_id] = 0;
+  //       //   return acc;
+  //       // }, {});
 
-        setAttendance(response?.data?.data);
-        console.log(response.data.data);
-        // setSelectedAttendance(initialAttendance);
-        // console.log(response.data);
-      } else {
-        console.error("Failed to fetch attendance, status:", response.status);
-      }
+  //       setAttendance(response?.data?.data);
+  //       console.log(response.data.data);
+  //       // setSelectedAttendance(initialAttendance);
+  //       // console.log(response.data);
+  //     } else {
+  //       console.error("Failed to fetch attendance, status:", response.status);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching attendance:", error);
+  //   }
+  // }
+
+  const fetchAllSessions = async () => {
+    try {
+      const response = await listAllSessions();
+      setAdminSessions(response.data.data);
     } catch (error) {
-      console.error("Error fetching attendance:", error);
+      console.log("fetching sessions", error);
     }
-  }
+  };
 
   useEffect(() => {
     fetchAttendanceAdmin();
-    fetchStudentsbySession();
-    fetchSessions();
+    // fetchStudentsbySession();
+    if (isInstructor) {
+      fetchSessions();
+    } else {
+      fetchAllSessions();
+    }
   }, [selectedSessionId]);
 
   return (
@@ -103,13 +121,24 @@ const AdminStudentGrading = ({ courseId }) => {
           >
             Select a session
           </option>
-          {Array.isArray(sessions.data) &&
-            sessions.data.map((session) => (
+          {Array.isArray(instructorSessions.data) ? (
+            instructorSessions.data.map((session) => (
               <option key={session.session_id} value={session.session_id}>
                 {session.location} - {session.course} - {session.no_of_student}{" "}
                 - {session.start_time} - {session.end_time}
               </option>
-            ))}
+            ))
+          ) : adminSessions && adminSessions.length > 0 ? (
+            adminSessions.map((session) => (
+              <option key={session.id} value={session.id}>
+                {session.location_name} - {session.course.name} -{" "}
+                {session.no_of_student} - {session.start_time} -{" "}
+                {session.end_time}
+              </option>
+            ))
+          ) : (
+            <p className="text-center text-sm text-dark-300">no session found</p>
+          )}
         </select>
       </div>
       <div className="-m-1.5 overflow-x-auto">
@@ -147,7 +176,10 @@ const AdminStudentGrading = ({ courseId }) => {
                     })
                   ) : (
                     <tr>
-                      <td colSpan="6" className="text-center py-4">
+                      <td
+                        colSpan="6"
+                        className="text-center text-sm text-dark-300 py-4"
+                      >
                         No students found
                       </td>
                     </tr>

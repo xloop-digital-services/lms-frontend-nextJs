@@ -371,16 +371,29 @@ export const updateExamGrading = async (examData) => {
 };
 
 //get student attendance
-export const getStudentAttendance = async (courseId, regId) => {
+// export const getStudentAttendance = async (courseId, regId) => {
+//   try {
+//     const response = await axiosInstance.get(
+//       `/attendance/course/${courseId}/user/${regId}/`
+//     );
+//     return response;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+
+// attendance/student/<int:course_id>/
+export const getStudentAttendance = async (courseId) => {
   try {
     const response = await axiosInstance.get(
-      `/attendance/course/${courseId}/user/${regId}/`
+      `/attendance/student/${courseId}/`
     );
     return response;
   } catch (error) {
     throw error;
   }
 };
+
 
 //get overall course progress percentage
 export const getProgressForCourse = async (courseId) => {
@@ -1061,6 +1074,27 @@ export const getAttendanceBySessionId = async (sessionId) => {
     throw error;
   }
 };
+export const getAttendanceBySessionIdnCourseId = async (sessionId, courseId, date) => {
+  try {
+    const response = await axiosInstance.get(
+      `/attendance/instructor/${sessionId}/${courseId}/?date=${date}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const postAttendanceBySessionId = async (sessionId, courseId, attendanceArray) => {
+  try {
+    const response = await axiosInstance.post(
+      `/attendance/instructor/${sessionId}/${courseId}/`, attendanceArray
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 
 //post attendance by courseId
 export const markAttendanceByCourseId = async (courseId, attendance) => {
@@ -1074,6 +1108,16 @@ export const markAttendanceByCourseId = async (courseId, attendance) => {
     throw error;
   }
 };
+
+export const getStudentAttendanceForAdmin = async (sessionId) => {
+  try {
+    const response = await  axiosInstance.get(`admin/attendance/${sessionId}/`)
+    return response;
+
+  } catch (error) {
+    throw error;
+  }
+}
 
 //get calendar (sessions)
 export const getCalendarSessions = async (userId) => {

@@ -202,7 +202,7 @@ function SideBar() {
                 </Link>
 
                 {/* <div className={`${isAdmin && "hidden"}`}> */}
-                {/* <Link
+                <Link
                   href="/attendance"
                   className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40  ${
                     isLinkActive("/attendance")
@@ -212,7 +212,7 @@ function SideBar() {
                 >
                   <FaClipboard size={24} />
                   Attendance
-                </Link> */}
+                </Link>
                 <Link
                   href="/quiz"
                   className={`p-4  flex gap-4 mt-2 rounded-xl hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
@@ -268,7 +268,7 @@ function SideBar() {
                   <FaClipboardCheck size={24} />
                   Grading
                 </Link>
-                {/* {!isStudent && (
+                {!isStudent && (
                   <Link
                     href="/students"
                     className={`p-4 flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
@@ -280,7 +280,7 @@ function SideBar() {
                     <FaUsers size={24} />
                     Students
                   </Link>
-                )} */}
+                )}
                 {/* <Link
                   href="/calendar"
                   className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
