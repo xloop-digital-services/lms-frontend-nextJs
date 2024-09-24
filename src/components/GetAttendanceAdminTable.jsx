@@ -34,7 +34,7 @@ export default function GetAttendanceAdminTable({
   const month = String(today.getMonth() + 1).padStart(2, "0");
   const year = today.getFullYear();
   const formattedDate = `${year}-${month}-${day}`;
-  const [selectedSessionId, setSelectedSessionId] = useState(null)
+  const [selectedSessionId, setSelectedSessionId] = useState(null);
 
   // console.log(group, userId);
   // async function fetchSessions() {
@@ -147,11 +147,11 @@ export default function GetAttendanceAdminTable({
     try {
       const response = await listSessionByCourseId(courseId);
       // console.log('sessions in attendence', response.data.data)
-      setSessions(response?.data?.data)
+      setSessions(response?.data?.data);
     } catch (error) {
-      console.log('fetching sessions', error)
+      console.log("fetching sessions", error);
     }
-  }
+  };
 
   const handleChange = (e) => {
     const session_id = e.target.value;
@@ -164,16 +164,21 @@ export default function GetAttendanceAdminTable({
     try {
       const response = await getStudentAttendanceForAdmin(selectedSessionId);
       console.log("response for admin attendence", response.data.data);
-      setGetAttendance(response.data.data);
+      setGetAttendance(response.data.data.attendance);
+      const initialAttendance = response.data.reduce((acc, student) => {
+        acc[student.student] = 0;
+        return acc;
+      }, {});
+      setSelectedAttendance(initialAttendance);
     } catch (error) {
     } finally {
       setLoader(false);
     }
   };
 
-  useEffect(()=>{
-    fetchAllSessions()
-  },[])
+  useEffect(() => {
+    fetchAllSessions();
+  }, []);
   useEffect(() => {
     if (group === "admin" && selectedSessionId) {
       handleAdminStudentAttendence();
@@ -198,13 +203,15 @@ export default function GetAttendanceAdminTable({
           >
             Select a session
           </option>
-           {sessions && sessions.length > 0 &&
+          {sessions &&
+            sessions.length > 0 &&
             sessions.map((session) => (
               <option key={session.id} value={session.id}>
-                {session.location_name} - {session.course.name} - {session.no_of_student}{" "}
-                - {session.start_time} - {session.end_time}
+                {session.location_name} - {session.course.name} -{" "}
+                {session.no_of_student} - {session.start_time} -{" "}
+                {session.end_time}
               </option>
-            ))} 
+            ))}
         </select>
       </div>
       <div className="-m-1.5 overflow-x-auto">
@@ -229,14 +236,14 @@ export default function GetAttendanceAdminTable({
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-dark-200 dark:divide-gray-700 overflow-y-scroll scrollbar-webkit">
-                  {getAttendance.length > 0 ? (
+                  {getAttendance && getAttendance.length > 0 ? (
                     getAttendance.map((att, index) => (
                       <tr key={index}>
                         <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
-                          {att.student || att.registration_id}
+                          {att.student}
                         </td>
                         <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
-                          {att.full_name || att.student_name}
+                          {att.student_name}
                         </td>
                         <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
                           {att.date}
@@ -252,64 +259,10 @@ export default function GetAttendanceAdminTable({
                                 name={`attendance-${att.id}`}
                                 value={status}
                                 checked={
-                                  selectedAttendance[att.student] ===
-                                  parseInt(status)
-                                }
-                                onChange={() =>
-                                  handleAttendanceChange(
-                                    att.registration_id,
-                                    parseInt(status)
-                                  )
+                                  att.status === parseInt(status)
                                 }
                                 className="w-4 h-4 rounded-full border-2 border-[#03A1D8] group-hover:cursor-pointer"
-                                disabled={isAttendancePosted}
-                              />
-                              <p className="group-hover:cursor-pointer">
-                                {status === "0"
-                                  ? "P"
-                                  : status === "1"
-                                  ? "A"
-                                  : "L"}
-                              </p>
-                            </div>
-                          ))}
-                        </td>
-                      </tr>
-                    ))
-                  ) : attendance.length > 0 ? (
-                    attendance.map((att, index) => (
-                      <tr key={index}>
-                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
-                          {att.registration_id}
-                        </td>
-                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
-                          {att.full_name}
-                        </td>
-                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
-                          {att.date}
-                        </td>
-                        <td className="px-6 py-4 gap-3 flex text-center justify-center items-center whitespace-nowrap text-sm text-gray-800">
-                          {["0", "1", "2"].map((status) => (
-                            <div
-                              key={status}
-                              className="space-x-2 flex items-center group"
-                            >
-                              <input
-                                type="radio"
-                                name={`attendance-${att.registration_id}`}
-                                value={status}
-                                checked={
-                                  selectedAttendance[att.registration_id] ===
-                                  parseInt(status)
-                                }
-                                onChange={() =>
-                                  handleAttendanceChange(
-                                    att.registration_id,
-                                    parseInt(status)
-                                  )
-                                }
-                                className="w-4 h-4 rounded-full border-2 border-[#03A1D8] group-hover:cursor-pointer"
-                                disabled={isAttendancePosted}
+                                disabled={true}  
                               />
                               <p className="group-hover:cursor-pointer">
                                 {status === "0"
@@ -324,14 +277,62 @@ export default function GetAttendanceAdminTable({
                       </tr>
                     ))
                   ) : (
+                    // : attendance.length > 0 ? (
+                    //   attendance.map((att, index) => (
+                    //     <tr key={index}>
+                    //       <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                    //         {att.registration_id}
+                    //       </td>
+                    //       <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                    //         {att.full_name}
+                    //       </td>
+                    //       <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                    //         {att.date}
+                    //       </td>
+                    //       <td className="px-6 py-4 gap-3 flex text-center justify-center items-center whitespace-nowrap text-sm text-gray-800">
+                    //         {["0", "1", "2"].map((status) => (
+                    //           <div
+                    //             key={status}
+                    //             className="space-x-2 flex items-center group"
+                    //           >
+                    //             <input
+                    //               type="radio"
+                    //               name={`attendance-${att.registration_id}`}
+                    //               value={status}
+                    //               checked={
+                    //                 selectedAttendance[att.registration_id] ===
+                    //                 parseInt(status)
+                    //               }
+                    //               onChange={() =>
+                    //                 handleAttendanceChange(
+                    //                   att.registration_id,
+                    //                   parseInt(status)
+                    //                 )
+                    //               }
+                    //               className="w-4 h-4 rounded-full border-2 border-[#03A1D8] group-hover:cursor-pointer"
+                    //               disabled={isAttendancePosted}
+                    //             />
+                    //             <p className="group-hover:cursor-pointer">
+                    //               {status === "0"
+                    //                 ? "P"
+                    //                 : status === "1"
+                    //                 ? "A"
+                    //                 : "L"}
+                    //             </p>
+                    //           </div>
+                    //         ))}
+                    //       </td>
+                    //     </tr>
+                    //   ))
+                    // )
                     <tr>
-                    <td
-                      colSpan="8"
-                      className="text-center py-4 text-dark-400"
-                    >
-                      no data found
-                    </td>
-                  </tr>
+                      <td
+                        colSpan="8"
+                        className="text-center py-4 text-dark-400"
+                      >
+                        no data found
+                      </td>
+                    </tr>
                   )}
                 </tbody>
               </table>

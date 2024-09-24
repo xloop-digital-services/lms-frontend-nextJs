@@ -794,6 +794,17 @@ export const getInstructorSessions = async (userId, group) => {
   }
 };
 
+export const getInstructorSessionsbyCourseId = async (userId, group, courseID) => {
+  try {
+    const response = await axiosInstance.get(
+      `/user-sessions/${userId}/?group_name=${group}&course_id=${courseID}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 //get all skills
 export const getAllSkills = async () => {
   try {

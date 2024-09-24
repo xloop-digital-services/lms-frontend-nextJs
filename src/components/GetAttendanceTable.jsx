@@ -4,6 +4,7 @@ import {
   getAttendanceBySessionId,
   getAttendanceBySessionIdnCourseId,
   getInstructorSessions,
+  getInstructorSessionsbyCourseId,
   getStudentsByCourseId,
   markAttendanceByCourseId,
   postAttendanceBySessionId,
@@ -36,7 +37,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   const [toggleMark, setToggleMark] = useState(false);
   // console.log(group, userId);
   async function fetchSessions() {
-    const response = await getInstructorSessions(userId, group);
+    const response = await getInstructorSessionsbyCourseId(userId, group, courseId);
     setLoader(true);
     try {
       if (response.status === 200) {
