@@ -98,6 +98,7 @@ export default function Page({ params }) {
             />
             {isStudent ? (
               <StudentAttendence
+                isAdmin={isAdmin}
                 attendance={attendanceStudent}
                 loader={loader}
               />
