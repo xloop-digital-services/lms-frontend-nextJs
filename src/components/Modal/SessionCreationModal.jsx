@@ -40,6 +40,8 @@ const SessionCreationModal = ({
   const [isCourseSelected, setIsCourseSelected] = useState(false);
   const [loadingCourses, setLoadingCourses] = useState(false);
   const [selectedDays, setSelectedDays] = useState([]);
+  const [startDate, setstartDate] = useState(null);
+  const [endDate, setendDate] = useState(null);
   const mouseClick = useRef(null);
   const modalClose = useRef(null);
 
@@ -57,6 +59,8 @@ const SessionCreationModal = ({
       if (
         selectedLocation &&
         // selectedBatch &&
+        startDate &&
+        endDate &&
         selectedCourseName &&
         capacity &&
         startTime &&
@@ -127,6 +131,34 @@ const SessionCreationModal = ({
 
     handleCoursesList();
   }, []);
+
+  const handleStartDate = (event) => {
+    // Check if the date is a valid Date object
+    // if (date instanceof Date && !isNaN(date)) {
+    //   const formattedDate = date.toISOString().split("T")[0]; // Extract the date part
+    //   setstartDate(formattedDate); // Set the start date
+    //   // console.log("start date,", date);
+    //   console.log("formated start date", formattedDate);
+    // } else {
+    //   toast.error("Invalid date selected");
+    setstartDate(event.target.value);
+    // }
+  };
+
+  const handleEndDateChange = (event) => {
+    // if (date instanceof Date && !isNaN(date)) {
+    //   const formattedDate = date.toISOString().split("T")[0]; // Extract the date part
+    //   setendDate(formattedDate); // Set the end date
+    //   // console.log('end date,', date)
+    //   console.log("formated end date", formattedDate);
+    setendDate(event.target.value);
+    // Check if end date is earlier than start date
+    if (startDate && event.target.value <= startDate) {
+      setErrorMessage("End date should be greater than start date");
+    } else {
+      setErrorMessage("");
+    }
+  };
 
   const handleStartTimeChange = (event) => {
     // Get the value from the input field
@@ -437,6 +469,42 @@ const SessionCreationModal = ({
               </div>
             </div>
             <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
+              {/* Start Date Input */}
+              <div className="space-y-2 text-[15px] w-full">
+                <p>Start Date</p>
+                <div className="relative w-full">
+                  <input
+                    type="date"
+                    value={startDate}
+                    onChange={handleStartDate}
+                    className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
+                    placeholder="Select start date"
+                  />
+                  {/* <FaCalendar className="absolute right-3 top-1/2 transform -translate-y-1/2 text-dark-400 pointer-events-none" /> */}
+                </div>
+              </div>
+
+              {/* End Date Input */}
+              <div className="space-y-2 text-[15px] w-full">
+                <p>End Date</p>
+                <div className="relative w-full">
+                  <input
+                    type="date"
+                    value={endDate}
+                    onChange={handleEndDateChange}
+                    className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
+                    placeholder="Select end date"
+                  />
+                  {/* <FaCalendar className="absolute right-3 top-1/2 transform -translate-y-1/2 text-dark-400 pointer-events-none" /> */}
+                </div>
+                {errorMessage && (
+                  <p className="text-[#D84848] text-[12px] mt-2">
+                    {errorMessage}
+                  </p>
+                )}
+              </div>
+            </div>
+            <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
               {/* Start Time Input */}
               <div className="space-y-2 text-[15px] w-full">
                 <p>Start Time</p>
@@ -447,7 +515,6 @@ const SessionCreationModal = ({
                     onChange={handleStartTimeChange}
                     className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
                     placeholder="Select start time"
-                    required
                   />
                 </div>
               </div>
@@ -462,7 +529,6 @@ const SessionCreationModal = ({
                     onChange={handleEndTimeChange}
                     className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
                     placeholder="Select end time"
-                    required
                   />
                 </div>
                 {errorMessage && (
@@ -472,6 +538,7 @@ const SessionCreationModal = ({
                 )}
               </div>
             </div>
+
             <div className="flex flex-col gap-3 mx-auto  w-full">
               <div className="space-y-2 text-[15px] w-full">
                 <p>Week Days</p>

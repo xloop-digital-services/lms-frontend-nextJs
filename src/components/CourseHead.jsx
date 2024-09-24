@@ -7,7 +7,7 @@ import { FaEdit, FaTimes } from "react-icons/fa";
 
 const CourseHead = ({
   rating,
-  // instructorName,
+  instructorName,
   id,
   progress,
   name,
@@ -26,7 +26,7 @@ const CourseHead = ({
   // const session = userData?.session;
   // const session = userData?.session?.find((s) => s.course.id === id);
   const session = userData?.session;
-  const instructorName =
+  const studentInstructorName =
     session?.length > 0 ? session[0].instructor?.instructor_name : null;
 
   console.log(session);
@@ -171,7 +171,11 @@ const CourseHead = ({
       )}
 
       {program === "program" ? null : (
-        <p className="flex items-center"> Instructor: {instructorName}</p>
+        <p className="flex items-center">
+          {" "}
+          Instructor:{" "}
+          {studentInstructorName ? studentInstructorName : instructorName}
+        </p>
       )}
       {progress ? <Progress progress={progress} /> : null}
 
