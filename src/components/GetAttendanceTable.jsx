@@ -37,7 +37,11 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   const [toggleMark, setToggleMark] = useState(false);
   // console.log(group, userId);
   async function fetchSessions() {
-    const response = await getInstructorSessionsbyCourseId(userId, group, courseId);
+    const response = await getInstructorSessionsbyCourseId(
+      userId,
+      group,
+      courseId
+    );
     setLoader(true);
     try {
       if (response.status === 200) {
@@ -84,12 +88,12 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
         date
       );
       if (response.status === 200) {
-        const initialAttendance = response.data.reduce((acc, student) => {
+        console.log("attendece per session", response.data);
+        setAttendance(response.data.data.attendance);
+        const initialAttendance = response.data.data.attendance.reduce((acc, student) => {
           acc[student.student] = 0;
           return acc;
         }, {});
-        console.log("attendece per session", response.data);
-        setAttendance(response.data.data.attendance);
         // console.log(response.data.data);
         setSelectedAttendance(initialAttendance);
         // console.log(response.data);
@@ -190,23 +194,25 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   }, []);
 
   useEffect(() => {
-    fetchAttendanceIns();
+    if (date && selectedSession) {
+      fetchAttendanceIns();
+    }
   }, [courseId, selectedSession, date]);
 
-  useEffect(() => {
-    fetchAttendance();
-  }, [selectedSession]);
+  // useEffect(() => {
+  //   fetchAttendance();
+  // }, [selectedSession]);
 
   const handleDateChange = (e) => {
     const selectedDate = e.target.value; // Input date is already in YYYY-MM-DD format
     console.log(selectedDate);
     setDate(selectedDate); // This will correctly store the date in the state
-    fetchAttendanceIns();
+    // fetchAttendanceIns();
   };
 
   const handleCheckboxChange = (e) => {
     setToggleMark(e.target.checked);
-    setDate('')
+    setDate("");
   };
   // console.log(selectedSessionId);
 
@@ -253,7 +259,11 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
               value={date}
               onChange={handleDateChange}
               disabled={toggleMark} // Disable when toggleMark is true
-              className={ `${toggleMark ? 'text-dark-300 cursor-not-allowed':'text-[#424b55] cursor-default'} border border-dark-300  outline-none px-3 py-2 my-2 rounded-lg w-full`}
+              className={`${
+                toggleMark
+                  ? "text-dark-300 cursor-not-allowed"
+                  : "text-[#424b55] cursor-default"
+              } border border-dark-300  outline-none px-3 py-2 my-2 rounded-lg w-full`}
               placeholder="Select start date"
             />
           </div>
@@ -315,14 +325,9 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                                   selectedAttendance[att.student] ===
                                   parseInt(status)
                                 }
-                                onChange={() =>
-                                  handleAttendanceChange(
-                                    att.student,
-                                    parseInt(status)
-                                  )
-                                }
+                                disabled={true}
                                 className="w-4 h-4 rounded-full border-2 border-[#03A1D8] group-hover:cursor-pointer"
-                                disabled={isAttendancePosted}
+                                // disabled={isAttendancePosted}
                               />
                               <p className="group-hover:cursor-pointer">
                                 {status === "0"
@@ -336,7 +341,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                         </td>
                       </tr>
                     ))
-                  ) : toggleMark && 
+                  ) : toggleMark &&
                     Array.isArray(getAttendance) &&
                     getAttendance.length > 0 ? (
                     getAttendance.map((att, index) => (
