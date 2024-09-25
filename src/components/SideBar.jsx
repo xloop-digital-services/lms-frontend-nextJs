@@ -281,17 +281,19 @@ function SideBar() {
                     Students
                   </Link>
                 )}
-                <Link
-                  href="/calendar"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
-                    isLinkActive("/calendar")
-                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
-                      : "text-dark-600"
-                  }`}
-                >
-                  <FaCalendar size={24} />
-                  Calendar
-                </Link>
+                {!isAdmin && (
+                  <Link
+                    href="/calendar"
+                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
+                      isLinkActive("/calendar")
+                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
+                        : "text-dark-600"
+                    }`}
+                  >
+                    <FaCalendar size={24} />
+                    Calendar
+                  </Link>
+                )}
               </div>
               <div className="flex flex-col">
                 <Link
