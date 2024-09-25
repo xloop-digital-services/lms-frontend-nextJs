@@ -246,7 +246,7 @@ export default function ApplicationForm() {
       !contactNumber ||
       !selectedCity ||
       !birthDate ||
-      !experience ||
+      (!experience && selectedRole !== "student") ||
       !locationId
     ) {
       toast.error("Please properly fill out all the fields");
@@ -265,12 +265,15 @@ export default function ApplicationForm() {
         group_name: selectedRole,
         year: currentYear,
         date_of_birth: birthDate,
-        years_of_experience: parseInt(experience),
-        resume: file,
         location: locationId,
         program: programId,
-        required_skills: skillId,
       };
+
+      if (selectedRole !== "student") {
+        data.years_of_experience = parseInt(experience);
+        data.resume = file;
+        data.required_skills = skillId;
+      }
 
       const response = await submitApplication(data);
       router.push("/application/submitted");
@@ -646,160 +649,6 @@ export default function ApplicationForm() {
                 </div>
               </div>
             ) : (
-              //   <div className="space-y-4">
-              //     {/* If no role selected, show all fields */}
-              //     <div className="space-y-2 text-[15px] w-full">
-              //       <p>
-              //         Programs{" "}
-              //         <span className="text-[12px] text-dark-400">
-              //           (atleast 3)
-              //         </span>{" "}
-              //       </p>
-              //       <button
-              //         onClick={toggleProgramOpen}
-              //         className={`${
-              //           selectedProgram.length === 0
-              //             ? "text-[#92A7BE] py-3 "
-              //             : "text-[#424b55] py-2"
-              //         } flex justify-between items-center w-full hover:text-[#0e1721] px-4 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
-              //       >
-              //         {selectedProgram.length > 0 ? (
-              //           <div className="flex flex-wrap gap-2">
-              //             {selectedProgram.map((program, index) => (
-              //               <span
-              //                 key={index}
-              //                 className="bg-[#d0e9f888] px-2 py-1 text-blue-300 rounded"
-              //               >
-              //                 {program}
-              //               </span>
-              //             ))}
-              //           </div>
-              //         ) : (
-              //           "Select your programs"
-              //         )}
-              //         <span className="">
-              //           <IoIosArrowDown />
-              //         </span>
-              //       </button>
-
-              //       {isProgramOpen && (
-              //         <div
-              //           ref={cityDown}
-              //           className="absolute z-10 min-w-[560px] max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
-              //         >
-              //           {allPrograms.map((option, index) => (
-              //             <div
-              //               key={index}
-              //               onClick={() => handleProgramSelect(option)}
-              //               className="p-2 cursor-pointer"
-              //             >
-              //               <div
-              //                 className={`px-4 py-1 ${
-              //                   selectedProgram.includes(option.name)
-              //                     ? "bg-[#03a3d838] "
-              //                     : ""
-              //                 } hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg`}
-              //               >
-              //                 {option.name}
-              //               </div>
-              //             </div>
-              //           ))}
-              //         </div>
-              //       )}
-              //     </div>
-              //     <div className="space-y-2 text-[15px] w-full">
-              //       <p>
-              //         Skills{" "}
-              //         <span className="text-[12px] text-dark-400">
-              //           (atleast 3)
-              //         </span>
-              //       </p>
-              //       <button
-              //         onClick={toggleSkillOpen}
-              //         className={`${
-              //           !isSkillSelected
-              //             ? " text-[#92A7BE] py-3"
-              //             : "text-[#424b55] py-2"
-              //         } flex justify-between items-center w-full  hover:text-[#0e1721] px-4  text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
-              //       >
-              //         {selectedSkill.length > 0 ? (
-              //           <div className="flex flex-wrap gap-2">
-              //             {selectedSkill.map((skill, index) => (
-              //               <span
-              //                 key={index}
-              //                 className="bg-[#d0e9f888] px-2 py-1 text-blue-300 rounded"
-              //               >
-              //                 {skill}
-              //               </span>
-              //             ))}
-              //           </div>
-              //         ) : (
-              //           "Select your skills"
-              //         )}
-              //         <span className="">
-              //           <IoIosArrowDown />
-              //         </span>
-              //       </button>
-
-              //       {isSkillOpen && (
-              //         <div
-              //           ref={cityDown}
-              //           className="absolute z-10 min-w-[560px] max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
-              //         >
-              //           {allSkills.map((option, index) => (
-              //             <div
-              //               key={index}
-              //               onClick={() => handleSkillSelect(option)}
-              //               className="p-2 cursor-pointer "
-              //             >
-              //               <div className="px-4 py-1 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
-              //                 {option.name}
-              //               </div>
-              //             </div>
-              //           ))}
-              //         </div>
-              //       )}
-              //     </div>
-              //     <div className="space-y-2 text-[15px] w-full">
-              //       <p>Years of Experience</p>
-              //       <input
-              //         type="number"
-              //         className="border border-dark-300 outline-none p-3 rounded-lg w-full"
-              //         placeholder="Your experience in years"
-              //         inputMode="numeric"
-              //         value={experience}
-              //         min={0}
-              //         onChange={(e) => setExperience(e.target.value)}
-              //       />
-              //     </div>
-              //     <div className={` space-y-2 text-[15px] w-full  `}>
-              //       <p>Resume</p>
-              //       <input
-              //         type="file"
-              //         id="fileInput"
-              //         accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.zip"
-              //         className="hidden"
-              //         onChange={handleBrowse}
-              //       />
-              //       <button
-              //         className="border border-dark-300 p-3 w-full flex items-center text-[15px] rounded-lg "
-              //         onClick={() => document.getElementById("fileInput").click()}
-              //       >
-              //         <span className="flex  w-full text-dark-400 justify-start items-center hover:text-blue-300">
-              //           <span>Upload File</span>
-              //           {/* <span>
-              //             <FaUpload size={15} />
-              //           </span> */}
-              //         </span>
-
-              //         {fileUploaded && (
-              //           <p className="text-[#1ab725] text-[13px] max-w-[350px] truncate border border-[#1ab7245f] p-1 px-4 rounded-lg">
-              //             {fileUploaded} selected
-              //           </p>
-              //         )}
-              //       </button>
-              //     </div>
-              //   </div>
               <></>
             )}
           </div>
