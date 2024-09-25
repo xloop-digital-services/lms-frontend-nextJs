@@ -9,6 +9,7 @@ import useClickOutside from "@/providers/useClickOutside";
 import { userSelectionByAdmin } from "@/api/route";
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
+import { downloadFile } from "@/app/courses/course/[courseId]/page";
 const UserModal = ({
   selectedOption,
   setModal,
@@ -241,15 +242,16 @@ const UserModal = ({
                           </td>
                           <td className="text-center py-2 px-4">
                             {resume ? (
-                              <a
-                                href={resume}
-                                target="_blank"
-                                rel="noopener noreferrer"
+                              <button
+                              onClick={() => downloadFile(resume)}
+                                // href={resume}
+                                // target="_blank"
+                                // rel="noopener noreferrer"
                                 className=" hover:text-blue-300 hover:underline"
                               >
                                 {resume.split("/").pop()}{" "}
                                 {/* Display only the filename */}
-                              </a>
+                              </button>
                             ) : (
                               "-"
                             )}

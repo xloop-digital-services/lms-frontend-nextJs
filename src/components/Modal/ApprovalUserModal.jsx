@@ -16,6 +16,7 @@ import {
   listAllSessions,
 } from "@/api/route";
 import { IoIosArrowDown } from "react-icons/io";
+import { downloadFile } from "@/app/courses/course/[courseId]/page";
 
 const ApprovalUserModal = ({
   selectedOption,
@@ -52,7 +53,7 @@ const ApprovalUserModal = ({
   const [userSkills, setUserSkills] = useState([]);
   const [weekDays, setWeekDays] = useState([]);
   const [studentSessions, setStudentSessions] = useState([]);
-  const [errorUpdate, setErrorUpdate] = useState(false)
+  const [errorUpdate, setErrorUpdate] = useState(false);
 
   const WEEKDAYS = {
     0: ["Monday", "Mon"],
@@ -182,7 +183,7 @@ const ApprovalUserModal = ({
       if (error.message === "Network Error") {
         toast.error(error.message);
       } else if (error.response.status === 400) {
-        setErrorUpdate(!errorUpdate)
+        setErrorUpdate(!errorUpdate);
         toast.error(error.response.data.message);
       } else if (error.response.status === 401) {
         toast.error("your log in token has been expired. Please log in again!");
@@ -366,15 +367,16 @@ const ApprovalUserModal = ({
                 <div className="px-4">
                   {resume ? (
                     <p className="max-w-[140px] truncate pt-[2px] text-[#43434a] text-sm">
-                      <a
-                        href={resume}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <button
+                        onClick={() => downloadFile(resume)}
+                        // href={resume}
+                        // target="_blank"
+                        // rel="noopener noreferrer"
                         className=" hover:text-blue-300 hover:underline"
                       >
                         {resume.split("/").pop()}{" "}
                         {/* Display only the filename */}
-                      </a>
+                      </button>
                     </p>
                   ) : (
                     <p className="text-[12px]  pt-[2px] text-dark-300">

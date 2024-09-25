@@ -24,9 +24,12 @@ const API = process.env.NEXT_PUBLIC_BACKEND_URL;
 //submit user application
 export const submitApplication = async (data) => {
   try {
-    const response = await axiosInstance.post('/applications/', data)
+    const response = await axiosInstance.post("/applications/", data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response;
-    
   } catch (error) {
     throw error;
   }

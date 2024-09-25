@@ -230,7 +230,6 @@ export default function ApplicationForm() {
 
     setBirthDate(e.target.value);
   };
-
   const handleApplicationCreation = async () => {
     setLoadingSubmit(true);
 
@@ -255,27 +254,28 @@ export default function ApplicationForm() {
     }
 
     try {
-      const data = {
-        email: email,
-        first_name: firstName,
-        last_name: lastName,
-        contact: contactNumber,
-        city: selectedCity,
-        city_abb: cityShortName,
-        group_name: selectedRole,
-        year: currentYear,
-        date_of_birth: birthDate,
-        location: locationId,
-        program: programId,
-      };
-
-      if (selectedRole !== "student") {
-        data.years_of_experience = parseInt(experience);
-        data.resume = file;
-        data.required_skills = skillId;
+      const formData = new FormData();
+      formData.append("email", email);
+      formData.append("first_name", firstName);
+      formData.append("last_name", lastName);
+      formData.append("contact", contactNumber);
+      formData.append("city", selectedCity);
+      formData.append("city_abb", cityShortName);
+      formData.append("group_name", selectedRole);
+      formData.append("year", currentYear);
+      formData.append("date_of_birth", birthDate);
+      formData.append("location", [locationId]);
+      if (selectedRole !== "instructor") {
+        formData.append("program", JSON.stringify([programId]));
       }
-
-      const response = await submitApplication(data);
+      if (selectedRole !== "student") {
+        formData.append("years_of_experience", parseInt(experience));
+        formData.append("resume", file);
+        formData.append("required_skills", skillId);
+      }
+      const response = await submitApplication(formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       router.push("/application/submitted");
       console.log("submit", response);
     } catch (error) {
@@ -642,9 +642,11 @@ export default function ApplicationForm() {
                 <div className="my-2 text-[15px] w-full ">
                   <p>Resume</p>
                   <input
+                    required
                     type="file"
                     className="border border-dark-300 text-[#424b55] outline-none px-3 py-3 my-2 rounded-lg w-full"
                     placeholder="Upload your resume"
+                    onChange={(e) => setFile(e.target.files[0])}
                   />
                 </div>
               </div>

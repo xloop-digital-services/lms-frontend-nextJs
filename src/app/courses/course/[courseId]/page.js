@@ -378,7 +378,7 @@ export default function Page({ params }) {
               setIsEditing={setIsEditing}
               // shortDesc={courseData.short_description}
               isEditing={isEditing}
-              title="Edit course"
+              // title="Edit course"
               // chr={`${courseData.theory_credit_hours}+ ${courseData.lab_credit_hours}`}
             />
 
@@ -404,7 +404,6 @@ export default function Page({ params }) {
                           className="sr-only"
                         />
 
-                     
                         <div className="w-11 h-6 bg-blue-600 rounded-full"></div>
                         <div
                           className={`absolute w-4 h-4 bg-blue-300 rounded-full shadow-md transform transition-transform ${
@@ -631,7 +630,7 @@ export default function Page({ params }) {
             <div className="flex flex-col gap-4">
               <div className="flex justify-between items-center max-md:flex-col mt-8 mb-4">
                 <h2 className="text-xl font-exo font-bold">Modules</h2>
-                {isAdmin && (
+                {!isStudent && (
                   <button
                     className=" flex justify-center items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl hover:bg-[#4296b3]"
                     onClick={() => setCreatingModule(!isCreatingModule)}
@@ -707,7 +706,7 @@ export default function Page({ params }) {
                   >
                     <div className="flex justify-between ">
                       <p className="text-dark-300 my-4"> Module {index + 1}</p>
-                      {isAdmin && (
+                      {!isStudent && (
                         <div className="flex">
                           <button
                             className=" flex justify-center mt-4 items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-[#4296b3]"
