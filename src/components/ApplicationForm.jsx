@@ -515,15 +515,15 @@ export default function ApplicationForm() {
               <div className="space-y-2 text-[15px] w-full">
                 <p>
                   Programs{" "}
-                  <span className="text-[12px] text-dark-400">(atleast 3)</span>
+                  <span className="text-[12px] text-dark-400">(atleast 3)</span>{" "}
                 </p>
                 <button
                   onClick={toggleProgramOpen}
                   className={`${
                     selectedProgram.length === 0
-                      ? "text-[#92A7BE] py-3"
+                      ? "text-[#92A7BE] py-3 "
                       : "text-[#424b55] py-2"
-                  } flex justify-between items-center w-full hover:text-[#0e1721] px-4   text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                  } flex justify-between items-center w-full hover:text-[#0e1721] px-4 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
                   {selectedProgram.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
