@@ -21,6 +21,17 @@ const API = process.env.NEXT_PUBLIC_BACKEND_URL;
 //   }
 // };
 
+//submit user application
+export const submitApplication = async (data) => {
+  try {
+    const response = await axiosInstance.post('/applications/', data)
+    return response;
+    
+  } catch (error) {
+    throw error;
+  }
+};
+
 //reset password
 export const resetPassword = async (email) => {
   try {
@@ -393,7 +404,6 @@ export const getStudentAttendance = async (courseId) => {
     throw error;
   }
 };
-
 
 //get overall course progress percentage
 export const getProgressForCourse = async (courseId) => {
@@ -794,7 +804,11 @@ export const getInstructorSessions = async (userId, group) => {
   }
 };
 
-export const getInstructorSessionsbyCourseId = async (userId, group, courseID) => {
+export const getInstructorSessionsbyCourseId = async (
+  userId,
+  group,
+  courseID
+) => {
   try {
     const response = await axiosInstance.get(
       `/user-sessions/${userId}/?group_name=${group}&course_id=${courseID}`
@@ -1085,7 +1099,11 @@ export const getAttendanceBySessionId = async (sessionId) => {
     throw error;
   }
 };
-export const getAttendanceBySessionIdnCourseId = async (sessionId, courseId, date) => {
+export const getAttendanceBySessionIdnCourseId = async (
+  sessionId,
+  courseId,
+  date
+) => {
   try {
     const response = await axiosInstance.get(
       `/attendance/instructor/${sessionId}/${courseId}/?date=${date}`
@@ -1096,10 +1114,15 @@ export const getAttendanceBySessionIdnCourseId = async (sessionId, courseId, dat
   }
 };
 
-export const postAttendanceBySessionId = async (sessionId, courseId, attendanceArray) => {
+export const postAttendanceBySessionId = async (
+  sessionId,
+  courseId,
+  attendanceArray
+) => {
   try {
     const response = await axiosInstance.post(
-      `/attendance/instructor/${sessionId}/${courseId}/`, attendanceArray
+      `/attendance/instructor/${sessionId}/${courseId}/`,
+      attendanceArray
     );
     return response;
   } catch (error) {
@@ -1122,13 +1145,12 @@ export const markAttendanceByCourseId = async (courseId, attendance) => {
 
 export const getStudentAttendanceForAdmin = async (sessionId) => {
   try {
-    const response = await  axiosInstance.get(`admin/attendance/${sessionId}/`)
+    const response = await axiosInstance.get(`admin/attendance/${sessionId}/`);
     return response;
-
   } catch (error) {
     throw error;
   }
-}
+};
 
 //get calendar (sessions)
 export const getCalendarSessions = async (userId) => {
