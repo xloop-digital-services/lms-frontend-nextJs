@@ -53,6 +53,12 @@ export default function ApplicationForm() {
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   const [programError, setPorgramError] = useState("");
 
+  const formatContactInput = (value) => {
+    const numericValue = value.replace(/[^0-9]/g, "");
+    const formattedValue = numericValue.replace(/(\d{4})(\d{1,7})?/, "$1-$2");
+    return formattedValue.slice(0, 12);
+  };
+
   const cityDown = useRef(null);
   useClickOutside(cityDown, () => {
     setIsCityOpen(false);
@@ -302,7 +308,7 @@ export default function ApplicationForm() {
               <input
                 type="email"
                 className="border border-dark-300 outline-none p-3 rounded-lg w-full "
-                placeholder="email address"
+                placeholder="Enter your email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -312,7 +318,7 @@ export default function ApplicationForm() {
               <input
                 type="text"
                 className="border border-dark-300 outline-none p-3 rounded-lg w-full "
-                placeholder="first name"
+                placeholder="Enter your first name"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
               />
@@ -322,7 +328,7 @@ export default function ApplicationForm() {
               <input
                 type="text"
                 className="border border-dark-300 outline-none p-3 rounded-lg w-full "
-                placeholder="last name"
+                placeholder="Enter your last name"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
               />
@@ -337,6 +343,9 @@ export default function ApplicationForm() {
                 pattern="[0-9]{4}-[0-9]{7}"
                 name="contact"
                 value={contactNumber}
+                onInput={(e) => {
+                  e.target.value = formatContactInput(e.target.value);
+                }}
                 onChange={(e) => setContactNumber(e.target.value)}
               />
             </div>
@@ -399,7 +408,7 @@ export default function ApplicationForm() {
                       ))}
                     </div>
                   ) : (
-                    "Select your locations"
+                    "Select your suitable locations"
                   )}
                   <span className="">
                     <IoIosArrowDown />
@@ -448,7 +457,7 @@ export default function ApplicationForm() {
               <input
                 type="text"
                 className="border border-dark-300 outline-none p-3 rounded-lg w-full "
-                placeholder="location code"
+                placeholder="Enter your location code"
                 value={cityShortName}
                 required
               />
@@ -615,11 +624,11 @@ export default function ApplicationForm() {
                     </div>
                   )}
                 </div>
-                <div className="space-y-2 text-[15px] w-full">
+                <div className="my-4 text-[15px] w-full">
                   <p>Years of Experience</p>
                   <input
                     type="number"
-                    className="border border-dark-300 outline-none p-3 rounded-lg w-full"
+                    className="border border-dark-300 text-[#424b55] outline-none px-3 py-3 my-2 rounded-lg w-full"
                     placeholder="Your experience in years"
                     inputMode="numeric"
                     value={experience}
@@ -627,170 +636,171 @@ export default function ApplicationForm() {
                     onChange={(e) => setExperience(e.target.value)}
                   />
                 </div>
-                <div className="space-y-2 text-[15px] w-full">
+                <div className="my-2 text-[15px] w-full ">
                   <p>Resume</p>
                   <input
                     type="file"
-                    className="border border-dark-300 outline-none p-3 rounded-lg w-full"
+                    className="border border-dark-300 text-[#424b55] outline-none px-3 py-3 my-2 rounded-lg w-full"
                     placeholder="Upload your resume"
                   />
                 </div>
               </div>
             ) : (
-              <div className="space-y-4">
-                {/* If no role selected, show all fields */}
-                <div className="space-y-2 text-[15px] w-full">
-                  <p>
-                    Programs{" "}
-                    <span className="text-[12px] text-dark-400">
-                      (atleast 3)
-                    </span>{" "}
-                  </p>
-                  <button
-                    onClick={toggleProgramOpen}
-                    className={`${
-                      selectedProgram.length === 0
-                        ? "text-[#92A7BE] py-3 "
-                        : "text-[#424b55] py-2"
-                    } flex justify-between items-center w-full hover:text-[#0e1721] px-4 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
-                  >
-                    {selectedProgram.length > 0 ? (
-                      <div className="flex flex-wrap gap-2">
-                        {selectedProgram.map((program, index) => (
-                          <span
-                            key={index}
-                            className="bg-[#d0e9f888] px-2 py-1 text-blue-300 rounded"
-                          >
-                            {program}
-                          </span>
-                        ))}
-                      </div>
-                    ) : (
-                      "Select your programs"
-                    )}
-                    <span className="">
-                      <IoIosArrowDown />
-                    </span>
-                  </button>
+              //   <div className="space-y-4">
+              //     {/* If no role selected, show all fields */}
+              //     <div className="space-y-2 text-[15px] w-full">
+              //       <p>
+              //         Programs{" "}
+              //         <span className="text-[12px] text-dark-400">
+              //           (atleast 3)
+              //         </span>{" "}
+              //       </p>
+              //       <button
+              //         onClick={toggleProgramOpen}
+              //         className={`${
+              //           selectedProgram.length === 0
+              //             ? "text-[#92A7BE] py-3 "
+              //             : "text-[#424b55] py-2"
+              //         } flex justify-between items-center w-full hover:text-[#0e1721] px-4 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+              //       >
+              //         {selectedProgram.length > 0 ? (
+              //           <div className="flex flex-wrap gap-2">
+              //             {selectedProgram.map((program, index) => (
+              //               <span
+              //                 key={index}
+              //                 className="bg-[#d0e9f888] px-2 py-1 text-blue-300 rounded"
+              //               >
+              //                 {program}
+              //               </span>
+              //             ))}
+              //           </div>
+              //         ) : (
+              //           "Select your programs"
+              //         )}
+              //         <span className="">
+              //           <IoIosArrowDown />
+              //         </span>
+              //       </button>
 
-                  {isProgramOpen && (
-                    <div
-                      ref={cityDown}
-                      className="absolute z-10 min-w-[560px] max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
-                    >
-                      {allPrograms.map((option, index) => (
-                        <div
-                          key={index}
-                          onClick={() => handleProgramSelect(option)}
-                          className="p-2 cursor-pointer"
-                        >
-                          <div
-                            className={`px-4 py-1 ${
-                              selectedProgram.includes(option.name)
-                                ? "bg-[#03a3d838] "
-                                : ""
-                            } hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg`}
-                          >
-                            {option.name}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <div className="space-y-2 text-[15px] w-full">
-                  <p>
-                    Skills{" "}
-                    <span className="text-[12px] text-dark-400">
-                      (atleast 3)
-                    </span>
-                  </p>
-                  <button
-                    onClick={toggleSkillOpen}
-                    className={`${
-                      !isSkillSelected
-                        ? " text-[#92A7BE] py-3"
-                        : "text-[#424b55] py-2"
-                    } flex justify-between items-center w-full  hover:text-[#0e1721] px-4  text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
-                  >
-                    {selectedSkill.length > 0 ? (
-                      <div className="flex flex-wrap gap-2">
-                        {selectedSkill.map((skill, index) => (
-                          <span
-                            key={index}
-                            className="bg-[#d0e9f888] px-2 py-1 text-blue-300 rounded"
-                          >
-                            {skill}
-                          </span>
-                        ))}
-                      </div>
-                    ) : (
-                      "Select your skills"
-                    )}
-                    <span className="">
-                      <IoIosArrowDown />
-                    </span>
-                  </button>
+              //       {isProgramOpen && (
+              //         <div
+              //           ref={cityDown}
+              //           className="absolute z-10 min-w-[560px] max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+              //         >
+              //           {allPrograms.map((option, index) => (
+              //             <div
+              //               key={index}
+              //               onClick={() => handleProgramSelect(option)}
+              //               className="p-2 cursor-pointer"
+              //             >
+              //               <div
+              //                 className={`px-4 py-1 ${
+              //                   selectedProgram.includes(option.name)
+              //                     ? "bg-[#03a3d838] "
+              //                     : ""
+              //                 } hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg`}
+              //               >
+              //                 {option.name}
+              //               </div>
+              //             </div>
+              //           ))}
+              //         </div>
+              //       )}
+              //     </div>
+              //     <div className="space-y-2 text-[15px] w-full">
+              //       <p>
+              //         Skills{" "}
+              //         <span className="text-[12px] text-dark-400">
+              //           (atleast 3)
+              //         </span>
+              //       </p>
+              //       <button
+              //         onClick={toggleSkillOpen}
+              //         className={`${
+              //           !isSkillSelected
+              //             ? " text-[#92A7BE] py-3"
+              //             : "text-[#424b55] py-2"
+              //         } flex justify-between items-center w-full  hover:text-[#0e1721] px-4  text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+              //       >
+              //         {selectedSkill.length > 0 ? (
+              //           <div className="flex flex-wrap gap-2">
+              //             {selectedSkill.map((skill, index) => (
+              //               <span
+              //                 key={index}
+              //                 className="bg-[#d0e9f888] px-2 py-1 text-blue-300 rounded"
+              //               >
+              //                 {skill}
+              //               </span>
+              //             ))}
+              //           </div>
+              //         ) : (
+              //           "Select your skills"
+              //         )}
+              //         <span className="">
+              //           <IoIosArrowDown />
+              //         </span>
+              //       </button>
 
-                  {isSkillOpen && (
-                    <div
-                      ref={cityDown}
-                      className="absolute z-10 min-w-[560px] max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
-                    >
-                      {allSkills.map((option, index) => (
-                        <div
-                          key={index}
-                          onClick={() => handleSkillSelect(option)}
-                          className="p-2 cursor-pointer "
-                        >
-                          <div className="px-4 py-1 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
-                            {option.name}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <div className="space-y-2 text-[15px] w-full">
-                  <p>Years of Experience</p>
-                  <input
-                    type="number"
-                    className="border border-dark-300 outline-none p-3 rounded-lg w-full"
-                    placeholder="Your experience in years"
-                    inputMode="numeric"
-                    value={experience}
-                    min={0}
-                    onChange={(e) => setExperience(e.target.value)}
-                  />
-                </div>
-                <div className={` space-y-2 text-[15px] w-full  `}>
-                  <p>Resume</p>
-                  <input
-                    type="file"
-                    id="fileInput"
-                    accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.zip"
-                    className="hidden"
-                    onChange={handleBrowse}
-                  />
-                  <button
-                    className="border border-dark-300 p-3 w-full flex items-center text-[15px] rounded-lg "
-                    onClick={() => document.getElementById("fileInput").click()}
-                  >
-                    <span className="flex  w-full text-dark-400 justify-start items-center hover:text-blue-300">
-                      <span>Upload File</span>
-                      {/* <span>
-                        <FaUpload size={15} />
-                      </span> */}
-                    </span>
+              //       {isSkillOpen && (
+              //         <div
+              //           ref={cityDown}
+              //           className="absolute z-10 min-w-[560px] max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
+              //         >
+              //           {allSkills.map((option, index) => (
+              //             <div
+              //               key={index}
+              //               onClick={() => handleSkillSelect(option)}
+              //               className="p-2 cursor-pointer "
+              //             >
+              //               <div className="px-4 py-1 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+              //                 {option.name}
+              //               </div>
+              //             </div>
+              //           ))}
+              //         </div>
+              //       )}
+              //     </div>
+              //     <div className="space-y-2 text-[15px] w-full">
+              //       <p>Years of Experience</p>
+              //       <input
+              //         type="number"
+              //         className="border border-dark-300 outline-none p-3 rounded-lg w-full"
+              //         placeholder="Your experience in years"
+              //         inputMode="numeric"
+              //         value={experience}
+              //         min={0}
+              //         onChange={(e) => setExperience(e.target.value)}
+              //       />
+              //     </div>
+              //     <div className={` space-y-2 text-[15px] w-full  `}>
+              //       <p>Resume</p>
+              //       <input
+              //         type="file"
+              //         id="fileInput"
+              //         accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.zip"
+              //         className="hidden"
+              //         onChange={handleBrowse}
+              //       />
+              //       <button
+              //         className="border border-dark-300 p-3 w-full flex items-center text-[15px] rounded-lg "
+              //         onClick={() => document.getElementById("fileInput").click()}
+              //       >
+              //         <span className="flex  w-full text-dark-400 justify-start items-center hover:text-blue-300">
+              //           <span>Upload File</span>
+              //           {/* <span>
+              //             <FaUpload size={15} />
+              //           </span> */}
+              //         </span>
 
-                    {fileUploaded && (
-                      <p className="text-[#1ab725] text-[13px] max-w-[350px] truncate border border-[#1ab7245f] p-1 px-4 rounded-lg">
-                        {fileUploaded} selected
-                      </p>
-                    )}
-                  </button>
-                </div>
-              </div>
+              //         {fileUploaded && (
+              //           <p className="text-[#1ab725] text-[13px] max-w-[350px] truncate border border-[#1ab7245f] p-1 px-4 rounded-lg">
+              //             {fileUploaded} selected
+              //           </p>
+              //         )}
+              //       </button>
+              //     </div>
+              //   </div>
+              <></>
             )}
           </div>
         </div>
