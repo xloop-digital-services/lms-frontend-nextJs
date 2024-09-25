@@ -90,10 +90,13 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
       if (response.status === 200) {
         console.log("attendece per session", response.data);
         setAttendance(response.data.data.attendance);
-        const initialAttendance = response.data.data.attendance.reduce((acc, student) => {
-          acc[student.student] = 0;
-          return acc;
-        }, {});
+        const initialAttendance = response.data.data.attendance.reduce(
+          (acc, student) => {
+            acc[student.student] = 0;
+            return acc;
+          },
+          {}
+        );
         // console.log(response.data.data);
         setSelectedAttendance(initialAttendance);
         // console.log(response.data);
@@ -130,7 +133,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   //     setLoader(false);
   //   }
   // }
-
+ 
   const handleAttendanceChange = (regId, status) => {
     setSelectedAttendance((prevState) => ({
       ...prevState,
@@ -204,9 +207,9 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   // }, [selectedSession]);
 
   const handleDateChange = (e) => {
-    const selectedDate = e.target.value; // Input date is already in YYYY-MM-DD format
+    const selectedDate = e.target.value;
     console.log(selectedDate);
-    setDate(selectedDate); // This will correctly store the date in the state
+    setDate(selectedDate);
     // fetchAttendanceIns();
   };
 
@@ -218,56 +221,54 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
 
   return (
     <div className="flex flex-col">
-      <div className="flex gap-2 w-full justify-end items-center pr-4 pb-2">
-        <input
-          type="checkbox"
-          checked={toggleMark}
-          onChange={handleCheckboxChange}
-        />
-        <p>Mark Attendance</p>
-      </div>
       {isInstructor && (
-        <div className="flex items-center gap-3">
-          <div className="w-full">
-            <label>Select Session</label>
+        <>
+          <div className="flex items-center gap-3 w-full max-md:flex-col">
+            <div className="w-full">
+              <label>Select Session</label>
 
-            <select
-              value={selectedSession} // Selected session name or value
-              onChange={(e) => handleChange(e)} // Call handleChange on selection
-              className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-            >
-              <option value="" disabled>
-                Select a session
-              </option>
-              {Array.isArray(sessions) &&
-                sessions.map((session) => (
-                  <option
-                    key={session.session_id}
-                    value={session.session_id} // Value is session_id
-                  >
-                    {session.location} - {session.course} -{" "}
-                    {session.no_of_student} - {session.start_time} -{" "}
-                    {session.end_time}
-                  </option>
-                ))}
-            </select>
+              <select
+                value={selectedSession}
+                onChange={(e) => handleChange(e)}
+                className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+              >
+                <option value="" disabled>
+                  Select a session
+                </option>
+                {Array.isArray(sessions) &&
+                  sessions.map((session) => (
+                    <option key={session.session_id} value={session.session_id}>
+                      {session.location} - {session.course} -{" "}
+                      {session.start_time} - {session.end_time}
+                    </option>
+                  ))}
+              </select>
+            </div>
+            <div className="w-full">
+              <p>Select Date</p>
+              <input
+                type="date"
+                value={date}
+                onChange={handleDateChange}
+                disabled={toggleMark} // Disable when toggleMark is true
+                className={`${
+                  toggleMark
+                    ? "text-dark-300 cursor-not-allowed"
+                    : "text-[#424b55] cursor-default"
+                } border border-dark-300  outline-none px-3 py-2 my-2 rounded-lg w-full`}
+                placeholder="Select start date"
+              />
+            </div>
           </div>
-          <div>
-            <p>Select Date</p>
+          <div className="flex gap-2 w-full justify-end items-center pr-4 pb-2">
             <input
-              type="date"
-              value={date}
-              onChange={handleDateChange}
-              disabled={toggleMark} // Disable when toggleMark is true
-              className={`${
-                toggleMark
-                  ? "text-dark-300 cursor-not-allowed"
-                  : "text-[#424b55] cursor-default"
-              } border border-dark-300  outline-none px-3 py-2 my-2 rounded-lg w-full`}
-              placeholder="Select start date"
+              type="checkbox"
+              checked={toggleMark}
+              onChange={handleCheckboxChange}
             />
+            <p>Mark Attendance</p>
           </div>
-        </div>
+        </>
       )}
 
       <div className="-m-1.5 overflow-x-auto">
@@ -294,7 +295,8 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-dark-200 dark:divide-gray-700 overflow-y-scroll scrollbar-webkit">
-                  {!toggleMark && date &&
+                  {!toggleMark &&
+                  date &&
                   selectedSession &&
                   Array.isArray(attendance) &&
                   attendance.length > 0 ? (

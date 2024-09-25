@@ -3,6 +3,7 @@ import {
   getAttendanceByCourseId,
   getAttendanceBySessionId,
   getInstructorSessions,
+  getInstructorSessionsbyCourseId,
   getStudentsByCourseId,
   listAllSessions,
   listSessionByCourseId,
@@ -34,7 +35,7 @@ const AdminStudentGrading = ({ courseId }) => {
   };
 
   async function fetchSessions() {
-    const response = await getInstructorSessions(userId, group);
+    const response = await getInstructorSessionsbyCourseId(userId, group, courseId);
     setLoader(true);
     try {
       if (response.status === 200) {

@@ -1,6 +1,7 @@
 "use client";
 import {
   getAttendanceByCourseIdDate,
+  getAttendanceBySessionIdnCourseId,
   getInstructorSessions,
   getStudentAttendanceForAdmin,
   getStudentsByCourseId,
@@ -25,6 +26,7 @@ export default function GetAttendanceAdminTable({
   const [adminStudentAttendence, setAdminStudentAttendence] = useState([]);
   const [loader, setLoader] = useState(false);
   const [sessions, setSessions] = useState([]);
+  const [date, setDate] = useState(null);
   const group = userData?.Group;
   const userId = userData?.user_data?.id;
   // console.log(courseId,'course id');
@@ -162,7 +164,11 @@ export default function GetAttendanceAdminTable({
   const handleAdminStudentAttendence = async () => {
     setLoader(true);
     try {
-      const response = await getStudentAttendanceForAdmin(selectedSessionId);
+      const response = await getAttendanceBySessionIdnCourseId(
+        selectedSessionId,
+        courseId,
+        date
+      );
       console.log("response for admin attendence", response.data.data);
       setGetAttendance(response.data.data.attendance);
       const initialAttendance = response.data.reduce((acc, student) => {
@@ -179,40 +185,60 @@ export default function GetAttendanceAdminTable({
   useEffect(() => {
     fetchAllSessions();
   }, []);
+
+  const handleDateChange = (e) => {
+    const selectedDate = e.target.value;
+    console.log(selectedDate);
+    setDate(selectedDate);
+    // fetchAttendanceIns();
+  };
+  console.log(date);
   useEffect(() => {
-    if (group === "admin" && selectedSessionId) {
+    if (group === "admin" && selectedSessionId && date) {
       handleAdminStudentAttendence();
     }
-  }, [selectedSessionId]);
+  }, [selectedSessionId, date]);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col  ">
       <div>
-        <label>Select Session</label>
-
-        <select
-          value={selectedSessionId}
-          onChange={handleChange}
-          className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-        >
-          <option
-            className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-            value=""
-            disabled
-            selected
-          >
-            Select a session
-          </option>
-          {sessions &&
-            sessions.length > 0 &&
-            sessions.map((session) => (
-              <option key={session.id} value={session.id}>
-                {session.location_name} - {session.course.name} -{" "}
-                {session.no_of_student} - {session.start_time} -{" "}
-                {session.end_time}
+        <div className=" flex w-full gap-2 max-md:flex-col">
+          <div className="w-full">
+            <label>Select Session</label>
+            <select
+              value={selectedSessionId}
+              onChange={handleChange}
+              className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+            >
+              <option
+                className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                value=""
+                disabled
+                selected
+              >
+                Select a session
               </option>
-            ))}
-        </select>
+              {sessions &&
+                sessions.length > 0 &&
+                sessions.map((session) => (
+                  <option key={session.id} value={session.id}>
+                    {session.location_name} - {session.course.name} -{" "}
+                    {session.start_time} - {session.end_time}
+                  </option>
+                ))}
+            </select>
+          </div>
+          <div className="w-full">
+            <p>Select Date</p>
+            <input
+              type="date"
+              value={date}
+              onChange={handleDateChange}
+              className="text-[#424b55]  cursor-default border border-dark-300  focus:border-blue-300 outline-none px-3 py-2 my-2 rounded-lg w-full"
+              placeholder="Select start date"
+            />
+          </div>
+        </div>
       </div>
       <div className="-m-1.5 overflow-x-auto">
         <div className="p-1.5 min-w-full inline-block align-middle">
@@ -258,11 +284,9 @@ export default function GetAttendanceAdminTable({
                                 type="radio"
                                 name={`attendance-${att.id}`}
                                 value={status}
-                                checked={
-                                  att.status === parseInt(status)
-                                }
+                                checked={att.status === parseInt(status)}
                                 className="w-4 h-4 rounded-full border-2 border-[#03A1D8] group-hover:cursor-pointer"
-                                disabled={true}  
+                                disabled={true}
                               />
                               <p className="group-hover:cursor-pointer">
                                 {status === "0"

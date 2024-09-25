@@ -83,7 +83,6 @@ const CourseHead = ({
     program === "program" && fetchProgramById();
   }, [isEditing]);
 
-
   // console.log(progress);
 
   return (
@@ -171,14 +170,15 @@ const CourseHead = ({
         </div>
       )}
 
-      {program === "program"  ? null : (
-        isStudent &&
-        <p className="flex items-center">
-          {" "}
-          Instructor:{" "}
-          { studentInstructorName }
-        </p>
-      )}
+      {program === "program"
+        ? null
+        : isStudent && (
+            <p className="flex items-center">
+              {studentInstructorName
+                ? `Instructor: ${studentInstructorName}`
+                : null}
+            </p>
+          )}
       {progress ? <Progress progress={progress} /> : null}
 
       {haveStatus ? <StatusSummary /> : null}

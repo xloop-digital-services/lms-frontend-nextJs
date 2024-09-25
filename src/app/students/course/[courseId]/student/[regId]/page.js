@@ -24,8 +24,8 @@ export default function Page({ params }) {
         </h2>
         <CourseHead
           id={courseId}
-          rating="Top Instructor"
-          instructorName="Maaz"
+          // rating="Top Instructor"
+          // instructorName="Maaz"
           haveStatus={true}
           program="course"
         />

@@ -1,7 +1,7 @@
 import React from "react";
 import { CircularProgress } from "@mui/material";
 
-const StudentAttendence = ({ attendance, loader }) => {
+const StudentAttendence = ({ attendance, loader, isAdmin }) => {
   return (
     <div className="flex flex-col ">
       <div className="-m-1.5 overflow-x-auto">
@@ -26,6 +26,12 @@ const StudentAttendence = ({ attendance, loader }) => {
                     >
                       Module
                     </th>
+                    { <th
+                      scope="col"
+                      className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[20%]"
+                    >
+                      Marked By
+                    </th>}
                     <th
                       scope="col"
                       className="px-4  py-4 text-center text-xs font-medium text-gray-500 uppercase w-[20%]"
@@ -59,6 +65,9 @@ const StudentAttendence = ({ attendance, loader }) => {
                         <td className="px-6 py-4 text-center whitespace-nowrap text-sm font-medium text-gray-800">
                           {`Session ${index + 1}`}
                         </td>
+                        {<td className="px-6 py-4 text-center text-wrap whitespace-nowrap text-sm text-gray-800">
+                          {att.marked_by}
+                        </td>}
                         <td className="px-6 py-4 text-center text-wrap whitespace-nowrap text-sm text-gray-800">
                           {att.day}
                         </td>

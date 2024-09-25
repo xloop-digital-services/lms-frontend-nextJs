@@ -11,6 +11,7 @@ import {
 } from "@/api/route";
 import CreateWeightage from "./CreateWeightage";
 import GetWeightage from "./GetWeightage";
+import { useAuth } from "@/providers/AuthContext";
 
 const Grading = ({ courseId }) => {
   // const quiz = ["quiz1", "quiz2", "quiz3", "quiz4"];
@@ -25,12 +26,13 @@ const Grading = ({ courseId }) => {
   const [assignWeightage, setAssignWeightage] = useState(false);
   const [weightage, setWeightage] = useState("");
   const [weightagesExist, setWeightagesExist] = useState(false);
-
+  const { userData } = useAuth();
+  const userId = userData?.User?.id;
+  console.log(userId);
   const handleCreateWeightage = () => {
     setAssignWeightage(!assignWeightage);
   };
 
- 
   async function fetchQuizzes() {
     const response = await getQuizByCourseId(courseId);
     try {
@@ -46,7 +48,7 @@ const Grading = ({ courseId }) => {
   }
 
   async function fetchAssignments() {
-    const response = await getAssignmentsByCourseId(courseId);
+    const response = await getAssignmentsByCourseId(courseId, 1002);
     try {
       if (response.status === 200) {
         setAssignments(response?.data?.data);
@@ -105,10 +107,10 @@ const Grading = ({ courseId }) => {
       console.log("error", error);
     }
   }
-  const handleWeightageCreationSuccess=()=>{
+  const handleWeightageCreationSuccess = () => {
     fetchWeightages();
-    setAssignWeightage(false)
-  }
+    setAssignWeightage(false);
+  };
   useEffect(() => {
     fetchQuizzes();
     fetchAssignments();
@@ -139,7 +141,7 @@ const Grading = ({ courseId }) => {
       {assignWeightage && <CreateWeightage courseId={courseId} />} */}
 
       {weightagesExist ? (
-        <div className="my-4">  
+        <div className="my-4">
           <GetWeightage weigh={weightage} />
         </div>
       ) : (
@@ -151,7 +153,12 @@ const Grading = ({ courseId }) => {
           >
             {assignWeightage ? "Cancel" : "Assign Weightages"}
           </button>
-          {assignWeightage && <CreateWeightage courseId={courseId} onCreation={handleWeightageCreationSuccess} />}
+          {assignWeightage && (
+            <CreateWeightage
+              courseId={courseId}
+              onCreation={handleWeightageCreationSuccess}
+            />
+          )}
         </div>
       )}
     </div>
