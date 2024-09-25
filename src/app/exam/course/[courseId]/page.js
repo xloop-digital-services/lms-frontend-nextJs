@@ -153,8 +153,8 @@ export default function Page({ params }) {
         <CourseHead
           id={courseId}
           program="course"
-          rating="Top Instructor"
-          instructorName="Maaz"
+          // rating="Top Instructor"
+          // instructorName="Maaz"
           // progress={assignmentProgress?.progress_percentage}
           haveStatus={true}
           title="Create Exam"

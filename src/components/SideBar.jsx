@@ -281,7 +281,7 @@ function SideBar() {
                     Students
                   </Link>
                 )}
-                {/* <Link
+                <Link
                   href="/calendar"
                   className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
                     isLinkActive("/calendar")
@@ -291,7 +291,7 @@ function SideBar() {
                 >
                   <FaCalendar size={24} />
                   Calendar
-                </Link> */}
+                </Link>
               </div>
               <div className="flex flex-col">
                 <Link

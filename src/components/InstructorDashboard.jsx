@@ -7,16 +7,10 @@ import image1 from "/public/assets/img/course-image.png";
 import { MdArrowRightAlt } from "react-icons/md";
 import Link from "next/link";
 import { useAuth } from "@/providers/AuthContext";
-import {
-  getCourseByProgId,
-  getInstructorCourses,
-  getInstructorSessions,
-  getPendingAssignments,
-} from "@/api/route";
+import { getCalendarData, getInstructorSessions } from "@/api/route";
 import { CircularProgress } from "@mui/material";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import { formatDateTime } from "./AdminDataStructure";
 
 export default function InstructorDashboard() {
   const { isSidebarOpen } = useSidebar();
@@ -28,6 +22,7 @@ export default function InstructorDashboard() {
   const group = userData?.Group;
   const userId = userData?.User?.id;
   const insId = userData?.user_data?.id;
+  const [calendarEvents, setCalendarEvents] = useState([]);
   const insEmailId = userData?.User?.email;
 
   // console.log(group);
@@ -85,13 +80,41 @@ export default function InstructorDashboard() {
       console.log("error", error);
     }
   }
+  async function fetchCalendarSessions() {
+    const response = await getCalendarData(userId);
+    try {
+      if (response.status === 200) {
+        console.log(response.data?.data);
+        const events = Array.isArray(response?.data?.data)
+          ? response.data?.data?.flatMap((item) =>
+              Array.isArray(item.sessions)
+                ? item?.sessions?.map((session) => ({
+                    title: session.course_name,
+                    start: `${item.date}T${session.start_time}`,
+                    end: `${item.date}T${session.end_time}`,
+                    description: `Location: ${session.location}`,
+                  }))
+                : []
+            )
+          : [];
+
+        setCalendarEvents(events);
+      } else {
+        console.error("Failed to fetch calendar data", response.status);
+      }
+    } catch (error) {
+      console.error("Error fetching calendar data", error);
+    }
+  }
 
   const courseLimit = isSidebarOpen ? 2 : 3;
 
   useEffect(() => {
     // fetchCourses();
     fetchPendingAssignments();
-  }, []);
+    if (!userId) return;
+    fetchCalendarSessions();
+  }, [userId, group]);
   return (
     <>
       <div
@@ -149,28 +172,45 @@ export default function InstructorDashboard() {
             </div>
             <div>
               <div className=" w-full mt-4 h-[410px] flex gap-4 lg:flex-row flex-col-reverse  max-md:w-full">
-                <div className="bg-[#ffffff] p-2  rounded-xl grow">
-                  <div>
-                    <h1 className="text-xl font-bold px-3 py-4 font-exo">
-                      Weeks Activity
-                    </h1>
+                <div className="bg-[#ffffff] p-2 rounded-xl grow">
+                  <div className="flex justify-between">
+                    <div>
+                      <h1 className="text-xl font-bold px-3 py-4 font-exo">
+                        Weeks Activity
+                      </h1>
+                    </div>
+                    <div className="group px-3 flex items-center justify-center">
+                      <Link
+                        href="/calendar"
+                        className="text-[#03A1D8] underline flex items-center group-hover:cursor-pointer"
+                      >
+                        Show full calendar
+                        <span>
+                          <MdArrowRightAlt
+                            className="ml-2 group-hover:cursor-pointer"
+                            size={25}
+                          />
+                        </span>
+                      </Link>
+                    </div>
                   </div>
                   <div className="px-4">
                     <FullCalendar
-                      // className="overflow-y-clip"
                       height={320}
                       plugins={[dayGridPlugin]}
                       initialView="dayGridMonth"
-                      events={[
-                        {
-                          title: "Assignment Submission",
-                          date: "2024-08-22",
-                        },
-                        {
-                          title: "Mobile Application Development",
-                          date: "2024-08-10",
-                        },
-                      ]}
+                      events={calendarEvents}
+                      eventContent={(arg) => (
+                        <div
+                          style={{ whiteSpace: "normal" }}
+                          className="bg-blue-600 w-full rounded-md p-2 focus:outline-none cursor-pointer"
+                        >
+                          <b> {arg.timeText}m </b>
+                          <p className="text-blue-300" title={arg.event.title}>
+                            {arg.event.title}
+                          </p>{" "}
+                        </div>
+                      )}
                     />
                   </div>
                 </div>

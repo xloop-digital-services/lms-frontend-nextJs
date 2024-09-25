@@ -149,10 +149,15 @@ export const getModuleByCourseId = async (id) => {
 };
 
 //get assignment by courseId
-export const getAssignmentsByCourseId = async (id) => {
+export const getAssignmentsByCourseId = async (
+  // id
+  courseId,
+  insId
+) => {
   try {
     const response = await axiosInstance.get(
-      `/course/assignments/course/${id}/`
+      // `/course/assignments/course/${id}/`
+      `course/assignments/course/${courseId}/`
     );
     return response;
   } catch (error) {
@@ -1162,12 +1167,32 @@ export const getCalendarSessions = async (userId) => {
   }
 };
 
-//get data
-export const getData = async () => {
+// //get data
+// export const getData = async () => {
+//   try {
+//     const response = await axiosInstance.get(
+//       `/user-process/1/?group_name=student`
+//     );
+//     return response;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+
+//get calendar sessions
+export const getCalendarData = async (userId) => {
   try {
-    const response = await axiosInstance.get(
-      `/user-process/1/?group_name=student`
-    );
+    const response = await axiosInstance.get(`sessions/calendar/${userId}/`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//get session and instructor api
+export const getSessionInstructor = async (courseId) => {
+  try {
+    const response = await axiosInstance.get(`instructors/course/${courseId}/`);
     return response;
   } catch (error) {
     throw error;
