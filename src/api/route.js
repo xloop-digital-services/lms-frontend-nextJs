@@ -155,12 +155,13 @@ export const getModuleByCourseId = async (id) => {
 export const getAssignmentsByCourseId = async (
   // id
   courseId,
-  insId
+  insId,
+  sessionId
 ) => {
   try {
     const response = await axiosInstance.get(
       // `/course/assignments/course/${id}/`
-      `course/assignments/course/${courseId}/`
+      `course/assignments/course/${courseId}/${insId}/session/${sessionId}/`
     );
     return response;
   } catch (error) {
@@ -181,9 +182,11 @@ export const getPendingAssignments = async (progId, regId) => {
 };
 
 //get Quiz by courseId
-export const getQuizByCourseId = async (id) => {
+export const getQuizByCourseId = async (courseId, insId, sessionId) => {
   try {
-    const response = await axiosInstance.get(`/course/quizzes/course/${id}/`);
+    const response = await axiosInstance.get(
+      `/course/quizzes/course/${courseId}/${insId}/session/${sessionId}/`
+    );
     return response;
   } catch (error) {
     throw error;
@@ -191,9 +194,11 @@ export const getQuizByCourseId = async (id) => {
 };
 
 //get project by courseId
-export const getProjectByCourseId = async (id) => {
+export const getProjectByCourseId = async (courseId, insId, sessionId) => {
   try {
-    const response = await axiosInstance.get(`/course/projects/course/${id}/`);
+    const response = await axiosInstance.get(
+      `/course/projects/course/${courseId}/${insId}/session/${sessionId}/`
+    );
     return response;
   } catch (error) {
     throw error;
@@ -201,9 +206,11 @@ export const getProjectByCourseId = async (id) => {
 };
 
 //get exam by courseId
-export const getExamByCourseId = async (id) => {
+export const getExamByCourseId = async (courseId, insId, sessionId) => {
   try {
-    const response = await axiosInstance.get(`/course/exams/course/${id}/`);
+    const response = await axiosInstance.get(
+      `/course/exams/course/${courseId}/${insId}/session/${sessionId}/`
+    );
     return response;
   } catch (error) {
     throw error;

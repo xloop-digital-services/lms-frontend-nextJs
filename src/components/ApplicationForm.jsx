@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import logo from "../../public/assets/img/logo.png";
+import bg from "../../public/assets/img/bg.jpg";
 import cityAreas from "../../public/data/cityAreas.json";
 import Image from "next/image";
 import useClickOutside from "@/providers/useClickOutside";
@@ -264,18 +265,24 @@ export default function ApplicationForm() {
       formData.append("group_name", selectedRole);
       formData.append("year", currentYear);
       formData.append("date_of_birth", birthDate);
-      formData.append("location", [locationId]);
+
+      locationId.forEach((id) => {
+        formData.append("location", id);
+      });
+
       if (selectedRole !== "instructor") {
-        formData.append("program", JSON.stringify([programId]));
+        programId.forEach((id) => {
+          formData.append("program", id);
+        });
       }
       if (selectedRole !== "student") {
         formData.append("years_of_experience", parseInt(experience));
         formData.append("resume", file);
-        formData.append("required_skills", skillId);
+        skillId.forEach((id) => {
+          formData.append("required_skills", id);
+        });
       }
-      const response = await submitApplication(formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const response = await submitApplication(formData);
       router.push("/application/submitted");
       console.log("submit", response);
     } catch (error) {
@@ -291,7 +298,10 @@ export default function ApplicationForm() {
   };
 
   return (
-    <div className="flex flex-col w-full h-screen justify-center items-center p-4 gap-7">
+    <div
+      className="flex flex-col w-full h-screen justify-center items-center p-4 gap-7 bg-gradient-to-t from-blue-600 "
+     
+    >
       <Image src={logo} />
       <div className="bg-surface-100 rounded-xl p-6 flex flex-col   space-y-4 w-[70%] max-h-screen overflow-y-auto scrollbar-webkit ">
         {loadingSubmit && (
@@ -357,31 +367,37 @@ export default function ApplicationForm() {
               <button
                 onClick={toggleCityOpen}
                 className={`${
-                  !isCitySelected ? " text-[#92A7BE]" : "text-[#424b55]"
-                } flex justify-between items-center w-full  hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                  !isCitySelected ? " text-[#92A7BE]" : "text-[#424B55]"
+                } flex justify-between items-center w-full  hover:text-[#0E1721] px-4 py-3 text-sm text-left bg-surface-100 border  border-[#ACC5E0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
               >
                 {selectedCity}
                 <span className="">
                   <IoIosArrowDown />
                 </span>
               </button>
-
               {isCityOpen && (
                 <div
                   ref={cityDown}
                   className="absolute z-10 min-w-[560px] max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
                 >
-                  {cityOptions.map((option, index) => (
-                    <div
-                      key={index}
-                      onClick={() => handleCitySelect(option)}
-                      className="p-2 cursor-pointer "
-                    >
-                      <div className="px-4 py-1 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
-                        {option.name}
+                  {/* Filter the cityOptions based on available locations */}
+                  {cityOptions
+                    .filter((city) =>
+                      allLocations.some(
+                        (location) => location.city === city.name
+                      )
+                    )
+                    .map((option, index) => (
+                      <div
+                        key={index}
+                        onClick={() => handleCitySelect(option)}
+                        className="p-2 cursor-pointer "
+                      >
+                        <div className="px-4 py-1 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                          {option.name}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               )}
             </div>

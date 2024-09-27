@@ -52,10 +52,15 @@ export default function InstructorDashboard() {
 
   useEffect(() => {
     if (userData?.session) {
-      const sessionCourses = userData?.session?.map(
-        (session) => session.course
-      );
-      setCourses(sessionCourses);
+      const sessionCourses = userData.session.map((session) => session.course);
+
+      const uniqueCourses = Array.from(
+        new Set(sessionCourses.map((course) => course.id))
+      ).map((id) => {
+        return sessionCourses.find((course) => course.id === id);
+      });
+
+      setCourses(uniqueCourses);
       setLoader(false);
     } else {
       setLoader(true);

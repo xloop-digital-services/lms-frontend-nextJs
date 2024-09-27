@@ -6,6 +6,7 @@ import CourseHead from "@/components/CourseHead";
 import {
   createProject,
   getProjectByCourseId,
+  getSessionInstructor,
   updateProject,
 } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
@@ -31,11 +32,36 @@ export default function Page({ params }) {
   const [updateStatus, setUpdateStatus] = useState(false);
   const [assignmentStatus, setAssignmentStatus] = useState(0);
   const [totalGrade, setTotalGrade] = useState("");
+  const group = userData?.Group;
+  const isAdmin = userData?.Group === "admin";
+  const [adminUserId, setAdminUserId] = useState("");
+  const isInstructor = userData?.Group === "instructor";
+  const [sessions, setSessions] = useState([]);
+  const [selectedSession, setSelectedSession] = useState();
+  const userId = group === "instructor" ? userData?.User?.id : adminUserId;
+  const [sessionId, setSessionId] = useState(null);
 
-  const [fetch, setFetch] = useState(false);
+  const handleChange = (e) => {
+    const [selectedSessionId, internalSessionId, instructorId] =
+      e.target.value.split("|");
+    const selectedSession = sessions.find(
+      (session) => session.session.session_id === selectedSessionId
+    );
+    setAdminUserId(instructorId);
+    setSelectedSession(e.target.value);
+    setSessionId(internalSessionId);
+  };
+
+  const handleChangeInstructor = (e) => {
+    const value = e.target.value;
+    setSelectedSession(value);
+    const sessionParts = value.split("|");
+    const selectedSessionId = sessionParts[1];
+    setSessionId(selectedSessionId);
+  };
 
   async function fetchAssignments() {
-    const response = await getProjectByCourseId(courseId);
+    const response = await getProjectByCourseId(courseId, userId, sessionId);
     try {
       if (response.status === 200) {
         setAssignments(response?.data?.data);
@@ -121,10 +147,45 @@ export default function Page({ params }) {
     setCreatingQuiz(true);
   };
 
-  useEffect(() => {
-    fetchAssignments();
-  }, [updateStatus]);
+  async function fetchSessions() {
+    const response = await getSessionInstructor(
+      // userId,
+      // group,
+      courseId
+    );
+    setLoading(true);
+    try {
+      if (response.status === 200) {
+        setSessions(response.data.data);
+        setLoading(false);
+      } else {
+        console.error("Failed to fetch sessions, status:", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
 
+  useEffect(() => {
+    if (!isInstructor) return;
+
+    if (userData?.session) {
+      setSessions(userData.session);
+      setLoading(false);
+    } else {
+      setLoading(true);
+    }
+  }, [userData, isInstructor]);
+
+  useEffect(() => {
+    if (!isAdmin) return;
+    fetchSessions();
+  }, [userId, sessionId, selectedSession]);
+
+  useEffect(() => {
+    if (!userId) return;
+    fetchAssignments();
+  }, [userId, sessionId, selectedSession, updateStatus]);
   return (
     <div
       className={`flex-1 transition-transform pt-[90px] space-y-4 max-md:pt-32 font-inter ${
@@ -144,7 +205,70 @@ export default function Page({ params }) {
           isEditing={isCreatingQuiz}
           setIsEditing={setCreatingQuiz}
         />
-
+        {isAdmin && (
+          <div className="w-full">
+            <label>Select Session</label>
+            <select
+              value={selectedSession || ""}
+              onChange={handleChange}
+              className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+            >
+              <option value="" disabled>
+                Select a session
+              </option>
+              {Array.isArray(sessions) && sessions.length > 0 ? (
+                sessions.map((session) => {
+                  console.log("Mapping session:", session);
+                  // Combine session_id and instructor_id in value
+                  const optionValue = `${session.session.session_name}|${session.session.id}|${session.instructor_id}`;
+                  return (
+                    <option key={session.session_id} value={optionValue}>
+                      {session.session?.location_name} -{" "}
+                      {session.session?.course?.name} -{" "}
+                      {session.session?.start_time} -{" "}
+                      {session.session?.end_time} - {session.instructor_name}
+                    </option>
+                  );
+                })
+              ) : (
+                <option value="" disabled>
+                  No sessions available
+                </option>
+              )}
+            </select>
+          </div>
+        )}
+        {isInstructor && (
+          <div className="w-full">
+            <label>Select Session</label>
+            <select
+              value={selectedSession || ""}
+              onChange={handleChangeInstructor}
+              className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+            >
+              <option value="" disabled>
+                Select a session
+              </option>
+              {Array.isArray(sessions) && sessions.length > 0 ? (
+                sessions.map((session) => {
+                  console.log("Mapping session:", session);
+                  // Combine session_id and instructor_id in value
+                  const optionValue = `${session.session_name}|${session.id}`;
+                  return (
+                    <option key={session.session_id} value={optionValue}>
+                      {session?.location_name} - {session?.course?.name} -{" "}
+                      {session?.start_time} - {session?.end_time}
+                    </option>
+                  );
+                })
+              ) : (
+                <option value="" disabled>
+                  No sessions available
+                </option>
+              )}
+            </select>
+          </div>
+        )}
         {isCreatingQuiz && (
           <>
             <div className="flex justify-between max-md:flex-col">
