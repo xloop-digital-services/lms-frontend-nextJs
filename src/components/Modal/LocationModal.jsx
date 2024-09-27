@@ -11,6 +11,8 @@ const LocationModal = ({
   setOpenModal,
   setUpdateLocation,
   cityOptions,
+  loading,
+  setLoading
 }) => {
   const [allLocations, setAllLocations] = useState([]);
   const [locationName, setLocationName] = useState("select your location");
@@ -21,7 +23,7 @@ const LocationModal = ({
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [isLocationSelected, setIsLocationSelected] = useState(false);
   const [capacity, setCapacity] = useState(null);
-  const [loadingCreation, setLoadingCreation] = useState(false);
+  
   const cityDown = useRef(null);
   const modalDown = useRef(null);
 
@@ -35,7 +37,7 @@ const LocationModal = ({
   // console.log('in the modal', cityOptions)
 
   const handlLocationCreation = async () => {
-    setLoadingCreation(true);
+  setLoading(true)
     if(city && capacity && locationName && locationCode){
 
       try {
@@ -49,14 +51,14 @@ const LocationModal = ({
         if (response.data.status_code === 201) {
           console.log("location created", response?.data?.message);
           toast.success(response?.data?.message);
-          setLoadingCreation(false);
-          setOpenModal(false);
           setUpdateLocation(!updateLocation);
+          setLoading(false)
+          setOpenModal(false);
         }
   
         if (response.data.code === "token_not_valid") {
           toast.error("Your session has been expired. Log In again!");
-          setLoadingCreation(false);
+          setLoading(false);
           setOpenModal(false);
         }
       } catch (error) {
@@ -64,11 +66,11 @@ const LocationModal = ({
           "error while location creation",
           error?.response?.data?.message
         );
-        setLoadingCreation(false);
+        setLoading(false);
       }
     } else {
       toast.error('All fields are required!')
-      setLoadingCreation(false)
+      setLoading(false)
     }
   };
 
@@ -98,7 +100,7 @@ const LocationModal = ({
   return (
     <div className="backDropOverlay h-screen flex justify-center items-center">
       <div className="w-[550px] z-[1000] mx-auto my-20">
-        {loadingCreation && (
+        {loading && (
           <div className="absolute inset-0 w-full p-2 flex items-center justify-center bg-surface-100 bg-opacity-30 z-[1100]">
             <CircularProgress size={30} />
           </div>
@@ -239,7 +241,7 @@ const LocationModal = ({
                 onClick={handlLocationCreation}
                 className="w-fit flex justify-center py-3 px-12 text-sm font-medium rounded-lg text-dark-100 bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
               >
-                Create
+                {loading && <CircularProgress size={19} style={{color: '#fffff'}} />} Create
               </button>
             </div>
           </div>

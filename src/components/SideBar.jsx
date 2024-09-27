@@ -43,7 +43,7 @@ function SideBar() {
   return (
     <>
       <div
-        className={`fixed border border-solid border-dark-100 left-0 w-80 bg-surface-100 py-5 transition-transform mt-20 ${
+        className={`fixed border border-solid border-dark-100 left-0 w-80 bg-surface-100 py-5 transition-transform mt-20 font-inter ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -71,7 +71,7 @@ function SideBar() {
                 </Link>
                 <div className={`${!isAdmin && "hidden"}`}>
                   <div
-                    className={`p-4 flex flex-col gap-4 mt-2 cursor-pointer rounded-xl hover:text-blue-300 ${
+                    className={`p-4 flex flex-col group gap-4 mt-2 cursor-pointer rounded-xl hover:text-blue-300 ${
                       isLinkActive("/user-management") ||
                       isLinkActive("/user-management/approved") ||
                       isLinkActive("/user-management/shortlist")
@@ -88,7 +88,13 @@ function SideBar() {
                       <div className="flex gap-4">
                         <FaListCheck
                           size={24}
-                          className="text-surface-100 bg-dark-600 p-1 rounded-md"
+                          className={`${
+                            isLinkActive("/user-management") ||
+                            isLinkActive("/user-management/approved") ||
+                            isLinkActive("/user-management/shortlist")
+                              ? " bg-blue-300"
+                              : " bg-dark-600"
+                          } text-surface-100 p-1 rounded-md group-hover:bg-blue-300`}
                         />{" "}
                         <p
                           className={`flex-grow text-center ${
@@ -115,7 +121,7 @@ function SideBar() {
                               className={`${
                                 isLinkActive("/user-management/applicants") &&
                                 "font-semibold"
-                              }`}
+                              } hover:font-semibold `}
                             >
                               Applicants
                             </Link>
@@ -126,7 +132,7 @@ function SideBar() {
                               className={`${
                                 isLinkActive("/user-management/users") &&
                                 "font-semibold"
-                              }`}
+                              } hover:font-semibold `}
                             >
                               Verified Users
                             </Link>
@@ -143,7 +149,7 @@ function SideBar() {
                         : "text-dark-600"
                     }`}
                   >
-                    <FaLocationDot size={24} />
+                    <FaLocationDot size={24}  />
                     Location
                   </Link>
                   <Link
@@ -159,7 +165,7 @@ function SideBar() {
                   </Link>
                   <Link
                     href="/class-scheduling"
-                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
+                    className={`p-4  flex gap-4 group mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
                       isLinkActive("/class-scheduling")
                         ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100 "
                         : "text-dark-600"
@@ -167,7 +173,11 @@ function SideBar() {
                   >
                     <FaListCheck
                       size={24}
-                      className="text-surface-100 bg-dark-600 p-1 rounded-md"
+                      className={`${
+                        isLinkActive("/class-scheduling")
+                          ? " bg-blue-300"
+                          : " bg-dark-600"
+                      } text-surface-100 p-1 rounded-md group-hover:bg-blue-300`}
                     />
                     Class Scheduling
                   </Link>

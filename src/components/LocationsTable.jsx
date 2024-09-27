@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 const LocationsTable = ({
   locations,
   loading,
+  setLoading,
   setUpdateLocation,
   updateLocation,
 }) => {
@@ -23,7 +24,7 @@ const LocationsTable = ({
   const handleUpdateStatus = (location) => {
     setEditCapacity(location.capacity);
     setSelectedLocation(location.id);
-    setStatus(location.status)
+    setStatus(location.status);
     setLocation(location);
     setEdit(!edit);
   };
@@ -38,7 +39,7 @@ const LocationsTable = ({
 
   const handleUpdate = async () => {
     if (status === null || updating) return;
-    setUpdating(true); // Set updating to true when status is being updated
+    setLoading(true); // Set updating to true when status is being updated
     try {
       const data = {
         capacity: editCapacity,
@@ -49,14 +50,16 @@ const LocationsTable = ({
       };
 
       const response = await UpdateLocation(selectedLocation, data);
-      toast.success(response.data.message)
-      console.log("location updated", response);
+      if (response.status === 200){
+        toast.success(response.data.message);
+      }
+      // console.log("location updated", response);
       setEdit(false);
       setUpdateLocation(!updateLocation);
     } catch (error) {
       console.log("error while updating status", error);
     } finally {
-      setUpdating(false); // Set updating to false after the update is complete
+      setLoading(false); // Set updating to false after the update is complete
     }
   };
 
@@ -67,13 +70,18 @@ const LocationsTable = ({
 
   const handleDelete = async () => {
     try {
+      setLoading(true)
       const response = await DeleteLocation(selectedLocation);
+      if (response.status === 204) {
+        toast.success("Location deleted successfully! ");
+        setUpdateLocation(!updateLocation);
+        setConfirmDelete(false);
+      }
       console.log("deleting the location", response);
-      setUpdateLocation(!updateLocation);
-      toast.success(response.data.message)
-      setConfirmDelete(false);
     } catch (error) {
       console.log("error while deleting the lcoation", error);
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -124,11 +132,11 @@ const LocationsTable = ({
                     </th>
                   </tr>
                 </thead>
-                {updating && (
+                {/* {updating && (
                   <div className="absolute inset-0 w-full p-2 flex items-center justify-center bg-surface-100 bg-opacity-30 z-[1100]">
                     <CircularProgress size={30} />
                   </div>
-                )}
+                )} */}
                 <tbody className="divide-y divide-dark-200 max-h-[500px] overflow-y-auto scrollbar-webkit ">
                   {loading ? ( // Show loading state while fetching locations
                     <tr>

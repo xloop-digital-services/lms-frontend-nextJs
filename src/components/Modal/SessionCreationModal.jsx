@@ -74,6 +74,8 @@ const SessionCreationModal = ({
             batch: selectedBatch,
             location: selectedLocationId,
             no_of_students: capacity,
+            start_date: startDate,
+            end_date: endDate,
             start_time: startTime,
             end_time: endTime,
             course_id: selectedCourseId,

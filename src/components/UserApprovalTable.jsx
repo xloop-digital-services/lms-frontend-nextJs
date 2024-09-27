@@ -22,8 +22,8 @@ const UserApprovalTable = ({
     setModal(true);
   };
   const getUserApplication = (userEmail) => {
-    console.log('userEmail', userEmail)
-    console.log('users',users)
+    // console.log('userEmail', userEmail)
+    // console.log('users',users)
     return users.find((app) => app.email === userEmail) || {};
   };
 

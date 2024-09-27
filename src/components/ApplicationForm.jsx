@@ -439,7 +439,7 @@ export default function ApplicationForm() {
                 allLocations.length > 0 ? (
                   <div
                     ref={cityDown}
-                    className="absolute z-10 w-[330px] mt-1 max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                    className="absolute z-10 min-w-[560px] mt-1 max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                   >
                     {allLocations.map(
                       (option, index) =>

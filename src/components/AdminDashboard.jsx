@@ -20,6 +20,7 @@ import Link from "next/link";
 const AdminDashboard = () => {
   const { isSidebarOpen } = useSidebar();
   const [batches, setBatches] = useState([]);
+  const [updateBatch, setUpdateBatch] = useState(false);
   const [loading, setLoading] = useState(true);
   const [allPrograms, setAllPrograms] = useState([]);
   const [selectedProgram, setSelectedProgram] = useState("");
@@ -54,6 +55,9 @@ const AdminDashboard = () => {
   const [allInActiveInstructors, setAllInActiveInstructors] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredBatches, setFilteredBatches] = useState([]);
+  const [isFilter, setIsFilter] = useState(false);
+  const [filterValue, setFilterValue] = useState(false);
+  const [filterStatus, setFilterStatus] = useState(false);
 
   const dropdownRef = useRef(null);
   const statusDown = useRef(null);
@@ -71,19 +75,35 @@ const AdminDashboard = () => {
   // Apply filtering whenever search term or dropdown status changes
   useEffect(() => {
     const handleFilter = () => {
-      const filteredData = batches.filter((batch) => {
-        const matchesSearchTerm = batch.batch
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
+      let matchesSearchTerm = false;
+      let matchesStatus = false;
 
-        const matchesStatus =
-          selectedStatus === "Show All" ||
-          (selectedStatus === "Active" && batch.status === 1) ||
-          (selectedStatus === "Inactive" && batch.status === 0);
+      if (!searchTerm && selectedStatus === "Show All") {
+        setFilteredBatches(batches);
+        setIsFilter(false);
+      } else {
+        const filteredData = batches.filter((batch) => {
+          const searchTermMatches = batch.batch
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase());
 
-        return matchesSearchTerm && matchesStatus;
-      });
-      setFilteredBatches(filteredData);
+          const statusMatches =
+            selectedStatus === "Show All" ||
+            (selectedStatus === "Active" && batch.status === 1) ||
+            (selectedStatus === "Inactive" && batch.status === 0);
+
+          matchesSearchTerm = matchesSearchTerm || searchTermMatches;
+          matchesStatus = matchesStatus || statusMatches;
+
+          return searchTermMatches && statusMatches;
+        });
+
+        setFilteredBatches(filteredData);
+        setIsFilter(filteredData.length > 0);
+      }
+
+      setFilterValue(matchesSearchTerm);
+      setFilterStatus(matchesStatus);
     };
     handleFilter();
   }, [searchTerm, selectedStatus, batches]);
@@ -119,6 +139,10 @@ const AdminDashboard = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    handleListingAllBatches();
+  }, [updateBatch]);
 
   useEffect(() => {
     handleListingAllBatches();
@@ -288,7 +312,7 @@ const AdminDashboard = () => {
           {" "}
           {/* Adding a unique key */}
           <Link href="/user-management/users" className="w-full">
-            <div className="bg-[#ffffff] min-w-[32%] flex justify-between px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
+            <div className="bg-[#ffffff] min-w-[32%] flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
               <div className="flex flex-col text-sm h-full justify-center items-center">
                 Total Users
                 <span className="text-xl font-semibold font-exo text-[#32324D]">
@@ -584,14 +608,32 @@ const AdminDashboard = () => {
               </div>
             </div>
           </div>
-          <div className=" max-h-[120px] overflow-y-auto overflow-x-hidden  scrollbar-webkit">
-            {filteredBatches.length > 0 ? (
-              <BatchTable batches={filteredBatches} loading={loading} />
-            ) : batches.length > 0 ? (
-              <BatchTable batches={batches} loading={loading} />
+          <div className="max-h-[130px] overflow-y-auto overflow-x-hidden scrollbar-webkit">
+            {loading ? (
+              <p>Loading...</p>
+            ) : isFilter ? (
+              <BatchTable
+                batches={filteredBatches}
+                loading={loading}
+                updateBatch={updateBatch}
+                setUpdateBatch={setUpdateBatch}
+              />
+            ) : !filterStatus &&
+              !filterValue &&
+              filteredBatches.length === 0 ? (
+              <p>No batch found</p>
             ) : (
-              <p>No batches available</p>
+              <BatchTable
+                batches={batches}
+                loading={loading}
+                updateBatch={updateBatch}
+                setUpdateBatch={setUpdateBatch}
+              />
             )}
+
+            {/* {batches.length > 0 && (
+              <BatchTable batches={batches} loading={loading} />
+            )} */}
           </div>
         </div>
       </div>

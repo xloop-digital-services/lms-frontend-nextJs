@@ -63,7 +63,7 @@ module.exports = {
         },
         ".scrollbar-webkit": {
           "&::-webkit-scrollbar": {
-            width: "2px",
+            width: "5px",
           },
           "&::-webkit-scrollbar-track": {
             background: "#fffff",

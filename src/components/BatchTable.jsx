@@ -7,7 +7,7 @@ import DeleteConfirmationPopup from "./Modal/DeleteConfirmationPopUp";
 import { IoCheckmark, IoClose } from "react-icons/io5";
 import { toast } from "react-toastify";
 
-const BatchTable = ({ batches, loading, setUpdateBatch, updateBatch }) => {
+const BatchTable = ({ batches, loading, setLoading, setUpdateBatch, updateBatch }) => {
   const [edit, setEdit] = useState(false);
   const [selectedBatch, setSelectedBatch] = useState(null);
   const [batch, setbatch] = useState(null);
@@ -44,7 +44,7 @@ const BatchTable = ({ batches, loading, setUpdateBatch, updateBatch }) => {
     if (editStartDate && editEndDate <= editStartDate) {
       toast.error("End date should be greater than start date");
     } else {
-      setUpdating(true); // Set updating to true when status is being updated
+      setLoading(true); // Set updating to true when status is being updated
       try {
         const data = {
           batch: selectedBatch,
@@ -59,13 +59,16 @@ const BatchTable = ({ batches, loading, setUpdateBatch, updateBatch }) => {
         };
 
         const response = await UpdateBatch(selectedBatch, data);
-        console.log("batch updated", response);
-        setEdit(false);
-        setUpdateBatch(!updateBatch);
+        if (response.status === 200){
+          toast.success(response.data.message)
+          console.log("batch updated", response);
+          setEdit(false);
+          setUpdateBatch(!updateBatch);
+        }
       } catch (error) {
         console.log("error while updating status", error);
       } finally {
-        setUpdating(false); // Set updating to false after the update is complete
+        setLoading(false); // Set updating to false after the update is complete
       }
     }
   };
@@ -77,10 +80,13 @@ const BatchTable = ({ batches, loading, setUpdateBatch, updateBatch }) => {
 
   const handleDelete = async () => {
     try {
+      setLoading(true)
       const response = await DeleteBatch(selectedBatch);
+      toast.success(response.data.message)
       console.log("deleting the batch", response);
       setUpdateBatch(!updateBatch);
       setConfirmDelete(false);
+      setLoading(false)
     } catch (error) {
       console.log("error while deleting the batch", error);
     }
@@ -156,11 +162,11 @@ const BatchTable = ({ batches, loading, setUpdateBatch, updateBatch }) => {
                     </th>
                   </tr>
                 </thead>
-                {updating && (
+                {/* {updating && (
                   <div className="absolute inset-0 w-full p-2 flex items-center justify-center bg-surface-100 bg-opacity-30 z-[1100]">
                     <CircularProgress size={30} />
                   </div>
-                )}
+                )} */}
                 <tbody className="divide-y divide-dark-200 dark:divide-gray-700">
                   {loading && batches.length == 0 ? (
                     <tr>

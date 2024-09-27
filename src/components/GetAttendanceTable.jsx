@@ -10,6 +10,7 @@ import {
   postAttendanceBySessionId,
 } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
+import { CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify"; // Ensure you have react-toastify installed
 
@@ -18,8 +19,10 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   const [attendance, setAttendance] = useState([]);
   const [getAttendance, setGetAttendance] = useState([]);
   const [selectedAttendance, setSelectedAttendance] = useState({});
+  const [isMarked, setIsMarked] = useState(false);
   const [loader, setLoader] = useState(false);
   const [sessions, setSessions] = useState([]);
+  const [getting, setGetting] = useState(false);
   const group = userData?.Group;
   const isAdmin = userData?.Group === "admin";
   const isInstructor = userData?.Group === "instructor";
@@ -42,11 +45,10 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
       group,
       courseId
     );
-    setLoader(true);
+
     try {
       if (response.status === 200) {
         setSessions(response.data.data); // Store the sessions data
-        setLoader(false);
       } else {
         console.error("Failed to fetch sessions, status:", response.status);
       }
@@ -56,13 +58,14 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   }
 
   async function fetchAttendance() {
+    setGetting(true);
     try {
       const response = await getAttendanceBySessionId(selectedSession);
       if (response.status === 200) {
-        console.log();
         const initialAttendance = response.data.data.students.reduce(
           (acc, student) => {
-            acc[student.registration_id] = 0;
+            // Initialize each student's attendance to 0 (Present)
+            // acc[student.registration_id] = 0;
             return acc;
           },
           {}
@@ -77,10 +80,13 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
       }
     } catch (error) {
       console.error("Error fetching attendance:", error);
+    } finally {
+      setGetting(false);
     }
   }
 
   async function fetchAttendanceIns() {
+    setGetting(true);
     try {
       const response = await getAttendanceBySessionIdnCourseId(
         selectedSession,
@@ -105,6 +111,8 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
       }
     } catch (error) {
       console.error("Error fetching attendance:", error);
+    } finally {
+      setGetting(false);
     }
   }
 
@@ -133,7 +141,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   //     setLoader(false);
   //   }
   // }
- 
+
   const handleAttendanceChange = (regId, status) => {
     setSelectedAttendance((prevState) => ({
       ...prevState,
@@ -142,6 +150,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   };
 
   const handleSubmit = async () => {
+    setLoader(true);
     const attendanceArray = Object.keys(selectedAttendance).map(
       (studentId) => ({
         student: studentId,
@@ -168,10 +177,23 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
         toast.error(`Error submitting attendance: ${response.data.message}`);
       }
     } catch (error) {
-      toast.error("Error submitting attendance");
-      console.error("Error submitting attendance:", error);
+      // toast.error("Error submitting attendance");
+      if (error.response.status === 500) {
+        console.error("Error submitting attendance:", error);
+        toast.info("Attendance has been marked!");
+      }
+    } finally {
+      setLoader(false);
     }
   };
+
+  useEffect(() => {
+    const marked =
+      getAttendance.map((att) => att.registration_id) ===
+      attendance.map((att) => att.student);
+    console.log("hey", marked);
+    setIsMarked(true);
+  }, []);
 
   const handleChange = (e) => {
     const session_id = e.target.value;
@@ -202,9 +224,11 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
     }
   }, [courseId, selectedSession, date]);
 
-  // useEffect(() => {
-  //   fetchAttendance();
-  // }, [selectedSession]);
+  useEffect(() => {
+    if (toggleMark && selectedSession) {
+      fetchAttendance();
+    }
+  }, [selectedSession, toggleMark]);
 
   const handleDateChange = (e) => {
     const selectedDate = e.target.value;
@@ -284,22 +308,34 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                     <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]">
                       Student Name
                     </th>
-                    {attendance && attendance.length > 0 && (
-                      <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]">
-                        Date
-                      </th>
-                    )}
+                    {date &&
+                      selectedSession &&
+                      attendance &&
+                      attendance.length > 0 && (
+                        <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]">
+                          Date
+                        </th>
+                      )}
                     <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]">
                       Action
                     </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-dark-200 dark:divide-gray-700 overflow-y-scroll scrollbar-webkit">
-                  {!toggleMark &&
-                  date &&
-                  selectedSession &&
-                  Array.isArray(attendance) &&
-                  attendance.length > 0 ? (
+                  {getting ? (
+                    <tr>
+                      <td
+                        colSpan="8"
+                        className="px-6 py-2 text-center whitespace-nowrap text-sm text-dark-300"
+                      >
+                        <CircularProgress size={20} />
+                      </td>
+                    </tr>
+                  ) : !toggleMark &&
+                    date &&
+                    selectedSession &&
+                    Array.isArray(attendance) &&
+                    attendance.length > 0 ? (
                     attendance.map((att, index) => (
                       <tr key={index}>
                         <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
@@ -323,15 +359,14 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                                 type="radio"
                                 name={`attendance-${att.student}`}
                                 value={status}
-                                checked={
-                                  selectedAttendance[att.student] ===
-                                  parseInt(status)
-                                }
+                                checked={att.status === parseInt(status)}
                                 disabled={true}
-                                className="w-4 h-4 rounded-full border-2 border-[#03A1D8] group-hover:cursor-pointer"
+                                className="w-4 h-4 rounded-full border-2 
+                                group-hover:cursor-default   
+                                disabled:opacity-100 disabled:bg-[#4b4b51]"
                                 // disabled={isAttendancePosted}
                               />
-                              <p className="group-hover:cursor-pointer">
+                              <p className="group-hover:cursor-default">
                                 {status === "0"
                                   ? "P"
                                   : status === "1"
@@ -343,6 +378,15 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                         </td>
                       </tr>
                     ))
+                  ) : getting ? (
+                    <tr>
+                      <td
+                        colSpan="8"
+                        className="px-6 py-2 text-center whitespace-nowrap text-sm text-dark-300"
+                      >
+                        <CircularProgress size={20} />
+                      </td>
+                    </tr>
                   ) : toggleMark &&
                     Array.isArray(getAttendance) &&
                     getAttendance.length > 0 ? (
@@ -366,9 +410,8 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                                 name={`attendance-${att.registration_id}`}
                                 value={status}
                                 checked={
-                                  selectedAttendance[
-                                    att.student || att.registration_id
-                                  ] === parseInt(status)
+                                  selectedAttendance[att.registration_id] ===
+                                  parseInt(status)
                                 }
                                 onChange={() =>
                                   handleAttendanceChange(
@@ -377,7 +420,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                                   )
                                 }
                                 className="w-4 h-4 rounded-full border-2 border-[#03A1D8] group-hover:cursor-pointer"
-                                disabled={isAttendancePosted}
+                                // disabled={isAttendancePosted} // If attendance is posted, disable the radio
                               />
                               <p className="group-hover:cursor-pointer">
                                 {status === "0"
@@ -412,11 +455,19 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
           onClick={handleSubmit}
           className={`${
             date ? "bg-blue-200 cursor-not-allowed" : "bg-blue-300"
-          }  from-dark-600 text-surface-100 p-2 rounded-md w-20 my-2 flex justify-center`}
+          } from-dark-600 text-surface-100 p-2 rounded-md w-20 my-2 flex items-center gap-2 justify-center`}
           type="button"
           disabled={date}
         >
-          Submit
+          {loader ? (
+            <CircularProgress
+              size={20}
+              style={{ color: "#ffffff" }}
+              className="m-[2px]"
+            />
+          ) : (
+            "Submit"
+          )}
         </button>
       )}
     </div>

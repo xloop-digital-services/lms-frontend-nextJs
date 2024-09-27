@@ -136,12 +136,15 @@ const ApprovalUserModal = ({
         return [...prevSelected, session.id];
       }
     });
-    if (session.id) {
+  };
+
+  useEffect(() => {
+    if (sessionIds.length > 0) {
       setSelected(true);
     } else {
       setSelected(false);
     }
-  };
+  }, [sessionIds]);
 
   useEffect(() => {
     const handleGetSuggestedSessions = async () => {
@@ -278,25 +281,6 @@ const ApprovalUserModal = ({
             </div>
             <div className="flex justify-evenly items-start pt-2">
               <div className="w-[40%]">
-                <h2 className="border-b border-dark-300 py-1 mb-2 text-sm text-dark-400">
-                  Locations
-                </h2>
-                {userLocations && userLocations.length > 0 ? (
-                  userLocations.map((location, index) => (
-                    <ul
-                      key={location.id}
-                      className={`${
-                        userLocations.length > 1 && "list-disc pl-4"
-                      }`}
-                    >
-                      <li>{location.name}</li>
-                    </ul>
-                  ))
-                ) : (
-                  <p className="text-[12px]">No location found</p>
-                )}
-              </div>
-              <div className="w-[40%]">
                 {selectedOption === "student" && (
                   <>
                     <h2 className="border-b border-dark-300 py-1 mb-2 text-sm text-dark-400">
@@ -310,8 +294,8 @@ const ApprovalUserModal = ({
                             {userProgramCourses &&
                               userProgramCourses.length > 0 &&
                               userProgramCourses.map((course) => (
-                                <div key={course.id}>
-                                  <p className="px-4"> - {course.name}</p>
+                                <div key={course.id} >
+                                  <p className="px-4 w-[270px]"> - {course.name}</p>
                                 </div>
                               ))}
                           </div>
@@ -338,8 +322,26 @@ const ApprovalUserModal = ({
                         <p className="text-[12px]">No skills found</p>
                       )}
                     </div>
-                    <div></div>
                   </>
+                )}
+              </div>
+              <div className="w-[40%]">
+                <h2 className="border-b border-dark-300 py-1 mb-2 text-sm text-dark-400">
+                  Locations
+                </h2>
+                {userLocations && userLocations.length > 0 ? (
+                  userLocations.map((location, index) => (
+                    <ul
+                      key={location.id}
+                      className={`${
+                        userLocations.length > 1 && "list-disc pl-4"
+                      }`}
+                    >
+                      <li>{location.name}</li>
+                    </ul>
+                  ))
+                ) : (
+                  <p className="text-[12px]">No location found</p>
                 )}
               </div>
             </div>
@@ -387,11 +389,7 @@ const ApprovalUserModal = ({
               </div>
             )}
             <div
-              className={`${
-                selectedOption === "instructor"
-                  ? " justify-end "
-                  : "justify-start"
-              } flex gap-3 pl-[50px] items-center w-full`}
+              className={`flex justify-end items-center w-full`}
             >
               <div className="flex flex-col justify-end  pt-4  relative min-w-[250px]">
                 {/* <div>
@@ -462,7 +460,7 @@ const ApprovalUserModal = ({
                             );
                           })
                         ) : (
-                          <div className="py-2 px-4 text-center text-sm text-dark-300">
+                          <div className="py-2 px-4 w-[250px] text-center text-sm text-dark-300">
                             No sessions available
                           </div>
                         )}
@@ -472,11 +470,11 @@ const ApprovalUserModal = ({
                 </div>
               </div>
 
-              <div className=" pt-4 px-5 ">
+              <div className=" pt-4 px-2 ">
                 <button
                   disabled={!selected}
                   className={`bg-blue-300 ${
-                    selected ? "" : "opacity-30"
+                    selected ? "" : "opacity-30 cursor-not-allowed"
                   } text-surface-100 py-[10px] w-[100px] text-sm h-fit rounded-md flex justify-center items-center`}
                   onClick={handleSessionAssign}
                   // disabled={!selected}

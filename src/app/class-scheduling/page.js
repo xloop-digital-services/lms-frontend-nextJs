@@ -333,6 +333,7 @@ export default function Page() {
             <SessionsTable
               sessions={filterLocation}
               loading={loading}
+              setLoading={setLoading}
               setUpdateSession={setUpdateSession}
               updateSession={updateSession}
             />
@@ -340,6 +341,7 @@ export default function Page() {
             <SessionsTable
               sessions={sessions}
               loading={loading}
+              setLoading={setLoading}
               setUpdateSession={setUpdateSession}
               updateSession={updateSession}
             />

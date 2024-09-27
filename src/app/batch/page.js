@@ -196,6 +196,7 @@ export default function Page() {
               setUpdateBatch={setUpdateBatch}
               updateBatch={updateBatch}
               loading={loading}
+              setLoading={setLoading}
             />
           ) : !isCitySelected && batches.length > 0 ? (
             <BatchTable
@@ -203,6 +204,7 @@ export default function Page() {
               setUpdateBatch={setUpdateBatch}
               updateBatch={updateBatch}
               loading={loading}
+              setLoading={setLoading}
             />
           ) : (
             <p>No Batch found in this city</p>

@@ -11,6 +11,7 @@ import useClickOutside from "@/providers/useClickOutside";
 const SessionsTable = ({
   sessions,
   loading,
+  setLoading,
   updateSession,
   setUpdateSession,
 }) => {
@@ -123,15 +124,17 @@ const SessionsTable = ({
     if (editStartTime && editEndTime <= editStartTime) {
       toast.error("End time should be greater than start time");
     } else {
-      setUpdating(true);
+      setLoading(true);
       try {
         const data = {
           batch: session.batch,
           course: session.course.id,
           location: session.location,
           no_of_students: editCapacity,
-          start_date: editStartTime,
-          end_date: editEndTime,
+          start_date: session.start_date,
+          end_date: session.end_date,
+          start_time: editStartTime,
+          end_time: editEndTime,
           status: status,
           days_of_week: selectedDays,
         };
@@ -156,12 +159,16 @@ const SessionsTable = ({
 
   const handleDelete = async () => {
     try {
+      setLoading(true)
       const response = await DeleteSession(selectedSession);
       console.log("deleting the session", response);
       setUpdateSession(!updateSession);
       setConfirmDelete(false);
+      setLoading(false)
     } catch (error) {
       console.log("error while deleting the lcoation", error);
+    } finally{
+      setLoading(false)
     }
   };
 

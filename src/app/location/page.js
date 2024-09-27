@@ -144,6 +144,7 @@ export default function Page() {
             <LocationsTable
               locations={filteredCityList}
               loading={loading}
+              setLoading={setLoading}
               setUpdateLocation={setUpdateLocation}
               updateLocation={updateLocation}
             />
@@ -157,6 +158,7 @@ export default function Page() {
             <LocationsTable
               locations={locations}
               loading={loading}
+              setLoading={setLoading}
               setUpdateLocation={setUpdateLocation}
               updateLocation={updateLocation}
             />
@@ -169,6 +171,8 @@ export default function Page() {
           setUpdateLocation={setUpdateLocation}
           updateLocation={updateLocation}
           cityOptions={cityOptions}
+          loading={loading}
+          setLoading={setLoading}
         />
       )}
     </div>

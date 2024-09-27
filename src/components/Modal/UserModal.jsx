@@ -59,9 +59,13 @@ const UserModal = ({
     setApprovalBySkill(true);
   };
   // console.log("skills id", skillID);
-  const handleLocationSelect = (id) => {
+  const handleLocationSelect = (id, isChecked) => {
     if (selectedOption === "student") {
-      setStudentLocationId(id);
+      if (isChecked) {
+        setStudentLocationId(id);
+      } else {
+        setStudentLocationId(null); // Set to null when unchecked
+      }
     } else {
       setLocationId((prevLocationIDs) => {
         if (prevLocationIDs.includes(id)) {
@@ -75,55 +79,48 @@ const UserModal = ({
     }
     setAprrovalByLocation(true);
   };
-  useEffect(() => {
-    if (!((programID || skillID) && locationId)) {
-      setEnableApprovalButton(false);
-      setApprovalBySkill(false);
-      setAprrovalByLocation(false);
-    }
-  }, [programID, locationId, skillID]);
 
   useEffect(() => {
-    const handleUserSelection = async () => {
-      setLoading(true);
-      if (selectedStatus === "approved") {
-        if (selectedOption === "student") {
-          data = {
-            application_status: selectedStatus,
-            program_id: programID,
-            location_id: studentLocationId,
-          };
-        } else {
-          data = {
-            application_status: selectedStatus,
-            skills_id: skillID,
-            locations_id: locationId,
-          };
-        }
+    if (selectedOption === "student") {
+      if (!studentLocationId) {
+        setAprrovalByLocation(false);
+      }
+    } else if (locationId.length === 0) {
+      setAprrovalByLocation(false);
+    }
+
+    if (skillID.length === 0) {
+      setApprovalBySkill(false);
+    }
+    // console.log("ye chal gaya", approvalByLocation);
+  }, [locationId, skillID, studentLocationId]);
+
+  const handleUserSelection = async (status) => {
+    setLoading(true);
+    if (status === "approved") {
+      if (selectedOption === "student") {
+        data = {
+          application_status: status,
+          program_id: programID,
+          location_id: studentLocationId,
+        };
       } else {
         data = {
-          application_status: selectedStatus,
+          application_status: status,
+          skills_id: skillID,
+          locations_id: locationId,
         };
       }
-      try {
-        const response = await userSelectionByAdmin(id, data);
-        console.log("response while selecting", response.data);
-        if (response.status === 200) {
-          toast.success(`User has been ${selectedStatus}!`, {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
-          setStatusUpdated(!statusUpdated);
-          setLoading(false);
-          setModal(false);
-        }
-      } catch (error) {
-        toast.error(error.response.data.message, {
+    } else {
+      data = {
+        application_status: status,
+      };
+    }
+    try {
+      const response = await userSelectionByAdmin(id, data);
+      console.log("response while selecting", response.data);
+      if (response.status === 200) {
+        toast.success(`User has been ${status}!`, {
           position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
@@ -132,15 +129,27 @@ const UserModal = ({
           draggable: true,
           progress: undefined,
         });
-        console.log("error while selecting", error);
-        s;
+        setStatusUpdated(!statusUpdated);
         setLoading(false);
+        setModal(false);
       }
-    };
-    if (!(selectedStatus === "")) {
-      handleUserSelection();
+    } catch (error) {
+      toast.error(error.response.data.message, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      console.log("error while selecting", error);
+      setLoading(false);
+    } finally {
+      setLoading(false);
     }
-  }, [selectedStatus]);
+  };
+
   useClickOutside(modalRef, () => setModal(false));
   return (
     <div className="backDropOverlay min-h-screen flex  items-center">
@@ -243,7 +252,7 @@ const UserModal = ({
                           <td className="text-center py-2 px-4">
                             {resume ? (
                               <button
-                              onClick={() => downloadFile(resume)}
+                                onClick={() => downloadFile(resume)}
                                 // href={resume}
                                 // target="_blank"
                                 // rel="noopener noreferrer"
@@ -338,7 +347,9 @@ const UserModal = ({
                             type="checkbox"
                             name="locationSelection" // Same name attribute for all radio buttons
                             // value={prog.name} // Store the value of the selected program
-                            onChange={() => handleLocationSelect(prog.id)} // Call a function to handle the selection
+                            onChange={(e) =>
+                              handleLocationSelect(prog.id, e.target.checked)
+                            } // Call a function to handle the selection
                             className="border-gray-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
                           />
                           {/* <label
@@ -367,7 +378,10 @@ const UserModal = ({
                   >
                     <div
                       className={`shadow-md flex items-center group-hover:gap-2 p-3 rounded-full cursor-pointer duration-300`}
-                      onClick={() => setSelectedStatus("short_listed")}
+                      onClick={() => {
+                        setSelectedStatus("short_listed");
+                        handleUserSelection("short_listed");
+                      }}
                     >
                       <PiListPlusFill size={23} className="fill-zinc-600" />
                       <span className="text-[0px] group-hover:text-sm duration-300">
@@ -379,7 +393,10 @@ const UserModal = ({
                 <div className="group relative flex justify-center items-center text-[#D84848] text-sm font-bold">
                   <div
                     className="shadow-md flex items-center group-hover:gap-2 p-3 rounded-full cursor-pointer duration-300"
-                    onClick={() => setSelectedStatus("removed")}
+                    onClick={() => {
+                      setSelectedStatus("removed");
+                      handleUserSelection("removed");
+                    }}
                   >
                     <IoMdCloseCircle size={24} className="fill-zinc-600" />
                     <span className="text-[0px] group-hover:text-sm duration-300">
@@ -387,24 +404,29 @@ const UserModal = ({
                     </span>
                   </div>
                 </div>
-                <div
+                <button
                   className={`group relative flex justify-center items-center ${
                     (enableApprovalButton || approvalByskill) &&
                     approvalByLocation
                       ? "text-[#18A07A] cursor-pointer"
                       : "text-[#23e1ab] cursor-not-allowed"
                   } text-sm font-bold`}
+                  disabled={
+                    !(enableApprovalButton || approvalByskill) ||
+                    !approvalByLocation
+                  }
+                  onClick={() => {
+                    setSelectedStatus("approved");
+                    handleUserSelection("approved");
+                  }}
                 >
-                  <div
-                    className="shadow-md flex items-center group-hover:gap-2 p-3 rounded-full duration-300"
-                    onClick={() => setSelectedStatus("approved")}
-                  >
+                  <div className="shadow-md flex items-center group-hover:gap-2 p-3 rounded-full duration-300">
                     <FaCheckCircle size={20} className="fill-zinc-600" />
                     <span className="text-[0px] group-hover:text-sm duration-300">
                       Approve
                     </span>
                   </div>
-                </div>
+                </button>
               </div>
             </div>
           </div>

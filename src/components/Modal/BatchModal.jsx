@@ -75,8 +75,8 @@ const BatchModal = ({
         setUpdateBatch(!updateBatch);
       } catch (error) {
         console.log("error is occuring", error.response);
-        if (error.response.status === 500) {
-          toast.error("Change your city, category, and");
+        if (error.response.status === 400) {
+          toast.error(error.response.data.error[0]);
         }
         // toast.error(error?.response?.data?.error[0])
         setLoadingCreation(false);
