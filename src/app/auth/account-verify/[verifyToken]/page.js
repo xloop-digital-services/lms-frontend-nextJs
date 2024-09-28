@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import logo from "../../../../../public/assets/img/logo.png";
+import logo from "../../../../public/assets/img/xCelerate - Logo.png";
 import Image from "next/image";
 import { useState } from "react";
 import { VerifyEmail } from "@/api/route";
@@ -9,31 +9,31 @@ import { toast } from "react-toastify";
 import { IoEyeSharp } from "react-icons/io5";
 import { BsEyeSlashFill } from "react-icons/bs";
 
-export default function Page({params}){
+export default function Page({ params }) {
   const encodedToken = params.verifyToken;
   const verifyToken = decodeURIComponent(encodedToken);
-  const [loading, setloading] = useState(false)
+  const [loading, setloading] = useState(false);
   const [newPassword, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
-  console.log('token', verifyToken)
+  console.log("token", verifyToken);
 
   const handlePassword = async (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
-    setloading(true)
- 
+    setloading(true);
+
     const data = {
-      token : verifyToken,
-      password : newPassword,
-      password2 : confirmPassword
-    }
-    console.log('form',data)
+      token: verifyToken,
+      password: newPassword,
+      password2: confirmPassword,
+    };
+    console.log("form", data);
 
     try {
       const response = await VerifyEmail(data);
-      console.log('res', response)
+      console.log("res", response);
       if (response.status === 200) {
         toast.success("Password Set Successfully", {
           position: "top-right",
@@ -49,7 +49,7 @@ export default function Page({params}){
             router.push("/auth/login");
           },
         });
-        setloading(false)
+        setloading(false);
       } else {
         toast.error("Wrong Password.", response.data.message, {
           position: "top-right",
@@ -60,7 +60,7 @@ export default function Page({params}){
           draggable: true,
           progress: undefined,
         });
-        setloading(false)
+        setloading(false);
       }
     } catch (error) {
       console.error("Error during login:", error.response.data.message);
@@ -75,20 +75,26 @@ export default function Page({params}){
       });
       setConfirmPassword("");
       setPassword("");
-      setloading(false)
+      setloading(false);
     }
-  }
+  };
 
   const handleShowPassword = () => {
-    setShowPassword(!showPassword)
-  }
-    
+    setShowPassword(!showPassword);
+  };
+
   return (
     <div className="w-full max-w-lg mx-auto p-6 mt-[10%] font-inter flex flex-col justify-center ">
       <div className="flex items-center justify-center">
-        <Image src={logo} alt="Workflow" />
+        <Image
+          src={logo}
+          alt="logo"
+          width={300}
+          height={50}
+          className=" object-contain"
+        />
       </div>
-      <div className="mt-7 bg-surface-100 rounded-xl shadow-lg ">
+      <div className="mt-8 bg-surface-100 rounded-xl shadow-lg ">
         <div className="p-4 sm:p-7">
           <div className="text-center">
             <h1 className="block text-2xl font-bold text-[#282323] font-exo">
@@ -108,10 +114,7 @@ export default function Page({params}){
             <form>
               <div className="flex flex-col space-y-3">
                 <div className="space-y-3">
-                  <label
-                
-                    className="block text-sm font-medium leading-5 text-dark-700"
-                  >
+                  <label className="block text-sm font-medium leading-5 text-dark-700">
                     New Password
                   </label>
                   <div className="relative">
@@ -139,10 +142,7 @@ export default function Page({params}){
                   </div>
                 </div>
                 <div className="space-y-3">
-                  <label
-                  
-                    className="block text-sm font-medium leading-5 text-dark-700"
-                  >
+                  <label className="block text-sm font-medium leading-5 text-dark-700">
                     Confirm Password
                   </label>
                   <div className="relative">
@@ -173,7 +173,10 @@ export default function Page({params}){
                   className="w-full flex justify-center gap-4 py-3 px-4 text-sm font-medium rounded-lg text-dark-100 bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
                   onClick={handlePassword}
                 >
-                  {loading && <CircularProgress size={20} style={{color:'white'}} />} Set password
+                  {loading && (
+                    <CircularProgress size={20} style={{ color: "white" }} />
+                  )}{" "}
+                  Set password
                 </button>
               </div>
             </form>
@@ -183,4 +186,3 @@ export default function Page({params}){
     </div>
   );
 }
-

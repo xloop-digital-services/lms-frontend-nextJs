@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import { resetPassword } from "@/api/route";
-import logo from "../../../../public/assets/img/logo.png";
+import logo from "../../../../public/assets/img/xCelerate - Logo.png";
 import Image from "next/image";
 import { CircularProgress } from "@mui/material";
 
@@ -54,9 +54,15 @@ export default function Page() {
   return (
     <div className="w-full max-w-lg mx-auto p-6 mt-[10%] font-inter flex flex-col justify-center ">
       <div className="flex items-center justify-center">
-        <Image src={logo} alt="Workflow" />
+      <Image
+            src={logo}
+            alt="logo"
+            width={300}
+            height={50}
+            className=" object-contain"
+          />
       </div>
-      <div className="mt-7 bg-surface-100 rounded-xl shadow-lg ">
+      <div className="mt-8 bg-surface-100 rounded-xl shadow-lg ">
         <div className="p-4 sm:p-7">
           <div className="text-center">
             <h1 className="block text-2xl font-bold text-[#282323]">

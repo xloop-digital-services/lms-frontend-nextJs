@@ -12,18 +12,20 @@ const LocationModal = ({
   setUpdateLocation,
   cityOptions,
   loading,
-  setLoading
+  setLoading,
 }) => {
   const [allLocations, setAllLocations] = useState([]);
-  const [locationName, setLocationName] = useState("select your location");
+  const [locationName, setLocationName] = useState("Select location");
   const [locationCode, setLocationCode] = useState("");
-  const [city, setCity] = useState("select your city");
+  const [city, setCity] = useState("Select city");
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [isCitySelected, setIscitySelected] = useState(false);
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [isLocationSelected, setIsLocationSelected] = useState(false);
   const [capacity, setCapacity] = useState(null);
-  
+  const [error, setError] = useState(""); 
+
+
   const cityDown = useRef(null);
   const modalDown = useRef(null);
 
@@ -37,9 +39,13 @@ const LocationModal = ({
   // console.log('in the modal', cityOptions)
 
   const handlLocationCreation = async () => {
-  setLoading(true)
-    if(city && capacity && locationName && locationCode){
-
+    setLoading(true);
+    if (error) {
+      toast.error("Capacity must be a positive value"); // Display the error toast
+      setLoading(false); // Set loading to false
+      return; // Stop further execution
+    }
+    if (city && capacity && locationName && locationCode) {
       try {
         const data = {
           name: locationName,
@@ -52,10 +58,10 @@ const LocationModal = ({
           console.log("location created", response?.data?.message);
           toast.success(response?.data?.message);
           setUpdateLocation(!updateLocation);
-          setLoading(false)
+          setLoading(false);
           setOpenModal(false);
         }
-  
+
         if (response.data.code === "token_not_valid") {
           toast.error("Your session has been expired. Log In again!");
           setLoading(false);
@@ -66,11 +72,25 @@ const LocationModal = ({
           "error while location creation",
           error?.response?.data?.message
         );
+        if (error.response.status === 400) {
+          toast.error(error?.response?.data?.message);
+        }
         setLoading(false);
       }
     } else {
-      toast.error('All fields are required!')
-      setLoading(false)
+      toast.error("All fields are required!");
+      setLoading(false);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    // Check if the value contains invalid characters
+    if (/[-]/.test(value)) {
+      setError("Invalid value");
+    } else {
+      setError(""); // Clear error if no invalid characters are present
+      setCapacity(value); // Update capacity only when valid
     }
   };
 
@@ -80,7 +100,7 @@ const LocationModal = ({
 
   const handleCitySelect = (option) => {
     setCity(option.name);
-    setLocationName("select your location");
+    setLocationName("Select location");
     setIsCityOpen(false);
     setIscitySelected(true);
     setAllLocations(option.areas);
@@ -217,7 +237,7 @@ const LocationModal = ({
                 <input
                   type="text"
                   className="border border-dark-300 outline-none p-3 rounded-lg w-full "
-                  placeholder="location code"
+                  placeholder="Location code"
                   value={locationCode}
                   required
                 />
@@ -226,13 +246,14 @@ const LocationModal = ({
                 <p>Capacity</p>
                 <input
                   type="number"
-                  className="border border-dark-300 outline-none p-3 rounded-lg w-full "
-                  placeholder="number of students"
-                  min={0}
+                  className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
+                  placeholder="Number of students"
                   value={capacity}
-                  onChange={(e) => setCapacity(parseInt(e.target.value, 10) || 0)}
-                  required
+                  min={0}
+                  onChange={handleInputChange}
                 />
+                {error && <p className="text-mix-200 text-[12px]">{error}</p>}{" "}
+                {/* Display error message */}
               </div>
             </div>
             <div className="flex w-full justify-center items-center">
@@ -241,7 +262,10 @@ const LocationModal = ({
                 onClick={handlLocationCreation}
                 className="w-fit flex justify-center py-3 px-12 text-sm font-medium rounded-lg text-dark-100 bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
               >
-                {loading && <CircularProgress size={19} style={{color: '#fffff'}} />} Create
+                {loading && (
+                  <CircularProgress size={19} style={{ color: "#fffff" }} />
+                )}{" "}
+                Create
               </button>
             </div>
           </div>

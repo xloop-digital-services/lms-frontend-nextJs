@@ -14,7 +14,7 @@ const BatchModal = ({
   setUpdateBatch,
   cityOptions,
 }) => {
-  const [selectedCity, setSelectedCity] = useState("City");
+  const [selectedCity, setSelectedCity] = useState("Select city");
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [locations, setLocations] = useState([]); // State to store the list of location names
   const [currentLocation, setCurrentLocation] = useState(""); // State to store the current input value
@@ -28,7 +28,8 @@ const BatchModal = ({
   const [isCitySelected, setIsCitySelected] = useState(false);
   const [cityShortName, setCityShortName] = useState("");
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("select category");
+  const [selectedCategory, setSelectedCategory] = useState("Select category");
+  const [error, setError] = useState(""); 
   const categoryOptions = [
     { name: "Fall" },
     { name: "Winter" },
@@ -46,6 +47,11 @@ const BatchModal = ({
 
   const handleBatchCreation = async () => {
     setLoadingCreation(true);
+    if (error) {
+      toast.error("Capacity must be a positive value"); // Display the error toast
+      setLoadingCreation(false); // Set loading to false
+      return; // Stop further execution
+    }
     if (
       !errorMessage &&
       selectedCity &&
@@ -69,7 +75,7 @@ const BatchModal = ({
 
         const response = await createBatch(data);
         console.log("batch created", response?.data.message);
-        toast.success("Batch created");
+        toast.success("Batch created successfully!");
         setLoadingCreation(false);
         setIsOpenModal(false);
         setUpdateBatch(!updateBatch);
@@ -82,7 +88,7 @@ const BatchModal = ({
         setLoadingCreation(false);
       }
     } else {
-      toast.warn("Properly select the fields!");
+      toast.error("All fields are required!");
       setLoadingCreation(false);
     }
   };
@@ -157,6 +163,17 @@ const BatchModal = ({
     setCityShortName(option.shortName);
     setIsCityOpen(false);
     setIsCitySelected(true);
+  };
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    // Check if the value contains invalid characters
+    if (/[-]/.test(value)) {
+      setError("Invalid value");
+    } else {
+      setError(""); // Clear error if no invalid characters are present
+      setStudentCapacity(value); // Update capacity only when valid
+    }
   };
 
   return (
@@ -240,11 +257,12 @@ const BatchModal = ({
                 <input
                   type="number"
                   className="border border-dark-300 outline-none p-3 rounded-lg w-full "
-                  placeholder="number of students"
+                  placeholder="Number of students"
                   value={studentCapacity}
                   min={0}
-                  onChange={(e) => setStudentCapacity(e.target.value)}
+                  onChange={handleInputChange}
                 />
+                {error && <p className="text-mix-200 text-[12px]">{error}</p>}{" "}
               </div>
             </div>
 
@@ -333,7 +351,7 @@ const BatchModal = ({
                 <input
                   type="text"
                   className="border border-dark-300 outline-none p-3 rounded-lg w-full "
-                  placeholder="batch year"
+                  placeholder="Batch year"
                   value={year}
                   onChange={(e) => setYear(e.target.value)}
                 />

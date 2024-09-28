@@ -4,7 +4,7 @@ import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import userIcon from "../../public/assets/img/images.png";
-import logo from "../../public/assets/img/logo.png";
+import logo from "../../public/assets/img/xCelerate - Logo.png";
 import { FaBell, FaSignOutAlt, FaUser, FaUsers } from "react-icons/fa";
 import Notifications from "./Notifications";
 import { getUserProfile } from "@/api/route";
@@ -30,7 +30,7 @@ export default function Navbar() {
           console.log("Fetched user data:", response.data);
           setLoader(false);
           setUser(response.data.response);
-          console.log(response.data.response)
+          console.log(response.data.response);
           console.log(user, "user");
           // console.log(response.data.response.city, "city")
         } else {
@@ -94,27 +94,25 @@ export default function Navbar() {
   const firstWord = getFirstWord(user?.first_name);
   // console.log(firstWord)
 
-
   return (
     <>
       <nav className="fixed w-screen bg-surface-100 z-10">
         <div className="mx-auto px-2 sm:px-6 lg:px-8">
           <div className="relative flex h-20 items-center justify-between">
-            <div className="hidden sm:flex justify start ml-4">
+            <div className="hidden sm:flex justify start ">
               <Link href="/dashboard" passHref>
                 <Image
                   src={logo}
                   alt="logo"
                   width={200}
-                  height={100}
-                  className={`w-full h-full rounded-3xl `}
-                  style={{ objectFit: "cover" }}
+                  height={50}
+                  className="max-w-[200px] max-h-[50px] object-contain"
                 />
               </Link>
             </div>
 
             {loader ? (
-              <CircularProgress />
+              <CircularProgress  />
             ) : (
               <div className="flex justify-end items-center w-full">
                 <div className="absolute inset-y-0 right-0 flex justify-center items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
@@ -174,7 +172,9 @@ export default function Navbar() {
                       <div className="flex justify-end items-center">
                         <div className={``} style={{ color: "#07224D" }}>
                           <p className="text-md capitalize">{`${user?.first_name} ${user?.last_name}`}</p>
-                          <p className="text-xs uppercase">{user?.registration_id}</p>
+                          <p className="text-xs uppercase">
+                            {user?.registration_id}
+                          </p>
                         </div>
                         <div className={`ml-1`} onClick={toggleDropdown}>
                           <svg

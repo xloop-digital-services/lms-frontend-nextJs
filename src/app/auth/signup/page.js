@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import logo from "../../../../public/assets/img/logo.png";
+import logo from "../../../../public/assets/img/xCelerate - Logo.png";
 import { IoEyeSharp } from "react-icons/io5";
 import { BsEyeSlashFill } from "react-icons/bs";
 import Image from "next/image";
@@ -104,8 +104,8 @@ export default function Page() {
         draggable: true,
         progress: undefined,
       });
-      if(error.message === 'Network Error'){
-        toast.error(error.message,'Check your internet connection')
+      if (error.message === "Network Error") {
+        toast.error(error.message, "Check your internet connection");
       }
     }
   };
@@ -114,7 +114,13 @@ export default function Page() {
     <div className="min-h-screen bg-[#F2F6FF] flex flex-col justify-center py-12 sm:px-6 lg:px-8 px-6 font-inter">
       <div className="sm:mx-auto sm:w-full sm:max-w-md flex justify-center items-center space-x-4 pr-4">
         <div className="flex items-center justify-center">
-          <Image src={logo} alt="Workflow" />
+          <Image
+            src={logo}
+            alt="logo"
+            width={300}
+            height={50}
+            className=" object-contain"
+          />
         </div>
         {/* <h2 className="text-center text-3xl font-exo leading-9 font-extrabold text-dark-900">
             Learning Management 
@@ -277,7 +283,11 @@ export default function Page() {
                     Select a city
                   </option>
                   {cities.map((cityName) => (
-                    <option className="bg-surface-100" key={cityName} value={cityName}>
+                    <option
+                      className="bg-surface-100"
+                      key={cityName}
+                      value={cityName}
+                    >
                       {cityName}
                     </option>
                   ))}

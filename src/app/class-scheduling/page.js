@@ -13,7 +13,7 @@ export default function Page() {
   const [selectedLocationId, setSelectedLocationId] = useState(null);
   // const [isMobile, setIsMobile] = useState(window.innerWidth <= 845);
   const [selectedCity, setSelectedCity] = useState("select city");
-  const [selectedLocation, setSelectedLocation] = useState("select location");
+  const [selectedLocation, setSelectedLocation] = useState("Location");
   const [selectedBatch, setSelectedBatch] = useState("select batch");
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [isLocationOpen, setIsLocationOpen] = useState(false);
@@ -38,9 +38,9 @@ export default function Page() {
       const mobile = window.innerWidth <= 845;
       // setIsMobile(mobile);
       // Update initial states based on screen size
-      setSelectedCity(mobile ? "city" : "Select your city");
-      setSelectedLocation(mobile ? "location" : "Select your location");
-      setSelectedBatch(mobile ? "batch" : "Select your batch");
+      // setSelectedCity(mobile ? "city" : "Select your city");
+      // setSelectedLocation(mobile ? "location" : "Location");
+      // setSelectedBatch(mobile ? "batch" : "Select your batch");
     };
 
     // Add resize event listener
@@ -160,7 +160,7 @@ export default function Page() {
   };
 
   const clearLocationFilter = () => {
-    setSelectedLocation("select location");
+    setSelectedLocation("Location");
     setIsLocationSelected(false);
     setIsLocationOpen(false);
   };

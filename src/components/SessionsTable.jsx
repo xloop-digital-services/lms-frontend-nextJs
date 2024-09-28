@@ -142,7 +142,7 @@ const SessionsTable = ({
         const response = await UpdateSession(selectedSession, data);
         console.log("session updated", response);
         setEdit(false);
-        toast.success(response.data.message);
+        toast.success('Class schedule updated successfully');
         setUpdateSession(!updateSession);
       } catch (error) {
         console.log("error while updating status", error);
@@ -159,16 +159,17 @@ const SessionsTable = ({
 
   const handleDelete = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const response = await DeleteSession(selectedSession);
       console.log("deleting the session", response);
+      toast.success('Class schedule deleted successfully!')
       setUpdateSession(!updateSession);
       setConfirmDelete(false);
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
       console.log("error while deleting the lcoation", error);
-    } finally{
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -191,13 +192,13 @@ const SessionsTable = ({
                       scope="col"
                       className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
                     >
-                      Location
+                      Course
                     </th>
                     <th
                       scope="col"
                       className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
                     >
-                      Capacity
+                      Location
                     </th>
                     <th
                       scope="col"
@@ -240,12 +241,9 @@ const SessionsTable = ({
                 </thead>
                 {/* Set max height and overflow for the table body */}
                 <tbody className="divide-y divide-dark-200 max-h-[500px] overflow-y-auto scrollbar-webkit">
-                  {loading && sessions.length == 0 ? (
+                  {loading && sessions.length === 0 ? (
                     <tr>
-                      <td
-                        colSpan="8"
-                        className="text-center py-4 text-dark-400"
-                      >
+                      <td colSpan="8" className="text-center py-4">
                         <CircularProgress size={20} />
                       </td>
                     </tr>
@@ -257,14 +255,18 @@ const SessionsTable = ({
                       )
                       .map((session, index) => {
                         return (
-                          <tr key={index}>
+                          <tr key={index} className={`${session.status === 2 && 'hidden'}`}>
                             {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
                               {session.batch}
                             </td> */}
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                              {session.course.name}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
                               {session.location_name}
                             </td>
-                            <td
+
+                            {/* <td
                               className={` ${
                                 !(edit && selectedSession === session.id)
                                   ? "py-4 px-6"
@@ -285,7 +287,7 @@ const SessionsTable = ({
                                   min={0}
                                 />
                               )}
-                            </td>
+                            </td> */}
                             <td
                               className={` ${
                                 !(edit && selectedSession === session.id)
@@ -475,7 +477,7 @@ const SessionsTable = ({
                                     </div>
                                   )}
                                 </div>
-                                {/* <div>
+                                <div>
                                   {!(
                                     edit && selectedSession === session.id
                                   ) && (
@@ -488,9 +490,9 @@ const SessionsTable = ({
                                       title="delete"
                                     />
                                   )}
-                                </div> */}
+                                </div>
                               </div>
-                            </td> 
+                            </td>
                           </tr>
                         );
                       })

@@ -7,7 +7,13 @@ import DeleteConfirmationPopup from "./Modal/DeleteConfirmationPopUp";
 import { IoCheckmark, IoClose } from "react-icons/io5";
 import { toast } from "react-toastify";
 
-const BatchTable = ({ batches, loading, setLoading, setUpdateBatch, updateBatch }) => {
+const BatchTable = ({
+  batches,
+  loading,
+  setLoading,
+  setUpdateBatch,
+  updateBatch,
+}) => {
   const [edit, setEdit] = useState(false);
   const [selectedBatch, setSelectedBatch] = useState(null);
   const [batch, setbatch] = useState(null);
@@ -18,14 +24,15 @@ const BatchTable = ({ batches, loading, setLoading, setUpdateBatch, updateBatch 
   const [editEndDate, setEditEndDate] = useState(null);
   const [editStartDate, setEditStartDate] = useState(null);
   const [editCapacity, setEditCapacity] = useState(null);
+  const [error, setError] = useState(false);
 
   const handleUpdateStatus = (batch) => {
     setSelectedBatch(batch.batch);
-    setEditEndDate(batch.end_date)
-    setEditStartDate(batch.start_date)
-    setEditYear(batch.year)
-    setEditCapacity(batch.no_of_students)
-    setStatus(batch.status)
+    setEditEndDate(batch.end_date);
+    setEditStartDate(batch.start_date);
+    setEditYear(batch.year);
+    setEditCapacity(batch.no_of_students);
+    setStatus(batch.status);
     setbatch(batch);
     // console.log("fhsfldddeeeeeeeeeeeewwwwww", batch.batch);
     setEdit(!edit);
@@ -40,6 +47,10 @@ const BatchTable = ({ batches, loading, setLoading, setUpdateBatch, updateBatch 
   };
 
   const handleUpdate = async () => {
+    if (error) {
+      toast.error("Capacity must a positive value");
+      return;
+    }
     if (status === null || updating) return;
     if (editStartDate && editEndDate <= editStartDate) {
       toast.error("End date should be greater than start date");
@@ -59,8 +70,8 @@ const BatchTable = ({ batches, loading, setLoading, setUpdateBatch, updateBatch 
         };
 
         const response = await UpdateBatch(selectedBatch, data);
-        if (response.status === 200){
-          toast.success(response.data.message)
+        if (response.status === 200) {
+          toast.success('Batch updated successfully!');
           console.log("batch updated", response);
           setEdit(false);
           setUpdateBatch(!updateBatch);
@@ -80,13 +91,13 @@ const BatchTable = ({ batches, loading, setLoading, setUpdateBatch, updateBatch 
 
   const handleDelete = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const response = await DeleteBatch(selectedBatch);
-      toast.success(response.data.message)
+      toast.success('Batch deleted successfully!');
       console.log("deleting the batch", response);
       setUpdateBatch(!updateBatch);
       setConfirmDelete(false);
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
       console.log("error while deleting the batch", error);
     }
@@ -95,6 +106,18 @@ const BatchTable = ({ batches, loading, setLoading, setUpdateBatch, updateBatch 
   const handleEndDateChange = (event) => {
     setEditEndDate(event.target.value);
     // Check if end date is earlier than start date
+  };
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    // Check if the value contains invalid characters
+    if (/[-]/.test(value)) {
+      toast.error("Invalid Value");
+      setError(true);
+    } else {
+      setError(false); // Clear error if no invalid characters are present
+      setEditCapacity(value); // Update capacity only when valid
+    }
   };
 
   return (
@@ -207,9 +230,7 @@ const BatchTable = ({ batches, loading, setLoading, setUpdateBatch, updateBatch 
                               <input
                                 type="number"
                                 value={editCapacity}
-                                onChange={(e) =>
-                                  setEditCapacity(e.target.value)
-                                }
+                                onChange={handleInputChange}
                                 className=" px-2 py-3 border border-dark-300 outline-none rounded-lg w-full"
                                 placeholder={batch.no_of_students}
                                 min={0}

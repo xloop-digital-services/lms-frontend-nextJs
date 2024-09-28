@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
-  const [selectedCity, setSelectedCity] = useState("Select your city");
+  const [selectedCity, setSelectedCity] = useState("City");
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [batches, setBatches] = useState([]);
@@ -52,7 +52,7 @@ export default function Page() {
   }, [selectedCity, batches]);
 
   const handleResetFilter = () => {
-    setSelectedCity("select city");
+    setSelectedCity("City");
     setUpdateBatch(true);
     setIscitySelected(false);
   };

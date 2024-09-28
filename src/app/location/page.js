@@ -6,12 +6,12 @@ import { listAllLocations } from "@/api/route";
 import LocationModal from "@/components/Modal/LocationModal";
 import cityAreas from "../../../public/data/cityAreas.json";
 import useClickOutside from "@/providers/useClickOutside";
-import { toast } from "react-toastify";
 import { IoIosArrowDown, IoIosCloseCircleOutline, IoMdClose } from "react-icons/io";
+import { toast } from "react-toastify";
 
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
-  const [selectedCity, setSelectedCity] = useState("select city");
+  const [selectedCity, setSelectedCity] = useState("City");
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [cityOptions, setCityOptions] = useState([]);
   const [isCitySelected, setIsCitySelected] = useState(false); // Fix typo

@@ -20,6 +20,7 @@ const LocationsTable = ({
   const [status, setStatus] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [editCapacity, setEditCapacity] = useState(null);
+  const [error, setError] = useState(false);
 
   const handleUpdateStatus = (location) => {
     setEditCapacity(location.capacity);
@@ -38,6 +39,10 @@ const LocationsTable = ({
   };
 
   const handleUpdate = async () => {
+    if (error) {
+      toast.error(" Capacity must a positive value")
+      return;
+    }
     if (status === null || updating) return;
     setLoading(true); // Set updating to true when status is being updated
     try {
@@ -50,10 +55,11 @@ const LocationsTable = ({
       };
 
       const response = await UpdateLocation(selectedLocation, data);
-      if (response.status === 200){
-        toast.success(response.data.message);
-      }
+      // if (response.status === 200){
+      //   toast.success(response.data.message);
+      // }
       // console.log("location updated", response);
+      toast.success("Location updated successfully");
       setEdit(false);
       setUpdateLocation(!updateLocation);
     } catch (error) {
@@ -70,7 +76,7 @@ const LocationsTable = ({
 
   const handleDelete = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const response = await DeleteLocation(selectedLocation);
       if (response.status === 204) {
         toast.success("Location deleted successfully! ");
@@ -81,7 +87,19 @@ const LocationsTable = ({
     } catch (error) {
       console.log("error while deleting the lcoation", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    // Check if the value contains invalid characters
+    if (/[-]/.test(value)) {
+      toast.error("Invalid Value");
+      setError(true);
+    } else {
+      setError(false); // Clear error if no invalid characters are present
+      setEditCapacity(value); // Update capacity only when valid
     }
   };
 
@@ -138,7 +156,7 @@ const LocationsTable = ({
                   </div>
                 )} */}
                 <tbody className="divide-y divide-dark-200 max-h-[500px] overflow-y-auto scrollbar-webkit ">
-                  {loading ? ( // Show loading state while fetching locations
+                  {loading && locations.length === 0 ? ( // Show loading state while fetching locations
                     <tr>
                       <td
                         colSpan="8"
@@ -179,13 +197,11 @@ const LocationsTable = ({
                             ) : (
                               <input
                                 type="number"
-                                value={editCapacity}
-                                onChange={(e) =>
-                                  setEditCapacity(e.target.value)
-                                }
-                                className=" px-2 py-3 border border-dark-300 outline-none rounded-lg w-full"
+                                className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
                                 placeholder={location.capacity}
+                                value={editCapacity}
                                 min={0}
+                                onChange={handleInputChange}
                               />
                             )}
                           </td>
@@ -238,7 +254,7 @@ const LocationsTable = ({
                             </p>
                           </td>
                           <td className="px-8 py-2 whitespace-nowrap text-[#03A1D8] ">
-                            <div className="flex gap-4">
+                            <div className="flex gap-4 justify-center items-center">
                               <div>
                                 {!(edit && selectedLocation === location.id) ? (
                                   <FaEdit
@@ -264,7 +280,7 @@ const LocationsTable = ({
                                   </div>
                                 )}
                               </div>
-                              <div>
+                              {/* <div>
                                 {!(
                                   edit && selectedLocation === location.id
                                 ) && (
@@ -277,7 +293,7 @@ const LocationsTable = ({
                                     title="delete"
                                   />
                                 )}
-                              </div>
+                              </div> */}
                             </div>
                           </td>
                         </tr>

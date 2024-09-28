@@ -18,7 +18,7 @@ const SessionCreationModal = ({
   setUpdateSession,
   updateSession,
 }) => {
-  const [selectedLocation, setSelectedLocation] = useState("select location");
+  const [selectedLocation, setSelectedLocation] = useState("Select location");
   const [selectedLocationId, setSelectedLocationId] = useState(null);
   const [selectedBatch, setSelectedBatch] = useState("select batch");
 
@@ -29,7 +29,9 @@ const SessionCreationModal = ({
   const [capacity, setCapacity] = useState();
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [timeErrorMessage, setTimeErrorMessage] = useState("");
+  const [dateErrorMessage, setDateErrorMessage] = useState("");
+
   const [loadingCreation, setLoadingCreation] = useState(false);
   const [courseNames, setCourseNames] = useState([]); // Store only the names
   const [coursesMap, setCoursesMap] = useState({}); // Store the mapping of names to full course objects
@@ -42,6 +44,7 @@ const SessionCreationModal = ({
   const [selectedDays, setSelectedDays] = useState([]);
   const [startDate, setstartDate] = useState(null);
   const [endDate, setendDate] = useState(null);
+  const [error, setError] = useState(""); // To track error messages
   const mouseClick = useRef(null);
   const modalClose = useRef(null);
 
@@ -55,7 +58,13 @@ const SessionCreationModal = ({
 
   const handleSessionCreation = async () => {
     setLoadingCreation(true);
-    if (!errorMessage) {
+    if (error) {
+      toast.error("Capacity must be a positive value"); // Display the error toast
+      setLoadingCreation(false); // Set loading to false
+      return; // Stop further execution
+    }
+
+    if (!timeErrorMessage && !dateErrorMessage) {
       if (
         selectedLocation &&
         selectedBatch &&
@@ -97,12 +106,23 @@ const SessionCreationModal = ({
           setLoadingCreation(false);
         }
       } else {
-        toast.error("properly select the fields to schedule a class");
+        toast.error("All fields are required!");
         setLoadingCreation(false);
       }
     } else {
-      toast.warn("Correct your start time and end time");
+      toast.error("Correct your time and date");
       setLoadingCreation(false);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    // Check if the value contains invalid characters
+    if (/[-]/.test(value)) {
+      setError("Invalid value");
+    } else {
+      setError(""); // Clear error if no invalid characters are present
+      setCapacity(value); // Update capacity only when valid
     }
   };
 
@@ -157,9 +177,9 @@ const SessionCreationModal = ({
     setendDate(event.target.value);
     // Check if end date is earlier than start date
     if (startDate && event.target.value <= startDate) {
-      setErrorMessage("End date should be greater than start date");
+      setDateErrorMessage("End date should be greater than start date");
     } else {
-      setErrorMessage("");
+      setDateErrorMessage("");
     }
   };
 
@@ -198,12 +218,12 @@ const SessionCreationModal = ({
       startTimeDate.setMinutes(startMinutes);
 
       if (endTimeDate <= startTimeDate) {
-        setErrorMessage("End time should be greater than start time");
+        setTimeErrorMessage("End time should be greater than start time");
       } else {
-        setErrorMessage("");
+        setTimeErrorMessage("");
       }
     } else {
-      setErrorMessage("");
+      setTimeErrorMessage("");
     }
   };
   const toggleLocationOpen = () => {
@@ -368,7 +388,7 @@ const SessionCreationModal = ({
                     textOverflow: "ellipsis",
                   }}
                 >
-                  {selectedCourseName ? selectedCourseName : "select a course"}
+                  {selectedCourseName ? selectedCourseName : "Select a course"}
                   <span
                     className={`${
                       isCourseOpen ? "rotate-180 duration-300" : "duration-300"
@@ -434,12 +454,15 @@ const SessionCreationModal = ({
                     ref={mouseClick}
                     className="absolute z-10 min-w-[240px] max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
                   >
-                    {loadingLocation && LocationOptions.length == 0 ? (
+                    {loadingLocation ? (
                       <div className="w-full flex items-center justify-center p-1">
                         <CircularProgress size={15} />
                       </div>
                     ) : LocationOptions && LocationOptions.length > 0 ? (
-                      LocationOptions.map((option, index) => (
+                      LocationOptions.sort(
+                        (a, b) =>
+                          new Date(b.created_at) - new Date(a.created_at)
+                      ).map((option, index) => (
                         <div
                           key={index}
                           onClick={() => handleLocationSelect(option)}
@@ -462,13 +485,14 @@ const SessionCreationModal = ({
                 <p>Capacity</p>
                 <input
                   type="number"
-                  className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full "
-                  placeholder="number of students"
+                  className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
+                  placeholder="Number of students"
                   value={capacity}
                   min={0}
-                  onChange={(e) => setCapacity(e.target.value)}
-                  // required
+                  onChange={handleInputChange}
                 />
+                {error && <p className="text-mix-200 text-[12px]">{error}</p>}{" "}
+                {/* Display error message */}
               </div>
             </div>
             <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
@@ -500,9 +524,9 @@ const SessionCreationModal = ({
                   />
                   {/* <FaCalendar className="absolute right-3 top-1/2 transform -translate-y-1/2 text-dark-400 pointer-events-none" /> */}
                 </div>
-                {errorMessage && (
+                {dateErrorMessage && (
                   <p className="text-[#D84848] text-[12px] mt-2">
-                    {errorMessage}
+                    {dateErrorMessage}
                   </p>
                 )}
               </div>
@@ -534,9 +558,9 @@ const SessionCreationModal = ({
                     placeholder="Select end time"
                   />
                 </div>
-                {errorMessage && (
+                {timeErrorMessage && (
                   <p className="text-[#D84848] text-[12px] mt-2">
-                    {errorMessage}
+                    {timeErrorMessage}
                   </p>
                 )}
               </div>

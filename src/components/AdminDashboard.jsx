@@ -38,7 +38,7 @@ const AdminDashboard = () => {
   const [shortListRequest, setShortlisted] = useState(null);
   const [isUserOpen, setIsUserOpen] = useState(false);
   const [isUserSelected, setIsUserSelected] = useState(false);
-  const [selectedUser, setSelectedUser] = useState("select your user");
+  const [selectedUser, setSelectedUser] = useState("Select user");
   const [isOpen, setIsOpen] = useState(false);
   const [isSelected, setIsSelected] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState("");
@@ -74,37 +74,52 @@ const AdminDashboard = () => {
 
   // Apply filtering whenever search term or dropdown status changes
   useEffect(() => {
+    // Set the initial status to "Show All" when the page loads
+    if (!selectedStatus) {
+      setSelectedStatus("Show All");
+    }
+
     const handleFilter = () => {
       let matchesSearchTerm = false;
       let matchesStatus = false;
 
-      if (!searchTerm && selectedStatus === "Show All") {
+      if (searchTerm.length === 0 && selectedStatus === "Show All") {
+        // If both filters are empty, show all batches
         setFilteredBatches(batches);
         setIsFilter(false);
       } else {
-        const filteredData = batches.filter((batch) => {
-          const searchTermMatches = batch.batch
-            ?.toLowerCase()
-            .includes(searchTerm.toLowerCase());
+        if(searchTerm.length > 0 || selectedStatus){
 
-          const statusMatches =
-            selectedStatus === "Show All" ||
-            (selectedStatus === "Active" && batch.status === 1) ||
-            (selectedStatus === "Inactive" && batch.status === 0);
-
-          matchesSearchTerm = matchesSearchTerm || searchTermMatches;
-          matchesStatus = matchesStatus || statusMatches;
-
-          return searchTermMatches && statusMatches;
-        });
-
-        setFilteredBatches(filteredData);
-        setIsFilter(filteredData.length > 0);
+          const filteredData = batches.filter((batch) => {
+            const searchTermMatches = batch.batch
+              ?.toLowerCase()
+              .includes(searchTerm.toLowerCase());
+  
+  
+            const statusMatches =
+              selectedStatus === "Show All" ||
+              (selectedStatus === "Active" && batch.status === 1) ||
+              (selectedStatus === "Inactive" && batch.status === 0);
+  
+            matchesSearchTerm = matchesSearchTerm || searchTermMatches;
+            matchesStatus = matchesStatus || statusMatches;
+  
+            // Only return batches that match both the search term and status
+            return searchTermMatches && statusMatches;
+          });
+  
+          // If filtered data exists, show it; otherwise, set it to empty
+          setFilteredBatches(filteredData);
+          setIsFilter(filteredData.length > 0);
+        }
       }
 
       setFilterValue(matchesSearchTerm);
       setFilterStatus(matchesStatus);
+      // If no results match the filters, set these accordingly
     };
+
+    // Trigger filtering when search term, status, or batches change
     handleFilter();
   }, [searchTerm, selectedStatus, batches]);
 
@@ -258,7 +273,7 @@ const AdminDashboard = () => {
     selectedSkill,
     skillId,
     isUserSelected,
-    selectedUser.toLowerCase(),
+    // selectedUser.toLowerCase(),
     selectedUser,
   ]);
 
@@ -382,7 +397,7 @@ const AdminDashboard = () => {
         </div>
 
         <div className="flex gap-4 xmd:flex-row flex-col">
-          <div className="bg-[#ffffff] xmd:w-[65.5%] w-full overflow-x-auto scrollbar-webkit p-5 rounded-xl  h-[450px]">
+          <div className="bg-[#ffffff] xmd:w-[70%] w-full overflow-x-auto scrollbar-webkit p-5 rounded-xl  h-[450px]">
             <div className="border border-dark-300 rounded-xl p-3 h-full w-full">
               <div className="font-bold font-exo text-[#32324D] text-lg pb-2">
                 Capacity in Different Cities
@@ -397,14 +412,20 @@ const AdminDashboard = () => {
               <div className="font-bold font-exo text-[#32324D] text-lg">
                 Applications Status Overview
               </div>
-              <div className="flex gap-2 px-2 justify-between items-center">
+              <div className="flex gap-2  justify-between items-center">
                 <div>
                   <button
                     onClick={toggleUsers}
-                    className={`flex justify-between mt-1 items-center text-[#424b55] xl:max-w-[200px] md:max-w-[170px] w-full  gap-1 hover:text-[#0e1721] px-4 xlg:py-3 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                    className={`${
+                      !isUserSelected ? "text-[#92A7BE]" : "text-[#424b55]"
+                    } flex justify-between mt-1 items-center xl:max-w-[200px] md:max-w-[170px] w-[140px]  gap-1 hover:text-[#0e1721] px-4 xlg:py-3  py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                   >
                     {selectedUser || userOptions[0]}
-                    <span className="">
+                    <span
+                      className={`${
+                        isUserOpen ? "rotate-180 duration-300" : "duration-300"
+                      }`}
+                    >
                       <IoIosArrowDown />
                     </span>
                   </button>
@@ -412,7 +433,7 @@ const AdminDashboard = () => {
                   {isUserOpen && (
                     <div
                       ref={userDown}
-                      className="absolute capitalize z-50 w-fit xl:w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                      className="absolute capitalize z-50 w-fit xl:w-[120px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                     >
                       {userOptions.map((option, index) => (
                         <div
@@ -434,7 +455,7 @@ const AdminDashboard = () => {
                       onClick={toggleProgramOpen}
                       className={`${
                         !isProgramSelected ? "text-[#92A7BE]" : "text-[#424b55]"
-                      } flex justify-between items-center md:max-w-[280px] w-full truncate px-4 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                      } flex justify-between items-center min-w-[300px] w-full truncate px-4 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                       style={{
                         // maxWidth: "220px", // Set the maximum width of the button
                         whiteSpace: "nowrap",
@@ -443,7 +464,13 @@ const AdminDashboard = () => {
                       }}
                     >
                       {selectedProgram}
-                      <span className="">
+                      <span
+                        className={`${
+                          isProgramOpen
+                            ? "rotate-180 duration-300"
+                            : "duration-300"
+                        } pl-1`}
+                      >
                         <IoIosArrowDown />
                       </span>
                     </button>
@@ -451,7 +478,7 @@ const AdminDashboard = () => {
                     {isProgramOpen && (
                       <div
                         ref={dropdownRef}
-                        className="absolute z-50 mt-1  md:max-w-[280px] w-full truncate  max-h-[240px] overflow-auto scrollbar-webkit  bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                        className="absolute z-50 mt-1  md:max-w-[300px] w-full  max-h-[240px] overflow-auto scrollbar-webkit  bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                         style={{
                           // maxWidth: "220px", // Set the maximum width of the button
                           whiteSpace: "nowrap",
@@ -466,7 +493,7 @@ const AdminDashboard = () => {
                               onClick={() => handleProgramSelect(option)}
                               className="p-2 cursor-pointer"
                             >
-                              <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                              <div className="px-4 py-2 hover:bg-[#03a3d838] truncate hover:text-[#03A1D8] hover:font-semibold rounded-lg">
                                 {option.name}
                               </div>
                             </div>
@@ -485,7 +512,7 @@ const AdminDashboard = () => {
                       onClick={toggleSkillOpen}
                       className={`${
                         !isSkillSelected ? " text-[#92A7BE]" : "text-[#424b55]"
-                      } flex justify-between mt-1 items-center  xl:w-[200px] w-full gap-1 hover:text-[#0e1721] px-4 xlg:py-3 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                      } flex justify-between mt-1 items-center   min-w-[300px] w-full gap-1 hover:text-[#0e1721] px-4 xlg:py-3 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                     >
                       {selectedSkill}
                       <span className="">
@@ -496,7 +523,7 @@ const AdminDashboard = () => {
                     {isSkillOpen && (
                       <div
                         ref={dropdownRef}
-                        className="absolute z-50 mt-1 xl:w-[200px] w-fit  max-h-[200px] overflow-auto scrollbar-webkit  bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                        className="absolute z-50 mt-1 md:max-w-[300px] w-full max-h-[200px] overflow-auto scrollbar-webkit  bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                       >
                         {allSkills && allSkills.length > 0 ? (
                           allSkills.map((option) => (
@@ -505,7 +532,7 @@ const AdminDashboard = () => {
                               onClick={() => handleSkillSelect(option)}
                               className="p-2 cursor-pointer"
                             >
-                              <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                              <div className="px-4 py-2 hover:bg-[#03a3d838] truncate hover:text-[#03A1D8] hover:font-semibold rounded-lg">
                                 {option.name}
                               </div>
                             </div>
@@ -555,21 +582,21 @@ const AdminDashboard = () => {
             </div>
           </div>
         </div>
-        <div className="bg-[#ffffff] rounded-xl p-5 max-h-[240px] ">
-          <div>
-            <h1 className="font-bold font-exo text-[#32324D] text-lg  ">
+        <div className="bg-[#ffffff] rounded-xl p-5 max-h-[290px] ">
+          <div className="flex ">
+            <h1 className="font-bold font-exo text-[#32324D] text-lg  w-full">
               <Link href="/batch" className="w-fit">
                 Batch Details
               </Link>
             </h1>
-            <div className="w-full flex items-center gap-4 mt-2">
+            <div className="w-full flex items-center gap-4 ">
               <div className="flex-grow">
                 {" "}
                 {/* Ensure the container is growable */}
                 <input
                   type="text"
                   placeholder="Search batch by names"
-                  className="p-3 text-sm border border-[#92A7BE] rounded-lg outline-none w-full" // w-full ensures full width
+                  className="px-3 py-2 text-sm border border-[#92A7BE] rounded-lg outline-none w-full" // w-full ensures full width
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -578,8 +605,8 @@ const AdminDashboard = () => {
                 <button
                   onClick={toggleOpen}
                   className={` ${
-                    !isSelected ? " text-[#92A7BE]" : "text-[#424b55]"
-                  } flex justify-between text-sm z-50 items-center w-full md:w-[200px] hover:text-[#0e1721] px-4 py-3 text-left bg-white border border-[#92A7BE] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                    !isSelected && !options[0] ? " text-[#92A7BE]" : "text-[#424b55]"
+                  } flex justify-between text-sm z-50 items-center w-full md:w-[200px] hover:text-[#0e1721] px-4 py-2 text-left bg-white border border-[#92A7BE] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
                   {selectedStatus || options[0]}
                   <span className="">
@@ -608,9 +635,11 @@ const AdminDashboard = () => {
               </div>
             </div>
           </div>
-          <div className="max-h-[130px] overflow-y-auto overflow-x-hidden scrollbar-webkit">
+          <div className="max-h-[160px] mt-[-3px] overflow-y-auto overflow-x-hidden scrollbar-webkit">
             {loading ? (
               <p>Loading...</p>
+            ) : filteredBatches.length === 0 ? (
+              <p className="text-center text-dark-300 pt-6">No batch found</p>
             ) : isFilter ? (
               <BatchTable
                 batches={filteredBatches}
@@ -618,10 +647,6 @@ const AdminDashboard = () => {
                 updateBatch={updateBatch}
                 setUpdateBatch={setUpdateBatch}
               />
-            ) : !filterStatus &&
-              !filterValue &&
-              filteredBatches.length === 0 ? (
-              <p>No batch found</p>
             ) : (
               <BatchTable
                 batches={batches}
@@ -630,10 +655,6 @@ const AdminDashboard = () => {
                 setUpdateBatch={setUpdateBatch}
               />
             )}
-
-            {/* {batches.length > 0 && (
-              <BatchTable batches={batches} loading={loading} />
-            )} */}
           </div>
         </div>
       </div>

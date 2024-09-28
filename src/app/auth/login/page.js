@@ -2,7 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import logo from "../../../../public/assets/img/logo.png";
+import logo from "../../../../public/assets/img/xCelerate - Logo.png";
 import { BsEyeSlashFill } from "react-icons/bs";
 import { IoEyeSharp } from "react-icons/io5";
 import { useAuth } from "@/providers/AuthContext";
@@ -21,13 +21,19 @@ export default function Page() {
   } = useAuth();
 
   return (
-    <div className="min-h-screen bg-[#F2F6FF] flex flex-col justify-center py-12 sm:px-6 lg:px-8 px-6 font-inter">
+    <div className="min-h-screen bg-[#F2F6FF] flex flex-col mt-[200px] sm:px-6 lg:px-8 px-6 font-inter">
       <div className="sm:mx-auto sm:w-full sm:max-w-md flex justify-center items-center space-x-6 pr-4">
         <div className="flex items-center justify-center">
-          <Image src={logo} alt="Workflow" />
+          <Image
+            src={logo}
+            alt="logo"
+            width={300}
+            height={50}
+            className=" object-contain"
+          />
         </div>
       </div>
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+      <div className="mt-9 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-surface-100 py-8 px-4 shadow sm:rounded-xl sm:px-10">
           <div className="space-y-2">
             <h1 className="font-exo font-bold text-xl text-center">Login</h1>
@@ -114,7 +120,7 @@ export default function Page() {
               </span>
             </div>
           </form>
-          <div className="text-[#8A8A95] text-sm text-center mt-3 space-y-3">
+          {/* <div className="text-[#8A8A95] text-sm text-center mt-3 space-y-3">
             <p>
               Dont have an account?
               <span className="text-[#03A1D8] decoration-1 hover:underline font-medium pl-1 cursor-pointer">
@@ -125,7 +131,7 @@ export default function Page() {
             <button className="w-full flex justify-center py-3 px-4 hover:text-surface-100 border bg-transparent text-sm font-medium rounded-lg text-[#03A1D8] border-[#03A1D8] hover:bg-blue-300 focus:outline-none focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
               <Link href="/auth/signup">Register Now</Link>
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
