@@ -33,12 +33,13 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   const month = String(today.getMonth() + 1).padStart(2, "0");
   const year = today.getFullYear();
   const formattedDate = `${year}-${month}-${day}`;
-  console.log(formattedDate, "formated");
+  // console.log(formattedDate, "formated");
   // const today = new Date().toISOString().split("T")[0];
 
   const [selectedSession, setSelectedSession] = useState("");
+  const [isSelected, setIsSelected] = useState(false)
   const [date, setDate] = useState(null);
-  const [toggle, setToggle] = useState(true);
+  const [toggle, setToggle] = useState(false);
   // console.log(group, userId);
   async function fetchSessions() {
     const response = await getInstructorSessionsbyCourseId(
@@ -75,7 +76,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
         console.log("Attendance:", response.data.data.students);
         setGetAttendance(response.data.data.students); // Setting attendance data
         setSelectedAttendance(initialAttendance); // Setting the initial status to 'Present'
-        fetchAttendanceIns(); // Fetch additional attendance insights if needed
+       // Fetch additional attendance insights if needed
       } else {
         console.error("Failed to fetch attendance, status:", response.status);
       }
@@ -174,7 +175,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
       if (response.status === 200 || response.status === 201) {
         console.log("response for mark attendence", response);
         toast.success("Attendance marked successfully");
-        setToggle(false);
+        setToggle(!toggle);
       } else {
         toast.error(`Error submitting attendance: ${response.data.message}`);
       }
@@ -219,16 +220,17 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   // }, [courseId, selectedSession, date]);
 
   useEffect(() => {
-    // Only set the date initially when the component loads or selectedSession changes
-    if (selectedSession && !date) {
-      setDate(formattedDate); // Set the default formatted date initially
+    // Only set the date and fetch attendance when the component loads or when selectedSession changes
+    if (selectedSession) {
+      if (!date) {
+        setDate(formattedDate); // Set the default formatted date initially
+      } else {
+        fetchAttendance();
+        fetchAttendanceIns();
+      }
     }
-
-    if (selectedSession && date) {
-      fetchAttendance();
-      fetchAttendanceIns();
-    }
-  }, [selectedSession, courseId, date, formattedDate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedSession, date, toggle]); // Only run when selectedSession or courseId changes
 
   const handleDateChange = (e) => {
     const selectedDate = e.target.value;
@@ -270,11 +272,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                 value={date}
                 onChange={handleDateChange}
                 // Disable when toggle is true
-                className={`${
-                  !toggle
-                    ? "text-dark-300 cursor-not-allowed"
-                    : "text-[#424b55] cursor-default"
-                } border border-dark-300  outline-none px-3 py-2 my-2 rounded-lg w-full`}
+                className={` border border-dark-300  text-[#424b55] cursor-default outline-none px-3 py-2 my-2 rounded-lg w-full`}
                 placeholder="Select start date"
               />
             </div>
@@ -367,7 +365,8 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                         <CircularProgress size={20} />
                       </td>
                     </tr>
-                  ) : date === formattedDate && Array.isArray(getAttendance) &&
+                  ) : date === formattedDate &&
+                    Array.isArray(getAttendance) &&
                     getAttendance.length > 0 ? (
                     getAttendance.map((att, index) => (
                       <tr key={index}>
@@ -435,9 +434,8 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
         )}
       </div>
       {!getting &&
-      (date === formattedDate) &&
+        date === formattedDate &&
         selectedSession &&
-        toggle &&
         getAttendance.length > 0 &&
         attendance.length === 0 && (
           <button
