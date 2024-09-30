@@ -6,6 +6,7 @@ import SideBar from "@/components/SideBar";
 import { useAuth } from "@/providers/AuthContext";
 
 export default function DashboardLayout({ children }) {
+
   const { userData } = useAuth();
   return (
     <>

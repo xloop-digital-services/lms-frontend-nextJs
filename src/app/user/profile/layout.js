@@ -4,7 +4,7 @@ import { SidebarProvider } from "@/providers/useSidebar";
 import SideBar from "@/components/SideBar";
 
 export const metadata = {
-  title: "Grading - LMS",
+  title: "Profile - LMS",
   description: "Learning Management System",
 };
 

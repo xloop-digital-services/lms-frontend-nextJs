@@ -40,6 +40,7 @@ export default function Page() {
       setLoading(false);
     }
   };
+  console.log('kiteni barr in bacth')
   useEffect(() => {
     handleListingAllBatches();
   }, [updateBatch]);
@@ -49,7 +50,7 @@ export default function Page() {
       batch.city.toLowerCase().includes(selectedCity.toLowerCase())
     );
     setFilterCity(filteredList);
-  }, [selectedCity, batches]);
+  }, [selectedCity]);
 
   const handleResetFilter = () => {
     setSelectedCity("City");
@@ -191,23 +192,27 @@ export default function Page() {
         </div>
         <div>
           {isCitySelected && filterCity.length > 0 ? (
-            <BatchTable
-              batches={filterCity}
-              setUpdateBatch={setUpdateBatch}
-              updateBatch={updateBatch}
-              loading={loading}
-              setLoading={setLoading}
-            />
+            <div className="mt-4">
+              <BatchTable
+                batches={filterCity}
+                setUpdateBatch={setUpdateBatch}
+                updateBatch={updateBatch}
+                loading={loading}
+                setLoading={setLoading}
+              />
+            </div>
           ) : !isCitySelected && batches.length > 0 ? (
-            <BatchTable
-              batches={batches}
-              setUpdateBatch={setUpdateBatch}
-              updateBatch={updateBatch}
-              loading={loading}
-              setLoading={setLoading}
-            />
+            <div className="mt-4">
+              <BatchTable
+                batches={filterCity}
+                setUpdateBatch={setUpdateBatch}
+                updateBatch={updateBatch}
+                loading={loading}
+                setLoading={setLoading}
+              />
+            </div>
           ) : (
-            <p>No Batch found in this city</p>
+            <p className="pt-5 py-2 text-center text-dark-300">No Batch found in this city</p>
           )}
         </div>
       </div>

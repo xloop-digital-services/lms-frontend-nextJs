@@ -96,7 +96,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="fixed w-screen bg-surface-100 z-10">
+      <nav className="fixed w-screen bg-surface-100 z-10 font-inter">
         <div className="mx-auto px-2 sm:px-6 lg:px-8">
           <div className="relative flex h-20 items-center justify-between">
             <div className="hidden sm:flex justify start ">
@@ -169,7 +169,7 @@ export default function Navbar() {
                       /> */}
                     </div>
                     <div>
-                      <div className="flex justify-end items-center">
+                      <div className="flex justify-end items-center cursor-pointer">
                         <div className={``} style={{ color: "#07224D" }}>
                           <p className="text-md capitalize">{`${user?.first_name} ${user?.last_name}`}</p>
                           <p className="text-xs uppercase">

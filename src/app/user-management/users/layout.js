@@ -5,10 +5,10 @@ import SideBar from "@/components/SideBar";
 import { AuthProvider } from "@/providers/AuthContext";
 
 export const metadata = {
-  title: "Courses - LMS",
-  description: "Learning Management System",
-};
-
+    title: "Verified Users - LMS",
+    description: "Learning Management System",
+  };
+  
 
 export default function CoursesLayout({ children }) {
   return (

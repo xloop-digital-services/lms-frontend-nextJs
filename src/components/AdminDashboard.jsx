@@ -88,26 +88,24 @@ const AdminDashboard = () => {
         setFilteredBatches(batches);
         setIsFilter(false);
       } else {
-        if(searchTerm.length > 0 || selectedStatus){
-
+        if (searchTerm.length > 0 || selectedStatus) {
           const filteredData = batches.filter((batch) => {
             const searchTermMatches = batch.batch
               ?.toLowerCase()
               .includes(searchTerm.toLowerCase());
-  
-  
+
             const statusMatches =
               selectedStatus === "Show All" ||
               (selectedStatus === "Active" && batch.status === 1) ||
               (selectedStatus === "Inactive" && batch.status === 0);
-  
+
             matchesSearchTerm = matchesSearchTerm || searchTermMatches;
             matchesStatus = matchesStatus || statusMatches;
-  
+
             // Only return batches that match both the search term and status
             return searchTermMatches && statusMatches;
           });
-  
+
           // If filtered data exists, show it; otherwise, set it to empty
           setFilteredBatches(filteredData);
           setIsFilter(filteredData.length > 0);
@@ -582,9 +580,9 @@ const AdminDashboard = () => {
             </div>
           </div>
         </div>
-        <div className="bg-[#ffffff] rounded-xl p-5 max-h-[290px] ">
-          <div className="flex ">
-            <h1 className="font-bold font-exo text-[#32324D] text-lg  w-full">
+        <div className="bg-[#ffffff] rounded-xl p-5 pb-0 max-h-[260px] ">
+          <div className="flex items-center">
+            <h1 className="font-bold font-exo  text-[#32324D] text-lg  w-full">
               <Link href="/batch" className="w-fit">
                 Batch Details
               </Link>
@@ -605,7 +603,9 @@ const AdminDashboard = () => {
                 <button
                   onClick={toggleOpen}
                   className={` ${
-                    !isSelected && !options[0] ? " text-[#92A7BE]" : "text-[#424b55]"
+                    !isSelected && !options[0]
+                      ? " text-[#92A7BE]"
+                      : "text-[#424b55]"
                   } flex justify-between text-sm z-50 items-center w-full md:w-[200px] hover:text-[#0e1721] px-4 py-2 text-left bg-white border border-[#92A7BE] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
                   {selectedStatus || options[0]}
@@ -635,15 +635,19 @@ const AdminDashboard = () => {
               </div>
             </div>
           </div>
-          <div className="max-h-[160px] mt-[-3px] overflow-y-auto overflow-x-hidden scrollbar-webkit">
+
+          <div className="max-h-[155px] mt-3 overflow-y-auto overflow-x-hidden scrollbar-webkit">
             {loading ? (
-              <p>Loading...</p>
+              <div className="flex justify-center items-center w-full h-full p-5">
+                <CircularProgress size={20} />
+              </div>
             ) : filteredBatches.length === 0 ? (
               <p className="text-center text-dark-300 pt-6">No batch found</p>
             ) : isFilter ? (
               <BatchTable
                 batches={filteredBatches}
                 loading={loading}
+                setLoading={setLoading}
                 updateBatch={updateBatch}
                 setUpdateBatch={setUpdateBatch}
               />
@@ -651,6 +655,7 @@ const AdminDashboard = () => {
               <BatchTable
                 batches={batches}
                 loading={loading}
+                setLoading={setLoading}
                 updateBatch={updateBatch}
                 setUpdateBatch={setUpdateBatch}
               />

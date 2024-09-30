@@ -6,8 +6,12 @@ import { listAllLocations } from "@/api/route";
 import LocationModal from "@/components/Modal/LocationModal";
 import cityAreas from "../../../public/data/cityAreas.json";
 import useClickOutside from "@/providers/useClickOutside";
-import { IoIosArrowDown, IoIosCloseCircleOutline, IoMdClose } from "react-icons/io";
-import { toast } from "react-toastify";
+import {
+  IoIosArrowDown,
+  IoIosCloseCircleOutline,
+  IoMdClose,
+} from "react-icons/io";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
@@ -43,7 +47,6 @@ export default function Page() {
     handleListingAllLocations();
   }, [updateLocation]);
 
-
   const toggleCityOpen = () => {
     setIsCityOpen(!isCityOpen);
   };
@@ -63,7 +66,7 @@ export default function Page() {
       location.city.toLowerCase().includes(selectedCity.toLowerCase())
     );
     setFilteredCityList(filteredList);
-  }, [selectedCity, locations]);
+  }, [selectedCity]);
 
   const clearCityFilter = () => {
     setSelectedCity("select city");
@@ -98,7 +101,7 @@ export default function Page() {
                     onClick={clearCityFilter}
                     className="ml-2 text-red-500 cursor-pointer"
                   >
-                    <IoIosCloseCircleOutline size={20}  />
+                    <IoIosCloseCircleOutline size={20} />
                   </span>
                 )}
                 <span
@@ -139,8 +142,8 @@ export default function Page() {
             </div>
           </div>
         </div>
-        {isCitySelected && (
-          filteredCityList.length > 0 ? (
+        {isCitySelected &&
+          (filteredCityList.length > 0 ? (
             <LocationsTable
               locations={filteredCityList}
               loading={loading}
@@ -152,9 +155,10 @@ export default function Page() {
             <p className="text-dark-400 text-sm">
               No Location is found in this city
             </p>
-          )
-        )  } {
-          !isCitySelected && filteredCityList.length === 0 && locations.length > 0 && (
+          ))}{" "}
+        {!isCitySelected &&
+          filteredCityList.length === 0 &&
+          locations.length > 0 && (
             <LocationsTable
               locations={locations}
               loading={loading}
@@ -163,7 +167,6 @@ export default function Page() {
               updateLocation={updateLocation}
             />
           )}
-       
       </div>
       {openModal && (
         <LocationModal

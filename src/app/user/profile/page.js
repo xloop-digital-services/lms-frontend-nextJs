@@ -19,9 +19,9 @@ import { useAuth } from "@/providers/AuthContext";
 function Profile() {
   const { isSidebarOpen } = useSidebar();
   const [firstName, setFirstName] = useState("");
-  const [editFirstName, setEditFirstName] = useState(firstName)
+  const [editFirstName, setEditFirstName] = useState(firstName);
   const [lastName, setLastName] = useState("");
-  const [editLastName, setEditLastName] = useState(lastName)
+  const [editLastName, setEditLastName] = useState(lastName);
   const [email, setEmail] = useState("");
   const [contactNumber, setContactNumber] = useState("");
   const [program, setProgram] = useState("");
@@ -35,6 +35,7 @@ function Profile() {
   const [showPassword, setShowPassword] = useState(false);
   const [loader, setLoader] = useState(true);
   const formRef = useRef(null);
+  const [errorMessage, setErrorMessage] = useState("");
   // const registrationID = user?.registration_id
   const { userData } = useAuth();
   const isStudent = userData?.Group === "student";
@@ -52,8 +53,8 @@ function Profile() {
           setUser(userData);
           setFirstName(userData.first_name || "");
           setLastName(userData.last_name || "");
-          setEditFirstName(userData.first_name || "")
-          setEditLastName(userData.last_name || "")
+          setEditFirstName(userData.first_name || "");
+          setEditLastName(userData.last_name || "");
           setEmail(userData.email || "");
           setContactNumber(userData.contact || "");
           setProgram(userData.program?.name || "");
@@ -102,8 +103,8 @@ function Profile() {
   };
 
   const handleSubmit = async (event) => {
-    setFirstName(editFirstName)
-    setLastName(editLastName)
+    setFirstName(editFirstName);
+    setLastName(editLastName);
     event.preventDefault();
     const userData = {
       first_name: editFirstName,
@@ -158,8 +159,10 @@ function Profile() {
   };
   const handlePasswordSubmit = async (event) => {
     event.preventDefault();
-    const passwordRegex =
-      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (errorMessage) {
+      toast.error("Properly set your contact number");
+      return;
+    }
     if (password !== confirmPassword) {
       toast.error("Password and Confirm Password do not match.", {
         position: "top-right",
@@ -170,11 +173,6 @@ function Profile() {
         draggable: true,
         progress: undefined,
       });
-      return;
-    } else if (!passwordRegex.test(password)) {
-      toast.error(
-        "Password must be at least 8 characters long, include at least one letter, one number, and one special character, and contain no spaces."
-      );
       return;
     }
 
@@ -197,7 +195,11 @@ function Profile() {
         toast.error(response.data?.message);
       }
     } catch (error) {
-      toast.error(`Error updating password: ${error.message}`);
+      if (error.response.status === 400) {
+        toast.error(error.response.data.error[0]);
+      } else {
+        toast.error(`Error updating password: ${error.message}`);
+      }
     }
   };
   // if (loader) {
@@ -206,33 +208,78 @@ function Profile() {
 
   const getFirstWord = (name) => (name ? name[0] : "");
 
-  const validatePassword = (password) => {
-    const passwordRegex = /^[a-zA-Z0-9!@#$%^&*()_+=-]*$/;
-    return passwordRegex.test(password);
-  };
+  // const validatePassword = (password) => {
+  //   const passwordRegex = /^[a-zA-Z0-9!@#$%^&*()_+=-]*$/;
+  //   return passwordRegex.test(password);
+  // };
 
   const handleConfirmChange = (e) => {
     const { value } = e.target;
-    if (validatePassword(value)) {
-      setConfirmPassword(value);
-    } else {
-      console.log("Invalid characters in password");
-    }
+    setConfirmPassword(value);
+    // if (validatePassword(value)) {
+    // } else {
+    //   console.log("Invalid characters in password");
+    // }
   };
 
   const handleChange = (e) => {
     const { value } = e.target;
-    if (validatePassword(value)) {
-      setPassword(value);
+    setPassword(value);
+    // if (validatePassword(value)) {
+    // } else {
+    //   console.log("Invalid characters in password");
+    // }
+  };
+
+  const formatContactInput = (value, caretPos) => {
+    const numericValue = value.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+    let formattedValue = numericValue
+      .slice(0, 11)
+      .replace(/(\d{4})(\d{1,7})?/, "$1-$2"); // Format as XXXX-XXXXXXX
+    if (numericValue.length <= 4) {
+      formattedValue = numericValue; // Don't add hyphen if there are less than 5 digits
+    }
+
+    return { formattedValue, caretPos };
+  };
+
+  // Validate the contact number input
+  const validateContactNumber = (value) => {
+    const contactPattern = /^[0-9]{4}-[0-9]{7}$/; // Ensure valid format (XXXX-XXXXXXX)
+    const invalidPrefix = /^0000-/; // Prevent numbers starting with 0000
+
+    if (invalidPrefix.test(value)) {
+      setErrorMessage("Contact number cannot start with 0000.");
+    } else if (!contactPattern.test(value)) {
+      setErrorMessage("Please enter a valid contact number.");
     } else {
-      console.log("Invalid characters in password");
+      setErrorMessage(""); // Clear error if the input is valid
     }
   };
 
-  const formatContactInput = (value) => {
-    const numericValue = value.replace(/[^0-9]/g, "");
-    const formattedValue = numericValue.replace(/(\d{4})(\d{1,7})?/, "$1-$2");
-    return formattedValue.slice(0, 12);
+  // Handle input change and validation
+  const handleInputChange = (e) => {
+    const input = e.target;
+    const caretPos = input.selectionStart; // Get current caret position
+    const { formattedValue } = formatContactInput(input.value, caretPos);
+
+    setContactNumber(formattedValue); // Set formatted value
+    validateContactNumber(formattedValue); // Validate input
+  };
+
+  const handleInput = (e) => {
+    const input = e.target;
+    const caretPos = input.selectionStart;
+    const { formattedValue } = formatContactInput(input.value, caretPos);
+    const oldValue = contactNumber;
+
+    // Check if the user is deleting right before the hyphen and adjust the cursor
+    if (
+      oldValue.length > formattedValue.length &&
+      oldValue.charAt(caretPos - 1) === "-"
+    ) {
+      input.setSelectionRange(caretPos - 1, caretPos - 1); // Move the caret back
+    }
   };
 
   return (
@@ -243,7 +290,7 @@ function Profile() {
         </div>
       ) : ( */}
       <div
-        className={`flex-1 transition-transform pt-28 max-md:pt-44 max-lg:pt-44 ${
+        className={`flex-1 transition-transform pt-28 max-md:pt-44 max-lg:pt-44 font-inter ${
           isSidebarOpen
             ? "translate-x-64 pr-4 pl-20"
             : "translate-x-0 pl-10 pr-4"
@@ -378,15 +425,19 @@ function Profile() {
                       type="tel"
                       pattern="[0-9]{4}-[0-9]{7}"
                       name="contact"
-                      onChange={(e) => setContactNumber(e.target.value)}
+                      onChange={handleInputChange}
+                      onInput={handleInput}
                       className={`${
                         !isDisabled && "ring-blue-300 ring-2"
                       } block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 text-blue-500 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 pl-10 sm:text-sm sm:leading-6`}
-                      onInput={(e) => {
-                        e.target.value = formatContactInput(e.target.value);
-                      }}
                     />
                   </div>
+                  {/* Error message */}
+                  {errorMessage && (
+                    <p className="text-mix-200 text-[12px] mt-1">
+                      {errorMessage}
+                    </p>
+                  )}
                 </div>
               </div>
               <div className="flex sm:flex-row flex-col lg:w-[100%]">

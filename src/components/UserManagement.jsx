@@ -60,6 +60,10 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   useEffect(() => {
     const handleApprovedUsers = async () => {
       setMessage("");
+      setUsers([]);
+      setApplications([]);
+      setLocations([]);
+      setCount(0);
       if (approvedProgramID !== null) {
         try {
           setLoadingUsers(true);
@@ -118,8 +122,9 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   }, [selectedOption.toLowerCase(), selectedOption]);
 
   useEffect(() => {
-    console.log("userUpdate", statusUpdated);
+    // console.log("userUpdate", statusUpdated);
     setMessage("");
+    setUserByProgramID([]);
     if (programID) {
       setLoading(true);
       const handleUserByStatus = async () => {
@@ -136,7 +141,6 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
           if (error.response.status === 404) {
             setMessage("no data found");
           }
-
           setLoading(false);
         }
       };
@@ -184,20 +188,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   // console.log('courses Name', courses)
 
   const handleToggleSection = (section, id) => {
-    // if (isSectionOpen) {
-    //   setUserByProgramID([]);
-    //   setIsSectionOpen(false);
-    //   setPorgramID(null);
-    //   setProgramSection(null);
-    // }
-    // setIsProgramSectionOpen(false);
-    // setIsSkillSectionOpen(false);
-    setUserByProgramID([]);
-    setUsers([]);
-    setApplications([]);
-    setLocations([]);
-    setCount(0);
-    // setUserPrograms([])
+   
     if (heading === "Applicants") {
       setPorgramID(id);
     } else {
@@ -233,8 +224,6 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
     setSelectedStatus(option);
     setStatusOpen(false);
   };
-
-  
 
   const status = ["pending", "approved", "short_listed"];
   const statusDisplayMap = {
@@ -384,7 +373,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
 
                               {statusOpen && (
                                 <div
-                                  // ref={dropStatus}
+                                  ref={dropStatus}
                                   className="absolute  z-40 min-w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                                 >
                                   {Object.entries(statusDisplayMap).length >

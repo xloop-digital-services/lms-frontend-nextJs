@@ -81,7 +81,7 @@ const DevelopmentTable = ({
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-dark-200 ">
-                  {loading && userByProgramID.length == 0 ? (
+                  {loading ? (
                     <tr>
                       <td
                         colSpan="8"

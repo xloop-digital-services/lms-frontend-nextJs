@@ -19,7 +19,6 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   const [attendance, setAttendance] = useState([]);
   const [getAttendance, setGetAttendance] = useState([]);
   const [selectedAttendance, setSelectedAttendance] = useState({});
-  const [isMarked, setIsMarked] = useState(false);
   const [loader, setLoader] = useState(false);
   const [sessions, setSessions] = useState([]);
   const [getting, setGetting] = useState(false);
@@ -34,10 +33,12 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   const month = String(today.getMonth() + 1).padStart(2, "0");
   const year = today.getFullYear();
   const formattedDate = `${year}-${month}-${day}`;
+  console.log(formattedDate, "formated");
+  // const today = new Date().toISOString().split("T")[0];
 
   const [selectedSession, setSelectedSession] = useState("");
   const [date, setDate] = useState(null);
-  const [toggleMark, setToggleMark] = useState(false);
+  const [toggle, setToggle] = useState(true);
   // console.log(group, userId);
   async function fetchSessions() {
     const response = await getInstructorSessionsbyCourseId(
@@ -64,17 +65,17 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
       if (response.status === 200) {
         const initialAttendance = response.data.data.students.reduce(
           (acc, student) => {
-            // Initialize each student's attendance to 0 (Present)
-            // acc[student.registration_id] = 0;
+            // Initialize each student's attendance to 0 (Present) initially
+            acc[student.registration_id] = 0; // '0' for Present
             return acc;
           },
           {}
         );
 
-        console.log("attendence", response.data.data.students);
-        setGetAttendance(response.data.data.students);
-        setSelectedAttendance(initialAttendance);
-        fetchAttendanceIns();
+        console.log("Attendance:", response.data.data.students);
+        setGetAttendance(response.data.data.students); // Setting attendance data
+        setSelectedAttendance(initialAttendance); // Setting the initial status to 'Present'
+        fetchAttendanceIns(); // Fetch additional attendance insights if needed
       } else {
         console.error("Failed to fetch attendance, status:", response.status);
       }
@@ -173,6 +174,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
       if (response.status === 200 || response.status === 201) {
         console.log("response for mark attendence", response);
         toast.success("Attendance marked successfully");
+        setToggle(false);
       } else {
         toast.error(`Error submitting attendance: ${response.data.message}`);
       }
@@ -186,14 +188,6 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
       setLoader(false);
     }
   };
-
-  useEffect(() => {
-    const marked =
-      getAttendance.map((att) => att.registration_id) ===
-      attendance.map((att) => att.student);
-    console.log("hey", marked);
-    setIsMarked(true);
-  }, []);
 
   const handleChange = (e) => {
     const session_id = e.target.value;
@@ -218,29 +212,30 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
     isInstructor && fetchSessions();
   }, []);
 
-  useEffect(() => {
-    if (date && selectedSession) {
-      fetchAttendanceIns();
-    }
-  }, [courseId, selectedSession, date]);
+  // useEffect(() => {
+  //   if (date && selectedSession) {
+  //     fetchAttendanceIns();
+  //   }
+  // }, [courseId, selectedSession, date]);
 
   useEffect(() => {
-    if (toggleMark && selectedSession) {
-      fetchAttendance();
+    // Only set the date initially when the component loads or selectedSession changes
+    if (selectedSession && !date) {
+      setDate(formattedDate); // Set the default formatted date initially
     }
-  }, [selectedSession, toggleMark]);
+
+    if (selectedSession && date) {
+      fetchAttendance();
+      fetchAttendanceIns();
+    }
+  }, [selectedSession, courseId, date, formattedDate]);
 
   const handleDateChange = (e) => {
     const selectedDate = e.target.value;
     console.log(selectedDate);
     setDate(selectedDate);
-    // fetchAttendanceIns();
   };
 
-  const handleCheckboxChange = (e) => {
-    setToggleMark(e.target.checked);
-    setDate("");
-  };
   // console.log(selectedSessionId);
 
   return (
@@ -274,23 +269,15 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                 type="date"
                 value={date}
                 onChange={handleDateChange}
-                disabled={toggleMark} // Disable when toggleMark is true
+                // Disable when toggle is true
                 className={`${
-                  toggleMark
+                  !toggle
                     ? "text-dark-300 cursor-not-allowed"
                     : "text-[#424b55] cursor-default"
                 } border border-dark-300  outline-none px-3 py-2 my-2 rounded-lg w-full`}
                 placeholder="Select start date"
               />
             </div>
-          </div>
-          <div className="flex gap-2 w-full justify-end items-center pr-4 pb-2">
-            <input
-              type="checkbox"
-              checked={toggleMark}
-              onChange={handleCheckboxChange}
-            />
-            <p>Mark Attendance</p>
           </div>
         </>
       )}
@@ -308,14 +295,11 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                     <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]">
                       Student Name
                     </th>
-                    {date &&
-                      selectedSession &&
-                      attendance &&
-                      attendance.length > 0 && (
-                        <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]">
-                          Date
-                        </th>
-                      )}
+                    {date && selectedSession && attendance.length > 0 && (
+                      <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]">
+                        Date
+                      </th>
+                    )}
                     <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]">
                       Action
                     </th>
@@ -331,11 +315,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                         <CircularProgress size={20} />
                       </td>
                     </tr>
-                  ) : !toggleMark &&
-                    date &&
-                    selectedSession &&
-                    Array.isArray(attendance) &&
-                    attendance.length > 0 ? (
+                  ) : date && selectedSession && attendance.length > 0 ? (
                     attendance.map((att, index) => (
                       <tr key={index}>
                         <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
@@ -387,8 +367,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                         <CircularProgress size={20} />
                       </td>
                     </tr>
-                  ) : toggleMark &&
-                    Array.isArray(getAttendance) &&
+                  ) : date === formattedDate && Array.isArray(getAttendance) &&
                     getAttendance.length > 0 ? (
                     getAttendance.map((att, index) => (
                       <tr key={index}>
@@ -420,7 +399,6 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                                   )
                                 }
                                 className="w-4 h-4 rounded-full border-2 border-[#03A1D8] group-hover:cursor-pointer"
-                                // disabled={isAttendancePosted} // If attendance is posted, disable the radio
                               />
                               <p className="group-hover:cursor-pointer">
                                 {status === "0"
@@ -440,7 +418,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                         colSpan="8"
                         className="px-6 py-4 text-center whitespace-nowrap text-sm text-dark-300"
                       >
-                        No attendance data available
+                        No attendance marked
                       </td>
                     </tr>
                   )}
@@ -449,27 +427,35 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
             </div>
           </div>
         </div>
+        {!getting && date && selectedSession && attendance.length > 0 && (
+          <p className="text-center text-mix-300 p-3">
+            {" "}
+            Attendance has been Marked!
+          </p>
+        )}
       </div>
-      {selectedSession && toggleMark && getAttendance.length > 0 && (
-        <button
-          onClick={handleSubmit}
-          className={`${
-            date ? "bg-blue-200 cursor-not-allowed" : "bg-blue-300"
-          } from-dark-600 text-surface-100 p-2 rounded-md w-20 my-2 flex items-center gap-2 justify-center`}
-          type="button"
-          disabled={date}
-        >
-          {loader ? (
-            <CircularProgress
-              size={20}
-              style={{ color: "#ffffff" }}
-              className="m-[2px]"
-            />
-          ) : (
-            "Submit"
-          )}
-        </button>
-      )}
+      {!getting &&
+      (date === formattedDate) &&
+        selectedSession &&
+        toggle &&
+        getAttendance.length > 0 &&
+        attendance.length === 0 && (
+          <button
+            onClick={handleSubmit}
+            className={`$ bg-blue-200 hover:bg-blue-300 text-surface-100 p-2 rounded-md w-20 my-2 flex items-center gap-2 justify-center`}
+            type="button"
+          >
+            {loader ? (
+              <CircularProgress
+                size={20}
+                style={{ color: "#ffffff" }}
+                className="m-[2px]"
+              />
+            ) : (
+              "Submit"
+            )}
+          </button>
+        )}
     </div>
   );
 }
