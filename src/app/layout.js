@@ -8,6 +8,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata = {
   title: "Dashboard - LMS",
   description: "Learning Management System",
+  icons:{
+    icon :['/favicon.ico?v=1'],
+  }
 };
 
 export default function RootLayout({ children }) {

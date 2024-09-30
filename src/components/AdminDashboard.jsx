@@ -21,6 +21,7 @@ const AdminDashboard = () => {
   const { isSidebarOpen } = useSidebar();
   const [batches, setBatches] = useState([]);
   const [updateBatch, setUpdateBatch] = useState(false);
+  const [loadingBatch, setloadingBatch] = useState(true);
   const [loading, setLoading] = useState(true);
   const [allPrograms, setAllPrograms] = useState([]);
   const [selectedProgram, setSelectedProgram] = useState("");
@@ -146,10 +147,10 @@ const AdminDashboard = () => {
       const response = await listAllBatches();
       // console.log("batches", response?.data);
       setBatches(response?.data);
-      setLoading(false);
+      setloadingBatch(false);
     } catch (error) {
       console.log("error while fetching the batches", error);
-      setLoading(false);
+      setloadingBatch(false);
     }
   };
 
@@ -267,7 +268,6 @@ const AdminDashboard = () => {
   }, [
     selectedProgram,
     programId,
-    isProgramSelected,
     selectedSkill,
     skillId,
     isUserSelected,
@@ -637,7 +637,7 @@ const AdminDashboard = () => {
           </div>
 
           <div className="max-h-[155px] mt-3 overflow-y-auto overflow-x-hidden scrollbar-webkit">
-            {loading ? (
+            {loadingBatch ? (
               <div className="flex justify-center items-center w-full h-full p-5">
                 <CircularProgress size={20} />
               </div>
@@ -646,16 +646,16 @@ const AdminDashboard = () => {
             ) : isFilter ? (
               <BatchTable
                 batches={filteredBatches}
-                loading={loading}
-                setLoading={setLoading}
+                loading={loadingBatch}
+                setLoading={setloadingBatch}
                 updateBatch={updateBatch}
                 setUpdateBatch={setUpdateBatch}
               />
             ) : (
               <BatchTable
                 batches={batches}
-                loading={loading}
-                setLoading={setLoading}
+                loading={loadingBatch}
+                setLoading={setloadingBatch}
                 updateBatch={updateBatch}
                 setUpdateBatch={setUpdateBatch}
               />
