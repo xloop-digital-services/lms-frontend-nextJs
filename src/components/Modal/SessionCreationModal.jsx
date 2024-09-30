@@ -18,10 +18,9 @@ const SessionCreationModal = ({
   setUpdateSession,
   updateSession,
 }) => {
-  const [selectedLocation, setSelectedLocation] = useState("Select location");
+  const [selectedLocation, setSelectedLocation] = useState("select Location");
   const [selectedLocationId, setSelectedLocationId] = useState(null);
   const [selectedBatch, setSelectedBatch] = useState("select batch");
-
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [isBatchOpen, setIsBatchOpen] = useState(false);
   const [isBatchSelected, setIsBatchSelected] = useState(false);
@@ -485,7 +484,7 @@ const SessionCreationModal = ({
                 <p>Capacity</p>
                 <input
                   type="number"
-                  className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
+                  className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full "
                   placeholder="Number of students"
                   value={capacity}
                   min={0}

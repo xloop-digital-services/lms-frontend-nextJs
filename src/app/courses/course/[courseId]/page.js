@@ -7,6 +7,7 @@ import {
   getCourseById,
   getModuleByCourseId,
   getProgressForCourse,
+  getSessionInstructor,
   updateCourse,
   updateModule,
 } from "@/api/route";
@@ -67,6 +68,13 @@ export default function Page({ params }) {
   const [skillId, setSkillId] = useState("");
   const [fetch, setFetch] = useState(false);
   const [courseStatus, setCourseStatus] = useState(0);
+  const [adminUserId, setAdminUserId] = useState("");
+  const group = userData?.Group;
+  const isInstructor = userData?.Group === "instructor";
+  const [sessions, setSessions] = useState([]);
+  const [selectedSession, setSelectedSession] = useState();
+  const userId = group === "instructor" ? userData?.User?.id : adminUserId;
+  const [sessionId, setSessionId] = useState(null);
 
   const [skill, setSkill] = useState();
   // console.log(isAdmin)
@@ -196,7 +204,7 @@ export default function Page({ params }) {
   };
 
   async function fetchModules() {
-    const response = await getModuleByCourseId(courseId);
+    const response = await getModuleByCourseId(courseId, sessionId);
     setLoader(true);
     try {
       if (response.status === 200) {
@@ -221,6 +229,7 @@ export default function Page({ params }) {
       description: moduleDesc,
       course: courseId,
       files: file,
+      session: sessionId,
     };
     try {
       const formData = new FormData();
@@ -228,6 +237,7 @@ export default function Page({ params }) {
       formData.append("description", moduleData.description);
       formData.append("course", moduleData.course);
       formData.append("files", file);
+      formData.append("session", sessionId);
 
       const response = await createModule(moduleData);
       if (response.status === 201) {
@@ -236,6 +246,7 @@ export default function Page({ params }) {
         setModuleName("");
         setModuleDesc("");
         fetchModules();
+
         setFileUploaded("");
         setCreatingModule(false);
       } else {
@@ -313,6 +324,7 @@ export default function Page({ params }) {
       formData.append("description", moduleData.description);
       formData.append("course", moduleData.course);
       formData.append("files", file);
+      formData.append("session", sessionId);
 
       const response = await updateModule(formData, moduleId);
       if (response.status === 200) {
@@ -330,9 +342,53 @@ export default function Page({ params }) {
     }
   }
 
+  const handleChange = (e) => {
+    const [selectedSessionId, internalSessionId, instructorId] =
+      e.target.value.split("|");
+    const selectedSession = sessions.find(
+      (session) => session.session.session_id === selectedSessionId
+    );
+    setAdminUserId(instructorId);
+    setSelectedSession(e.target.value);
+    setSessionId(internalSessionId);
+  };
+
+  async function fetchSessions() {
+    const response = await getSessionInstructor(
+      // userId,
+      // group,
+      courseId
+    );
+    setLoader(true);
+    try {
+      if (response.status === 200) {
+        setSessions(response.data.data);
+        setLoader(false);
+      } else {
+        console.error("Failed to fetch sessions, status:", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
+  useEffect(() => {
+    if (!isInstructor) return;
+
+    if (userData?.session) {
+      setSessions(userData.session);
+      setLoader(false);
+    } else {
+      setLoader(true);
+    }
+  }, [userData, isInstructor]);
+
+  useEffect(() => {
+    fetchModules();
+  }, [sessionId]);
+
   useEffect(() => {
     fetchCoursesById();
-    fetchModules();
     fetchAllSkills();
     // fetchSkillbyId();
     {
@@ -340,13 +396,11 @@ export default function Page({ params }) {
     }
     fetchAllSkills();
   }, []);
-  // console.log(courseData?.status);
-  // useEffect(() => {
-  //   // if (courseData?.skills?.length > 0) {
 
-  //   // console.log(courseData?.skills);
-  // }, []);
-
+  useEffect(() => {
+    // if (!isAdmin) return;
+    fetchSessions();
+  }, [userId, sessionId, selectedSession]);
   return (
     <>
       {loader ? (
@@ -373,7 +427,6 @@ export default function Page({ params }) {
               // name={courseData.name}
               // rating="Top Instructor"
               // instructorName={instructor}
-
               progress={courseProgress?.progress_percentage}
               setIsEditing={setIsEditing}
               // shortDesc={courseData.short_description}
@@ -626,9 +679,77 @@ export default function Page({ params }) {
                 </div>
               </>
             )}
-
+            {isAdmin && (
+              <div className="w-full mt-4 ">
+                <label className="text-xl font-exo font-bold">
+                  Select Session
+                </label>
+                <select
+                  value={selectedSession || ""}
+                  onChange={handleChange}
+                  className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                >
+                  <option value="" disabled>
+                    Select a session
+                  </option>
+                  {Array.isArray(sessions) && sessions.length > 0 ? (
+                    sessions.map((session) => {
+                      console.log("Mapping session:", session);
+                      // Combine session_id and instructor_id in value
+                      const optionValue = `${session.session.session_name}|${session.session.id}|${session.instructor_id}`;
+                      return (
+                        <option key={session.session_id} value={optionValue}>
+                          {session.session?.location_name} -{" "}
+                          {session.session?.course?.name} -{" "}
+                          {session.session?.start_time} -{" "}
+                          {session.session?.end_time} -{" "}
+                          {session.instructor_name}
+                        </option>
+                      );
+                    })
+                  ) : (
+                    <option value="" disabled>
+                      No sessions available
+                    </option>
+                  )}
+                </select>
+              </div>
+            )}
+            {isInstructor && (
+              <div className="w-full mt-4 ">
+                <label className="text-xl font-exo font-bold">
+                  Select Session
+                </label>
+                <select
+                  value={selectedSession || ""}
+                  onChange={handleChangeInstructor}
+                  className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                >
+                  <option value="" disabled>
+                    Select a session
+                  </option>
+                  {Array.isArray(sessions) && sessions.length > 0 ? (
+                    sessions.map((session) => {
+                      console.log("Mapping session:", session);
+                      // Combine session_id and instructor_id in value
+                      const optionValue = `${session.session_name}|${session.id}`;
+                      return (
+                        <option key={session.session_id} value={optionValue}>
+                          {session?.location_name} - {session?.course?.name} -{" "}
+                          {session?.start_time} - {session?.end_time}
+                        </option>
+                      );
+                    })
+                  ) : (
+                    <option value="" disabled>
+                      No sessions available
+                    </option>
+                  )}
+                </select>
+              </div>
+            )}
             <div className="flex flex-col gap-4">
-              <div className="flex justify-between items-center max-md:flex-col mt-8 mb-4">
+              <div className="flex justify-between items-center max-md:flex-col mt-4 mb-4">
                 <h2 className="text-xl font-exo font-bold">Modules</h2>
                 {!isStudent && (
                   <button

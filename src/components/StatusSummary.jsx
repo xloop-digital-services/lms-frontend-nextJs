@@ -2,7 +2,7 @@ import React from "react";
 
 export default function StatusSummary() {
   return (
-    <div className="flex min-w-48  py-2 rounded-xl text-dark-400  justify-between my-2 ">
+    <div className="flex min-w-48  py-2 rounded-xl text-dark-500  justify-between my-2 ">
       Status Summary
       <div className="flex items-center">
         <p className="bg-mix-300 w-2 h-2 rounded-full "></p>

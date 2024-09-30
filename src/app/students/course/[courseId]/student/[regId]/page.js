@@ -8,6 +8,7 @@ export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
   // const regId = params.regId;
   const { courseId, regId } = params;
+  
   return (
     <div
       className={`flex-1 transition-transform pt-[90px] space-y-4 max-md:pt-32 font-inter ${

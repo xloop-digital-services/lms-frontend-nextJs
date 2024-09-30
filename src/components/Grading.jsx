@@ -19,10 +19,6 @@ const Grading = ({ courseId }) => {
   // const exams = ["midterm", "final"];
   // const projects = ["project1", "project2", "project3"];
   const [loader, setLoader] = useState(false);
-  const [quizzes, setQuizzes] = useState([]);
-  const [assignments, setAssignments] = useState([]);
-  const [exams, setExams] = useState([]);
-  const [projects, setProjects] = useState([]);
   const [assignWeightage, setAssignWeightage] = useState(false);
   const [weightage, setWeightage] = useState("");
   const [weightagesExist, setWeightagesExist] = useState(false);
@@ -33,61 +29,6 @@ const Grading = ({ courseId }) => {
     setAssignWeightage(!assignWeightage);
   };
 
-  async function fetchQuizzes() {
-    const response = await getQuizByCourseId(courseId);
-    try {
-      if (response.status === 200) {
-        setQuizzes(response?.data?.data);
-        console.log(quizzes);
-      } else {
-        console.error("Failed to fetch user, status:", response.status);
-      }
-    } catch (error) {
-      console.log("error", error);
-    }
-  }
-
-  async function fetchAssignments() {
-    const response = await getAssignmentsByCourseId(courseId, 1002);
-    try {
-      if (response.status === 200) {
-        setAssignments(response?.data?.data);
-        console.log(quizzes);
-      } else {
-        console.error("Failed to fetch user, status:", response.status);
-      }
-    } catch (error) {
-      console.log("error", error);
-    }
-  }
-
-  async function fetchExams() {
-    const response = await getExamByCourseId(courseId);
-    try {
-      if (response.status === 200) {
-        setExams(response?.data?.data);
-        console.log(quizzes);
-      } else {
-        console.error("Failed to fetch user, status:", response.status);
-      }
-    } catch (error) {
-      console.log("error", error);
-    }
-  }
-
-  async function fetchProjects() {
-    const response = await getProjectByCourseId(courseId);
-    try {
-      if (response.status === 200) {
-        setProjects(response?.data?.data);
-        console.log(quizzes);
-      } else {
-        console.error("Failed to fetch user, status:", response.status);
-      }
-    } catch (error) {
-      console.log("error", error);
-    }
-  }
   async function fetchWeightages() {
     const response = await getWeightages(courseId);
     setLoader(true);
@@ -112,24 +53,32 @@ const Grading = ({ courseId }) => {
     setAssignWeightage(false);
   };
   useEffect(() => {
-    fetchQuizzes();
-    fetchAssignments();
-    fetchExams();
-    fetchProjects();
     fetchWeightages();
   }, []);
 
   console.log(weightage);
   return (
     <div className="">
-      <GradingSection title="Quiz" options={quizzes} courseId={courseId} />
       <GradingSection
-        title="Assignment"
-        options={assignments}
+        title="Quiz"
+        //  options={quizzes}
         courseId={courseId}
       />
-      <GradingSection title="Exam" options={exams} courseId={courseId} />
-      <GradingSection title="Project" options={projects} courseId={courseId} />
+      <GradingSection
+        title="Assignment"
+        // options={assignments}
+        courseId={courseId}
+      />
+      <GradingSection
+        title="Exam"
+        //  options={exams}
+        courseId={courseId}
+      />
+      <GradingSection
+        title="Project"
+        // options={projects}
+        courseId={courseId}
+      />
       <hr className="text-dark-200" />
       {/* <button
         onClick={handleCreateWeightage}

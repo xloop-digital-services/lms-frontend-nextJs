@@ -5,6 +5,7 @@ import UplaodingFile from "./Modal/UplaodingFile";
 import { FaCheck, FaEdit, FaTrash } from "react-icons/fa";
 import { downloadFile } from "@/app/courses/course/[courseId]/page";
 import { useAuth } from "@/providers/AuthContext";
+import DeleteConfirmationPopup from "./Modal/DeleteConfirmationPopUp";
 
 export function formatDateTime(apiDateTime) {
   const dateObject = new Date(apiDateTime);
@@ -38,6 +39,7 @@ const AdminDataStructure = ({
   remarks,
   setQuizzes,
   setUpdateStatus,
+  onDelete,
 }) => {
   const [uploadFile, setUploadFile] = useState(false);
   const [editId, setEditId] = useState(null);
@@ -45,7 +47,8 @@ const AdminDataStructure = ({
   const { userData } = useAuth();
   const isAdmin = userData?.Group === "admin";
   const isStudent = userData?.Group === "student";
-
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [selectedQuiz, setSelectedQuiz] = useState(null);
   const handleFileUpload = (id) => {
     setUploadFile(id);
   };
@@ -55,6 +58,22 @@ const AdminDataStructure = ({
       onUpdateQuiz(quizId, editContent);
     }
     setEditId(null);
+  };
+
+  const handleDeleteClick = (quizId) => {
+    setSelectedQuiz(quizId);
+    setConfirmDelete(true);
+  };
+
+  const handleDelete = async () => {
+    try {
+      if (onDelete) {
+        await onDelete(selectedQuiz);
+        setConfirmDelete(false);
+      }
+    } catch (error) {
+      console.error("Error deleting the quiz", error);
+    }
   };
 
   return (
@@ -289,11 +308,19 @@ const AdminDataStructure = ({
                                 //   className="cursor-pointer hover:opacity-80"
                                 // />
                                 // <></>
-                                <FaEdit
-                                  title="edit"
-                                  className="cursor-pointer"
-                                  onClick={() => handleSave(quiz.id)}
-                                />
+                                <>
+                                  <FaEdit
+                                    title="edit"
+                                    className="cursor-pointer"
+                                    onClick={() => handleSave(quiz.id)}
+                                  />
+
+                                  <FaTrash
+                                    title="Delete"
+                                    className="cursor-pointer"
+                                    onClick={() => handleDeleteClick(quiz.id)}
+                                  />
+                                </>
                               )}
 
                               {/* <FaTrash
@@ -326,6 +353,13 @@ const AdminDataStructure = ({
           setUploadFile={setUploadFile}
           assignmentID={iD}
           setUpdateStatus={setUpdateStatus}
+        />
+      )}
+      {confirmDelete && (
+        <DeleteConfirmationPopup
+          setConfirmDelete={setConfirmDelete}
+          handleDelete={handleDelete}
+          field={field}
         />
       )}
     </div>

@@ -21,7 +21,7 @@ export default function Page() {
   } = useAuth();
 
   return (
-    <div className="min-h-screen bg-[#F2F6FF] flex flex-col mt-[200px] sm:px-6 lg:px-8 px-6 font-inter">
+    <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 px-6 font-inter">
       <div className="sm:mx-auto sm:w-full sm:max-w-md flex justify-center items-center space-x-6 pr-4">
         <div className="flex items-center justify-center">
           <Image

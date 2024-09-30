@@ -104,6 +104,7 @@ export default function Page() {
         setCreatingProgram={setCreatingProgram}
         courses={courses}
         removeCourse={removeCourse}
+        
       />
     </div>
   );

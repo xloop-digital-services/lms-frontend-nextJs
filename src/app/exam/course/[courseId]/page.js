@@ -7,6 +7,7 @@ import {
   createAssignment,
   createExam,
   createQuiz,
+  deleteExam,
   getAssignmentsByCourseId,
   getExamByCourseId,
   getProgressForAssignment,
@@ -74,7 +75,7 @@ export default function Page({ params }) {
   };
 
   async function fetchAssignments() {
-    const response = await getExamByCourseId(courseId, userId, sessionId);
+    const response = await getExamByCourseId(courseId, sessionId);
     try {
       if (response.status === 200) {
         setAssignments(response?.data?.data);
@@ -89,7 +90,11 @@ export default function Page({ params }) {
   const handleAssignmentCreation = async (event) => {
     event.preventDefault();
     setLoading(true);
-
+    if (!selectedSession) {
+      toast.error("No session selected");
+      setLoading(false);
+      return;
+    }
     const formData = new FormData();
     formData.append("course", courseId);
     formData.append("title", question);
@@ -103,6 +108,7 @@ export default function Page({ params }) {
     formData.append("start_time", startTime);
     formData.append("end_time", endTime);
     formData.append("total_grade", totalGrade);
+    formData.append("session", sessionId);
 
     try {
       const response = currentAssignment
@@ -184,6 +190,33 @@ export default function Page({ params }) {
       console.log("error", error);
     }
   }
+  const handleDeleteAssignment = async (id) => {
+    const assignmentToDelete = assignments.find(
+      (assignment) => assignment.id === id
+    );
+
+    if (!assignmentToDelete) {
+      toast.error("Assignment not found");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("status", 2);
+
+    try {
+      const response = await deleteExam(formData, assignmentToDelete.id);
+
+      if (response.status === 200) {
+        toast.success("Assignment deleted successfully!");
+        fetchAssignments();
+      } else {
+        toast.error("Error deleting assignment", response?.message);
+      }
+    } catch (error) {
+      toast.error("Error deleting assignment", error);
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     if (!isInstructor) return;
@@ -487,6 +520,7 @@ export default function Page({ params }) {
               assessment="Exam"
               setUpdateStatus={setUpdateStatus}
               handleUpdateAssignment={handleUpdateAssignment}
+              onDelete={handleDeleteAssignment}
             />
           )}
         </div>

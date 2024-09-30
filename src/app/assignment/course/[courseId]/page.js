@@ -5,7 +5,9 @@ import StudentDataStructure from "@/components/StudentDataStructure";
 import CourseHead from "@/components/CourseHead";
 import {
   createAssignment,
+  deleteAssignment,
   getAssignmentsByCourseId,
+  getAssignmentsStudents,
   getInstructorSessionsbyCourseId,
   getProgressForAssignment,
   getSessionInstructor,
@@ -37,13 +39,14 @@ export default function Page({ params }) {
   const [assignmentStatus, setAssignmentStatus] = useState(0);
   const [totalGrade, setTotalGrade] = useState("");
   const [adminUserId, setAdminUserId] = useState("");
-  const group = userData?.Group;
-  const isAdmin = userData?.Group === "admin";
-  const isInstructor = userData?.Group === "instructor";
   const [sessions, setSessions] = useState([]);
   const [selectedSession, setSelectedSession] = useState();
-  const userId = group === "instructor" ? userData?.User?.id : adminUserId;
   const [sessionId, setSessionId] = useState(null);
+  const group = userData?.Group;
+  const regId = userData?.user_data?.registration_id;
+  const isAdmin = userData?.Group === "admin";
+  const isInstructor = userData?.Group === "instructor";
+  const userId = group === "instructor" ? userData?.User?.id : adminUserId;
 
   const handleChange = (e) => {
     const [selectedSessionId, internalSessionId, instructorId] =
@@ -71,8 +74,30 @@ export default function Page({ params }) {
     }
     const response = await getAssignmentsByCourseId(
       courseId,
-      userId,
+      // userId,
       sessionId
+    );
+    try {
+      if (response.status === 200) {
+        setAssignments(response?.data?.data);
+      } else {
+        console.error("Failed to fetch assignments, status:", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
+  async function fetchAssignmentStudents() {
+    if (!userId) {
+      console.error("userId is null, cannot fetch assignments.");
+      return;
+    }
+    const response = await getAssignmentsStudents(
+      courseId,
+      // userId,
+      sessionId,
+      regId
     );
     try {
       if (response.status === 200) {
@@ -105,7 +130,8 @@ export default function Page({ params }) {
     event.preventDefault();
     setLoading(true);
     if (!selectedSession) {
-      console.error("No session selected");
+      toast.error("No session selected");
+      setLoading(false);
       return;
     }
 
@@ -121,8 +147,13 @@ export default function Page({ params }) {
     formData.append("status", assignmentStatus);
     formData.append("total_grade", totalGrade);
     formData.append("created_by", userId);
+    formData.append("session", sessionId);
 
     try {
+      if (!sessionId) {
+        toast.error("Select a session to create the assignment.");
+        return;
+      }
       const response = currentAssignment
         ? await updateAssignment(formData, currentAssignment.id)
         : await createAssignment(formData);
@@ -176,14 +207,35 @@ export default function Page({ params }) {
       return;
     }
 
-    setCurrentAssignment(assignmentToEdit);
-    setQuestion(assignmentToEdit.question);
-    setDescription(assignmentToEdit.description);
-    setDueDate(assignmentToEdit.due_date);
-    setResubmission(assignmentToEdit.no_of_resubmissions_allowed);
-    setFile(assignmentToEdit.content);
-    setTotalGrade(assignmentToEdit.total_grade);
-    setCreatingQuiz(true);
+    formData.append("status", 2);
+  };
+
+  const handleDeleteAssignment = async (id) => {
+    const assignmentToDelete = assignments.find(
+      (assignment) => assignment.id === id
+    );
+
+    if (!assignmentToDelete) {
+      toast.error("Assignment not found");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("status", 2); 
+
+    try {
+      const response = await deleteAssignment(formData, assignmentToDelete.id);
+
+      if (response.status === 200) {
+        toast.success("Assignment deleted successfully!");
+        fetchAssignments(); 
+      } else {
+        toast.error("Error deleting assignment", response?.message);
+      }
+    } catch (error) {
+      toast.error("Error deleting assignment", error);
+      console.error(error);
+    }
   };
 
   async function fetchSessions() {
@@ -206,15 +258,15 @@ export default function Page({ params }) {
   }
 
   useEffect(() => {
-    if (!isInstructor) return; 
+    if (!isInstructor) return;
 
     if (userData?.session) {
       setSessions(userData.session);
-      setLoading(false); 
+      setLoading(false);
     } else {
       setLoading(true);
     }
-  }, [userData, isInstructor]); 
+  }, [userData, isInstructor]);
 
   useEffect(() => {
     if (!isAdmin) return;
@@ -223,10 +275,12 @@ export default function Page({ params }) {
 
   useEffect(() => {
     if (!userId) return;
-    fetchAssignments();
 
     if (isStudent) {
+      fetchAssignmentStudents();
       fetchAssignmentProgress();
+    } else {
+      fetchAssignments();
     }
   }, [userId, sessionId, selectedSession, updateStatus]);
 
@@ -460,6 +514,7 @@ export default function Page({ params }) {
               assessment="Assignments"
               setUpdateStatus={setUpdateStatus}
               handleUpdateAssignment={handleUpdateAssignment}
+              onDelete={handleDeleteAssignment}
             />
           )}
         </div>

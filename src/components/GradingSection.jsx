@@ -3,17 +3,22 @@ import React, { useEffect, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import {
   getAssignmentGrading,
+  getAssignmentsByCourseId,
+  getExamByCourseId,
   getExamGrading,
   getInstructorSessions,
+  getProjectByCourseId,
   getProjectGrading,
+  getQuizByCourseId,
   getQuizGrading,
+  getSessionInstructor,
   listAllSessions,
   listSessionByCourseId,
 } from "@/api/route";
 import AdminMarksTable from "./AdminMarksTable";
 import { useAuth } from "@/providers/AuthContext";
 
-export const GradingSection = ({ title, options, courseId }) => {
+export const GradingSection = ({ title, courseId }) => {
   const { userData } = useAuth();
   const isAdmin = userData?.Group === "admin";
   const isInstructor = userData?.Group === "instructor";
@@ -32,13 +37,84 @@ export const GradingSection = ({ title, options, courseId }) => {
   const [selectedSessionId, setSelectedSessionId] = useState("");
   const [sessions, setSessions] = useState([]);
   const [loader, setLoader] = useState(false);
-  const userId = userData?.user_data?.id;
+  const [adminUserId, setAdminUserId] = useState("");
   const group = userData?.Group;
+  const [selectedSession, setSelectedSession] = useState();
+  const [sessionId, setSessionId] = useState(null);
+  const userId = group === "instructor" ? userData?.User?.id : adminUserId;
+  const [quizzes, setQuizzes] = useState([]);
+  const [assignments, setAssignments] = useState([]);
+  const [exams, setExams] = useState([]);
+  const [projects, setProjects] = useState([]);
+  const [options, setOptions] = useState([]);
 
-  // console.log(isAdmin);
+  async function fetchAssignments() {
+    const response = await getAssignmentsByCourseId(courseId, sessionId);
+    try {
+      if (response.status === 200) {
+        setOptions(response?.data?.data);
+        console.log(quizzes);
+      } else {
+        console.error("Failed to fetch user, status:", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+  async function fetchQuizzes() {
+    const response = await getQuizByCourseId(courseId, sessionId);
+    try {
+      if (response.status === 200) {
+        setOptions(response?.data?.data);
+        console.log(quizzes);
+      } else {
+        console.error("Failed to fetch user, status:", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
+  async function fetchExams() {
+    const response = await getExamByCourseId(courseId, sessionId);
+    try {
+      if (response.status === 200) {
+        setOptions(response?.data?.data);
+        console.log(quizzes);
+      } else {
+        console.error("Failed to fetch user, status:", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
+  async function fetchProjects() {
+    const response = await getProjectByCourseId(courseId, sessionId);
+    try {
+      if (response.status === 200) {
+        setOptions(response?.data?.data);
+        console.log(quizzes);
+      } else {
+        console.error("Failed to fetch user, status:", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
   const handleChange = (e) => {
-    setSelectedSessionId(e.target.value);
+    const [selectedSessionId, internalSessionId, instructorId] =
+      e.target.value.split("|");
+    const selectedSession = sessions.find(
+      (session) => session.session.session_id === selectedSessionId
+    );
+    setAdminUserId(instructorId);
+    setSelectedSession(e.target.value);
+    setSessionId(internalSessionId);
   };
+
+  console.log(sessionId);
 
   const toggleOpen = (e) => {
     e.stopPropagation();
@@ -50,6 +126,32 @@ export const GradingSection = ({ title, options, courseId }) => {
     setIsOpen(false);
     // setSelectedDesc("")
     // setTotalMarks("")
+  };
+  // useEffect(() => {
+  //   fetchQuizzes();
+  //   fetchAssignments();
+  //   fetchExams();
+  //   fetchProjects();
+  // }, [sessionId]);
+  useEffect(() => {
+    if (!sessionId) return;
+    if (title === "Assignment") {
+      fetchAssignments();
+    } else if (title === "Quiz") {
+      fetchQuizzes();
+    } else if (title === "Exam") {
+      fetchExams();
+    } else if (title === "Project") {
+      fetchProjects();
+    }
+  }, [sessionId]);
+
+  const handleChangeInstructor = (e) => {
+    const value = e.target.value;
+    setSelectedSession(value);
+    const sessionParts = value.split("|");
+    const selectedSessionId = sessionParts[1];
+    setSessionId(selectedSessionId);
   };
 
   const handleToggleSection = (section) => {
@@ -71,11 +173,7 @@ export const GradingSection = ({ title, options, courseId }) => {
 
   async function fetchQuizzesGrading() {
     setLoading(true);
-    const response = await getQuizGrading(
-      courseId,
-      selected,
-      selectedSessionId
-    );
+    const response = await getQuizGrading(courseId, selected, sessionId);
     try {
       if (response.status === 200) {
         setLoading(false);
@@ -91,11 +189,7 @@ export const GradingSection = ({ title, options, courseId }) => {
 
   async function fetchAssignmentsGrading() {
     setLoading(true);
-    const response = await getAssignmentGrading(
-      courseId,
-      selected,
-      selectedSessionId
-    );
+    const response = await getAssignmentGrading(courseId, selected, sessionId);
     try {
       if (response.status === 200) {
         setLoading(false);
@@ -110,6 +204,7 @@ export const GradingSection = ({ title, options, courseId }) => {
   }
 
   console.log(selectedSessionId);
+  console.log(selected);
 
   // async function fetchExamGrading() {
   //   setLoading(true);
@@ -130,11 +225,7 @@ export const GradingSection = ({ title, options, courseId }) => {
   async function fetchExamGrading() {
     setLoading(true);
     try {
-      const response = await getExamGrading(
-        courseId,
-        selected,
-        selectedSessionId
-      );
+      const response = await getExamGrading(courseId, selected, sessionId);
       if (response.status === 200) {
         const examData = response?.data?.data;
         setLoading(false);
@@ -151,11 +242,7 @@ export const GradingSection = ({ title, options, courseId }) => {
 
   async function fetchProjectGrading() {
     setLoading(true);
-    const response = await getProjectGrading(
-      courseId,
-      selected,
-      selectedSessionId
-    );
+    const response = await getProjectGrading(courseId, selected, sessionId);
     try {
       if (response.status === 200) {
         setLoading(false);
@@ -170,27 +257,16 @@ export const GradingSection = ({ title, options, courseId }) => {
   }
 
   async function fetchSessions() {
-    const response = await getInstructorSessions(userId, group); 
-    setLoader(true);
+    const response = await getSessionInstructor(
+      // userId,
+      // group,
+      courseId
+    );
+    setLoading(true);
     try {
       if (response.status === 200) {
-        setSessions(response.data); 
-        setLoader(false);
-      } else {
-        console.error("Failed to fetch sessions, status:", response.status);
-      }
-    } catch (error) {
-      console.log("error", error);
-    }
-  }
-
-  async function fetchSessionsAdmin() {
-    const response = await listSessionByCourseId(courseId); 
-    setLoader(true);
-    try {
-      if (response.status === 200) {
-        setSessions(response.data); 
-        setLoader(false);
+        setSessions(response.data.data);
+        setLoading(false);
       } else {
         console.error("Failed to fetch sessions, status:", response.status);
       }
@@ -200,13 +276,21 @@ export const GradingSection = ({ title, options, courseId }) => {
   }
 
   useEffect(() => {
-    if (isInstructor) {
-      fetchSessions();
-    }
+    if (!isInstructor) return;
 
-    if (isAdmin) {
-      fetchSessionsAdmin();
+    if (userData?.session) {
+      setSessions(userData.session);
+      setLoading(false);
+    } else {
+      setLoading(true);
     }
+  }, [userData, isInstructor]);
+  useEffect(() => {
+    if (!isAdmin) return;
+    fetchSessions();
+  }, [userId, selectedSessionId, selectedSession]);
+
+  useEffect(() => {
     if (!selected) return;
     if (title === "Assignment") {
       fetchAssignmentsGrading();
@@ -242,90 +326,64 @@ export const GradingSection = ({ title, options, courseId }) => {
           )}
         </div>
         <div className="flex gap-2 items-center">
-          <div
-            className={`transition-container ${
-              openSection === title ? "max-height-full" : "max-height-0"
-            }`}
-          >
-            {openSection === title && (
-              <div className="z-20">
-                <button
-                  onClick={toggleOpen}
-                  className="flex justify-between z-30 items-center min-w-[200px] text-[#92A7BE] hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border  border-[#92A7BE] rounded-lg  focus:outline-none  transition duration-300 ease-in-out"
-                >
-                  {selectedValue ? selectedValue : `Select ${title}`}
-                  {/* Select {title} */}
-                  <span
-                    className={`${
-                      !isOpen ? "rotate-180 duration-300" : "duration-300"
-                    }`}
+          {sessionId && (
+            <div
+              className={`transition-container ${
+                openSection === title ? "max-height-full" : "max-height-0"
+              }`}
+            >
+              {openSection === title && (
+                <div className="z-20">
+                  <button
+                    onClick={toggleOpen}
+                    className="flex justify-between z-30 items-center min-w-[200px] text-[#92A7BE] hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border  border-[#92A7BE] rounded-lg  focus:outline-none  transition duration-300 ease-in-out"
                   >
-                    <IoIosArrowDown />
-                  </span>
-                </button>
+                    {selectedValue ? selectedValue : `Select ${title}`}
 
-                {isOpen && (
-                  <div
-                    className="absolute capitalize z-40 min-w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    {options?.length > 0 ? (
-                      options.map((option) => (
-                        <div
-                          key={option.id}
-                          onClick={() => {
-                            handleSelect(option.id);
-                            setSelectedValue(option.question || option.title);
-                            setSelectedDesc(option.description);
-                            setTotalMarks(option.total_grade || 0); // Update total marks for selected option
-                          }}
-                          className="p-2 cursor-pointer"
-                        >
-                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
-                            {option.question || option.title}
+                    <span
+                      className={`${
+                        !isOpen ? "rotate-180 duration-300" : "duration-300"
+                      }`}
+                    >
+                      <IoIosArrowDown />
+                    </span>
+                  </button>
+
+                  {isOpen && (
+                    <div
+                      className="absolute capitalize z-40 min-w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {options?.length > 0 ? (
+                        options.map((option) => (
+                          <div
+                            key={option.id}
+                            onClick={() => {
+                              handleSelect(option.id);
+                              setSelectedValue(option.question || option.title);
+                              setSelectedDesc(option.description);
+                              setTotalMarks(option.total_grade || 0); // Update total marks for selected option
+                            }}
+                            className="p-2 cursor-pointer"
+                          >
+                            <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                              {option.question || option.title}
+                            </div>
                           </div>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="text-center py-4">No data found</div>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-
-          {isInstructor && (
-            <div>
-              <select
-                value={selectedSessionId}
-                onChange={handleChange}
-                
-                className="bg-surface-100 cursor-pointer text-[#92A7BE] block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-              >
-                <option
-                  className="bg-surface-100 text-[#92A7BE] block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                  value=""
-                  disabled
-                  selected
-                >
-                  Select a session
-                </option>
-                {Array.isArray(sessions.data) &&
-                  sessions.data.map((session) => (
-                    <option className="px-4 py-2 w-40 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg" key={session.session_id} value={session.session_id}>
-                      {session.location} - {session.course} -{" "}
-                      {session.no_of_student} - {session.start_time} -{" "}
-                      {session.end_time}
-                    </option>
-                  ))}
-              </select>
+                        ))
+                      ) : (
+                        <div className="text-center py-4">No data found</div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
           {isAdmin && (
-            <div>
+            <div className="">
               <select
-                value={selectedSessionId}
+                value={selectedSession || ""}
                 onChange={handleChange}
                 className="bg-surface-100 cursor-pointer text-[#92A7BE] block w-[200px] my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
               >
@@ -337,17 +395,68 @@ export const GradingSection = ({ title, options, courseId }) => {
                 >
                   Select a session
                 </option>
-                {Array.isArray(sessions.data) &&
-                  sessions.data.map((session) => (
-                    <option
-                      key={session.id} // Use the session id
-                      value={session.id} // Set value as session id
-                    >
-                      {session.location_name} - {session.course.name} -{" "}
-                      {session.no_of_students} Students - {session.start_time} -{" "}
-                      {session.end_time}
-                    </option>
-                  ))}
+                {Array.isArray(sessions) && sessions.length > 0 ? (
+                  sessions.map((session) => {
+                    console.log("Mapping session:", session);
+                    // Combine session_id and instructor_id in value
+                    const optionValue = `${session.session.session_name}|${session.session.id}|${session.instructor_id}`;
+                    return (
+                      <option
+                        className="bg-surface-100 text-[#92A7BE] block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                        key={session.session_id}
+                        value={optionValue}
+                      >
+                        {session.session?.location_name} -{" "}
+                        {session.session?.course?.name} -{" "}
+                        {session.session?.start_time} -{" "}
+                        {session.session?.end_time} - {session.instructor_name}
+                      </option>
+                    );
+                  })
+                ) : (
+                  <option value="" disabled>
+                    No sessions available
+                  </option>
+                )}
+              </select>
+            </div>
+          )}
+          {isInstructor && (
+            <div className="">
+              <select
+                value={selectedSession || ""}
+                onChange={handleChangeInstructor}
+                className="bg-surface-100 cursor-pointer text-[#92A7BE] block w-[200px] my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+              >
+                <option
+                  className="bg-surface-100 text-[#92A7BE] block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                  value=""
+                  disabled
+                  selected
+                >
+                  Select a session
+                </option>
+                {Array.isArray(sessions) && sessions.length > 0 ? (
+                  sessions.map((session) => {
+                    console.log("Mapping session:", session);
+                    // Combine session_id and instructor_id in value
+                    const optionValue = `${session.session_name}|${session.id}`;
+                    return (
+                      <option
+                        className="bg-surface-100 text-[#92A7BE] block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                        key={session.session_id}
+                        value={optionValue}
+                      >
+                        {session?.location_name} - {session?.course?.name} -{" "}
+                        {session?.start_time} - {session?.end_time}
+                      </option>
+                    );
+                  })
+                ) : (
+                  <option value="" disabled>
+                    No sessions available
+                  </option>
+                )}
               </select>
             </div>
           )}

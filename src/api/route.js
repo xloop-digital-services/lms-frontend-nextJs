@@ -142,9 +142,11 @@ export const getCourseById = async (id) => {
 };
 
 // get module by course_id
-export const getModuleByCourseId = async (id) => {
+export const getModuleByCourseId = async (courseId, sessionId) => {
   try {
-    const response = await axiosInstance.get(`/course/courses/${id}/modules/`);
+    const response = await axiosInstance.get(
+      `/course/courses/${courseId}/modules/session/${sessionId}/`
+    );
     return response;
   } catch (error) {
     throw error;
@@ -155,13 +157,24 @@ export const getModuleByCourseId = async (id) => {
 export const getAssignmentsByCourseId = async (
   // id
   courseId,
-  insId,
+  // insId,
   sessionId
 ) => {
   try {
     const response = await axiosInstance.get(
       // `/course/assignments/course/${id}/`
-      `course/assignments/course/${courseId}/${insId}/session/${sessionId}/`
+      `course/assignments/course/${courseId}/session/${sessionId}/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+//get assignments for students
+export const getAssignmentsStudents = async (courseId, sessionId, regId) => {
+  try {
+    const response = await axiosInstance.get(
+      `course/assignments/course/${courseId}/session/${sessionId}/student/${regId}`
     );
     return response;
   } catch (error) {
@@ -182,10 +195,10 @@ export const getPendingAssignments = async (progId, regId) => {
 };
 
 //get Quiz by courseId
-export const getQuizByCourseId = async (courseId, insId, sessionId) => {
+export const getQuizByCourseId = async (courseId, sessionId) => {
   try {
     const response = await axiosInstance.get(
-      `/course/quizzes/course/${courseId}/${insId}/session/${sessionId}/`
+      `/course/quizzes/course/${courseId}/session/${sessionId}/`
     );
     return response;
   } catch (error) {
@@ -194,10 +207,10 @@ export const getQuizByCourseId = async (courseId, insId, sessionId) => {
 };
 
 //get project by courseId
-export const getProjectByCourseId = async (courseId, insId, sessionId) => {
+export const getProjectByCourseId = async (courseId, sessionId) => {
   try {
     const response = await axiosInstance.get(
-      `/course/projects/course/${courseId}/${insId}/session/${sessionId}/`
+      `/course/projects/course/${courseId}/session/${sessionId}/`
     );
     return response;
   } catch (error) {
@@ -206,10 +219,10 @@ export const getProjectByCourseId = async (courseId, insId, sessionId) => {
 };
 
 //get exam by courseId
-export const getExamByCourseId = async (courseId, insId, sessionId) => {
+export const getExamByCourseId = async (courseId, sessionId) => {
   try {
     const response = await axiosInstance.get(
-      `/course/exams/course/${courseId}/${insId}/session/${sessionId}/`
+      `/course/exams/course/${courseId}/session/${sessionId}/`
     );
     return response;
   } catch (error) {
@@ -987,6 +1000,19 @@ export const updateAssignment = async (assignmentData, assignmentId) => {
   }
 };
 
+//delete an assignment
+export const deleteAssignment = async (assignmentData, assignmentId) => {
+  try {
+    const response = await axiosInstance.patch(
+      `/course/assignments/${assignmentId}/`,
+      assignmentData
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 //create a quiz
 export const createQuiz = async (quiz) => {
   try {
@@ -1013,7 +1039,18 @@ export const updateQuiz = async (quizData, quizId) => {
     throw error;
   }
 };
-
+//delete a quiz
+export const deleteQuiz = async (quizData, quizId) => {
+  try {
+    const response = await axiosInstance.patch(
+      `/course/quizzes/${quizId}/`,
+      quizData
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 //create a project
 export const createProject = async (project) => {
   try {
@@ -1040,6 +1077,18 @@ export const updateProject = async (projectData, projectId) => {
   }
 };
 
+//delete the project
+export const deleteProject = async (projectData, projectId) => {
+  try {
+    const response = await axiosInstance.patch(
+      `/course/projects/${projectId}/`,
+      projectData
+    );
+  } catch (error) {
+    throw error;
+  }
+};
+
 //create an exam
 export const createExam = async (exam) => {
   try {
@@ -1058,6 +1107,17 @@ export const createExam = async (exam) => {
 export const updateExam = async (examData, examId) => {
   try {
     const response = await axiosInstance.put(
+      `/course/exams/${examId}/`,
+      examData
+    );
+  } catch (error) {
+    throw error;
+  }
+};
+//selete the exam
+export const deleteExam = async (examData, examId) => {
+  try {
+    const response = await axiosInstance.patch(
       `/course/exams/${examId}/`,
       examData
     );

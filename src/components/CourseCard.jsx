@@ -48,9 +48,9 @@ const CourseCard = ({
           </div>
           <div className="space-y-2 text-sm px-4 pt-[6px]">
             <div className="flex justify-between">
-              <div className="flex bg-[#EBF6FF] w-fit py-[9px] px-5 rounded-lg items-center space-x-2">
+              <div className="flex bg-[#EBF6FF] w-full py-[9px] px-5 rounded-lg items-center space-x-2">
                 {/* <p className="bg-[#03A1D8] w-2 h-2 rounded-full"></p> */}
-                <p className="text-blue-300 h-4 uppercase text-[12px] font-semibold line-clamp-1">
+                <p className="text-blue-300 h-4 uppercase text-[12px] font-semibold overflow-hidden text-ellipsis whitespace-nowrap">
                   {courseName}
                 </p>{" "}
               </div>

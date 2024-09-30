@@ -400,7 +400,7 @@ const ApprovalUserModal = ({
                     className="flex  items-center justify-between border-dark-200 border rounded-lg text-dark-400 text-center p-2  w-full "
                     onClick={handleToggle}
                   >
-                    <span>assign classes</span>
+                    <span>Assign classes</span>
                     <span className="flex items-center">
                       <IoIosArrowDown
                         size={12}

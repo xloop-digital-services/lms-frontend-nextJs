@@ -153,7 +153,7 @@ const UserApprovalTable = ({
                             </div> */}
                             <div
                               className="flex items-center justify-center group text-[#03A1D8]"
-                              title="assign classes"
+                              title="Assign classes"
                               onClick={() =>
                                 handleModal(
                                   user,

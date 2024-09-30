@@ -6,6 +6,7 @@ import CourseHead from "@/components/CourseHead";
 import {
   createAssignment,
   createQuiz,
+  deleteQuiz,
   getAssignmentsByCourseId,
   getProgressForAssignment,
   getProgressForQuiz,
@@ -68,7 +69,11 @@ export default function Page({ params }) {
   };
 
   async function fetchAssignments() {
-    const response = await getQuizByCourseId(courseId, userId, sessionId);
+    const response = await getQuizByCourseId(
+      courseId,
+      //  userId,
+      sessionId
+    );
     try {
       if (response.status === 200) {
         setAssignments(response?.data?.data);
@@ -100,6 +105,11 @@ export default function Page({ params }) {
   const handleAssignmentCreation = async (event) => {
     event.preventDefault();
     setLoading(true);
+    if (!selectedSession) {
+      toast.error("No session selected");
+      setLoading(false);
+      return;
+    }
 
     const formData = new FormData();
     formData.append("course", courseId);
@@ -112,6 +122,7 @@ export default function Page({ params }) {
     formData.append("no_of_resubmissions_allowed", resubmission);
     formData.append("status", assignmentStatus);
     formData.append("total_grade", totalGrade);
+    formData.append("session", sessionId);
 
     try {
       const response = currentAssignment
@@ -188,6 +199,34 @@ export default function Page({ params }) {
       console.log("error", error);
     }
   }
+
+  const handleDeleteAssignment = async (id) => {
+    const assignmentToDelete = assignments.find(
+      (assignment) => assignment.id === id
+    );
+
+    if (!assignmentToDelete) {
+      toast.error("Assignment not found");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("status", 2);
+
+    try {
+      const response = await deleteQuiz(formData, assignmentToDelete.id);
+
+      if (response.status === 200) {
+        toast.success("Assignment deleted successfully!");
+        fetchAssignments();
+      } else {
+        toast.error("Error deleting assignment", response?.message);
+      }
+    } catch (error) {
+      toast.error("Error deleting assignment", error);
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     if (!isInstructor) return;
@@ -446,6 +485,7 @@ export default function Page({ params }) {
               assessment="Quiz"
               setUpdateStatus={setUpdateStatus}
               handleUpdateAssignment={handleUpdateAssignment}
+              onDelete={handleDeleteAssignment}
             />
           )}
         </div>

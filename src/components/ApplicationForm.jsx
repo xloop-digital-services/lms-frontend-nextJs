@@ -298,12 +298,9 @@ export default function ApplicationForm() {
   };
 
   return (
-    <div
-      className="flex flex-col w-full h-screen justify-center items-center p-4 gap-7 bg-gradient-to-t from-blue-600 "
-     
-    >
-      <Image src={logo} />
-      <div className="bg-surface-100 rounded-xl p-6 flex flex-col   space-y-4 w-[70%] max-h-screen overflow-y-auto scrollbar-webkit ">
+    <div className="flex flex-col w-full h-screen justify-center items-center p-4 gap-7 bg-gradient-to-t from-blue-600 ">
+      <Image src={logo} width={300} />
+      <div className="bg-surface-100 rounded-xl p-4 flex flex-col space-y-4 w-[70%] max-h-screen overflow-y-auto scrollbar-webkit ">
         {loadingSubmit && (
           <div className="absolute inset-0 w-full p-2 flex items-center justify-center bg-surface-100 bg-opacity-30 z-[1100]">
             <CircularProgress size={30} />

@@ -150,7 +150,15 @@ const CourseHead = ({
             ) : null}
           </div>
         </div>
-
+        {program === "program"
+          ? null
+          : isStudent && (
+              <p className="flex items-center text-blue-300 font-semibold">
+                {studentInstructorName
+                  ? `Instructor: ${studentInstructorName}`
+                  : null}
+              </p>
+            )}
         {program === "program" ? (
           <p className="mt-2 mb-2 text-dark-500 max-md:text-center">
             {programData.short_description}
@@ -170,15 +178,6 @@ const CourseHead = ({
         </div>
       )}
 
-      {program === "program"
-        ? null
-        : isStudent && (
-            <p className="flex items-center">
-              {studentInstructorName
-                ? `Instructor: ${studentInstructorName}`
-                : null}
-            </p>
-          )}
       {progress ? <Progress progress={progress} /> : null}
 
       {haveStatus ? <StatusSummary /> : null}
