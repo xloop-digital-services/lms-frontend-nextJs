@@ -371,6 +371,13 @@ export default function Page({ params }) {
       console.log("error", error);
     }
   }
+  const handleChangeInstructor = (e) => {
+    const value = e.target.value;
+    setSelectedSession(value);
+    const sessionParts = value.split("|");
+    const selectedSessionId = sessionParts[1];
+    setSessionId(selectedSessionId);
+  };
 
   useEffect(() => {
     if (!isInstructor) return;
@@ -398,7 +405,7 @@ export default function Page({ params }) {
   }, []);
 
   useEffect(() => {
-    // if (!isAdmin) return;
+    if (!isAdmin) return;
     fetchSessions();
   }, [userId, sessionId, selectedSession]);
   return (
