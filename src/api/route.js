@@ -170,17 +170,6 @@ export const getAssignmentsByCourseId = async (
     throw error;
   }
 };
-//get assignments for students
-export const getAssignmentsStudents = async (courseId, sessionId, regId) => {
-  try {
-    const response = await axiosInstance.get(
-      `course/assignments/course/${courseId}/session/${sessionId}/student/${regId}`
-    );
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
 
 //get pending assignment by courseId and registration id
 export const getPendingAssignments = async (progId, regId) => {
@@ -231,10 +220,10 @@ export const getExamByCourseId = async (courseId, sessionId) => {
 };
 
 //get assignment Progress(grading)
-export const getAssignmentProgress = async (courseId, regId) => {
+export const getAssignmentProgress = async (courseId, sessionId, regId) => {
   try {
     const response = await axiosInstance.get(
-      `/course/assignments/${courseId}/student/${regId}/`
+      `course/assignments/${courseId}/session/${sessionId}/student/${regId}/`
     );
     return response;
   } catch (error) {
@@ -243,10 +232,10 @@ export const getAssignmentProgress = async (courseId, regId) => {
 };
 
 //get quizzes Progress (grading)
-export const getQuizProgress = async (courseId, regId) => {
+export const getQuizProgress = async (courseId, sessionId, regId) => {
   try {
     const response = await axiosInstance.get(
-      `/course/quizzes/${courseId}/student/${regId}/`
+      `/course/quizzes/${courseId}/session/${sessionId}/student/${regId}/`
     );
     return response;
   } catch (error) {
@@ -255,10 +244,10 @@ export const getQuizProgress = async (courseId, regId) => {
 };
 
 //get project Progress (grading)
-export const getProjectProgress = async (courseId, regId) => {
+export const getProjectProgress = async (courseId, sessionId, regId) => {
   try {
     const response = await axiosInstance.get(
-      `/course/projects/${courseId}/student/${regId}/`
+      `/course/projects/${courseId}/session/${sessionId}/student/${regId}/`
     );
     return response;
   } catch (error) {
@@ -267,10 +256,10 @@ export const getProjectProgress = async (courseId, regId) => {
 };
 
 //get exam Progress (grading)
-export const getExamProgress = async (courseId, regId) => {
+export const getExamProgress = async (courseId, sessionId, regId) => {
   try {
     const response = await axiosInstance.get(
-      `/course/exams/${courseId}/student/${regId}/`
+      `/course/exams/${courseId}/session/${sessionId}/student/${regId}/`
     );
     return response;
   } catch (error) {
@@ -955,6 +944,24 @@ export const updateCourse = async (course, courseId) => {
 export const updateModule = async (module, moduleId) => {
   try {
     const response = await axiosInstance.put(
+      `/course/modules/${moduleId}/`,
+      module,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//delete a module
+export const deleteModule = async (module, moduleId) => {
+  try {
+    const response = await axiosInstance.patch(
       `/course/modules/${moduleId}/`,
       module,
       {

@@ -7,6 +7,7 @@ import {
   getExamByCourseId,
   getExamGrading,
   getInstructorSessions,
+  getInstructorSessionsbyCourseId,
   getProjectByCourseId,
   getProjectGrading,
   getQuizByCourseId,
@@ -103,17 +104,6 @@ export const GradingSection = ({ title, courseId }) => {
     }
   }
 
-  const handleChange = (e) => {
-    const [selectedSessionId, internalSessionId, instructorId] =
-      e.target.value.split("|");
-    const selectedSession = sessions.find(
-      (session) => session.session.session_id === selectedSessionId
-    );
-    setAdminUserId(instructorId);
-    setSelectedSession(e.target.value);
-    setSessionId(internalSessionId);
-  };
-
   console.log(sessionId);
 
   const toggleOpen = (e) => {
@@ -145,14 +135,6 @@ export const GradingSection = ({ title, courseId }) => {
       fetchProjects();
     }
   }, [sessionId]);
-
-  const handleChangeInstructor = (e) => {
-    const value = e.target.value;
-    setSelectedSession(value);
-    const sessionParts = value.split("|");
-    const selectedSessionId = sessionParts[1];
-    setSessionId(selectedSessionId);
-  };
 
   const handleToggleSection = (section) => {
     if (openSection === section) {
@@ -256,40 +238,6 @@ export const GradingSection = ({ title, courseId }) => {
     }
   }
 
-  async function fetchSessions() {
-    const response = await getSessionInstructor(
-      // userId,
-      // group,
-      courseId
-    );
-    setLoading(true);
-    try {
-      if (response.status === 200) {
-        setSessions(response.data.data);
-        setLoading(false);
-      } else {
-        console.error("Failed to fetch sessions, status:", response.status);
-      }
-    } catch (error) {
-      console.log("error", error);
-    }
-  }
-
-  useEffect(() => {
-    if (!isInstructor) return;
-
-    if (userData?.session) {
-      setSessions(userData.session);
-      setLoading(false);
-    } else {
-      setLoading(true);
-    }
-  }, [userData, isInstructor]);
-  useEffect(() => {
-    if (!isAdmin) return;
-    fetchSessions();
-  }, [userId, selectedSessionId, selectedSession]);
-
   useEffect(() => {
     if (!selected) return;
     if (title === "Assignment") {
@@ -302,6 +250,64 @@ export const GradingSection = ({ title, courseId }) => {
       fetchProjectGrading();
     }
   }, [selected, fetch, title, isAdmin, isInstructor]);
+
+  const handleChange = (e) => {
+    const [selectedSessionId, internalSessionId] = e.target.value.split("|");
+    const selectedSession = sessions.find(
+      (session) => session?.session_id === selectedSessionId
+    );
+    setSelectedSession(e.target.value);
+    setSessionId(internalSessionId);
+  };
+
+  const handleChangeInstructor = (e) => {
+    const value = e.target.value;
+    setSelectedSession(value);
+    setSessionId(value);
+  };
+
+  async function fetchSessions() {
+    const response = await listSessionByCourseId(courseId);
+    setLoader(true);
+    try {
+      if (response.status === 200) {
+        setSessions(response.data.data);
+        setLoader(false);
+      } else {
+        console.error("Failed to fetch sessions, status:", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
+  async function fetchSessionsInstructor() {
+    const response = await getInstructorSessionsbyCourseId(
+      userId,
+      group,
+      courseId
+    );
+
+    try {
+      if (response.status === 200) {
+        setSessions(response.data.data);
+      } else {
+        console.error("Failed to fetch sessions, status:", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
+  useEffect(() => {
+    if (!isInstructor) return;
+    fetchSessionsInstructor();
+  }, [userData, isInstructor]);
+
+  useEffect(() => {
+    if (!isAdmin) return;
+    fetchSessions();
+  }, [sessionId, selectedSession]);
 
   // console.log(selected);
   // console.log(selectedValue);
@@ -399,17 +405,14 @@ export const GradingSection = ({ title, courseId }) => {
                   sessions.map((session) => {
                     console.log("Mapping session:", session);
                     // Combine session_id and instructor_id in value
-                    const optionValue = `${session.session.session_name}|${session.session.id}|${session.instructor_id}`;
+                    const optionValue = `${session?.session_name}|${session?.id}`;
                     return (
                       <option
-                        className="bg-surface-100 text-[#92A7BE] block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                        key={session.session_id}
+                        className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                        key={session?.session_id}
                         value={optionValue}
                       >
-                        {session.session?.location_name} -{" "}
-                        {session.session?.course?.name} -{" "}
-                        {session.session?.start_time} -{" "}
-                        {session.session?.end_time} - {session.instructor_name}
+                        {session.session_name}
                       </option>
                     );
                   })
@@ -439,16 +442,16 @@ export const GradingSection = ({ title, courseId }) => {
                 {Array.isArray(sessions) && sessions.length > 0 ? (
                   sessions.map((session) => {
                     console.log("Mapping session:", session);
-                    // Combine session_id and instructor_id in value
-                    const optionValue = `${session.session_name}|${session.id}`;
+                    const optionValue = `${session.session_id}`;
                     return (
                       <option
                         className="bg-surface-100 text-[#92A7BE] block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                         key={session.session_id}
                         value={optionValue}
                       >
-                        {session?.location_name} - {session?.course?.name} -{" "}
-                        {session?.start_time} - {session?.end_time}
+                        {session.location} -{" "}
+                        {session.session_name || session.course} -{" "}
+                        {session.start_time} - {session.end_time}
                       </option>
                     );
                   })

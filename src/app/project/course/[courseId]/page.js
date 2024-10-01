@@ -6,8 +6,10 @@ import CourseHead from "@/components/CourseHead";
 import {
   createProject,
   deleteProject,
+  getInstructorSessionsbyCourseId,
   getProjectByCourseId,
   getSessionInstructor,
+  listSessionByCourseId,
   updateProject,
 } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
@@ -42,13 +44,30 @@ export default function Page({ params }) {
   const userId = group === "instructor" ? userData?.User?.id : adminUserId;
   const [sessionId, setSessionId] = useState(null);
 
+  useEffect(() => {
+    if (!isStudent) return;
+
+    if (userData?.session) {
+      setSessions(userData.session);
+      setLoading(false);
+      const foundSession = userData.session.find(
+        (session) => Number(session.course?.id) === Number(courseId)
+      );
+
+      if (foundSession) {
+        setSessionId(foundSession.id);
+      }
+    } else {
+      setLoading(true);
+    }
+  }, [userData, isStudent, courseId]);
+  // console.log(sessionId);
+
   const handleChange = (e) => {
-    const [selectedSessionId, internalSessionId, instructorId] =
-      e.target.value.split("|");
+    const [selectedSessionId, internalSessionId] = e.target.value.split("|");
     const selectedSession = sessions.find(
-      (session) => session.session.session_id === selectedSessionId
+      (session) => session?.session_id === selectedSessionId
     );
-    setAdminUserId(instructorId);
     setSelectedSession(e.target.value);
     setSessionId(internalSessionId);
   };
@@ -56,9 +75,7 @@ export default function Page({ params }) {
   const handleChangeInstructor = (e) => {
     const value = e.target.value;
     setSelectedSession(value);
-    const sessionParts = value.split("|");
-    const selectedSessionId = sessionParts[1];
-    setSessionId(selectedSessionId);
+    setSessionId(value);
   };
 
   async function fetchAssignments() {
@@ -164,14 +181,14 @@ export default function Page({ params }) {
     }
 
     const formData = new FormData();
-    formData.append("status", 2); 
+    formData.append("status", 2);
 
     try {
       const response = await deleteProject(formData, assignmentToDelete.id);
 
       if (response.status === 200) {
         toast.success("Assignment deleted successfully!");
-        fetchAssignments(); 
+        fetchAssignments();
       } else {
         toast.error("Error deleting assignment", response?.message);
       }
@@ -182,11 +199,7 @@ export default function Page({ params }) {
   };
 
   async function fetchSessions() {
-    const response = await getSessionInstructor(
-      // userId,
-      // group,
-      courseId
-    );
+    const response = await listSessionByCourseId(courseId);
     setLoading(true);
     try {
       if (response.status === 200) {
@@ -200,24 +213,36 @@ export default function Page({ params }) {
     }
   }
 
+  async function fetchSessionsInstructor() {
+    const response = await getInstructorSessionsbyCourseId(
+      userId,
+      group,
+      courseId
+    );
+
+    try {
+      if (response.status === 200) {
+        setSessions(response.data.data);
+      } else {
+        console.error("Failed to fetch sessions, status:", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
   useEffect(() => {
     if (!isInstructor) return;
-
-    if (userData?.session) {
-      setSessions(userData.session);
-      setLoading(false);
-    } else {
-      setLoading(true);
-    }
+    fetchSessionsInstructor();
   }, [userData, isInstructor]);
 
   useEffect(() => {
     if (!isAdmin) return;
     fetchSessions();
-  }, [userId, sessionId, selectedSession]);
+  }, [sessionId, selectedSession]);
 
   useEffect(() => {
-    if (!userId) return;
+    if (!sessionId) return;
     fetchAssignments();
   }, [userId, sessionId, selectedSession, updateStatus]);
   return (
@@ -254,13 +279,10 @@ export default function Page({ params }) {
                 sessions.map((session) => {
                   console.log("Mapping session:", session);
                   // Combine session_id and instructor_id in value
-                  const optionValue = `${session.session.session_name}|${session.session.id}|${session.instructor_id}`;
+                  const optionValue = `${session?.session_name}|${session?.id}`;
                   return (
-                    <option key={session.session_id} value={optionValue}>
-                      {session.session?.location_name} -{" "}
-                      {session.session?.course?.name} -{" "}
-                      {session.session?.start_time} -{" "}
-                      {session.session?.end_time} - {session.instructor_name}
+                    <option key={session?.session_id} value={optionValue}>
+                      {session.session_name}
                     </option>
                   );
                 })
@@ -286,12 +308,12 @@ export default function Page({ params }) {
               {Array.isArray(sessions) && sessions.length > 0 ? (
                 sessions.map((session) => {
                   console.log("Mapping session:", session);
-                  // Combine session_id and instructor_id in value
-                  const optionValue = `${session.session_name}|${session.id}`;
+                  const optionValue = `${session.session_id}`;
                   return (
                     <option key={session.session_id} value={optionValue}>
-                      {session?.location_name} - {session?.course?.name} -{" "}
-                      {session?.start_time} - {session?.end_time}
+                      {session.location} -{" "}
+                      {session.session_name || session.course} -{" "}
+                      {session.start_time} - {session.end_time}
                     </option>
                   );
                 })

@@ -3,11 +3,13 @@ import React, { useEffect, useState } from "react";
 import {
   createModule,
   createSkill,
+  deleteModule,
   getAllSkillCourses,
   getCourseById,
+  getInstructorSessionsbyCourseId,
   getModuleByCourseId,
   getProgressForCourse,
-  getSessionInstructor,
+  listSessionByCourseId,
   updateCourse,
   updateModule,
 } from "@/api/route";
@@ -21,6 +23,7 @@ import {
   FaFileDownload,
   FaPlus,
   FaTimes,
+  FaTrash,
   FaUpload,
 } from "react-icons/fa";
 import JsFileDownloader from "js-file-downloader";
@@ -28,6 +31,7 @@ import { useAuth } from "@/providers/AuthContext";
 import { toast } from "react-toastify";
 import { Upload, UploadFile } from "@mui/icons-material";
 import UploadContent from "@/components/Modal/UploadFile";
+import DeleteConfirmationPopup from "@/components/Modal/DeleteConfirmationPopUp";
 
 export const downloadFile = async (filePath) => {
   console.log("ye raha", filePath);
@@ -75,7 +79,8 @@ export default function Page({ params }) {
   const [selectedSession, setSelectedSession] = useState();
   const userId = group === "instructor" ? userData?.User?.id : adminUserId;
   const [sessionId, setSessionId] = useState(null);
-
+  const [selectedModule, setSelectedModule] = useState(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const [skill, setSkill] = useState();
   // console.log(isAdmin)
   const [skillName, setSkillName] = useState("");
@@ -224,6 +229,14 @@ export default function Page({ params }) {
 
   const handleCreateModule = async (event) => {
     event.preventDefault();
+    setLoader(true);
+
+    if (!selectedSession) {
+      toast.error("No session selected");
+      setLoader(false);
+      return;
+    }
+
     const moduleData = {
       name: moduleName,
       description: moduleDesc,
@@ -231,7 +244,14 @@ export default function Page({ params }) {
       files: file,
       session: sessionId,
     };
+
     try {
+      if (!sessionId) {
+        toast.error("Select a session to create the assignment.");
+        setLoader(false);
+        return;
+      }
+
       const formData = new FormData();
       formData.append("name", moduleData.name);
       formData.append("description", moduleData.description);
@@ -240,13 +260,12 @@ export default function Page({ params }) {
       formData.append("session", sessionId);
 
       const response = await createModule(moduleData);
+
       if (response.status === 201) {
         toast.success("Module created successfully!");
-        setModule(moduleData);
         setModuleName("");
         setModuleDesc("");
         fetchModules();
-
         setFileUploaded("");
         setCreatingModule(false);
       } else {
@@ -254,9 +273,10 @@ export default function Page({ params }) {
       }
     } catch (error) {
       toast.error(`Error creating course: ${error.message}`);
+    } finally {
+      setLoader(false); // Ensure loader is disabled after the process
     }
   };
-
   const handleModuleID = (id) => {
     setModuleId(id);
   };
@@ -342,55 +362,48 @@ export default function Page({ params }) {
     }
   }
 
-  const handleChange = (e) => {
-    const [selectedSessionId, internalSessionId, instructorId] =
-      e.target.value.split("|");
-    const selectedSession = sessions.find(
-      (session) => session.session.session_id === selectedSessionId
-    );
-    setAdminUserId(instructorId);
-    setSelectedSession(e.target.value);
-    setSessionId(internalSessionId);
-  };
+  const handleDeleteModule = async (id) => {
+    const moduletoDelete = modules?.find((mod) => mod.id === id);
+    console.log(id);
+    if (!moduletoDelete) {
+      toast.error("Module not found");
+      return;
+    }
 
-  async function fetchSessions() {
-    const response = await getSessionInstructor(
-      // userId,
-      // group,
-      courseId
-    );
-    setLoader(true);
+    const formData = new FormData();
+    formData.append("status", 2);
+
     try {
+      const response = await deleteModule(formData, id);
       if (response.status === 200) {
-        setSessions(response.data.data);
-        setLoader(false);
+        toast.success("Module deleted successfully!");
+        fetchModules();
       } else {
-        console.error("Failed to fetch sessions, status:", response.status);
+        toast.error("Error deleting module", response?.message);
       }
     } catch (error) {
-      console.log("error", error);
+      toast.error("Error deleting module", error);
+      console.error(error);
     }
-  }
-  const handleChangeInstructor = (e) => {
-    const value = e.target.value;
-    setSelectedSession(value);
-    const sessionParts = value.split("|");
-    const selectedSessionId = sessionParts[1];
-    setSessionId(selectedSessionId);
   };
 
-  useEffect(() => {
-    if (!isInstructor) return;
+  const handleDeleteClick = (moduleId) => {
+    setSelectedModule(moduleId);
+    setConfirmDelete(true);
+  };
 
-    if (userData?.session) {
-      setSessions(userData.session);
-      setLoader(false);
-    } else {
-      setLoader(true);
+  const handleDelete = async () => {
+    try {
+      if (handleDeleteModule) {
+        await handleDeleteModule(selectedModule);
+        setConfirmDelete(false);
+      }
+    } catch (error) {
+      console.error("Error deleting the module", error);
     }
-  }, [userData, isInstructor]);
-
+  };
   useEffect(() => {
+    if (!sessionId) return;
     fetchModules();
   }, [sessionId]);
 
@@ -405,9 +418,80 @@ export default function Page({ params }) {
   }, []);
 
   useEffect(() => {
+    if (!isStudent) return;
+
+    if (userData?.session) {
+      setSessions(userData.session);
+      setLoader(false);
+      const foundSession = userData.session.find(
+        (session) => Number(session.course?.id) === Number(courseId)
+      );
+
+      if (foundSession) {
+        setSessionId(foundSession.id);
+      }
+    } else {
+      setLoader(true);
+    }
+  }, [userData, isStudent, courseId]);
+
+  const handleChange = (e) => {
+    const [selectedSessionId, internalSessionId] = e.target.value.split("|");
+    const selectedSession = sessions.find(
+      (session) => session?.session_id === selectedSessionId
+    );
+    setSelectedSession(e.target.value);
+    setSessionId(internalSessionId);
+  };
+
+  const handleChangeInstructor = (e) => {
+    const value = e.target.value;
+    setSelectedSession(value);
+    setSessionId(value);
+  };
+
+  async function fetchSessions() {
+    const response = await listSessionByCourseId(courseId);
+    setLoader(true);
+    try {
+      if (response.status === 200) {
+        setSessions(response.data.data);
+        setLoader(false);
+      } else {
+        console.error("Failed to fetch sessions, status:", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
+  async function fetchSessionsInstructor() {
+    const response = await getInstructorSessionsbyCourseId(
+      userId,
+      group,
+      courseId
+    );
+
+    try {
+      if (response.status === 200) {
+        setSessions(response.data.data);
+      } else {
+        console.error("Failed to fetch sessions, status:", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
+  useEffect(() => {
+    if (!isInstructor) return;
+    fetchSessionsInstructor();
+  }, [userData, isInstructor]);
+
+  useEffect(() => {
     if (!isAdmin) return;
     fetchSessions();
-  }, [userId, sessionId, selectedSession]);
+  }, [sessionId, selectedSession]);
   return (
     <>
       {loader ? (
@@ -431,15 +515,9 @@ export default function Page({ params }) {
               id={courseId}
               program="course"
               setFetch={setFetch}
-              // name={courseData.name}
-              // rating="Top Instructor"
-              // instructorName={instructor}
               progress={courseProgress?.progress_percentage}
               setIsEditing={setIsEditing}
-              // shortDesc={courseData.short_description}
               isEditing={isEditing}
-              // title="Edit course"
-              // chr={`${courseData.theory_credit_hours}+ ${courseData.lab_credit_hours}`}
             />
 
             {isEditing ? (
@@ -449,7 +527,6 @@ export default function Page({ params }) {
                     <label className="text-lg font-exo font-bold">
                       Course Name
                     </label>
-
                     <div className="flex items-center">
                       <span className="mr-4 text-md">Course Status</span>
                       <label className="relative inline-flex items-center cursor-pointer">
@@ -687,10 +764,8 @@ export default function Page({ params }) {
               </>
             )}
             {isAdmin && (
-              <div className="w-full mt-4 ">
-                <label className="text-xl font-exo font-bold">
-                  Select Session
-                </label>
+              <div className="w-full mt-4">
+                <label>Select Session</label>
                 <select
                   value={selectedSession || ""}
                   onChange={handleChange}
@@ -701,16 +776,11 @@ export default function Page({ params }) {
                   </option>
                   {Array.isArray(sessions) && sessions.length > 0 ? (
                     sessions.map((session) => {
-                      console.log("Mapping session:", session);
-                      // Combine session_id and instructor_id in value
-                      const optionValue = `${session.session.session_name}|${session.session.id}|${session.instructor_id}`;
+                      // console.log("Mapping session:", session);
+                      const optionValue = `${session?.session_name}|${session?.id}`;
                       return (
-                        <option key={session.session_id} value={optionValue}>
-                          {session.session?.location_name} -{" "}
-                          {session.session?.course?.name} -{" "}
-                          {session.session?.start_time} -{" "}
-                          {session.session?.end_time} -{" "}
-                          {session.instructor_name}
+                        <option key={session?.session_id} value={optionValue}>
+                          {session.session_name}
                         </option>
                       );
                     })
@@ -723,10 +793,8 @@ export default function Page({ params }) {
               </div>
             )}
             {isInstructor && (
-              <div className="w-full mt-4 ">
-                <label className="text-xl font-exo font-bold">
-                  Select Session
-                </label>
+              <div className="w-full mt-4">
+                <label>Select Session</label>
                 <select
                   value={selectedSession || ""}
                   onChange={handleChangeInstructor}
@@ -737,13 +805,13 @@ export default function Page({ params }) {
                   </option>
                   {Array.isArray(sessions) && sessions.length > 0 ? (
                     sessions.map((session) => {
-                      console.log("Mapping session:", session);
-                      // Combine session_id and instructor_id in value
-                      const optionValue = `${session.session_name}|${session.id}`;
+                      // console.log("Mapping session:", session);
+                      const optionValue = `${session.session_id}`;
                       return (
                         <option key={session.session_id} value={optionValue}>
-                          {session?.location_name} - {session?.course?.name} -{" "}
-                          {session?.start_time} - {session?.end_time}
+                          {session.location} -{" "}
+                          {session.session_name || session.course} -{" "}
+                          {session.start_time} - {session.end_time}
                         </option>
                       );
                     })
@@ -762,8 +830,11 @@ export default function Page({ params }) {
                   <button
                     className=" flex justify-center items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl hover:bg-[#4296b3]"
                     onClick={() => setCreatingModule(!isCreatingModule)}
+                    disabled={loader}
                   >
-                    {isCreatingModule ? (
+                    {loader ? (
+                      <CircularProgress size={20} style={{ color: "white" }} />
+                    ) : isCreatingModule ? (
                       <p className="flex justify-center items-center gap-2">
                         <FaTimes />
                         Cancel Edit
@@ -857,6 +928,15 @@ export default function Page({ params }) {
                                 <FaEdit />
                               </p>
                             )}
+                          </button>
+                          <button
+                            onClick={() => handleDeleteClick(module.id)}
+                            title="Delete Module"
+                            className=" flex justify-center mt-4 items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-[#4296b3]"
+                          >
+                            <p className="flex justify-center items-center gap-2">
+                              <FaTrash />
+                            </p>
                           </button>
                           {moduleId === module.id ? (
                             <>
@@ -975,6 +1055,13 @@ export default function Page({ params }) {
           fileUploaded={fileUploaded}
           setFileUploaded={setFileUploaded}
           handleUploadContent={handleSaveModule}
+        />
+      )}
+      {confirmDelete && (
+        <DeleteConfirmationPopup
+          setConfirmDelete={setConfirmDelete}
+          handleDelete={handleDelete}
+          field="Module"
         />
       )}
     </>

@@ -92,7 +92,7 @@ const StudentDataStructure = ({
                       >
                         Due Date
                       </th>
-                      {/* {assessment === "Exam" && (
+                      {assessment === "Exam" && (
                         <>
                           <th
                             scope="col"
@@ -107,7 +107,7 @@ const StudentDataStructure = ({
                             End Time
                           </th>
                         </>
-                      )} */}
+                      )}
 
                       <th
                         scope="col"
@@ -189,6 +189,7 @@ const StudentDataStructure = ({
                                       }}
                                     >
                                       {quiz.question || quiz.title}
+                                      {/* {quiz.assignment_name} */}
                                     </a>
                                   )}
                                 </>
@@ -347,8 +348,6 @@ const StudentDataStructure = ({
                                     />
                                   </div>
                                 )}
-
-                                
 
                                 {/* {isAdmin ? (
                                   <div

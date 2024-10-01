@@ -11,12 +11,12 @@ export default function DashboardLayout({ children }) {
   return (
     <>
       <SidebarProvider>
-        {userData?.Group === "admin" ? (
+        {/* {userData?.Group === "admin" ? ( */}
+        <SideBar />
+        {/* // ) : ["instructor", "student"].includes(userData?.Group) &&
+        //   userData?.session ? (
           <SideBar />
-        ) : ["instructor", "student"].includes(userData?.Group) &&
-          userData?.session ? (
-          <SideBar />
-        ) : null}
+        ) : null} */}
 
         {/* <div> */}
         <Navbar />

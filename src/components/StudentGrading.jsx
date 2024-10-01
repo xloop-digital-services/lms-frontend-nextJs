@@ -18,8 +18,6 @@ import { useAuth } from "@/providers/AuthContext";
 export default function StudentGrading({ courseId, regId: propRegId }) {
   const { width } = useWindowSize();
   const { isSidebarOpen } = useSidebar();
-
-  // const [selectedOption, setSelectedOption] = useState("Hammad Siddiqui");
   const [isOpen, setIsOpen] = useState(false);
   const [openSection, setOpenSection] = useState(null);
   const [progress, setProgress] = useState({});
@@ -31,6 +29,8 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
   const dropdownRef = useRef(null);
   const { userData } = useAuth();
   const isStudent = userData?.Group === "student";
+  const [sessions, setSessions] = useState([]);
+  const [sessionId, setSessionId] = useState(null);
   //   const courseId = params.courseId;
   // const userId = userData?.user_data?.user;
   const regId = isStudent ? userData?.user_data?.registration_id : propRegId;
@@ -39,7 +39,25 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
   const toggleOpen = () => {
     setIsOpen(!isOpen);
   };
+  useEffect(() => {
+    if (!isStudent) return;
 
+    if (userData?.session) {
+      setSessions(userData.session);
+      setLoader(false);
+      const foundSession = userData.session.find(
+        (session) => Number(session.course?.id) === Number(courseId)
+      );
+
+      if (foundSession) {
+        setSessionId(foundSession.id);
+      }
+    } else {
+      setLoader(true);
+    }
+  }, [userData, isStudent, courseId]);
+
+  console.log(sessionId);
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
     setIsOpen(false);
@@ -67,83 +85,72 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
     fetchOverallProgress();
   }, []);
 
-  useEffect(() => {
-    if (!regId) return;
-    async function fetchAssignmentProgress() {
-      const response = await getAssignmentProgress(courseId, regId);
-      // setLoader(true);
-      try {
-        if (response.status === 200) {
-          setAssignment(response.data);
-          // setLoader(false);
-          // console.log(assignment);
-          // console.log(response.data);
-        } else {
-          console.error("Failed to fetch courses", response.status);
-        }
-      } catch (error) {
-        console.log("error", error);
+  async function fetchAssignmentProgress() {
+    const response = await getAssignmentProgress(courseId, sessionId, regId);
+    setLoader(true);
+    try {
+      if (response.status === 200) {
+        setAssignment(response.data);
+        setLoader(false);
+      } else {
+        console.error("Failed to fetch courses", response.status);
       }
+    } catch (error) {
+      console.log("error", error);
     }
+  }
 
-    async function fetchQuizProgress() {
-      const response = await getQuizProgress(courseId, regId);
-      // setLoader(true);
-      try {
-        if (response.status === 200) {
-          setQuiz(response.data);
-          // setLoader(false);
-          // console.log(quiz);
-          // console.log(response.data);
-        } else {
-          console.error("Failed to fetch courses", response.status);
-        }
-      } catch (error) {
-        console.log("error", error);
+  async function fetchQuizProgress() {
+    const response = await getQuizProgress(courseId, sessionId, regId);
+    setLoader(true);
+    try {
+      if (response.status === 200) {
+        setQuiz(response.data);
+        setLoader(false);
+        // console.log(quiz);
+        // console.log(response.data);
+      } else {
+        console.error("Failed to fetch courses", response.status);
       }
+    } catch (error) {
+      console.log("error", error);
     }
+  }
 
-    async function fetchProjectProgress() {
-      const response = await getProjectProgress(courseId, regId);
-      // setLoader(true);
-      try {
-        if (response.status === 200) {
-          setProject(response.data);
-          // setLoader(false);
-          // console.log(project);
-          // console.log(response.data);
-        } else {
-          console.error("Failed to fetch courses", response.status);
-        }
-      } catch (error) {
-        console.log("error", error);
+  async function fetchProjectProgress() {
+    const response = await getProjectProgress(courseId, sessionId, regId);
+    setLoader(true);
+    try {
+      if (response.status === 200) {
+        setProject(response.data);
+        setLoader(false);
+        // console.log(project);
+        // console.log(response.data);
+      } else {
+        console.error("Failed to fetch courses", response.status);
       }
+    } catch (error) {
+      console.log("error", error);
     }
+  }
 
-    if (!regId) return;
-    async function fetchExamProgress() {
-      const response = await getExamProgress(courseId, regId);
-      // setLoader(true);
-      try {
-        if (response.status === 200) {
-          setExam(response.data);
-          // setLoader(false);
-          // console.log(exam);
-          // console.log(response.data);
-        } else {
-          console.error("Failed to fetch courses", response.status);
-        }
-      } catch (error) {
-        console.log("error", error);
+  if (!regId) return;
+  async function fetchExamProgress() {
+    const response = await getExamProgress(courseId, sessionId, regId);
+    setLoader(true);
+    try {
+      if (response.status === 200) {
+        setExam(response.data);
+        setLoader(false);
+        // console.log(exam);
+        // console.log(response.data);
+      } else {
+        console.error("Failed to fetch courses", response.status);
       }
+    } catch (error) {
+      console.log("error", error);
     }
-
-    fetchOverallProgress();
-    fetchAssignmentProgress();
-    fetchQuizProgress();
-    fetchProjectProgress();
-    fetchExamProgress();
-  }, [regId]);
+  }
 
   const options = [
     "Hammad Siddiqui",
@@ -155,6 +162,15 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
   const handleToggleSection = (section) => {
     setOpenSection(openSection === section ? null : section);
   };
+
+  useEffect(() => {
+    if (!regId || !sessionId) return;
+    fetchOverallProgress();
+    fetchAssignmentProgress();
+    fetchQuizProgress();
+    fetchProjectProgress();
+    fetchExamProgress();
+  }, [regId, sessionId]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
