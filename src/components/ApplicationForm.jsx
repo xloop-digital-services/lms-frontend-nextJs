@@ -25,7 +25,7 @@ export default function ApplicationForm() {
   const [lastName, setLastName] = useState("");
   const [contactNumber, setContactNumber] = useState("");
   const [birthDate, setBirthDate] = useState("");
-  const [selectedCity, setSelectedCity] = useState("city");
+  const [selectedCity, setSelectedCity] = useState("Select your city");
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [isCitySelected, setIsCitySelected] = useState(false);
   const [cityShortName, setCityShortName] = useState("");
@@ -53,11 +53,57 @@ export default function ApplicationForm() {
   const [skillId, setSkillId] = useState([]);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   const [programError, setPorgramError] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const formatContactInput = (value) => {
-    const numericValue = value.replace(/[^0-9]/g, "");
-    const formattedValue = numericValue.replace(/(\d{4})(\d{1,7})?/, "$1-$2");
-    return formattedValue.slice(0, 12);
+  const formatContactInput = (value, caretPos) => {
+    const numericValue = value.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+    let formattedValue = numericValue
+      .slice(0, 11)
+      .replace(/(\d{4})(\d{1,7})?/, "$1-$2"); // Format as XXXX-XXXXXXX
+    if (numericValue.length <= 4) {
+      formattedValue = numericValue; // Don't add hyphen if there are less than 5 digits
+    }
+
+    return { formattedValue, caretPos };
+  };
+
+  // Validate the contact number input
+  const validateContactNumber = (value) => {
+    const contactPattern = /^[0-9]{4}-[0-9]{7}$/; // Ensure valid format (XXXX-XXXXXXX)
+    const invalidPrefix = /^0000-/; // Prevent numbers starting with 0000
+
+    if (invalidPrefix.test(value)) {
+      setErrorMessage("Contact number cannot start with 0000.");
+    } else if (!contactPattern.test(value)) {
+      setErrorMessage("Please enter a valid contact number.");
+    } else {
+      setErrorMessage(""); // Clear error if the input is valid
+    }
+  };
+
+  // Handle input change and validation
+  const handleInputChange = (e) => {
+    const input = e.target;
+    const caretPos = input.selectionStart; // Get current caret position
+    const { formattedValue } = formatContactInput(input.value, caretPos);
+
+    setContactNumber(formattedValue); // Set formatted value
+    validateContactNumber(formattedValue); // Validate input
+  };
+
+  const handleInput = (e) => {
+    const input = e.target;
+    const caretPos = input.selectionStart;
+    const { formattedValue } = formatContactInput(input.value, caretPos);
+    const oldValue = contactNumber;
+
+    // Check if the user is deleting right before the hyphen and adjust the cursor
+    if (
+      oldValue.length > formattedValue.length &&
+      oldValue.charAt(caretPos - 1) === "-"
+    ) {
+      input.setSelectionRange(caretPos - 1, caretPos - 1); // Move the caret back
+    }
   };
 
   const cityDown = useRef(null);
@@ -240,6 +286,12 @@ export default function ApplicationForm() {
       return;
     }
 
+    if (errorMessage !== "") {
+      toast.error("Please enter a valid contact number.");
+      setLoaderEdit(false); // Set loader to false
+      return;
+    }
+
     if (
       !firstName ||
       !lastName ||
@@ -311,7 +363,7 @@ export default function ApplicationForm() {
             Registration Form
           </p>
         </div>
-        <div className="flex gap-6 justify-evenly ">
+        <div className="flex gap-6 justify-evenly font-inter">
           <div className="flex flex-col w-full space-y-4 px-4">
             <div className="space-y-2 text-[15px] w-full">
               <p>Email</p>
@@ -353,11 +405,12 @@ export default function ApplicationForm() {
                 pattern="[0-9]{4}-[0-9]{7}"
                 name="contact"
                 value={contactNumber}
-                onInput={(e) => {
-                  e.target.value = formatContactInput(e.target.value);
-                }}
-                onChange={(e) => setContactNumber(e.target.value)}
+                onChange={handleInputChange}
+                onInput={handleInput}
               />
+              {errorMessage && (
+                <p className="text-mix-200 text-[12px] mt-1">{errorMessage}</p>
+              )}
             </div>
             <div className="space-y-2 text-[15px] w-full">
               <p>City</p>

@@ -2,6 +2,7 @@ import React from "react";
 import Navbar from "@/components/Navbar";
 import { SidebarProvider } from "@/providers/useSidebar";
 import SideBar from "@/components/SideBar";
+import { AuthProvider } from "@/providers/AuthContext";
 
 export const metadata = {
   title: "Profile - LMS",
@@ -11,11 +12,13 @@ export const metadata = {
 export default function CoursesLayout({ children }) {
   return (
     <>
-      <SidebarProvider>
-        <Navbar />
-        <SideBar />
-        {children}
-      </SidebarProvider>
+      <AuthProvider>
+        <SidebarProvider>
+          <Navbar />
+          <SideBar />
+          {children}
+        </SidebarProvider>
+      </AuthProvider>
     </>
   );
 }

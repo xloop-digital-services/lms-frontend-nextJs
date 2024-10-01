@@ -5,12 +5,13 @@ import Table from "./Table";
 import CourseHead from "./CourseHead";
 
 import GetAttendanceAdminTable from "./GetAttendanceAdminTable";
+import GetAttendanceTable from "./GetAttendanceTable";
 
 export default function AdminAttendance({ courseId }) {
   console.log(courseId);
   return (
     <div className=" bg-surface-100  rounded-xl ">
-      <GetAttendanceAdminTable courseId={courseId} />
+      <GetAttendanceTable courseId={courseId} />
     </div>
   );
 }

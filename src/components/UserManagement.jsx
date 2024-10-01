@@ -328,7 +328,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                           className="mt-1 text-[12px] text-blue-300 font-bold"
                           title={`number of ${selectedStatus} applications`}
                         >
-                          {/* {heading === "Applicants" &&
+                          {heading === "Applicants" &&
                           isProgramSectionOpen &&
                           programSection === program.name ? (
                             selectedStatus === "pending" ? (
@@ -349,7 +349,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                             programSection === program.name && (
                               <p>( {count} )</p>
                             )
-                          )} */}
+                          )}
                         </div>
                       </div>
 
@@ -469,7 +469,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                         className="mt-1 text-[12px] text-blue-300 font-bold"
                         title={`number of ${selectedStatus} applications`}
                       >
-                        {/* {heading === "Applicants" &&
+                        {heading === "Applicants" &&
                         isSkillSectionOpen &&
                         skillSection === skill.name ? (
                           selectedStatus === "pending" ? (
@@ -488,7 +488,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                         ) : (
                           isSkillSectionOpen &&
                           skillSection === skill.name && <p>( {count} )</p>
-                        )} */}
+                        )}
                       </div>
                     </div>
 

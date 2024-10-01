@@ -6,6 +6,7 @@ import {
   getInstructorSessions,
   getInstructorSessionsbyCourseId,
   getStudentsByCourseId,
+  listSessionByCourseId,
   markAttendanceByCourseId,
   postAttendanceBySessionId,
 } from "@/api/route";
@@ -37,7 +38,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   // const today = new Date().toISOString().split("T")[0];
 
   const [selectedSession, setSelectedSession] = useState("");
-  const [isSelected, setIsSelected] = useState(false)
+  const [isSelected, setIsSelected] = useState(false);
   const [date, setDate] = useState(null);
   const [toggle, setToggle] = useState(false);
   // console.log(group, userId);
@@ -59,6 +60,16 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
     }
   }
 
+  const fetchAllSessions = async () => {
+    try {
+      const response = await listSessionByCourseId(courseId);
+      // console.log('sessions in attendence', response.data.data)
+      setSessions(response?.data?.data);
+    } catch (error) {
+      console.log("fetching sessions", error);
+    }
+  };
+
   async function fetchAttendance() {
     setGetting(true);
     try {
@@ -76,7 +87,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
         console.log("Attendance:", response.data.data.students);
         setGetAttendance(response.data.data.students); // Setting attendance data
         setSelectedAttendance(initialAttendance); // Setting the initial status to 'Present'
-       // Fetch additional attendance insights if needed
+        // Fetch additional attendance insights if needed
       } else {
         console.error("Failed to fetch attendance, status:", response.status);
       }
@@ -210,9 +221,17 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   //   }
   // }, [isAttendancePosted, courseId, group, userId, selectedSessionId]);
   useEffect(() => {
-    isInstructor && fetchSessions();
-  }, []);
-
+    console.log('isInstructor:', isInstructor);
+    console.log('isAdmin:', isAdmin);
+  
+    if (isInstructor) {
+      fetchSessions();
+    } else if (isAdmin) {
+      fetchAllSessions();
+      console.log('yaha amin he')
+    }
+  }, [isAdmin, isInstructor]);
+  
   // useEffect(() => {
   //   if (date && selectedSession) {
   //     fetchAttendanceIns();
@@ -242,7 +261,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
 
   return (
     <div className="flex flex-col">
-      {isInstructor && (
+      {
         <>
           <div className="flex items-center gap-3 w-full max-md:flex-col">
             <div className="w-full">
@@ -256,13 +275,22 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                 <option value="" disabled>
                   Select a session
                 </option>
-                {Array.isArray(sessions) &&
-                  sessions.map((session) => (
-                    <option key={session.session_id} value={session.session_id}>
-                      {session.location} - {session.course} -{" "}
-                      {session.start_time} - {session.end_time}
-                    </option>
-                  ))}
+                {Array.isArray(sessions) && isInstructor
+                  ? sessions.map((session) => (
+                      <option
+                        key={session.session_id}
+                        value={session.session_id}
+                      >
+                        {session.location} - {session.course} -{" "}
+                        {session.start_time} - {session.end_time}
+                      </option>
+                    ))
+                  : sessions.map((session) => (
+                      <option key={session.id} value={session.id}>
+                        {session.location_name} - {session.course.name} -{" "}
+                        {session.start_time} - {session.end_time}
+                      </option>
+                    ))}
               </select>
             </div>
             <div className="w-full">
@@ -278,11 +306,11 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
             </div>
           </div>
         </>
-      )}
+      }
 
       <div className="-m-1.5 overflow-x-auto">
         <div className="p-1.5 min-w-full inline-block align-middle">
-          <div className="border border-dark-300 rounded-lg divide-y divide-dark-200 dark:border-gray-700 dark:divide-gray-700">
+          <div className="mt-2 border border-dark-300 rounded-lg divide-y divide-dark-200 dark:border-gray-700 dark:divide-gray-700">
             <div className="overflow-hidden rounded-lg">
               <table className="min-w-full divide-y divide-dark-300 dark:divide-gray-700">
                 <thead className="bg-dark-100 dark:bg-gray-700">

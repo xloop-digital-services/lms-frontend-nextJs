@@ -1,3 +1,4 @@
+import { AuthProvider } from "@/providers/AuthContext";
 import React from "react";
 export const metadata = {
   title: "Account Verify - LMS",
@@ -5,5 +6,9 @@ export const metadata = {
 };
 
 export default function LoginLayout({ children }) {
-  return <>{children}</>;
+  return (
+    <>
+      <AuthProvider>{children}</AuthProvider>
+    </>
+  );
 }

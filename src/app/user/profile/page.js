@@ -33,7 +33,8 @@ function Profile() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [user, setUser] = useState({});
   const [showPassword, setShowPassword] = useState(false);
-  const [loader, setLoader] = useState(true);
+  const [loader, setLoader] = useState(false);
+  const [loaderEdit, setLoaderEdit] = useState(false);
   const formRef = useRef(null);
   const [errorMessage, setErrorMessage] = useState("");
   // const registrationID = user?.registration_id
@@ -103,64 +104,75 @@ function Profile() {
   };
 
   const handleSubmit = async (event) => {
-    setFirstName(editFirstName);
-    setLastName(editLastName);
     event.preventDefault();
-    const userData = {
-      first_name: editFirstName,
-      last_name: editLastName,
-      contact: contactNumber,
-      program,
-      email,
-      city,
-    };
+    if (errorMessage !== "") {
+      toast.error("Please enter a valid contact number.");
+      setLoaderEdit(false); // Set loader to false
+      return; // Prevent form submission
+    } else {
+      setLoaderEdit(true);
+      setFirstName(editFirstName);
+      setLastName(editLastName);
+      event.preventDefault();
+      const userData = {
+        first_name: editFirstName,
+        last_name: editLastName,
+        contact: contactNumber,
+        program,
+        email,
+        city,
+      };
 
-    try {
-      const response = await updateUserProfile(userData);
-      if (response.status === 200) {
-        toast.success("Profile updated successfully!", {
+      try {
+        const response = await updateUserProfile(userData);
+        if (response.status === 200) {
+          toast.success("Profile updated successfully!", {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+          setUser(userData);
+          setIsDisable(true);
+        } else {
+          toast.error(
+            `Profile update failed. Please check your details. ${
+              response.error || ""
+            }`,
+            {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            }
+          );
+        }
+      } catch (error) {
+        toast.error(`Error updating profile: ${response.error}`, {
           position: "top-right",
-          autoClose: 2000,
+          autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
         });
-        setUser(userData);
-        setIsDisable(true);
-      } else {
-        toast.error(
-          `Profile update failed. Please check your details. ${
-            response.error || ""
-          }`,
-          {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          }
-        );
+      } finally {
+        setLoaderEdit(false);
       }
-    } catch (error) {
-      toast.error(`Error updating profile: ${response.error}`, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
     }
   };
   const handlePasswordSubmit = async (event) => {
+    setLoader(true);
     event.preventDefault();
     if (errorMessage) {
-      toast.error("Properly set your contact number");
+      toast.error("Please enter a valid contact number.");
       return;
     }
     if (password !== confirmPassword) {
@@ -191,6 +203,7 @@ function Profile() {
         setPassword("");
         setConfirmPassword("");
         setIsDisable(true);
+        handleDisabledPass();
       } else {
         toast.error(response.data?.message);
       }
@@ -200,6 +213,8 @@ function Profile() {
       } else {
         toast.error(`Error updating password: ${error.message}`);
       }
+    } finally {
+      setLoader(false);
     }
   };
   // if (loader) {
@@ -488,8 +503,15 @@ function Profile() {
                   </button>
                   <button
                     type="submit"
-                    className="bg-blue-300 text-surface-100 rounded-md px-4 py-2 border border-blue-300 "
+                    className="bg-blue-300 text-surface-100 rounded-md px-4 py-2 border border-blue-300  flex items-center gap-2 justify-center"
                   >
+                    {loaderEdit && (
+                      <CircularProgress
+                        size={20}
+                        style={{ color: "#ffffff" }}
+                        className="m-[2px]"
+                      />
+                    )}{" "}
                     Save Changes
                   </button>
                 </div>
@@ -595,8 +617,15 @@ function Profile() {
                   </button>
                   <button
                     type="submit"
-                    className="bg-blue-300 text-surface-100 rounded-md px-4 py-2 border border-blue-300 "
+                    className="bg-blue-300 text-surface-100 rounded-md px-4 py-2 border border-blue-300 flex items-center gap-2 justify-center"
                   >
+                    {loader && (
+                      <CircularProgress
+                        size={20}
+                        style={{ color: "#ffffff" }}
+                        className="m-[2px]"
+                      />
+                    )}{" "}
                     Change Password
                   </button>
                 </div>

@@ -3,10 +3,9 @@ import React from "react";
 import Navbar from "@/components/Navbar";
 import { SidebarProvider } from "@/providers/useSidebar";
 import SideBar from "@/components/SideBar";
-import { useAuth } from "@/providers/AuthContext";
+import { AuthProvider, useAuth } from "@/providers/AuthContext";
 
 export default function DashboardLayout({ children }) {
-
   const { userData } = useAuth();
   return (
     <>
