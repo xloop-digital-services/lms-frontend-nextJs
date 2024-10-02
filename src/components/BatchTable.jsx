@@ -191,7 +191,7 @@ const BatchTable = ({
                   </div>
                 )} */}
                 <tbody className="divide-y divide-dark-200 dark:divide-gray-700">
-                  {loading && batches.length == 0 ? (
+                  {loading && batches.length === 0 ? (
                     <tr>
                       <td
                         colSpan="8"
@@ -209,7 +209,7 @@ const BatchTable = ({
                       .map((batch, index) => (
                         <tr
                           key={index}
-                          className={`${batch.status === 2 && "hidden"}`}
+                          className={``}
                         >
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
                             {batch.batch || "-"}

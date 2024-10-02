@@ -174,7 +174,7 @@ const LocationsTable = ({
                       .map((location, index) => (
                         <tr
                           key={index}
-                          className={`${location.status === 2 && "hidden"}`}
+                          className={``}
                         >
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
                             {location.city}

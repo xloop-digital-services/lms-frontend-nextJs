@@ -1,6 +1,10 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { IoIosArrowDown, IoIosCloseCircleOutline, IoMdClose } from "react-icons/io";
+import {
+  IoIosArrowDown,
+  IoIosCloseCircleOutline,
+  IoMdClose,
+} from "react-icons/io";
 import SessionsTable from "@/components/SessionsTable";
 import SessionCreationModal from "@/components/Modal/SessionCreationModal";
 import { useSidebar } from "@/providers/useSidebar";
@@ -13,7 +17,7 @@ export default function Page() {
   const [selectedLocationId, setSelectedLocationId] = useState(null);
   // const [isMobile, setIsMobile] = useState(window.innerWidth <= 845);
   const [selectedCity, setSelectedCity] = useState("select city");
-  const [selectedLocation, setSelectedLocation] = useState("Location");
+  const [selectedLocation, setSelectedLocation] = useState("Select location");
   const [selectedBatch, setSelectedBatch] = useState("select batch");
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [isLocationOpen, setIsLocationOpen] = useState(false);
@@ -160,7 +164,7 @@ export default function Page() {
   };
 
   const clearLocationFilter = () => {
-    setSelectedLocation("Location");
+    setSelectedLocation("Select location");
     setIsLocationSelected(false);
     setIsLocationOpen(false);
   };
@@ -248,21 +252,28 @@ export default function Page() {
                     <IoIosArrowDown />
                   </span>
                 </button>
-
                 {isLocationOpen && (
                   <div
                     ref={dropdownRef}
-                    className="absolute z-10 w-[200px] max-h-[200px] overflow-auto scrollbar-webkit mt-1 bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                    className="absolute z-10 w-[200px] max-h-[250px] overflow-auto scrollbar-webkit mt-1 bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                   >
                     {LocationOptions && LocationOptions.length > 0 ? (
-                      LocationOptions.map((option, index) => (
+                      // Filter duplicates based on both name and city
+                      [
+                        ...new Map(
+                          LocationOptions.map((item) => [
+                            `${item.name}-${item.city}`,
+                            item,
+                          ])
+                        ).values(),
+                      ].map((option, index) => (
                         <div
                           key={index}
                           onClick={() => handleLocationSelect(option)}
                           className="p-2 cursor-pointer"
                         >
                           <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
-                            {option.name}, {option.city}
+                            {option.name} - {option.city}
                           </div>
                         </div>
                       ))

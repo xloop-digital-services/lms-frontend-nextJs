@@ -194,7 +194,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
       // toast.error("Error submitting attendance");
       if (error.response.status === 500) {
         console.error("Error submitting attendance:", error);
-        toast.info("Attendance has been marked!");
+        toast.success("Attendance has been marked!");
       }
     } finally {
       setLoader(false);
@@ -228,7 +228,6 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
       fetchSessions();
     } else if (isAdmin) {
       fetchAllSessions();
-      console.log('yaha amin he')
     }
   }, [isAdmin, isInstructor]);
   

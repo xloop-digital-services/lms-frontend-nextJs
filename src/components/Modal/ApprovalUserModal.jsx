@@ -7,6 +7,7 @@ import useClickOutside from "@/providers/useClickOutside";
 import {
   getApplicationUserDetails,
   getCourseByProgId,
+  getInstructorPreferredSessions,
   getSuggestedSessionForStudent,
 } from "@/api/route";
 import {
@@ -54,6 +55,7 @@ const ApprovalUserModal = ({
   const [weekDays, setWeekDays] = useState([]);
   const [studentSessions, setStudentSessions] = useState([]);
   const [errorUpdate, setErrorUpdate] = useState(false);
+  const [errorMessages, setErrorMessages] = useState({});
 
   const WEEKDAYS = {
     0: ["Monday", "Mon"],
@@ -106,22 +108,22 @@ const ApprovalUserModal = ({
     handleCoursesByPrograms();
   }, [userProgramId]);
 
-  const handleGetSessions = async () => {
-    setLoadingSessions(true);
-    try {
-      const response = await listAllSessions();
-      setLoadingSessions(false);
-      setSessions(response.data.data);
-    } catch (error) {
-      console.log("Error while fetching the sessions", error);
-      setLoadingSessions(false);
+  useEffect(()=> {
+    const handleSuggestedSessionsForInstructor = async () =>{
+      setLoadingSessions(true);
+      try {
+        const response = await getInstructorPreferredSessions(id)
+        console.log('instructor suggested sessions', response)
+        setSessions(response.data.data.sessions);
+      } catch (error) {
+        console.log('error while fetching the suggested sessions for isntructor',error)
+      } finally {
+        setLoadingSessions(false)
+      }
     }
-  };
-
-  useEffect(() => {
-    handleGetSessions();
+    handleSuggestedSessionsForInstructor();
     setSelected(false);
-  }, []);
+  },[id])
 
   const handleToggle = (e) => {
     e.stopPropagation();
@@ -137,7 +139,7 @@ const ApprovalUserModal = ({
       }
     });
   };
-
+  
   useEffect(() => {
     if (sessionIds.length > 0) {
       setSelected(true);
@@ -186,7 +188,7 @@ const ApprovalUserModal = ({
       if (error.message === "Network Error") {
         toast.error(error.message);
       } else if (error.response.status === 400) {
-        setErrorUpdate(!errorUpdate);
+        setUpdateSessions(updateSession + 1);
         toast.error(error.response.data.message);
       } else if (error.response.status === 401) {
         toast.error("your log in token has been expired. Please log in again!");
@@ -294,8 +296,11 @@ const ApprovalUserModal = ({
                             {userProgramCourses &&
                               userProgramCourses.length > 0 &&
                               userProgramCourses.map((course) => (
-                                <div key={course.id} >
-                                  <p className="px-4 w-[270px]"> - {course.name}</p>
+                                <div key={course.id}>
+                                  <p className="px-4 w-[270px]">
+                                    {" "}
+                                    - {course.name}
+                                  </p>
                                 </div>
                               ))}
                           </div>
@@ -388,9 +393,7 @@ const ApprovalUserModal = ({
                 </div>
               </div>
             )}
-            <div
-              className={`flex justify-end items-center w-full`}
-            >
+            <div className={`flex justify-end items-center w-full`}>
               <div className="flex flex-col justify-end  pt-4  relative min-w-[250px]">
                 {/* <div>
                 <p className=" text-xs">Assign sessions</p>
@@ -456,6 +459,11 @@ const ApprovalUserModal = ({
               hover:bg-dark-200 transition-colors duration-200 ease-in-out`}
                               >
                                 {session.location_name} - {session.course.name}
+                                {errorMessages[session.id] && (
+                                  <div className="text-red-500 text-sm pt-1">
+                                    {errorMessages[session.id]}
+                                  </div>
+                                )}
                               </div>
                             );
                           })

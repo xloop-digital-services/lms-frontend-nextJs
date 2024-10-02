@@ -152,8 +152,8 @@ const UserModal = ({
 
   useClickOutside(modalRef, () => setModal(false));
   return (
-    <div className="backDropOverlay min-h-screen flex  items-center">
-      <div className="min-w-[70%]  z-[1000] mx-auto my-20 relative">
+    <div className="backDropOverlay min-h-screen flex  items-center cursor-default">
+      <div className="min-w-[75%]  z-[1000] mx-auto my-20 relative">
         {loading && (
           <div className="absolute inset-0 flex items-center justify-center bg-surface-100 bg-opacity-30 z-[1100]">
             <CircularProgress size={30} />
@@ -189,7 +189,9 @@ const UserModal = ({
               <p className="text-sm text-dark-400 text-center">{email}</p>
             </div>
             <div className="absolute top-[60px] right-[50px]">
-              <p className="text-sm text-dark-400 text-center">Status</p>
+            <p className="text-sm text-dark-400 text-center pb-1 border-b border-dark-300">
+                Status
+              </p>
               <div className=" py-2 whitespace-nowrap flex w-full justify-start text-sm text-surface-100 dark:text-gray-200 ">
                 <p
                   className={`${
@@ -208,7 +210,7 @@ const UserModal = ({
             </div>
             <div className="w-full h-[2px] bg-dark-200"></div>
             <div className="px-[40px] text-base">
-              <div className="md:flex justify-evenly">
+              <div className="md:flex justify-evenly gap-6">
                 <table className="w-[40%] border-collapse">
                   <tbody>
                     <tr className="border-b border-[#d7e4ee]">
@@ -239,10 +241,10 @@ const UserModal = ({
                       <>
                         <tr className="border-b border-[#d7e4ee]">
                           <td className="text-dark-400 text-center py-2">
-                            Years of Experience
+                            Experience
                           </td>
                           <td className="text-center py-2 px-4">
-                            {experience || "-"}
+                            {experience + ' Year' || "-"} 
                           </td>
                         </tr>
                         <tr>
@@ -271,8 +273,8 @@ const UserModal = ({
                   </tbody>
                 </table>
 
-                <div className="space-y-2  ">
-                  <p className="text-sm text-dark-400">
+                <div className="space-y-2  w-[30%]">
+                  <p className="text-sm text-dark-400 pb-1 border-b border-dark-300">
                     {selectedOption === "student"
                       ? status === "approved"
                         ? "Selected Program"
@@ -284,22 +286,22 @@ const UserModal = ({
                       program && program.length > 0 ? (
                         // Display Program Logic
                         program.map((prog, index) => (
-                          <div key={index} className="flex items-center gap-2">
+                          <div key={index} className="flex gap-2">
                             {/* Radio Button for Program Selection */}
                             <div
                               className={`${
                                 status === "approved" ? "hidden" : "flex"
-                              } items-center h-5`}
+                              } items-center h-5 group`}
                             >
                               <input
                                 id={`radio-${index}`}
                                 type="radio"
                                 name="programSelection"
                                 onChange={() => handleEnableApprove(prog.id)}
-                                className="border-gray-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
+                                className="border-gray-200 mt-1 group-hover:cursor-pointer rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
                               />
                             </div>
-                            <p>{prog.name}</p>
+                            <p className="group-hover:cursor-pointer">{prog.name}</p>
                           </div>
                         ))
                       ) : (
@@ -308,7 +310,7 @@ const UserModal = ({
                     ) : skill && skill.length > 0 ? (
                       // Display Skills Logic
                       skill.map((skill, index) => (
-                        <div key={index} className="flex items-center gap-2">
+                        <div key={index} className="flex gap-2">
                           {/* Checkbox for Skill Selection */}
                           <div
                             className={`${
@@ -320,7 +322,7 @@ const UserModal = ({
                               type="checkbox"
                               name="skillSelection"
                               onChange={() => handleSkillSelection(skill.id)}
-                              className="border-gray-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
+                              className="border-gray-200 rounded mt-1 text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
                             />
                           </div>
                           <p>{skill.name}</p>
@@ -331,8 +333,8 @@ const UserModal = ({
                     )}
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <p className="text-sm text-dark-400">Locations</p>
+                <div className="space-y-2 w-[30%]">
+                  <p className="text-sm text-dark-400 pb-1 border-b border-dark-300">Locations</p>
                   {location &&
                     location.length > 0 &&
                     location.map((prog, index) => (
@@ -344,7 +346,7 @@ const UserModal = ({
                         >
                           <input
                             id={`checkbox-${index}`}
-                            type="checkbox"
+                            type={selectedOption === 'student' ? 'radio' : 'checkbox'}
                             name="locationSelection" // Same name attribute for all radio buttons
                             // value={prog.name} // Store the value of the selected program
                             onChange={(e) =>

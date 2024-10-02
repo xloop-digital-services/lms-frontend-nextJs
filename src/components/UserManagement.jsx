@@ -72,7 +72,9 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
             selectedOption.toLowerCase()
           );
 
-          if (response.data.status_code === 200) {
+
+          if (response.data.status_code === 200 && response.data.data.data.length > 0) {
+
             setApplications(
               response?.data?.data.data.map((data) => data.application)
             );
@@ -88,7 +90,11 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
 
             // console.log(response?.data?.data?.[0].?id)
             setLoadingUsers(false);
-          } // console.log("response from both idss", response.data);
+          }  else {
+            setMessage("no data found");
+            setLoadingUsers(false);
+          }
+          console.log("response from both idss", response.data);
         } catch (error) {
           console.log("error is occuring while both", error);
           // setMessage(response.data.message);

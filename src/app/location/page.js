@@ -15,7 +15,7 @@ import { toast, ToastContainer } from "react-toastify";
 
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
-  const [selectedCity, setSelectedCity] = useState("City");
+  const [selectedCity, setSelectedCity] = useState("Select city");
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [cityOptions, setCityOptions] = useState([]);
   const [isCitySelected, setIsCitySelected] = useState(false); // Fix typo
@@ -116,19 +116,29 @@ export default function Page() {
               {isCityOpen && (
                 <div
                   ref={cityDown}
-                  className="absolute z-10 w-[200px] mt-1 bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                  className={`absolute z-10 sm:w-[200px] mt-1 max-h-[250px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out`}
+                  // style={{
+                  //   height:
+                  //     locations.length * 40 < 300
+                  //       ? `${locations.length * 0}px`
+                  //       : "250px",
+                  //   // maxHeight: "250px",
+                  //   overflowY: locations.length * 40 > 300 ? "auto" : "unset", // Enable scrolling only if list exceeds 300px
+                  // }}
                 >
-                  {cityOptions.map((option, index) => (
-                    <div
-                      key={index}
-                      onClick={() => handleCitySelect(option)}
-                      className="p-2 cursor-pointer"
-                    >
-                      <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
-                        {option.name}
+                  {[...new Set(locations.map((option) => option.city))].map(
+                    (city, index) => (
+                      <div
+                        key={index}
+                        onClick={() => handleCitySelect(city)}
+                        className="p-2 cursor-pointer"
+                      >
+                        <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                          {city}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    )
+                  )}
                 </div>
               )}
             </div>

@@ -821,6 +821,18 @@ export const getInstructorSessions = async (userId, group) => {
   }
 };
 
+export const getInstructorPreferredSessions = async (userId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/instructor-preferred-sessions/?instructor_id=${userId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
 export const getInstructorSessionsbyCourseId = async (
   userId,
   group,

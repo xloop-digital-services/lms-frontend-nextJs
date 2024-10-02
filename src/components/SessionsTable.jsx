@@ -255,7 +255,7 @@ const SessionsTable = ({
                       )
                       .map((session, index) => {
                         return (
-                          <tr key={index} className={`${session.status === 2 && 'hidden'}`}>
+                          <tr key={index} className={``}>
                             {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
                               {session.batch}
                             </td> */}
