@@ -5,6 +5,7 @@ import { BsArrowUpRightSquare } from "react-icons/bs";
 import { toast } from "react-toastify";
 import useClickOutside from "@/providers/useClickOutside";
 import {
+  DeleteAssignedSessions,
   getApplicationUserDetails,
   getCourseByProgId,
   getInstructorPreferredSessions,
@@ -16,8 +17,9 @@ import {
   getInstructorSessions,
   listAllSessions,
 } from "@/api/route";
-import { IoIosArrowDown } from "react-icons/io";
+import { IoIosArrowDown, IoIosCloseCircleOutline } from "react-icons/io";
 import { downloadFile } from "@/app/courses/course/[courseId]/page";
+import DeleteConfirmationPopup from "./DeleteConfirmationPopUp";
 
 const ApprovalUserModal = ({
   selectedOption,
@@ -54,8 +56,8 @@ const ApprovalUserModal = ({
   const [userSkills, setUserSkills] = useState([]);
   const [weekDays, setWeekDays] = useState([]);
   const [studentSessions, setStudentSessions] = useState([]);
-  const [errorUpdate, setErrorUpdate] = useState(false);
-  const [errorMessages, setErrorMessages] = useState({});
+  const [sessionId, setSessionId] = useState(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const WEEKDAYS = {
     0: ["Monday", "Mon"],
@@ -108,22 +110,25 @@ const ApprovalUserModal = ({
     handleCoursesByPrograms();
   }, [userProgramId]);
 
-  useEffect(()=> {
-    const handleSuggestedSessionsForInstructor = async () =>{
+  useEffect(() => {
+    const handleSuggestedSessionsForInstructor = async () => {
       setLoadingSessions(true);
       try {
-        const response = await getInstructorPreferredSessions(id)
-        console.log('instructor suggested sessions', response)
+        const response = await getInstructorPreferredSessions(id);
+        console.log("instructor suggested sessions", response);
         setSessions(response.data.data.sessions);
       } catch (error) {
-        console.log('error while fetching the suggested sessions for isntructor',error)
+        console.log(
+          "error while fetching the suggested sessions for isntructor",
+          error
+        );
       } finally {
-        setLoadingSessions(false)
+        setLoadingSessions(false);
       }
-    }
+    };
     handleSuggestedSessionsForInstructor();
     setSelected(false);
-  },[id])
+  }, [id]);
 
   const handleToggle = (e) => {
     e.stopPropagation();
@@ -139,7 +144,7 @@ const ApprovalUserModal = ({
       }
     });
   };
-  
+
   useEffect(() => {
     if (sessionIds.length > 0) {
       setSelected(true);
@@ -204,7 +209,7 @@ const ApprovalUserModal = ({
       setLoadingSelection(true);
       try {
         const response = await getInstructorSessions(id, selectedOption);
-        console.log("ye rahe sessions", response?.data?.data);
+        // console.log("ye rahe sessions", response?.data?.data);
         setAssignedSessions(response?.data?.data);
         setLoadingSelection(false);
       } catch (error) {
@@ -236,15 +241,23 @@ const ApprovalUserModal = ({
       setSelectedSessionStatus("Inactive");
     }
     setIsSessionSelected(session);
+  };;
+
+  const handleDeleteSession = (session) => {
+    setSessionId(session.session_id);
+    setConfirmDelete(true);
   };
 
-  const handleListOfCourses = async () => {
+  const handleDelete = async () => {
     try {
-      // const response = await
+      const response = await DeleteAssignedSessions(id, selectedOption, sessionId)
+      console.log('session deleted', response.data)
+      toast.success('Session removed succesfully!')
+      setUpdateSessions(updateSession + 1);
     } catch (error) {
-      console.log("error while fetching courses", error);
+      console.log('error removing assigned session', error)
     }
-  };
+  }
 
   return (
     <div className="backDropOverlay w-full min-h-screen flex items-center">
@@ -459,11 +472,6 @@ const ApprovalUserModal = ({
               hover:bg-dark-200 transition-colors duration-200 ease-in-out`}
                               >
                                 {session.location_name} - {session.course.name}
-                                {errorMessages[session.id] && (
-                                  <div className="text-red-500 text-sm pt-1">
-                                    {errorMessages[session.id]}
-                                  </div>
-                                )}
                               </div>
                             );
                           })
@@ -509,7 +517,7 @@ const ApprovalUserModal = ({
                       <h2 className="border-b border-dark-300 py-1 mb-2 text-sm text-dark-400">
                         Assigned Classes:
                       </h2>
-                      <ul className="list-disc space-y-2 max-h-[220px] overflow-y-auto w-full scrollbar-webkit ">
+                      <ul className="list-disc  max-h-[220px] overflow-y-auto w-full scrollbar-webkit ">
                         {assignedSessions.map((session, index) => (
                           <li
                             key={index}
@@ -518,9 +526,17 @@ const ApprovalUserModal = ({
                               isSessionSelected === session
                                 ? "text-blue-300"
                                 : ""
-                            }`}
+                            } flex gap-5 group items-center justify-between w-full hover:bg-[#1d1c1c] hover:bg-opacity-5 px-2 py-1 rounded-lg`}
                           >
-                            {session.location} {session.course}
+                            {session.location} - {session.course}
+                            <span className="mt-[2px] group-hover:text-opacity-45 text-opacity-0 text-[#1d1c1c] hover:border border-[#1d1c1c] border-opacity-45 rounded ">
+                              <IoClose
+                                size={15}
+                                className=""
+                                title="remove"
+                                onClick={() => handleDeleteSession(session)}
+                              />
+                            </span>
                           </li>
                         ))}
                       </ul>
@@ -606,6 +622,13 @@ const ApprovalUserModal = ({
             )}
           </div>
         </div>
+        {confirmDelete && (
+          <DeleteConfirmationPopup
+            setConfirmDelete={setConfirmDelete}
+            handleDelete={handleDelete}
+            field="assigned class"
+          />
+        )}
       </div>
     </div>
   );

@@ -848,6 +848,15 @@ export const getInstructorSessionsbyCourseId = async (
   }
 };
 
+export const DeleteAssignedSessions = async (userId, selectedOption, sessionId) => {
+  try {
+    const response = await axiosInstance.delete(`/user-sessions/${userId}/?group_name=${selectedOption}&pk=${sessionId}`)
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
 //get all skills
 export const getAllSkills = async () => {
   try {

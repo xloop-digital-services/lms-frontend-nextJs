@@ -56,7 +56,7 @@ const LocationModal = ({
         const response = await createLocation(data);
         if (response.data.status_code === 201) {
           console.log("location created", response?.data?.message);
-          toast.success(response?.data?.message);
+          toast.success('Location created successfully!');
           setUpdateLocation(!updateLocation);
           setLoading(false);
           setOpenModal(false);
