@@ -118,8 +118,8 @@ const LocationModal = ({
   };
 
   return (
-    <div className="backDropOverlay h-screen flex justify-center items-center">
-      <div className="w-[550px] z-[1000] mx-auto my-20">
+    <div className="backDropOverlay h-[98vh] flex justify-center items-center overflow-y-hidden ">
+      <div className="w-[550px] z-[1000] mx-auto ">
         {loading && (
           <div className="absolute inset-0 w-full p-2 flex items-center justify-center bg-surface-100 bg-opacity-30 z-[1100]">
             <CircularProgress size={30} />

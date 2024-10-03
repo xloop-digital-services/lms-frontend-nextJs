@@ -431,7 +431,7 @@ const AdminDashboard = () => {
                   {isUserOpen && (
                     <div
                       ref={userDown}
-                      className="absolute capitalize z-50 w-fit xl:w-[120px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                      className="absolute capitalize z-50 xl:max-w-[200px] md:max-w-[170px] w-[140px]  mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                     >
                       {userOptions.map((option, index) => (
                         <div
@@ -476,11 +476,11 @@ const AdminDashboard = () => {
                     {isProgramOpen && (
                       <div
                         ref={dropdownRef}
-                        className="absolute z-50 mt-1  md:max-w-[300px] w-full  max-h-[240px] overflow-auto scrollbar-webkit  bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                        className="absolute z-50 mt-1  md:max-w-[300px] w-full  max-h-[240px] overflow-y-auto scrollbar-webkit  bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                         style={{
                           // maxWidth: "220px", // Set the maximum width of the button
                           whiteSpace: "nowrap",
-                          overflow: "hidden",
+                          // overflow: "hidden",
                           // textOverflow: "ellipsis",
                         }}
                       >
@@ -521,7 +521,7 @@ const AdminDashboard = () => {
                     {isSkillOpen && (
                       <div
                         ref={dropdownRef}
-                        className="absolute z-50 mt-1 md:max-w-[300px] w-full max-h-[200px] overflow-auto scrollbar-webkit  bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                        className="absolute z-50 mt-1 md:max-w-[300px] w-full max-h-[240px] overflow-y-auto scrollbar-webkit  bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                       >
                         {allSkills && allSkills.length > 0 ? (
                           allSkills.map((option) => (

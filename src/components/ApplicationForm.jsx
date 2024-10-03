@@ -383,6 +383,8 @@ export default function ApplicationForm() {
                 placeholder="Enter your first name"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
+                pattern="[a-zA-Z0-9_\-\.]+"
+                title="Please enter a single word with special characters (a-z, A-Z, 0-9, _, -, .)"
               />
             </div>
             <div className="space-y-2 text-[15px] w-full">
