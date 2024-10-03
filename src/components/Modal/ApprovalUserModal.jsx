@@ -136,13 +136,25 @@ const ApprovalUserModal = ({
   };
 
   const handleSelectSession = (session) => {
-    setSessionIds((prevSelected) => {
-      if (prevSelected.includes(session.id)) {
-        return prevSelected.filter((id) => id !== session.id);
-      } else {
-        return [...prevSelected, session.id];
-      }
-    });
+    if (selectedOption === "instructor") {
+      setSessionIds((prevSelected) => {
+        if (prevSelected.includes(session.id)) {
+          return prevSelected.filter((id) => id !== session.id);
+        } else {
+          return [...prevSelected, session.id];
+        }
+      });
+    } else {
+      setSessionIds((prevSelected) => {
+        // If the session is already selected, deselect it (clear)
+        if (prevSelected.includes(session.id)) {
+          return [];
+        } else {
+          // Otherwise, select the new session, and clear previous selections
+          return [session.id];
+        }
+      });
+    }
   };
 
   useEffect(() => {
@@ -241,7 +253,7 @@ const ApprovalUserModal = ({
       setSelectedSessionStatus("Inactive");
     }
     setIsSessionSelected(session);
-  };;
+  };
 
   const handleDeleteSession = (session) => {
     setSessionId(session.session_id);
@@ -250,14 +262,18 @@ const ApprovalUserModal = ({
 
   const handleDelete = async () => {
     try {
-      const response = await DeleteAssignedSessions(id, selectedOption, sessionId)
-      console.log('session deleted', response.data)
-      toast.success('Session removed succesfully!')
+      const response = await DeleteAssignedSessions(
+        id,
+        selectedOption,
+        sessionId
+      );
+      console.log("session deleted", response.data);
+      toast.success("Session removed succesfully!");
       setUpdateSessions(updateSession + 1);
     } catch (error) {
-      console.log('error removing assigned session', error)
+      console.log("error removing assigned session", error);
     }
-  }
+  };
 
   return (
     <div className="backDropOverlay w-full min-h-screen flex items-center">
