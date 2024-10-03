@@ -54,14 +54,52 @@ export default function ApplicationForm() {
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   const [programError, setPorgramError] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [nameError, setNameError] = useState("");
+
+  const handleFirstName = (e) => {
+    const name = e.target.value;
+
+    // Regular expression to allow only alphabets (a-z, A-Z)
+    const alphabetPattern = /^[a-zA-Z]*$/;
+
+    // Check if the name contains only alphabets
+    if (!alphabetPattern.test(name)) {
+      setNameError("Name can only contain alphabets.");
+    } else {
+      setFirstName(name);
+      setNameError(""); // Clear the error if the input is valid
+    }
+  };
+
+  const handleLastName = (e) => {
+    const name = e.target.value;
+
+    // Regular expression to allow only alphabets (a-z, A-Z)
+    const alphabetPattern = /^[a-zA-Z]*$/;
+
+    // Check if the name contains only alphabets
+    if (!alphabetPattern.test(name)) {
+      setNameError("Name can only contain alphabets.");
+    } else {
+      setLastName(name);
+      setNameError(""); // Clear the error if the input is valid
+    }
+  };
 
   const formatContactInput = (value, caretPos) => {
     const numericValue = value.replace(/[^0-9]/g, ""); // Remove non-numeric characters
-    let formattedValue = numericValue
-      .slice(0, 11)
-      .replace(/(\d{4})(\d{1,7})?/, "$1-$2"); // Format as XXXX-XXXXXXX
-    if (numericValue.length <= 4) {
-      formattedValue = numericValue; // Don't add hyphen if there are less than 5 digits
+    let formattedValue = value;
+
+    if (numericValue.startsWith("92") && numericValue.length <= 12) {
+      // If it starts with +92, format as +92XXXXXXXXXX
+      formattedValue = `+92${numericValue.slice(2).slice(0, 10)}`; // Keep only 10 digits after +92
+    } else if (numericValue.startsWith("0")) {
+      // If it starts with 0, format as 0XXX-XXXXXXX
+      formattedValue = numericValue
+        .slice(0, 11) // Limit to 11 digits total
+        .replace(/(\d{4})(\d{1,7})/, "$1-$2"); // Format as 0XXX-XXXXXXX
+    } else {
+      formattedValue = numericValue.slice(0, 11); // Just return the first 11 digits for other cases
     }
 
     return { formattedValue, caretPos };
@@ -69,12 +107,14 @@ export default function ApplicationForm() {
 
   // Validate the contact number input
   const validateContactNumber = (value) => {
-    const contactPattern = /^[0-9]{4}-[0-9]{7}$/; // Ensure valid format (XXXX-XXXXXXX)
-    const invalidPrefix = /^0000-/; // Prevent numbers starting with 0000
+    // Ensure valid format: +92XXXXXXXXXX or 0XXX-XXXXXXX
+    const contactPattern = /^(?:\+92[0-9]{10}|0[0-9]{3}-[0-9]{7})$/; // Match +92XXXXXXXXXX or 0XXX-XXXXXXX
+    const invalidPrefix = /^0000/; // Prevent numbers starting with 0000
 
     if (invalidPrefix.test(value)) {
       setErrorMessage("Contact number cannot start with 0000.");
     } else if (!contactPattern.test(value)) {
+      // No need to check startsWith here; the regex handles the format
       setErrorMessage("Please enter a valid contact number.");
     } else {
       setErrorMessage(""); // Clear error if the input is valid
@@ -288,7 +328,7 @@ export default function ApplicationForm() {
 
     if (errorMessage !== "") {
       toast.error("Please enter a valid contact number.");
-      setLoaderEdit(false); // Set loader to false
+      setLoadingSubmit(false); // Set loader to false
       return;
     }
 
@@ -351,8 +391,8 @@ export default function ApplicationForm() {
 
   return (
     <div className="flex flex-col w-full h-screen justify-center items-center p-4 gap-7 bg-gradient-to-t from-blue-600 ">
-      <Image src={logo} width={300} />
-      <div className="bg-surface-100 rounded-xl p-4 flex flex-col space-y-4 w-[70%] max-h-screen overflow-y-auto scrollbar-webkit ">
+      <Image src={logo} className="lg:w-[250px] w-[200px]" />
+      <div className="bg-surface-100 rounded-xl xsm:p-4 flex flex-col space-y-4 xl:w-[70%] sm:w-[80%] w-[95%] max-h-screen overflow-y-auto scrollbar-webkit ">
         {loadingSubmit && (
           <div className="absolute inset-0 w-full p-2 flex items-center justify-center bg-surface-100 bg-opacity-30 z-[1100]">
             <CircularProgress size={30} />
@@ -363,8 +403,8 @@ export default function ApplicationForm() {
             Registration Form
           </p>
         </div>
-        <div className="flex gap-6 justify-evenly font-inter">
-          <div className="flex flex-col w-full space-y-4 px-4">
+        <div className="flex gap-6 lg:flex-row flex-col justify-evenly font-inter">
+          <div className="flex flex-col xl:w-full lg:max-w-[700px] w-full space-y-4 px-4">
             <div className="space-y-2 text-[15px] w-full">
               <p>Email</p>
               <input
@@ -382,9 +422,9 @@ export default function ApplicationForm() {
                 className="border border-dark-300 outline-none p-3 rounded-lg w-full "
                 placeholder="Enter your first name"
                 value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                pattern="[a-zA-Z0-9_\-\.]+"
-                title="Please enter a single word with special characters (a-z, A-Z, 0-9, _, -, .)"
+                onChange={handleFirstName}
+                pattern="[a-zA-Z]"
+                title="Please enter your correct name"
               />
             </div>
             <div className="space-y-2 text-[15px] w-full">
@@ -394,43 +434,48 @@ export default function ApplicationForm() {
                 className="border border-dark-300 outline-none p-3 rounded-lg w-full "
                 placeholder="Enter your last name"
                 value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
+                onChange={handleLastName}
+                pattern="[a-zA-Z]"
+                title="Please enter your correct name"
               />
             </div>
-            <div className="space-y-2 text-[15px] w-full">
-              <p>Contact</p>
-              <input
-                className="border border-dark-300 outline-none p-3 rounded-lg w-full "
-                placeholder="XXXX-XXXXXXX"
-                inputMode="numeric"
-                type="tel"
-                pattern="[0-9]{4}-[0-9]{7}"
-                name="contact"
-                value={contactNumber}
-                onChange={handleInputChange}
-                onInput={handleInput}
-              />
+            <div className="space-y-1 text-[15px] w-full">
+              <div className="space-y-2">
+                <p>Contact</p>
+                <input
+                  className="border border-dark-300 outline-none p-3 rounded-lg w-full "
+                  placeholder="XXXX-XXXXXXX"
+                  inputMode="numeric"
+                  type="tel"
+                  pattern="[0-9]{4}-[0-9]{7}"
+                  name="contact"
+                  value={contactNumber}
+                  onChange={handleInputChange}
+                  onInput={handleInput}
+                />
+              </div>
               {errorMessage && (
                 <p className="text-mix-200 text-[12px] mt-1">{errorMessage}</p>
               )}
             </div>
-            <div className="space-y-2 text-[15px] w-full">
+            <div className="relative space-y-2 text-[15px] w-full">
               <p>City</p>
               <button
                 onClick={toggleCityOpen}
                 className={`${
                   !isCitySelected ? " text-[#92A7BE]" : "text-[#424B55]"
-                } flex justify-between items-center w-full  hover:text-[#0E1721] px-4 py-3 text-sm text-left bg-surface-100 border  border-[#ACC5E0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                } flex justify-between items-center w-full hover:text-[#0E1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#ACC5E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
               >
                 {selectedCity}
                 <span className="">
                   <IoIosArrowDown />
                 </span>
               </button>
+
               {isCityOpen && (
                 <div
                   ref={cityDown}
-                  className="absolute z-10 min-w-[560px] max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
+                  className="absolute top-full left-0 z-10 w-full lg:max-h-[170px] max-h-[150px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                 >
                   {/* Filter the cityOptions based on available locations */}
                   {cityOptions
@@ -453,7 +498,8 @@ export default function ApplicationForm() {
                 </div>
               )}
             </div>
-            <div className="space-y-2 text-[15px] w-full">
+
+            <div className=" relative space-y-2 text-[15px] w-full">
               <p>
                 Location{" "}
                 <span className="text-[12px] text-dark-400">(atleast 3)</span>
@@ -487,11 +533,11 @@ export default function ApplicationForm() {
                 </button>
 
                 {isLocationOpen &&
-                selectedCity !== "city" &&
+                selectedCity !== "Select your city" &&
                 allLocations.length > 0 ? (
                   <div
                     ref={cityDown}
-                    className="absolute z-10 min-w-[560px] mt-1 max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                    className="absolute  top-full left-0 z-10 w-full mt-2 lg:max-h-[170px] max-h-[150px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                   >
                     {allLocations.map(
                       (option, index) =>
@@ -510,10 +556,11 @@ export default function ApplicationForm() {
                   </div>
                 ) : (
                   isLocationOpen &&
-                  selectedCity === "city" && (
+                  !isCitySelected &&
+                  selectedCity === "Select your city" && (
                     <div
                       ref={cityDown}
-                      className="absolute z-10 w-[330px] mt-1 max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                      className="absolute  top-full left-0 z-10 w-full mt-2 lg:max-h-[170px] max-h-[150px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                     >
                       <p className="text-[12px] text-dark-400 text-center p-1">
                         Select your city first
@@ -526,20 +573,18 @@ export default function ApplicationForm() {
             <div className="space-y-2 text-[15px] w-full">
               <p>Location Code</p>
               <input
-                type="text"
                 className="border border-dark-300 outline-none p-3 rounded-lg w-full "
-                placeholder="Enter your location code"
                 value={cityShortName}
-                required
+                readOnly
               />
             </div>
           </div>
-          <div className="bg-gradient-to-t from-transparent via-dark-200 to-transparent h-full w-[2px] py-6"></div>
+          <div className="bg-gradient-to-t from-transparent via-dark-200 to-transparent h-full lg:flex hidden w-[2px] py-6"></div>
 
           <div className="flex flex-col w-full space-y-4 mt-4 px-4">
-            <div className="flex  w-full items-center">
-              <p className="w-[150px]">Register as: </p>
-              <div className="flex justify-evenly w-full items-start">
+            <div className="flex xsm:flex-row flex-col xsm:gap-0 gap-4 w-full items-center  justify-center">
+              <p className="lg:w-[150px] w-[60%] text-center">Register as: </p>
+              <div className="flex lg:justify-evenly lg:gap-0 gap-10 xsm:justify-start justify-center items-start w-full">
                 <div className="flex gap-2">
                   <input
                     type="radio"
@@ -562,7 +607,7 @@ export default function ApplicationForm() {
                 </div>
               </div>
             </div>
-            <div className="space-y-2 text-[15px] w-full pt-10">
+            <div className="space-y-2 text-[15px] w-full lg:pt-10 pt-6">
               <p>Applying Year</p>
               <input
                 className="border border-dark-300 outline-none p-3 rounded-lg w-full"
@@ -583,7 +628,7 @@ export default function ApplicationForm() {
             </div>
 
             {selectedRole === "student" ? (
-              <div className="space-y-2 text-[15px] w-full">
+              <div className=" relative space-y-2 text-[15px] w-full">
                 <p>
                   Programs{" "}
                   <span className="text-[12px] text-dark-400">(atleast 3)</span>{" "}
@@ -618,7 +663,7 @@ export default function ApplicationForm() {
                 {isProgramOpen && (
                   <div
                     ref={cityDown}
-                    className="absolute z-10 min-w-[560px] max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                    className="absolute  top-full left-0 mt-2 z-10 w-full lg:max-h-[170px] max-h-[150px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                   >
                     {allPrograms.map((option, index) => (
                       <div
@@ -642,7 +687,7 @@ export default function ApplicationForm() {
               </div>
             ) : selectedRole === "instructor" ? (
               <div>
-                <div className="space-y-2 text-[15px] w-full">
+                <div className=" relative space-y-2 text-[15px] w-full">
                   <p>
                     Skills{" "}
                     <span className="text-[12px] text-dark-400">
@@ -679,7 +724,7 @@ export default function ApplicationForm() {
                   {isSkillOpen && (
                     <div
                       ref={cityDown}
-                      className="absolute z-10 min-w-[560px] max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
+                      className="absolute  top-full left-0 z-10 w-full lg:max-h-[170px] max-h-[150px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
                     >
                       {allSkills.map((option, index) => (
                         <div
@@ -723,7 +768,7 @@ export default function ApplicationForm() {
             )}
           </div>
         </div>
-        <div className="flex w-full justify-center items-center">
+        <div className="flex w-full lg:py-0 pt-8 pb-4 justify-center items-center font-inter">
           <button
             type="submit"
             onClick={handleApplicationCreation}

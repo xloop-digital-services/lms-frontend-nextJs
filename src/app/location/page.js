@@ -12,6 +12,7 @@ import {
   IoMdClose,
 } from "react-icons/io";
 import { toast, ToastContainer } from "react-toastify";
+import { CircularProgress } from "@mui/material";
 
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
@@ -166,8 +167,11 @@ export default function Page() {
               No Location is found in this city
             </p>
           ))}{" "}
-        {!isCitySelected &&
-          filteredCityList.length === 0 &&
+        { loading ? (
+          <div className="flex justify-center items-center w-full p-4">
+            <CircularProgress size={20} />
+          </div>
+        ) : !isCitySelected && filteredCityList.length === 0 && (
           locations.length > 0 && (
             <LocationsTable
               locations={locations}
@@ -176,7 +180,8 @@ export default function Page() {
               setUpdateLocation={setUpdateLocation}
               updateLocation={updateLocation}
             />
-          )}
+          )
+        )}
       </div>
       {openModal && (
         <LocationModal

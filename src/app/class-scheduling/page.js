@@ -356,6 +356,10 @@ export default function Page() {
               setUpdateSession={setUpdateSession}
               updateSession={updateSession}
             />
+          ) : loading ? (
+            <div className="flex justify-center items-center w-full p-4">
+              <CircularProgress size={20} />
+            </div>
           ) : (
             <p>No class is scheduled in this location</p>
           )}

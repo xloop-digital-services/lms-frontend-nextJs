@@ -9,6 +9,7 @@ import cityAreas from "../../../public/data/cityAreas.json";
 import useClickOutside from "@/providers/useClickOutside";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { toast } from "react-toastify";
+import { CircularProgress } from "@mui/material";
 
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
@@ -219,6 +220,10 @@ export default function Page() {
                 loading={loading}
                 setLoading={setLoading}
               />
+            </div>
+          ) : loading ? (
+            <div className="flex justify-center items-center w-full p-4">
+              <CircularProgress size={20} />
             </div>
           ) : (
             <p>No Batch found in this city</p>
