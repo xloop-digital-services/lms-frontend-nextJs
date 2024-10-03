@@ -151,7 +151,7 @@ export default function Page() {
   };
 
   const handleLocationSelect = (location) => {
-    setSelectedLocation(location.name);
+    setSelectedLocation(location.location_name);
     setSelectedLocationId(location.id); // Store the ID for later use
     setIsLocationOpen(false);
     setIsLocationSelected(true);
@@ -257,12 +257,12 @@ export default function Page() {
                     ref={dropdownRef}
                     className="absolute z-10 w-[200px] max-h-[250px] overflow-auto scrollbar-webkit mt-1 bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                   >
-                    {LocationOptions && LocationOptions.length > 0 ? (
+                    {sessions && sessions.length > 0 ? (
                       // Filter duplicates based on both name and city
                       [
                         ...new Map(
-                          LocationOptions.map((item) => [
-                            `${item.name}-${item.city}`,
+                          sessions.map((item) => [
+                            `${item.location_name}`,
                             item,
                           ])
                         ).values(),
@@ -273,7 +273,7 @@ export default function Page() {
                           className="p-2 cursor-pointer"
                         >
                           <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
-                            {option.name} - {option.city}
+                            {option.location_name}
                           </div>
                         </div>
                       ))

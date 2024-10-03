@@ -62,7 +62,7 @@ export default function Page() {
   };
 
   const handleCitySelect = (option) => {
-    setSelectedCity(option.name);
+    setSelectedCity(option);
     setIsCityOpen(false);
     setIscitySelected(true);
   };
