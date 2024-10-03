@@ -13,7 +13,7 @@ export default function DashboardLayout({ children }) {
         {userData?.Group === "admin" ? (
           <SideBar />
         ) : ["instructor", "student"].includes(userData?.Group) &&
-          userData?.session ? (
+          userData?.session === true ? (
           <SideBar />
         ) : null}
 

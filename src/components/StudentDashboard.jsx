@@ -7,7 +7,11 @@ import image1 from "/public/assets/img/course-image.png";
 import { MdArrowRightAlt } from "react-icons/md";
 import Link from "next/link";
 import { useAuth } from "@/providers/AuthContext";
-import { getCalendarData, getPendingAssignments } from "@/api/route";
+import {
+  getCalendarData,
+  getPendingAssignments,
+  getUserSessions,
+} from "@/api/route";
 import { CircularProgress } from "@mui/material";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -26,16 +30,27 @@ export default function StudentDashboard() {
   const userId = userData?.User?.id;
   const group = userData?.Group;
 
-  useEffect(() => {
-    if (userData?.session) {
-      // Extract courses from userData.session
-      const sessionCourses = userData.session.map((session) => session.course);
-      setCourses(sessionCourses);
-      setLoader(false);
-    } else {
-      setLoader(true); // Show loader if no data is available
+  async function fetchSessionForUser() {
+    const response = await getUserSessions();
+    setLoader(true);
+    try {
+      if (response.status === 200) {
+        setCourses(response.data?.session);
+
+        setLoader(false);
+        // setCourseId(response?.data?.id)
+        // console.log(response.data?.data?.courses?.[0])
+        console.log(response?.data);
+      } else {
+        console.error("Failed to fetch user, status:", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
     }
-  }, [userData]);
+  }
+  useEffect(() => {
+    fetchSessionForUser();
+  }, []);
 
   async function fetchPendingAssignments() {
     const response = await getPendingAssignments(progId, regId);
@@ -133,20 +148,22 @@ export default function StudentDashboard() {
 
                 <div className="flex gap-2 flex-wrap max-md:flex-nowrap max-md:flex-col">
                   {isStudent &&
-                    courses
-                      .slice(0, courseLimit)
-                      .map((course) => (
+                    courses?.slice(0, courseLimit).map((session) => {
+                      return (
                         <CourseCard
-                          id={course.id}
-                          key={course.id}
+                          id={session.course.id}
+                          key={session.course.id}
                           image={image1}
-                          courseName={course.name}
+                          courseName={session.course.name} // Accessing course name inside 'course' object
                           route="course"
                           route1="courses"
-                          courseDesc={course.short_description}
+                          courseDesc={session.course.short_description} // Accessing short description
+                          // progress="50%"
+                          // avatars={avatars}
                           extraCount={50}
                         />
-                      ))}
+                      );
+                    })}
                 </div>
               </div>
             </div>

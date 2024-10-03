@@ -21,6 +21,16 @@ const API = process.env.NEXT_PUBLIC_BACKEND_URL;
 //   }
 // };
 
+//get user sessions
+export const getUserSessions = async () => {
+  try {
+    const response = await axiosInstance.get(`/user-details/`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 //submit user application
 export const submitApplication = async (data) => {
   try {

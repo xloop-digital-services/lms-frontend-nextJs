@@ -7,7 +7,11 @@ import image1 from "/public/assets/img/course-image.png";
 import { MdArrowRightAlt } from "react-icons/md";
 import Link from "next/link";
 import { useAuth } from "@/providers/AuthContext";
-import { getCalendarData, getInstructorSessions } from "@/api/route";
+import {
+  getCalendarData,
+  getInstructorSessions,
+  getUserSessions,
+} from "@/api/route";
 import { CircularProgress } from "@mui/material";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -27,45 +31,45 @@ export default function InstructorDashboard() {
 
   // console.log(group);
 
-  // useEffect(() => {
-  //   if (!insId) return;
-  //   async function fetchInstructorCourses() {
-  //     const response = await getInstructorCourses(insId);
-  //     setLoader(true);
-  //     try {
-  //       if (response.status === 200) {
-  //         setCourses(response.data?.data?.courses);
-  //         setLoader(false);
-  //         // setCourseId(response?.data?.id)
-  //         // console.log(response.data?.data?.courses?.[0])
-  //         console.log(response?.data);
-  //       } else {
-  //         console.error("Failed to fetch user, status:", response.status);
-  //       }
-  //     } catch (error) {
-  //       console.log("error", error);
-  //     }
-  //   }
+  // if (!insId) return;
+  async function fetchSessionForUser() {
+    const response = await getUserSessions();
+    setLoader(true);
+    try {
+      if (response.status === 200) {
+        setCourses(response.data?.session);
 
-  //   fetchInstructorCourses();
-  // }, [insId]);
-
-  useEffect(() => {
-    if (userData?.session) {
-      const sessionCourses = userData.session.map((session) => session.course);
-
-      const uniqueCourses = Array.from(
-        new Set(sessionCourses.map((course) => course.id))
-      ).map((id) => {
-        return sessionCourses.find((course) => course.id === id);
-      });
-
-      setCourses(uniqueCourses);
-      setLoader(false);
-    } else {
-      setLoader(true);
+        setLoader(false);
+        // setCourseId(response?.data?.id)
+        // console.log(response.data?.data?.courses?.[0])
+        console.log(response?.data);
+      } else {
+        console.error("Failed to fetch user, status:", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
     }
-  }, [userData]);
+  }
+  useEffect(() => {
+    fetchSessionForUser();
+  }, []);
+
+  // useEffect(() => {
+  //   if (userData?.session) {
+  //     const sessionCourses = userData.session.map((session) => session.course);
+
+  //     const uniqueCourses = Array.from(
+  //       new Set(sessionCourses.map((course) => course.id))
+  //     ).map((id) => {
+  //       return sessionCourses.find((course) => course.id === id);
+  //     });
+
+  //     setCourses(uniqueCourses);
+  //     setLoader(false);
+  //   } else {
+  //     setLoader(true);
+  //   }
+  // }, [userData]);
 
   async function fetchPendingAssignments() {
     const response = await getInstructorSessions(userId, group);
@@ -120,6 +124,8 @@ export default function InstructorDashboard() {
     if (!userId) return;
     fetchCalendarSessions();
   }, [userId, group]);
+
+  console.log(courses);
   return (
     <>
       <div
@@ -156,16 +162,16 @@ export default function InstructorDashboard() {
                 </div>
 
                 <div className="flex gap-2 flex-wrap max-md:flex-nowrap max-md:flex-col">
-                  {courses?.slice(0, courseLimit).map((course) => {
+                  {courses?.slice(0, courseLimit).map((session) => {
                     return (
                       <CourseCard
-                        id={course.id}
-                        key={course.id}
+                        id={session.course.id}
+                        key={session.course.id}
                         image={image1}
-                        courseName={course.name}
+                        courseName={session.course.name} // Accessing course name inside 'course' object
                         route="course"
                         route1="courses"
-                        courseDesc={course.short_description}
+                        courseDesc={session.course.short_description} // Accessing short description
                         // progress="50%"
                         // avatars={avatars}
                         extraCount={50}

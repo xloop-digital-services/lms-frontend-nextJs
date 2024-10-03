@@ -6,7 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Dashboard - LMS",
+  title: "LMS",
   description: "Learning Management System",
   icons:{
     icon :['/favicon.ico?v=1'],
