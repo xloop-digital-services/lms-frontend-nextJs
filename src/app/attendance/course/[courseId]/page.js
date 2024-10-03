@@ -69,7 +69,7 @@ export default function Page({ params }) {
     if (isStudent) {
       fetchAttendance();
     }
-  }, [courseId]);
+  }, [courseId, isStudent]);
 
   return (
     <>

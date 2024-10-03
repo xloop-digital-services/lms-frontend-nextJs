@@ -1,14 +1,14 @@
 "use client";
 import React from "react";
-import StudentGrading from "@/components/StudentGrading";
 import { useSidebar } from "@/providers/useSidebar";
 import CourseHead from "@/components/CourseHead";
+import StudentGradingAdmin from "@/components/StudentGradingAdmin";
 
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
   // const regId = params.regId;
-  const { courseId, regId } = params;
-  
+  const { courseId, sessionId, regId } = params;
+
   return (
     <div
       className={`flex-1 transition-transform pt-[90px] space-y-4 max-md:pt-32 font-inter ${
@@ -27,10 +27,14 @@ export default function Page({ params }) {
           id={courseId}
           // rating="Top Instructor"
           // instructorName="Maaz"
-          haveStatus={true}
+          // haveStatus={true}
           program="course"
         />
-        <StudentGrading courseId={courseId} regId={regId} />
+        <StudentGradingAdmin
+          courseId={courseId}
+          regId={regId}
+          sessionId={sessionId}
+        />
       </div>
     </div>
   );

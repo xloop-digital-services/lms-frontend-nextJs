@@ -4,7 +4,7 @@ import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import userIcon from "../../public/assets/img/images.png";
-import logo from "../../public/assets/img/xCelerate - Logo.png";
+import logo from "../../public/assets/img/logo.png";
 import { FaBell, FaSignOutAlt, FaUser, FaUsers } from "react-icons/fa";
 import Notifications from "./Notifications";
 import { getUserProfile } from "@/api/route";
@@ -96,10 +96,10 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="fixed w-screen bg-surface-100 z-10 font-inter">
+      <nav className="fixed w-screen bg-blue-500 z-10 font-inter">
         <div className="mx-auto px-2 sm:px-6 lg:px-8">
           <div className="relative flex h-20 items-center justify-between">
-            <div className="hidden sm:flex justify start ">
+            <div className="hidden sm:flex justify start ml-20">
               <Link href="/dashboard" passHref>
                 <Image
                   src={logo}
@@ -169,8 +169,8 @@ export default function Navbar() {
                       /> */}
                     </div>
                     <div>
-                      <div className="flex justify-end items-center cursor-pointer">
-                        <div className={``} style={{ color: "#07224D" }}>
+                      <div className="flex justify-end items-center cursor-pointer text-surface-100">
+                        <div className={``} style={{ color: "white" }}>
                           <p className="text-md capitalize">{`${user?.first_name} ${user?.last_name}`}</p>
                           <p className="text-xs uppercase">
                             {user?.registration_id}
@@ -178,7 +178,7 @@ export default function Navbar() {
                         </div>
                         <div className={`ml-1`} onClick={toggleDropdown}>
                           <svg
-                            xmlns="http://www.w3.org/2000/svg"
+                            xmlns="http://www.w3.org/2000/svg" 
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"

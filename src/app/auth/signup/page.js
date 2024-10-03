@@ -83,7 +83,7 @@ export default function Page() {
           });
         }
       } else {
-        oast.error("Signup failed", error, {
+        toast.error("Signup failed", error, {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,

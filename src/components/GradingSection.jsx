@@ -307,7 +307,7 @@ export const GradingSection = ({ title, courseId }) => {
   useEffect(() => {
     if (!isAdmin) return;
     fetchSessions();
-  }, [sessionId, selectedSession]);
+  }, [sessionId, selectedSession, isAdmin]);
 
   // console.log(selected);
   // console.log(selectedValue);

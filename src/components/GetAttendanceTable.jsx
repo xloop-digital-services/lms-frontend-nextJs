@@ -221,17 +221,17 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   //   }
   // }, [isAttendancePosted, courseId, group, userId, selectedSessionId]);
   useEffect(() => {
-    console.log('isInstructor:', isInstructor);
-    console.log('isAdmin:', isAdmin);
-  
+    console.log("isInstructor:", isInstructor);
+    console.log("isAdmin:", isAdmin);
+
     if (isInstructor) {
       fetchSessions();
     } else if (isAdmin) {
       fetchAllSessions();
-      console.log('yaha amin he')
+      console.log("yaha amin he");
     }
   }, [isAdmin, isInstructor]);
-  
+
   // useEffect(() => {
   //   if (date && selectedSession) {
   //     fetchAttendanceIns();
@@ -369,7 +369,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                                 disabled={true}
                                 className="w-4 h-4 rounded-full border-2 
                                 group-hover:cursor-default   
-                                disabled:opacity-100 disabled:bg-[#4b4b51]"
+                                disabled:opacity-100 disabled:bg-dark-600"
                                 // disabled={isAttendancePosted}
                               />
                               <p className="group-hover:cursor-default">

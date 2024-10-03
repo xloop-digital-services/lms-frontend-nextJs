@@ -16,6 +16,10 @@ export default function StatusSummary() {
         <p className="bg-mix-200 w-2 h-2 rounded-full  "></p>
         <p className="mx-2 ">Not Submitted</p>
       </div>
+      <div className="flex items-center ">
+        <p className="bg-mix-600 w-2 h-2 rounded-full  "></p>
+        <p className="mx-2 ">Late Submitted</p>
+      </div>
     </div>
   );
 }

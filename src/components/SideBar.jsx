@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { IoIosArrowDown } from "react-icons/io";
 import { FaListCheck, FaLocationDot } from "react-icons/fa6";
+import logo from "../../public/assets/img/logo.png";
 import {
   FaBars,
   FaBookOpen,
@@ -43,21 +44,33 @@ function SideBar() {
   return (
     <>
       <div
-        className={`fixed border border-solid border-dark-100 left-0 w-80 bg-surface-100 py-5 transition-transform mt-20 font-inter ${
+        className={`fixed border border-solid border-blue-500 z-50 left-0 w-80 bg-blue-500 transition-transform font-inter ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <button
-          className={`cursor-pointer pl-4 max-md:pl-2 max-md:py-2 `}
-          onClick={toggleSidebar}
-        >
-          <FaBars size={24} />
-        </button>
-
-        <nav className="flex flex-col mt-1 p-2 text-blue-500 sidebar ">
+        <div className="flex z-50 justify-between">
+          <button
+            className={`cursor-pointer text-surface-100 pl-4 max-md:pl-2 max-md:py-2 `}
+            onClick={toggleSidebar}
+          >
+            <FaBars size={24} />
+          </button>
+          {/* <div className="hidden sm:flex justify start "> */}
+          <Link href="/dashboard" passHref>
+            <Image
+              src={logo}
+              alt="logo"
+              width={230}
+              height={100}
+              // className={`w-full h-full `}
+            />
+          </Link>
+          {/* </div>   */}
+        </div>
+        <nav className="flex flex-col p-2 text-blue-500 sidebar  bg-blue-500">
           <div className="flex flex-col h-screen">
-            <div className=" flex flex-col justify-between lg:h-[80%] h-[75%] overflow-y-auto scrollbar-webkit pb-4">
-              <div className=" py-4 rounded bg-surface-100 flex flex-col">
+            <div className=" flex flex-col justify-between lg:h-[90%] h-[75%] overflow-y-auto scrollbar-webkit pb-4">
+              <div className=" py-4 rounded flex flex-col">
                 <Link
                   href="/dashboard"
                   className={`p-4 flex gap-4 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
@@ -149,7 +162,7 @@ function SideBar() {
                         : "text-dark-600"
                     }`}
                   >
-                    <FaLocationDot size={24}  />
+                    <FaLocationDot size={24} />
                     Location
                   </Link>
                   <Link
@@ -223,17 +236,7 @@ function SideBar() {
                   <FaClipboard size={24} />
                   Attendance
                 </Link>
-                <Link
-                  href="/quiz"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
-                    isLinkActive("/quiz")
-                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
-                      : "text-dark-600"
-                  }`}
-                >
-                  <FaClipboardList size={24} />
-                  Quiz
-                </Link>
+
                 <Link
                   href="/assignment"
                   className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
@@ -244,6 +247,17 @@ function SideBar() {
                 >
                   <FaTasks size={24} />
                   Assignment
+                </Link>
+                <Link
+                  href="/quiz"
+                  className={`p-4  flex gap-4 mt-2 rounded-xl hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
+                    isLinkActive("/quiz")
+                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
+                      : "text-dark-600"
+                  }`}
+                >
+                  <FaClipboardList size={24} />
+                  Quiz
                 </Link>
                 <Link
                   href="/project"
@@ -337,7 +351,7 @@ function SideBar() {
       </div>
       {/* <div className="h-screen bg-surface-100 w-16"> */}
       <button
-        className={`absolute  text-blue-500 px-4 py-4 max-md:px-2 max-md:py-2 focus:outline-none mt-4  ${
+        className={`absolute  text-surface-100 px-4 py-4 max-md:px-2 max-md:py-2 focus:outline-none mt-4  ${
           isSidebarOpen && "hidden"
         } z-50`}
         onClick={toggleSidebar}

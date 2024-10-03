@@ -8,7 +8,6 @@ import {
 } from "@/api/route";
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
-import { handleUploadProject } from "@/app/project/course/[courseId]/page";
 
 const UploadingFile = ({
   field,
@@ -23,7 +22,7 @@ const UploadingFile = ({
   const [error, setError] = useState("");
   const [isDragOver, setIsDragOver] = useState(false);
   const [loader, setLoader] = useState(false);
-  // console.log(assignmentID);
+
   const supportedFormats = [
     ".pdf",
     ".doc",
@@ -33,8 +32,6 @@ const UploadingFile = ({
     ".txt",
     ".zip",
   ];
-
-  console.log(field);
 
   const handleBrowse = (event) => {
     const selectedFile = event.target.files[0];
@@ -72,8 +69,7 @@ const UploadingFile = ({
   };
 
   const handleUpload = async (type) => {
-    setLoader(true);
-    console.log("field is", type);
+    setLoader(true); 
     if (file === null) {
       toast.warn("File is not selected");
       setLoader(false);
@@ -100,108 +96,36 @@ const UploadingFile = ({
       }
 
       const response = await uploadFunction(formData);
-      console.log("file uploaded", response);
-
       if (response.status === 201) {
         toast.success(`${type} has been submitted`);
         setComment("");
-        setLoader(false);
+        setLoader(false); 
         setUploadFile(false);
+        setUpdateStatus(true);
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "An error occurred");
-      console.log("Error occurred:", error);
-      setLoader(false);
+      setLoader(false); 
       setUploadFile(false);
     }
   };
 
   const handleUploadExam = async () => {
-    if (file) {
-      const formData = new FormData();
-      formData.append("exam_submitted_file", file);
-      formData.append("comments", comment);
-      formData.append("exam", assignmentID);
-      try {
-        const response = await uploadExam(formData);
-        console.log("file uploaded", response);
-        if (response.status === 201) {
-          toast.success("Exam has been submitted");
-          setComment("");
-          setUploadFile(false);
-          setUpdateStatus(true);
-        }
-      } catch (error) {
-        toast.error(error.response.data.message);
-        console.log("Error occurred:", error);
-      }
-    }
+    await handleUpload("exam");
   };
 
   const handleUploadAssignment = async () => {
-    if (file) {
-      const formData = new FormData();
-      formData.append("submitted_file", file);
-      formData.append("comments", comment);
-      formData.append("assignment", assignmentID);
-      try {
-        const response = await uploadAssignment(formData);
-        console.log("file uploaded", response);
-        if (response.status === 201) {
-          toast.success("Assignment has been submitted");
-          setComment("");
-          setUploadFile(false);
-          setUpdateStatus(true);
-        }
-      } catch (error) {
-        toast.error(error.response.data.message);
-        console.log("Error occurred:", error);
-      }
-    }
+    await handleUpload("assignment");
   };
 
   const handleUploadQuiz = async () => {
-    if (file) {
-      const formData = new FormData();
-      formData.append("quiz_submitted_file", file);
-      formData.append("comments", comment);
-      formData.append("quiz", assignmentID);
-      try {
-        const response = await uploadQuiz(formData);
-        console.log("file uploaded", response);
-        if (response.status === 201) {
-          toast.success("Quiz has been submitted");
-          setComment("");
-          setUploadFile(false);
-          setUpdateStatus(true);
-        }
-      } catch (error) {
-        toast.error(error?.response?.data?.message);
-        console.log("Error occurred:", error);
-      }
-    }
+    await handleUpload("quiz");
   };
-  async function handleUploadProject() {
-    if (file) {
-      const formData = new FormData();
-      formData.append("project_submitted_file", file);
-      formData.append("comments", comment);
-      formData.append("project", assignmentID);
-      try {
-        const response = await uploadProject(formData);
-        console.log("file uploaded", response);
-        if (response.status === 201) {
-          toast.success("Project has been submitted");
-          setComment("");
-          setUploadFile(false);
-          setUpdateStatus(true);
-        }
-      } catch (error) {
-        toast.error(error.response.data.message);
-        console.log("Error occurred:", error);
-      }
-    }
-  }
+
+  const handleUploadProject = async () => {
+    await handleUpload("project");
+  };
+
   const handleUploadation = () => {
     if (field === "quiz") {
       handleUploadQuiz();
@@ -229,7 +153,7 @@ const UploadingFile = ({
                 lineHeight: "24.2px",
                 color: "#07224D",
               }}
-              className="text-start  px-2 py-[10px]"
+              className="text-start px-2 py-[10px]"
             >
               Upload {heading}
             </h1>
@@ -238,7 +162,7 @@ const UploadingFile = ({
             </button>
           </div>
           <div
-            className={`bg-surface-100 p-6 rounded-xl space-y-5 `}
+            className={`bg-surface-100 p-6 rounded-xl space-y-5`}
             onDrop={handleDrop}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
@@ -290,7 +214,7 @@ const UploadingFile = ({
               <input
                 type="text"
                 className="border border-dark-300 outline-none p-3 rounded-lg w-full"
-                placeholder="regarding assignment or note"
+                placeholder="Regarding assignment or note"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
               />
@@ -302,9 +226,7 @@ const UploadingFile = ({
                 className="w-fit flex justify-center py-3 px-12 text-sm font-medium rounded-lg text-dark-100 bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
               >
                 {loader ? (
-                  <span>
-                    <CircularProgress size={20} />
-                  </span>
+                  <CircularProgress size={20} style={{ color: "white" }} />
                 ) : (
                   <span> Upload </span>
                 )}

@@ -239,7 +239,7 @@ export default function Page({ params }) {
   useEffect(() => {
     if (!isAdmin) return;
     fetchSessions();
-  }, [sessionId, selectedSession]);
+  }, [sessionId, selectedSession,isAdmin]);
 
   useEffect(() => {
     if (!sessionId) return;

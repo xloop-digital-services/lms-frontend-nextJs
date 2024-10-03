@@ -367,7 +367,7 @@ function Profile() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <h2 className="text-lg font-bold block leading-6">Basic Info</h2>
               <div className="flex sm:flex-row flex-col lg:w-[100%]">
-                <div className="mb-4 sm:mb-0 lg:w-[50%] md:w-[50%]">
+                <div className="w-full mb-4 sm:mb-0 lg:w-[50%] md:w-[50%]">
                   <label htmlFor="first-name">First Name</label>
                   <div className="mt-2 sm:pr-4">
                     <div className="relative flex items-center">
@@ -387,7 +387,7 @@ function Profile() {
                     </div>
                   </div>
                 </div>
-                <div className="lg:w-[50%] md:w-[50%]">
+                <div className="w-full lg:w-[50%] md:w-[50%]">
                   <div className="flex items-center justify-between">
                     <label htmlFor="last-name">Last Name</label>
                   </div>
@@ -409,7 +409,7 @@ function Profile() {
                 </div>
               </div>
               <div className="flex sm:flex-row flex-col lg:w-[100%]">
-                <div className="mb-4 sm:mb-0 lg:w-[50%] md:w-[50%]">
+                <div className="mb-4 sm:mb-0 w-full lg:w-[50%] md:w-[50%]">
                   <label htmlFor="email">Email address</label>
                   <div className="relative flex items-center mt-2 sm:pr-4">
                     <FaEnvelope className="absolute left-3 text-dark-600 mt-2 " />
@@ -427,7 +427,7 @@ function Profile() {
                     />
                   </div>
                 </div>
-                <div className="lg:w-[50%] md:w-[50%]">
+                <div className="lg:w-[50%] w-full md:w-[50%]">
                   <label htmlFor="contact">Contact Number</label>
                   <div className="relative flex items-center mt-2">
                     <FaPhoneAlt className="absolute left-3 text-dark-600 mt-2" />
@@ -456,7 +456,7 @@ function Profile() {
                 </div>
               </div>
               <div className="flex sm:flex-row flex-col lg:w-[100%]">
-                <div className="mb-4 sm:mb-0 lg:w-[50%] md:w-[50%]">
+                <div className="mb-4 sm:mb-0 w-full lg:w-[50%] md:w-[50%]">
                   <label htmlFor="program">Program</label>
                   <div className="relative flex items-center mt-2 sm:pr-4">
                     <FaBookOpen className="absolute left-3 text-dark-600 mt-2 " />
@@ -473,7 +473,7 @@ function Profile() {
                     />
                   </div>
                 </div>
-                <div className="lg:w-[50%] md:w-[50%]">
+                <div className="lg:w-[50%] w-full md:w-[50%]">
                   <label htmlFor="city">City</label>
                   <div className="relative flex items-center mt-2">
                     <FaMapPin className="absolute left-3 text-dark-600 mt-2" />
@@ -555,7 +555,7 @@ function Profile() {
                 </div>
 
                 <div className="flex sm:flex-row flex-col lg:w-[100%]">
-                  <div className="mb-4 sm:mb-0 lg:w-[50%] md:w-[50%]">
+                  <div className="mb-4 sm:mb-0 w-full lg:w-[50%] md:w-[50%]">
                     <label htmlFor="password">New Password</label>
                     <div className="relative flex items-center mt-2 sm:pr-4">
                       <FaUnlock className="absolute left-3 text-dark-600 mt-2" />
@@ -580,7 +580,7 @@ function Profile() {
                       </div>
                     </div>
                   </div>
-                  <div className="lg:w-[50%] md:w-[50%]">
+                  <div className="w-full lg:w-[50%] md:w-[50%]">
                     <label htmlFor="confirm-password">Confirm Password</label>
                     <div className="relative flex items-center mt-2">
                       <FaUnlock className="absolute left-3 text-dark-600 mt-2" />

@@ -268,10 +268,10 @@ export const getExamProgress = async (courseId, sessionId, regId) => {
 };
 
 //get progress by courseId (grading)
-export const getOverallProgress = async (courseId, regId) => {
+export const getOverallProgress = async (courseId, sessionId, regId) => {
   try {
     const response = await axiosInstance.get(
-      `/course/assignments/${courseId}/course/${regId}/total_score/`
+      `/course/assignments/${courseId}/course/session/${sessionId}/${regId}/total_score/`
     );
     return response;
   } catch (error) {
@@ -365,7 +365,7 @@ export const assignWeightages = async (data) => {
 export const getWeightages = async (courseId) => {
   try {
     const response = await axiosInstance.get(
-      `course/course_weightages/${courseId}/`
+      `course/course_weightages/<int:course_id>/session/<int:session_id>/'`
     );
     return response;
   } catch (error) {
@@ -940,6 +940,25 @@ export const updateCourse = async (course, courseId) => {
     throw error;
   }
 };
+
+//delete a course
+export const deleteCourse = async (course, courseId) => {
+  try {
+    const response = await axiosInstance.patch(
+      `/course/courses/${courseId}/`,
+      course
+      // {
+      //   headers: {
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 //update a module
 export const updateModule = async (module, moduleId) => {
   try {

@@ -167,22 +167,25 @@ const AdminMarksTable = ({ assessments, courseId, setFetch, title }) => {
                               assessment?.remarks || "-"
                             )}
                           </td>
-                          <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-surface-100">
+                          <td className="px-6 py-4  text-sm font-medium text-surface-100">
                             <p
-                              className={`w-[110px] text-center px-4 py-2 text-[12px] rounded-lg ${
+                              className={`w-[120px] text-center px-4 py-2 text-[12px] rounded-lg ${
                                 assessment?.status === "Submitted"
-                                  ? "bg-mix-300"
+                                  ? "bg-mix-300 w-[120px]"
                                   : assessment?.status === "Pending"
-                                  ? "bg-mix-500 text-[#fff]"
-                                  : "bg-mix-200"
+                                  ? "bg-mix-500 text-[#fff] w-[120px]"
+                                  : assessment?.status === "Late Submission"
+                                  ? "bg-mix-600 text-[#fff] w-[110px]"
+                                  : "bg-mix-200 w-[120px]"
                               }`}
                             >
                               {assessment?.status}
                             </p>
                           </td>
                           <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
-                            {assessment?.grade > 0 &&
-                            assessment.status === "Submitted" ? (
+                            {(assessment?.grade > 0 &&
+                              assessment.status === "Submitted") ||
+                            assessment.status === "Late Submission" ? (
                               <button className="w-[110px] text-center px-4 py-2 text-[12px] rounded-lg text-sm bg-mix-300 text-surface-200">
                                 Graded
                               </button>

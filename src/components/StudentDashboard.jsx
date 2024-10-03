@@ -201,7 +201,7 @@ export default function StudentDashboard() {
           <div className="flex mx-2 h-[840px] w-[30%] max-md:w-full flex-col overflow-y-auto bg-[#ffffff] p-2 rounded-xl lg:w-fit scrollbar-webkit max-md:m-4">
             <div>
               <h1 className="text-xl font-bold px-3 py-4 font-exo">
-                Recent Activities
+                Upcoming Activities
               </h1>
             </div>
 

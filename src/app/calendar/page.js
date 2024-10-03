@@ -1,7 +1,7 @@
 "use client";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid"; 
+import timeGridPlugin from "@fullcalendar/timegrid";
 import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { useSidebar } from "@/providers/useSidebar";
@@ -62,12 +62,12 @@ export default function Page() {
             center: "title",
             right: "dayGridMonth,timeGridWeek,timeGridDay",
           }}
+          height="auto"
+          contentHeight={1000}
+          fixedWeekCount={false}
           events={calendarEvents.map((event) => {
-            const startTime = format(new Date(event.start), "p");
-            const endTime = format(new Date(event.end), "p");
-
             return {
-              title: `${event.title} `,
+              title: `${event.title}`,
               start: event.start,
               end: event.end,
               description: event.description,

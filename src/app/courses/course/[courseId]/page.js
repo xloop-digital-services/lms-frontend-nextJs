@@ -288,6 +288,7 @@ export default function Page({ params }) {
       setFileUploaded(selectedFile.name);
     }
   };
+
   async function handleSave() {
     const updatedCourseData = {
       ...courseData,
@@ -408,13 +409,18 @@ export default function Page({ params }) {
   }, [sessionId]);
 
   useEffect(() => {
-    fetchCoursesById();
     fetchAllSkills();
     // fetchSkillbyId();
     {
       isStudent && fetchCourseProgress();
     }
     fetchAllSkills();
+  }, []);
+
+  useEffect(() => {
+    if (courseId) {
+      fetchCoursesById();
+    }
   }, []);
 
   useEffect(() => {
@@ -518,6 +524,7 @@ export default function Page({ params }) {
               progress={courseProgress?.progress_percentage}
               setIsEditing={setIsEditing}
               isEditing={isEditing}
+              title="Edit course"
             />
 
             {isEditing ? (

@@ -143,7 +143,7 @@ const UploadContent = ({
               <input
                 type="text"
                 className="border border-dark-300 outline-none p-3 rounded-lg w-full"
-                placeholder="regarding assignment or note"
+                placeholder="Regarding assignment or note"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
               />

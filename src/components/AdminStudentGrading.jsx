@@ -30,12 +30,16 @@ const AdminStudentGrading = ({ courseId }) => {
 
   const [selectedSessionId, setSelectedSessionId] = useState("");
   const handleChange = (e) => {
-    console.log('chal rahi he', e.target.value)
+    console.log("chal rahi he", e.target.value);
     setSelectedSessionId(e.target.value);
   };
 
   async function fetchSessions() {
-    const response = await getInstructorSessionsbyCourseId(userId, group, courseId);
+    const response = await getInstructorSessionsbyCourseId(
+      userId,
+      group,
+      courseId
+    );
     setLoader(true);
     try {
       if (response.status === 200) {
@@ -139,7 +143,9 @@ const AdminStudentGrading = ({ courseId }) => {
               </option>
             ))
           ) : (
-            <p className="text-center text-sm text-dark-300">no session found</p>
+            <p className="text-center text-sm text-dark-300">
+              no session found
+            </p>
           )}
         </select>
       </div>
@@ -168,7 +174,7 @@ const AdminStudentGrading = ({ courseId }) => {
                           </td>
                           <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 hover:text-blue-300">
                             <Link
-                              href={`/students/course/${courseId}/student/${att.registration_id}`}
+                              href={`/students/course/${courseId}/student/${selectedSessionId}/${att.registration_id}/`}
                             >
                               {att.user}
                             </Link>

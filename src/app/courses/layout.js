@@ -9,17 +9,16 @@ export const metadata = {
   description: "Learning Management System",
 };
 
-
 export default function CoursesLayout({ children }) {
   return (
     <>
-      <AuthProvider>
-        <SidebarProvider>
-          <Navbar />
-          <SideBar />
-          {children}
-        </SidebarProvider>
-      </AuthProvider>
+      {/* <AuthProvider> */}
+      <SidebarProvider>
+        <Navbar />
+        <SideBar />
+        {children}
+      </SidebarProvider>
+      {/* </AuthProvider> */}
     </>
   );
 }

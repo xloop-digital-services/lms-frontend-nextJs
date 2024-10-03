@@ -6,13 +6,13 @@ import { AuthProvider } from "@/providers/AuthContext";
 export default function CoursesLayout({ children }) {
   return (
     <>
-      <AuthProvider>
+      {/* <AuthProvider> */}
         <SidebarProvider>
           <Navbar />
           <SideBar />
           {children}
         </SidebarProvider>
-      </AuthProvider>
+      {/* </AuthProvider> */}
     </>
   );
 }

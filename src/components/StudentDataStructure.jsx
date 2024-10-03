@@ -197,12 +197,15 @@ const StudentDataStructure = ({
                             </td>
                             <td className="px-12 py-2  whitespace-nowrap text-sm text-surface-100">
                               <p
-                                className={`w-[110px] text-center px-4 py-2 text-[12px] rounded-lg ${
+                                className={`w-[120px] text-center px-4 py-2 text-[12px] rounded-lg ${
                                   quiz?.submission_status === "Submitted"
-                                    ? "bg-mix-300 w-110px]"
+                                    ? "bg-mix-300 w-[120px]"
                                     : quiz?.submission_status === "Pending"
-                                    ? "bg-mix-500 text-[#fff] w-[110px]"
-                                    : "bg-mix-200 w-110px]"
+                                    ? "bg-mix-500 text-[#fff] w-[120px]"
+                                    : quiz?.submission_status ===
+                                      "Late Submission"
+                                    ? "bg-mix-600 text-[#fff] w-[110px]"
+                                    : "bg-mix-200 w-[120px]"
                                 }`}
                               >
                                 {quiz?.submission_status}
@@ -328,12 +331,18 @@ const StudentDataStructure = ({
                                     <LuUpload
                                       size={20}
                                       onClick={
-                                        quiz?.submission_status !== "Submitted"
+                                        quiz?.submission_status !==
+                                          "Submitted" ||
+                                        quiz?.submission_status ===
+                                          "Late Submission"
                                           ? () => handleFileUpload(quiz?.id)
                                           : undefined
                                       }
                                       className={`${
-                                        quiz?.submission_status === "Submitted"
+                                        quiz?.submission_status ===
+                                          "Submitted" ||
+                                        quiz?.submission_status ===
+                                          "Late Submission"
                                           ? "cursor-not-allowed opacity-50"
                                           : "cursor-pointer hover:opacity-80"
                                       }`}

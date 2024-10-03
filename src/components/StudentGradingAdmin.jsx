@@ -15,7 +15,7 @@ import {
 } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
 
-export default function StudentGrading({ courseId, regId: propRegId }) {
+export default function StudentGradingAdmin({ courseId, regId: propRegId, sessionId }) {
   const { width } = useWindowSize();
   const { isSidebarOpen } = useSidebar();
   const [isOpen, setIsOpen] = useState(false);
@@ -29,8 +29,6 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
   const dropdownRef = useRef(null);
   const { userData } = useAuth();
   const isStudent = userData?.Group === "student";
-  const [sessions, setSessions] = useState([]);
-  const [sessionId, setSessionId] = useState(null);
   //   const courseId = params.courseId;
   // const userId = userData?.user_data?.user;
   const regId = isStudent ? userData?.user_data?.registration_id : propRegId;
@@ -39,23 +37,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
   const toggleOpen = () => {
     setIsOpen(!isOpen);
   };
-  useEffect(() => {
-    if (!isStudent) return;
 
-    if (userData?.session) {
-      setSessions(userData.session);
-      setLoader(false);
-      const foundSession = userData.session.find(
-        (session) => Number(session.course?.id) === Number(courseId)
-      );
-
-      if (foundSession) {
-        setSessionId(foundSession.id);
-      }
-    } else {
-      setLoader(true);
-    }
-  }, [userData, isStudent, courseId]);
 
   console.log(sessionId);
   const handleOptionSelect = (option) => {

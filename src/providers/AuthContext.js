@@ -16,6 +16,7 @@ export function AuthProvider({ children }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [instructorData, setInstructorData] = useState(null);
 
   const router = useRouter();
   const API = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -30,13 +31,22 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     if (userData) {
-      Cookies.set("userData", JSON.stringify(userData));
-      const group = userData?.Group;
+      // Cookies.set("userData", JSON.stringify(userData));
+      const group = userData?.Group?.toLowerCase();
       Cookies.set("userGroup", group);
-
+      Cookies.set("userData", JSON.stringify(userData));
+      console.log("Setting userData cookie:", JSON.stringify(userData));
+      const instructorData = JSON.stringify(userData?.session);
+      console.log(instructorData);
+      setInstructorData(instructorData);
+      // Cookies.set("user", JSON.stringify(userData));
+      Cookies.set("instructorData", instructorData);
+      // console.log(userData);
     }
-  }, [userData]);
+  }, [userData, instructorData]);
+
   const isInstructor = Cookies.get("userGroup") === "instructor";
+  console.log(isInstructor);
   // console.log(isInstructor);
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -106,6 +116,7 @@ export function AuthProvider({ children }) {
     Cookies.remove("userGroup");
     Cookies.remove("access_token");
     Cookies.remove("refresh_token");
+    Cookies.remove("user");
     router.push("/login");
   };
 
@@ -123,7 +134,7 @@ export function AuthProvider({ children }) {
         userData,
         loading,
         handleShowPassword,
-        isInstructor
+        isInstructor,
       }}
     >
       {children}
