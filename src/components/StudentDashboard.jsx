@@ -114,7 +114,7 @@ export default function StudentDashboard() {
             <div className="w-full">
               <div className="bg-[#ffffff] p-4 rounded-xl mb-2">
                 <div className="flex justify-between items-center">
-                  <h1 className="text-xl font-bold font-exo mx-2">Courses</h1>
+                  <h1 className="text-xl font-bold font-exo mx-2 text-[#022567]">Courses</h1>
                   <div className="group px-3">
                     <Link
                       href="/courses"
@@ -155,7 +155,7 @@ export default function StudentDashboard() {
                 <div className="bg-[#ffffff] p-2 rounded-xl grow">
                   <div className="flex justify-between">
                     <div>
-                      <h1 className="text-xl font-bold px-3 py-4 font-exo">
+                      <h1 className="text-xl text-[#022567] font-bold px-3 py-4 font-exo">
                         Weeks Activity
                       </h1>
                     </div>
@@ -200,7 +200,7 @@ export default function StudentDashboard() {
 
           <div className="flex mx-2 h-[840px] w-[30%] max-md:w-full flex-col overflow-y-auto bg-[#ffffff] p-2 rounded-xl lg:w-fit scrollbar-webkit max-md:m-4">
             <div>
-              <h1 className="text-xl font-bold px-3 py-4 font-exo">
+              <h1 className="text-xl text-[#022567] font-bold px-3 py-4 font-exo">
                 Recent Activities
               </h1>
             </div>

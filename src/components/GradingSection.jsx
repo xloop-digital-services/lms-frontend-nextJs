@@ -319,7 +319,7 @@ export const GradingSection = ({ title, courseId }) => {
         onClick={() => handleToggleSection(title)}
       >
         <div className="flex flex-col">
-          <p className="text-[17px] font-semibold font-exo">{title}</p>
+          <p className="text-[17px] font-semibold text-[#022567] font-exo">{title}</p>
           {selectedValue && (
             <div>
               <p className="font-semibold text-sm text-blue-300">
@@ -372,7 +372,7 @@ export const GradingSection = ({ title, courseId }) => {
                             }}
                             className="p-2 cursor-pointer"
                           >
-                            <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                            <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
                               {option.question || option.title}
                             </div>
                           </div>

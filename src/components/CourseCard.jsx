@@ -49,7 +49,7 @@ const CourseCard = ({
           <div className="space-y-2 text-sm px-4 pt-[6px]">
             <div className="flex justify-between">
               <div className="flex bg-[#EBF6FF] w-full py-[9px] px-5 rounded-lg items-center space-x-2">
-                {/* <p className="bg-[#03A1D8] w-2 h-2 rounded-full"></p> */}
+                {/* <p className="bg-blue-300 w-2 h-2 rounded-full"></p> */}
                 <p className="text-blue-300 h-4 uppercase text-[12px] font-semibold overflow-hidden text-ellipsis whitespace-nowrap">
                   {courseName}
                 </p>{" "}
@@ -81,7 +81,7 @@ const CourseCard = ({
                       />
 
                       {extraCount && (
-                        <span className="flex items-center justify-center bg-[#EBF6FF] ml-2 dark:bg-dark-800 text-[12px] text-[#03A1D8] dark:text-white font-semibold border border-dark-200 dark:border-dark-700 rounded-full p-1">
+                        <span className="flex items-center justify-center bg-[#EBF6FF] ml-2 dark:bg-dark-800 text-[12px] text-blue-300 dark:text-white font-semibold border border-dark-200 dark:border-dark-700 rounded-full p-1">
                           +{extraCount}
                         </span>
                       )}
@@ -93,7 +93,7 @@ const CourseCard = ({
               {isStudent ? (
                 <Link
                   href={`/${route}s/${route}/${id}`}
-                  className="text-[#fcfeff] bg-[#03A1D8] p-1 rounded-full"
+                  className="text-[#fcfeff] bg-blue-300 p-1 rounded-full"
                 >
                   <MdKeyboardArrowRight size={20} />
                 </Link>

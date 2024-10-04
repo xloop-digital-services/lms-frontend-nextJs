@@ -181,7 +181,7 @@ const SessionsTable = ({
             <div className="overflow-hidden">
               <div className="relative max-h-[75vh] overflow-y-auto scrollbar-webkit">
                 <table className="min-w-full divide-y divide-dark-200 dark:divide-gray-700">
-                  <thead className="bg-[#ffff] sticky top-0 z-10 shadow-sm shadow-dark-200">
+                  <thead className="bg-[#ffff] text-[#022567] sticky top-0 z-10 shadow-sm shadow-dark-200">
                     <tr>
                       {/* <th
                       scope="col"
@@ -383,7 +383,7 @@ const SessionsTable = ({
                                               onClick={() =>
                                                 handleDaySelect(key)
                                               }
-                                              className={`m-1 cursor-pointer hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg ${
+                                              className={`m-1 cursor-pointer hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg ${
                                                 selectedDays.includes(
                                                   parseInt(key)
                                                 )
@@ -451,7 +451,7 @@ const SessionsTable = ({
                                   )}
                                 </p>
                               </td>
-                              <td className="px-8 py-2 whitespace-nowrap text-[#03A1D8] ">
+                              <td className="px-8 py-2 whitespace-nowrap text-blue-300 ">
                                 <div className="flex gap-4">
                                   <div>
                                     {!(

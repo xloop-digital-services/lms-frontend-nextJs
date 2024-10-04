@@ -94,11 +94,11 @@ const CourseHead = ({
         >
           <div className="flex my-2 justify-center items-center ">
             {program === "program" ? (
-              <h2 className=" font-exo text-xl font-bold">
+              <h2 className=" font-exo text-xl text-[#022567] font-bold">
                 {programData.name}
               </h2>
             ) : (
-              <h2 className="font-exo text-xl font-bold">{courseData.name}</h2>
+              <h2 className="font-exo text-xl text-[#022567] font-bold">{courseData.name}</h2>
             )}
             <div
               className={`w-4 h-4 mx-2 flex justify-center items-center rounded-full ${
@@ -172,8 +172,8 @@ const CourseHead = ({
       {rating && (
         <div className="mr-2 flex items-center mb-8 max-sm:flex-col">
           <div className="flex bg-[#EBF6FF] w-fit py-[9px] px-5 rounded-lg items-center space-x-2 max-md:mt-2 ">
-            <p className="bg-[#03A1D8] w-2 h-2 rounded-full"></p>
-            <p className="text-[#03A1D8] uppercase text-[12px] ">{rating}</p>
+            <p className="bg-blue-300 w-2 h-2 rounded-full"></p>
+            <p className="text-blue-300 uppercase text-[12px] ">{rating}</p>
           </div>
         </div>
       )}

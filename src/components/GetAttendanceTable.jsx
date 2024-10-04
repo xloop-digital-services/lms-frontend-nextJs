@@ -312,7 +312,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
           <div className="mt-2 border border-dark-300 rounded-lg divide-y divide-dark-200 dark:border-gray-700 dark:divide-gray-700">
             <div className="overflow-hidden rounded-lg">
               <table className="min-w-full divide-y divide-dark-300 dark:divide-gray-700">
-                <thead className="bg-dark-100 dark:bg-gray-700">
+                <thead className="bg-dark-100 text-[#022567] dark:bg-gray-700">
                   <tr>
                     <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]">
                       Student ID
@@ -424,7 +424,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                                     parseInt(status)
                                   )
                                 }
-                                className="w-4 h-4 rounded-full border-2 border-[#03A1D8] group-hover:cursor-pointer"
+                                className="w-4 h-4 rounded-full border-2 border-blue-300 group-hover:cursor-pointer"
                               />
                               <p className="group-hover:cursor-pointer">
                                 {status === "0"

@@ -86,7 +86,7 @@ export default function Page() {
       <div className="bg-surface-100 p-6 rounded-xl">
         <div className="w-full flex justify-between items-center gap-4">
           <div>
-            <p className="font-bold text-xl">Locations Details</p>
+            <p className="font-bold text-[#022567] text-xl">Locations Details</p>
           </div>
           <div className="flex gap-3">
             <div className="relative">
@@ -134,7 +134,7 @@ export default function Page() {
                         onClick={() => handleCitySelect(city)}
                         className="p-2 cursor-pointer"
                       >
-                        <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                        <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#0074EE] hover:font-semibold rounded-lg">
                           {city}
                         </div>
                       </div>
@@ -145,7 +145,7 @@ export default function Page() {
             </div>
             <div>
               <button
-                className="text-[#fff] bg-[#03A1D8] p-4 md:px-8 rounded-lg hover:cursor-pointer"
+                className="text-[#fff] bg-[#0074EE] hover:bg-[#3272b6] p-4 md:px-8 rounded-lg hover:cursor-pointer"
                 onClick={handleLocationCreate}
               >
                 Create a new location

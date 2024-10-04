@@ -16,7 +16,7 @@ const BarChart = ({ barData }) => {
               {
                 label: "Capacity",
                 data: barData.map((data) => data.total_capacity),
-                backgroundColor: "#03A1D8",
+                backgroundColor: "#0074EE",
               },
               {
                 label: "Intructors",

@@ -391,7 +391,7 @@ export default function ApplicationForm() {
 
   return (
     <div className="flex flex-col w-full h-screen justify-center items-center p-4 gap-7 bg-gradient-to-t from-blue-600 ">
-      <Image src={logo} className="lg:w-[250px] w-[200px]" />
+      <Image src={logo} className="lg:w-[250px] w-[200px]" alt='' />
       <div className="bg-surface-100 rounded-xl xsm:p-4 flex flex-col space-y-4 xl:w-[70%] sm:w-[80%] w-[95%] max-h-screen overflow-y-auto scrollbar-webkit ">
         {loadingSubmit && (
           <div className="absolute inset-0 w-full p-2 flex items-center justify-center bg-surface-100 bg-opacity-30 z-[1100]">
@@ -399,7 +399,7 @@ export default function ApplicationForm() {
           </div>
         )}
         <div>
-          <p className="text-center font-exo text-2xl font-semibold py-2">
+          <p className="text-center text-[#022567] font-exo text-2xl font-semibold py-2">
             Registration Form
           </p>
         </div>
@@ -575,6 +575,7 @@ export default function ApplicationForm() {
               <input
                 className="border border-dark-300 outline-none p-3 rounded-lg w-full "
                 value={cityShortName}
+                placeholder="Location code"
                 readOnly
               />
             </div>

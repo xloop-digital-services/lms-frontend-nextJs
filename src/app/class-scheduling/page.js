@@ -181,7 +181,7 @@ export default function Page() {
       <div className="bg-surface-100 p-6 rounded-xl">
         <div className="w-full flex xlg:flex-row flex-col justify-between items-center gap-4">
           <div>
-            <p className="font-bold text-xl font-exo">Class Details</p>
+            <p className="font-bold text-xl text-[#022567] font-exo">Class Details</p>
           </div>
           <div className="flex gap-3 sm:flex-row flex-col text-base lg:text-sm">
             <div className="flex gap-3 ">
@@ -272,7 +272,7 @@ export default function Page() {
                           onClick={() => handleLocationSelect(option)}
                           className="p-2 cursor-pointer"
                         >
-                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
                             {option.location_name}
                           </div>
                         </div>
@@ -329,7 +329,7 @@ export default function Page() {
             {/* Create Session Button */}
             <div>
               <button
-                className="text-[#fff] bg-[#03A1D8] md:w-[200px] px-4 xlg:py-4 py-3 w-full rounded-lg"
+                className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] md:w-[200px] px-4 xlg:py-4 py-3 w-full rounded-lg"
                 onClick={handleOpenSessionModal}
               >
                 Schedule a new class

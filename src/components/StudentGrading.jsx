@@ -193,7 +193,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
             className=" flex justify-between items-center "
             onClick={() => handleToggleSection("Quiz")}
           >
-            <p className="text-[17px] font-semibold font-exo">Quiz</p>
+            <p className="text-[17px] font-semibold text-[#022567] font-exo">Quiz</p>
             <span className="">
               <IoIosArrowDown />
             </span>
@@ -220,7 +220,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
             className=" flex justify-between items-center "
             onClick={() => handleToggleSection("Assignment")}
           >
-            <p className="text-[17px] font-semibold font-exo">Assignment</p>
+            <p className="text-[17px] font-semibold text-[#022567] font-exo">Assignment</p>
             <span className="">
               <IoIosArrowDown />
             </span>
@@ -247,7 +247,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
             className=" flex justify-between items-center "
             onClick={() => handleToggleSection("Project")}
           >
-            <p className="text-[17px] font-semibold font-exo">Project</p>
+            <p className="text-[17px] font-semibold text-[#022567] font-exo">Project</p>
             <span className="">
               <IoIosArrowDown />
             </span>
@@ -274,7 +274,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
             className=" flex justify-between items-center "
             onClick={() => handleToggleSection("Exam")}
           >
-            <p className="text-[17px] font-semibold font-exo">Exam</p>
+            <p className="text-[17px] font-semibold text-[#022567] font-exo">Exam</p>
             <span className="">
               <IoIosArrowDown />
             </span>
@@ -301,7 +301,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
               openSection !== null ? "max-height-0" : "max-height-full"
             }`}
           > */}
-      <div className={`font-semibold font-exo py-3 `}>
+      <div className={`font-semibold text-[#022567] font-exo py-3 `}>
         Student Performance Overview
       </div>
       {progress ? (

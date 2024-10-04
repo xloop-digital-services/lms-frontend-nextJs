@@ -97,7 +97,7 @@ const Grading = ({ courseId }) => {
         <div className="my-4">
           <button
             onClick={handleCreateWeightage}
-            className="bg-blue-300 from-dark-600 justify-end text-surface-100 p-2 rounded-md w-48 my-2 flex justify-center"
+            className="bg-blue-300 hover:bg-[#3272b6] from-dark-600 justify-end text-surface-100 p-2 rounded-md w-48 my-2 flex justify-center"
             type="submit"
           >
             {assignWeightage ? "Cancel" : "Assign Weightages"}

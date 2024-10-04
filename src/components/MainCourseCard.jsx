@@ -38,8 +38,8 @@ export default function MainCourseCard({
             <div className="w-full flex flex-col justify-between ">
               <div className="">
                 <div className="flex bg-[#EBF6FF] w-fit py-[9px] px-5 rounded-lg items-center space-x-2 max-md:mt-2 ">
-                  <p className="bg-[#03A1D8] w-2 h-2 rounded-full"></p>
-                  <p className="text-[#03A1D8] uppercase text-[12px] font-bold ">
+                  <p className="bg-blue-300 w-2 h-2 rounded-full"></p>
+                  <p className="text-blue-300 uppercase text-[12px] font-bold ">
                     {courseName}
                   </p>
                 </div>

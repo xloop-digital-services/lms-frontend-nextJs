@@ -32,7 +32,7 @@ const DeleteConfirmationPopup = ({
         ) : (
           <div className="bg-[#EBF6FF] p-3 rounded-2xl">
             <div className="flex justify-between items-center mb-4">
-              <h1 className="font-bold text-xl text-[#07224D]">Confirmation</h1>
+              <h1 className="font-bold text-xl font-exo text-[#022567]">Confirmation</h1>
               <button className="p-2" onClick={() => setConfirmDelete(false)}>
                 <IoClose size={25} />
               </button>

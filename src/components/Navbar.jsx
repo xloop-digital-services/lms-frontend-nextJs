@@ -99,7 +99,7 @@ export default function Navbar() {
       <nav className="fixed w-screen bg-surface-100 z-10 font-inter">
         <div className="mx-auto px-2 sm:px-6 lg:px-8">
           <div className="relative flex h-20 items-center justify-between">
-            <div className="hidden sm:flex justify start ">
+            {/* <div className="hidden sm:flex justify start ml-20">
               <Link href="/dashboard" passHref>
                 <Image
                   src={logo}
@@ -109,10 +109,12 @@ export default function Navbar() {
                   // className={`w-full h-full `}
                 />
               </Link>
-            </div>
+            </div> */}
 
             {loader ? (
-              <CircularProgress  />
+              <div className="flex justify-end items-center w-full">
+                <CircularProgress />
+              </div>
             ) : (
               <div className="flex justify-end items-center w-full">
                 <div className="absolute inset-y-0 right-0 flex justify-center items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
@@ -157,7 +159,7 @@ export default function Navbar() {
                     onClick={toggleDropdown}
                     ref={dropdownRef}
                   >
-                    <div className="w-[50px] h-[50px] uppercase rounded-full mr-2 flex justify-center items-center text-surface-100 bg-blue-300">
+                    <div className="w-[50px] h-[50px] uppercase rounded-full mr-2 flex justify-center items-center text-blue-100 bg-blue-300">
                       {firstWord}
                       {/* <Image
                         src={userIcon}
@@ -169,8 +171,8 @@ export default function Navbar() {
                       /> */}
                     </div>
                     <div>
-                      <div className="flex justify-end items-center cursor-pointer">
-                        <div className={``} style={{ color: "#07224D" }}>
+                      <div className="flex justify-end items-center cursor-pointer text-blue-500">
+                        <div className="text-blue-500">
                           <p className="text-md capitalize">{`${user?.first_name} ${user?.last_name}`}</p>
                           <p className="text-xs uppercase">
                             {user?.registration_id}
@@ -216,7 +218,7 @@ export default function Navbar() {
                       <Link
                         href="/user/profile"
                         passHref
-                        className="flex items-center px-4 py-2 text-[#07224D] hover:bg-gray-200"
+                        className="flex items-center px-4 py-2 text-blue-500 hover:bg-gray-200"
                         onClick={toggleDropdown}
                       >
                         <FaUser size={17} className="mr-2" />
@@ -236,7 +238,7 @@ export default function Navbar() {
                       <Link
                         href="/auth/login"
                         passHref
-                        className="flex items-center px-4 py-2 text-[#07224D] hover:bg-gray-200"
+                        className="flex items-center px-4 py-2 text-[#022567] hover:bg-gray-200"
                         onClick={logOutUser}
                       >
                         <FaSignOutAlt size={17} className="mr-2" />

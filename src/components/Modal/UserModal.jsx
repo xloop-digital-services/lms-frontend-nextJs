@@ -168,7 +168,7 @@ const UserModal = ({
                 lineHeight: "24.2px",
                 color: "#07224D",
               }}
-              className="text-start  px-2 py-[10px]"
+              className="text-start text-[#022567]  px-2 py-[10px]"
             >
               User Information
             </h1>
@@ -376,7 +376,7 @@ const UserModal = ({
                   <div
                     className={` ${
                       status === "short_listed" ? "hidden" : " flex"
-                    } group relative justify-center items-center text-[#03A1D8] text-sm font-bold`}
+                    } group relative justify-center items-center text-[#0074EE] text-sm font-bold`}
                   >
                     <div
                       className={`shadow-md flex items-center group-hover:gap-2 p-3 rounded-full cursor-pointer duration-300`}

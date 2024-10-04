@@ -326,20 +326,20 @@ const AdminDashboard = () => {
             <div className="bg-[#ffffff] flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
               <div className="flex flex-col text-sm h-full justify-center items-center">
                 Total Users
-                <span className="text-xl font-semibold font-exo text-[#32324D]">
+                <span className="text-xl font-semibold font-exo text-[#022567]">
                   {allUsers}
                 </span>
               </div>
               <div className="space-y-2">
                 <div className="flex flex-col text-[12px] justify-center items-center">
                   Active Users
-                  <span className="text-base font-semibold font-exo text-[#32324D]">
+                  <span className="text-base font-semibold font-exo text-[#022567]">
                     {allActiveUsers}
                   </span>
                 </div>
                 <div className="flex flex-col text-[12px] justify-center items-center">
                   Inactive Users
-                  <span className="text-base font-semibold font-exo text-[#32324D]">
+                  <span className="text-base font-semibold font-exo text-[#022567]">
                     {allInActiveUsers}
                   </span>
                 </div>
@@ -350,20 +350,20 @@ const AdminDashboard = () => {
           <div className="bg-[#ffffff] w-full xmd:w-1/3 flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
             <div className="flex flex-col text-sm h-full justify-center items-center">
               Total Students
-              <span className="text-xl font-semibold font-exo text-[#32324D]">
+              <span className="text-xl font-semibold font-exo text-[#022567]">
                 {allStudents}
               </span>
             </div>
             <div className="space-y-2">
               <div className="flex flex-col text-[12px] justify-center items-center">
                 Active Students
-                <span className="text-base font-semibold font-exo text-[#32324D]">
+                <span className="text-base font-semibold font-exo text-[#022567]">
                   {allActiveStudents}
                 </span>
               </div>
               <div className="flex flex-col text-[12px] justify-center items-center">
                 Inactive Students
-                <span className="text-base font-semibold font-exo text-[#32324D]">
+                <span className="text-base font-semibold font-exo text-[#022567]">
                   {allInActiveStudents}
                 </span>
               </div>
@@ -373,20 +373,20 @@ const AdminDashboard = () => {
           <div className="bg-[#ffffff] w-full xmd:w-1/3 flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
             <div className="flex flex-col text-sm h-full justify-center items-center">
               Total Instructors
-              <span className="text-xl font-semibold font-exo text-[#32324D]">
+              <span className="text-xl font-semibold font-exo text-[#022567]">
                 {allInstructors}
               </span>
             </div>
             <div className="space-y-2">
               <div className="flex flex-col text-[12px] justify-center items-center">
                 Active Instructors
-                <span className="text-base font-semibold font-exo text-[#32324D]">
+                <span className="text-base font-semibold font-exo text-[#022567]">
                   {allActiveInstructors}
                 </span>
               </div>
               <div className="flex flex-col text-[12px] justify-center items-center">
                 Inactive Instructors
-                <span className="text-base font-semibold font-exo text-[#32324D]">
+                <span className="text-base font-semibold font-exo text-[#022567]">
                   {allInActiveInstructors}
                 </span>
               </div>
@@ -395,9 +395,9 @@ const AdminDashboard = () => {
         </div>
 
         <div className="flex gap-4 xmd:flex-row flex-col">
-          <div className="bg-[#ffffff] xmd:w-[70%] w-full overflow-x-auto scrollbar-webkit p-5 rounded-xl  h-[450px]">
+          <div className="bg-[#ffffff] xmd:w-[66.5%] w-full overflow-x-auto scrollbar-webkit p-5 rounded-xl  h-[450px]">
             <div className="border border-dark-300 rounded-xl p-3 h-full w-full">
-              <div className="font-bold font-exo text-[#32324D] text-lg pb-2">
+              <div className="font-bold font-exo text-[#022567] text-lg pb-2">
                 Capacity in Different Cities
               </div>
               <div>
@@ -407,7 +407,7 @@ const AdminDashboard = () => {
           </div>
           <div className="bg-[#ffffff] min-w-[32%] p-4 rounded-xl  h-[450px]">
             <div className="flex w-full xmd:flex-col justify-between xmd:items-start items-center">
-              <div className="font-bold font-exo text-[#32324D] text-lg">
+              <div className="font-bold font-exo text-[#022567] text-lg">
                 Applications Status Overview
               </div>
               <div className="flex gap-2  justify-between items-center">
@@ -588,7 +588,7 @@ const AdminDashboard = () => {
         </div>
         <div className="bg-[rgb(255,255,255)] rounded-xl p-5 pb-0 xmd:max-h-[260px] max-h-[465px] ">
           <div className="flex nsm:items-center nsm:flex-row flex-col ">
-            <h1 className="font-bold font-exo  text-[#32324D] text-lg sm:w-[200px] w-[180px]  xlg:w-full">
+            <h1 className="font-bold font-exo  text-[#022567] text-lg sm:w-[200px] w-[180px]  xlg:w-full">
               <Link href="/batch" className="w-fit">
                 Batch Details
               </Link>

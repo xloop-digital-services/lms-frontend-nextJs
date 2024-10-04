@@ -111,7 +111,7 @@ const LocationsTable = ({
             <div className="overflow-hidden ">
               <div className="relative max-h-[75vh] overflow-y-auto scrollbar-webkit">
                 <table className="min-w-full divide-y divide-dark-200">
-                  <thead className="bg-[#ffff]  sticky top-0 z-10 shadow-sm shadow-dark-200">
+                  <thead className="bg-[#ffff] text-[#022567] sticky top-0 z-10 shadow-sm shadow-dark-200">
                     <tr>
                       <th className="px-6 py-4 rounded-lg text-start text-xs font-medium text-gray-500 uppercase w-[25%] bg-gray-50 dark:bg-gray-700">
                         City
@@ -229,7 +229,7 @@ const LocationsTable = ({
                                 )}
                               </p>
                             </td>
-                            <td className="px-8 py-2 whitespace-nowrap text-[#03A1D8] ">
+                            <td className="px-8 py-2 whitespace-nowrap text-[#0074EE] ">
                               <div className="flex gap-4 justify-center items-center">
                                 <div>
                                   {!(

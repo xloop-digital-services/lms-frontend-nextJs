@@ -25,7 +25,7 @@ const DevelopmentTable = ({
             <div className="overflow-hidden">
               <div className="relative max-h-[500px] overflow-y-auto scrollbar-webkit">
                 <table className="min-w-full divide-y divide-dark-200 ">
-                  <thead className="bg-[#ffff] sticky top-0 z-10 shadow-sm shadow-dark-200">
+                  <thead className="bg-[#ffff] text-[#022567] sticky top-0 z-10 shadow-sm shadow-dark-200">
                     <tr>
                       {/* <th scope="col" className="py-3 px-4 pe-0">
                       <div className="flex items-center h-5">
@@ -156,7 +156,7 @@ const DevelopmentTable = ({
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap t text-sm font-medium flex space-x-2">
                             <div
-                              className="flex items-center justify-center w-full group text-[#03A1D8]"
+                              className="flex items-center justify-center w-full group text-[#0074EE]"
                               title="info"
                               onClick={() => handleModal(user)} // Pass the user data when clicked
                             >

@@ -89,7 +89,7 @@ export default function InstructorCoursePage({
       <div className="bg-surface-100 p-8 rounded-xl ">
         <div className="flex justify-between max-md:flex-col max-md:items-center ">
           <div className="flex flex-col">
-            <h2 className="font-exo text-xl font-bold flex pb-2 justify-start items-center">
+            <h2 className="font-exo text-xl text-[#022567] font-bold flex pb-2 justify-start items-center">
               {title}
             </h2>
             <p className="pb-4">Select a course to view the {title}</p>

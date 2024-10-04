@@ -35,7 +35,7 @@ const UserApprovalTable = ({
             <div className="overflow-hidden">
               <div className="relative max-h-[500px] overflow-y-auto scrollbar-webkit">
                 <table className="min-w-full divide-y divide-dark-200">
-                  <thead className="bg-[#ffff] sticky top-0 z-10 shadow-sm shadow-dark-200">
+                  <thead className="bg-[#ffff] text-[#022567]  sticky top-0 z-10 shadow-sm shadow-dark-200">
                     <tr>
                       <th
                         scope="col"
@@ -141,7 +141,7 @@ const UserApprovalTable = ({
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap w-full text-sm flex items-center justify-center gap-3">
                               {/* <div
-                              className="flex items-center justify-center  group text-[#03A1D8]"
+                              className="flex items-center justify-center  group text-blue-300"
                               title="info"
                             >
                               {/* <Link href={`/user-management/users/${approvedProgramID}`}> *
@@ -152,7 +152,7 @@ const UserApprovalTable = ({
                               {/* </Link> *
                             </div> */}
                               <div
-                                className="flex items-center justify-center group text-[#03A1D8]"
+                                className="flex items-center justify-center group text-blue-300"
                                 title="Assign classes"
                                 onClick={() =>
                                   handleModal(user, userApplication)
