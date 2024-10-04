@@ -10,6 +10,7 @@ import {
   getProgressForQuiz,
   getQuizByCourseId,
   getSessionInstructor,
+  getUserSessions,
   listSessionByCourseId,
   updateQuiz,
 } from "@/api/route";
@@ -46,24 +47,38 @@ export default function Page({ params }) {
   const userId = group === "instructor" ? userData?.User?.id : adminUserId;
   const [sessionId, setSessionId] = useState(null);
 
-  useEffect(() => {
-    if (!isStudent) return;
-
-    if (userData?.session) {
-      setSessions(userData.session);
-      setLoading(false);
-      const foundSession = userData.session.find(
-        (session) => Number(session.course?.id) === Number(courseId)
-      );
-
-      if (foundSession) {
-        setSessionId(foundSession.id);
+  async function fetchSessionForUser() {
+    const response = await getUserSessions();
+    setLoading(true);
+    try {
+      if (response.status === 200) {
+        const sessions = response.data?.session || [];
+        console.log(sessions);
+        // const coursesData = sessions.map((session) => session.course);
+        // setLoading(false);
+        const foundSession = sessions.find(
+          (session) => Number(session.course?.id) === Number(courseId)
+        );
+        if (foundSession) {
+          setSessionId(foundSession.id);
+        }
+      } else {
+        console.error(
+          "Failed to fetch user sessions, status:",
+          response.status
+        );
       }
-    } else {
-      setLoading(true);
+    } catch (error) {
+      console.log("Error:", error);
+    } finally {
+      setLoading(false);
     }
-  }, [userData, isStudent, courseId]);
-  // console.log(sessionId);
+  }
+
+  useEffect(() => {
+    // if (isStudent) return;
+    fetchSessionForUser();
+  }, []);
 
   const handleChange = (e) => {
     const [selectedSessionId, internalSessionId] = e.target.value.split("|");
@@ -259,7 +274,7 @@ export default function Page({ params }) {
   useEffect(() => {
     if (!isAdmin) return;
     fetchSessions();
-  }, [sessionId, selectedSession,isAdmin]);
+  }, [sessionId, selectedSession, isAdmin]);
 
   useEffect(() => {
     if (!sessionId) return;

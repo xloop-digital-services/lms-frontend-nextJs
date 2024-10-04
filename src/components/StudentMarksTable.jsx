@@ -72,12 +72,14 @@ const StudentMarksTable = ({ field, assessments }) => {
 
                             <td className="px-12 py-4 text-center whitespace-nowrap flex w-full justify-center items-center text-sm text-surface-100 ">
                               <p
-                                className={`w-[110px] text-center px-4 py-2 text-[12px] rounded-lg ${
+                                className={`w-[120px] text-center px-4 py-2 text-[12px] rounded-lg ${
                                   assessment?.status === "Submitted"
-                                    ? "bg-mix-300 w-110px]"
+                                    ? "bg-mix-300 w-[120px]"
                                     : assessment?.status === "Pending"
-                                    ? "bg-mix-500 text-[#fff] w-[110px]"
-                                    : "bg-mix-200 w-110px]"
+                                    ? "bg-mix-500 text-[#fff] w-[120px]"
+                                    : assessment?.status === "Late Submission"
+                                    ? "bg-mix-600 text-[#fff] w-[110px]"
+                                    : "bg-mix-200 w-[120px]"
                                 }`}
                               >
                                 {assessment?.status}

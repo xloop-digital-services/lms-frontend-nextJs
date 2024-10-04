@@ -12,6 +12,7 @@ import {
   getOverallProgress,
   getProjectProgress,
   getQuizProgress,
+  getUserSessions,
 } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
 
@@ -39,23 +40,37 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
   const toggleOpen = () => {
     setIsOpen(!isOpen);
   };
-  useEffect(() => {
-    if (!isStudent) return;
-
-    if (userData?.session) {
-      setSessions(userData.session);
-      setLoader(false);
-      const foundSession = userData.session.find(
-        (session) => Number(session.course?.id) === Number(courseId)
-      );
-
-      if (foundSession) {
-        setSessionId(foundSession.id);
+  async function fetchSessionForUser() {
+    const response = await getUserSessions();
+    setLoader(true);
+    try {
+      if (response.status === 200) {
+        const sessions = response.data?.session || [];
+        console.log(sessions);
+        // const coursesData = sessions.map((session) => session.course);
+        // setLoading(false);
+        const foundSession = sessions.find(
+          (session) => Number(session.course?.id) === Number(courseId)
+        );
+        if (foundSession) {
+          setSessionId(foundSession.id);
+        }
+      } else {
+        console.error(
+          "Failed to fetch user sessions, status:",
+          response.status
+        );
       }
-    } else {
-      setLoader(true);
+    } catch (error) {
+      console.log("Error:", error);
+    } finally {
+      setLoader(false);
     }
-  }, [userData, isStudent, courseId]);
+  }
+
+  useEffect(() => {
+    fetchSessionForUser();
+  }, []);
 
   console.log(sessionId);
   const handleOptionSelect = (option) => {

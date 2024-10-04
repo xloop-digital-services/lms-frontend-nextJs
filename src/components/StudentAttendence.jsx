@@ -63,7 +63,7 @@ const StudentAttendence = ({ attendance, loader, isAdmin }) => {
                     attendance.map((att, index) => (
                       <tr key={index}>
                         <td className="px-6 py-4 text-center whitespace-nowrap text-sm font-medium text-gray-800">
-                          {`Module ${index + 1}`}
+                          {`Day ${index + 1}`}
                         </td>
                         {<td className="px-6 py-4 text-center text-wrap whitespace-nowrap text-sm text-gray-800">
                           {att.marked_by}

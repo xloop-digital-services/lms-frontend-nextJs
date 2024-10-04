@@ -5,6 +5,7 @@ import React, { useContext, useEffect, useState } from "react";
 import courseImg from "/public/assets/img/course-image.png";
 import { useAuth } from "@/providers/AuthContext";
 import { CircularProgress } from "@mui/material";
+import { getUserSessions } from "@/api/route";
 
 export default function CoursePage({ path, heading }) {
   const { isSidebarOpen } = useSidebar();
@@ -13,17 +14,27 @@ export default function CoursePage({ path, heading }) {
   const [courses, setCourses] = useState([]);
   const [loader, setLoader] = useState(true);
 
-  useEffect(() => {
-    if (userData?.session) {
-      const sessionCourses = userData?.session?.map(
-        (session) => session.course
-      );
-      setCourses(sessionCourses);
-      setLoader(false);
-    } else {
-      setLoader(true);
+  async function fetchSessionForUser() {
+    const response = await getUserSessions();
+    setLoader(true);
+    try {
+      if (response.status === 200) {
+        const sessions = response.data?.session || [];
+        const coursesData = sessions.map((session) => session.course);
+        setCourses(coursesData);
+
+        setLoader(false);
+      } else {
+        console.error("Failed to fetch user, status:", response.status);
+      }
+    } catch (error) {
+      console.log("Error:", error);
     }
-  }, [userData]);
+  }
+
+  useEffect(() => {
+    fetchSessionForUser();
+  }, []);
 
   if (loader) {
     return (
@@ -52,7 +63,7 @@ export default function CoursePage({ path, heading }) {
         <div className="flex flex-col w-full gap-4">
           {courses.map((course) => {
             // Find the session related to the current course
-            const session = userData?.session?.find(
+            const session = courses?.session?.find(
               (s) => s.course?.id === course.id
             );
 

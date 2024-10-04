@@ -8,6 +8,7 @@ import {
   getCourses,
   getInstructorCourses,
   getProgressForCourse,
+  getUserSessions,
 } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
 import { CircularProgress } from "@mui/material";
@@ -53,25 +54,30 @@ export default function InstructorCoursePage({
   //   inInstructor && fetchInstructorCourses();
   // }, [insId]);
 
-  useEffect(() => {
-    if (userData?.session) {
-      const sessionCourses = userData.session.map((session) => session.course);
-  
-      const uniqueCourses = Array.from(
-        new Set(sessionCourses.map((course) => course.id))
-      ).map((id) => {
-        return sessionCourses.find((course) => course.id === id);
-      });
-  
-      setCourses(uniqueCourses);
-      setLoader(false);
-    } else {
-      setLoader(true);
+  async function fetchSessionForUser() {
+    const response = await getUserSessions();
+    setLoader(true);
+    try {
+      if (response.status === 200) {
+        const sessions = response.data?.session || [];
+        const coursesData = sessions.map((session) => session.course);
+        setCourses(coursesData);
+
+        setLoader(false);
+      } else {
+        console.error("Failed to fetch user, status:", response.status);
+      }
+    } catch (error) {
+      console.log("Error:", error);
     }
-  }, [userData]);
+  }
+
+  useEffect(() => {
+    fetchSessionForUser();
+  }, []);
 
   console.log(courses);
-  
+
   if (loader) {
     <CircularProgress />;
   }

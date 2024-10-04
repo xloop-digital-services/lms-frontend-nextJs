@@ -351,7 +351,7 @@ function SideBar() {
       </div>
       {/* <div className="h-screen bg-surface-100 w-16"> */}
       <button
-        className={`absolute  text-surface-100 px-4 py-4 max-md:px-2 max-md:py-2 focus:outline-none mt-4  ${
+        className={` fixed text-blue-500 px-4 py-4 max-md:px-2 max-md:py-2 focus:outline-none mt-4  ${
           isSidebarOpen && "hidden"
         } z-50`}
         onClick={toggleSidebar}

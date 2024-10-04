@@ -35,19 +35,19 @@ export default function StudentDashboard() {
     setLoader(true);
     try {
       if (response.status === 200) {
-        setCourses(response.data?.session);
+        const sessions = response.data?.session || [];
+        const coursesData = sessions.map((session) => session.course);
+        setCourses(coursesData);
 
         setLoader(false);
-        // setCourseId(response?.data?.id)
-        // console.log(response.data?.data?.courses?.[0])
-        console.log(response?.data);
       } else {
         console.error("Failed to fetch user, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      console.log("Error:", error);
     }
   }
+
   useEffect(() => {
     fetchSessionForUser();
   }, []);
@@ -151,13 +151,13 @@ export default function StudentDashboard() {
                     courses?.slice(0, courseLimit).map((session) => {
                       return (
                         <CourseCard
-                          id={session.course.id}
-                          key={session.course.id}
+                          id={session.id}
+                          key={session.id}
                           image={image1}
-                          courseName={session.course.name} // Accessing course name inside 'course' object
+                          courseName={session.name} // Accessing course name inside 'course' object
                           route="course"
                           route1="courses"
-                          courseDesc={session.course.short_description} // Accessing short description
+                          courseDesc={session.short_description} // Accessing short description
                           // progress="50%"
                           // avatars={avatars}
                           extraCount={50}

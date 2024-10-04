@@ -9,6 +9,7 @@ import {
   getAssignmentsByCourseId,
   getInstructorSessionsbyCourseId,
   getProgressForAssignment,
+  getUserSessions,
   listSessionByCourseId,
   updateAssignment,
 } from "@/api/route";
@@ -32,6 +33,7 @@ export default function Page({ params }) {
   const [dueDate, setDueDate] = useState("");
   const [quiz, setQuiz] = useState("");
   const [file, setFile] = useState(null);
+  // const [courses, setCourses] = useState(null);
   const [resubmission, setResubmission] = useState("");
   const [updateStatus, setUpdateStatus] = useState(false);
   const [assignmentStatus, setAssignmentStatus] = useState(0);
@@ -46,24 +48,39 @@ export default function Page({ params }) {
   const isInstructor = userData?.Group === "instructor";
   const userId = group === "instructor" ? userData?.User?.id : adminUserId;
 
-  useEffect(() => {
-    if (!isStudent) return;
+  async function fetchSessionForUser() {
+    const response = await getUserSessions();
+    setLoading(true);
+    try {
+      if (response.status === 200) {
+        const sessions = response.data?.session || [];
+        console.log(sessions);
+        const coursesData = sessions.map((session) => session.course);
+        // setCourses(coursesData);
+        // setLoading(false);
+        const foundSession = sessions.find(
+          (session) => Number(session.course?.id) === Number(courseId)
+        );
 
-    if (userData?.session) {
-      setSessions(userData.session);
-      setLoading(false);
-      const foundSession = userData.session.find(
-        (session) => Number(session.course?.id) === Number(courseId)
-      );
-
-      if (foundSession) {
-        setSessionId(foundSession.id);
+        if (foundSession) {
+          setSessionId(foundSession.id);
+        }
+      } else {
+        console.error(
+          "Failed to fetch user sessions, status:",
+          response.status
+        );
       }
-    } else {
-      setLoading(true);
+    } catch (error) {
+      console.log("Error:", error);
+    } finally {
+      setLoading(false);
     }
-  }, [userData, isStudent, courseId]);
-  // console.log(sessionId);
+  }
+
+  useEffect(() => {
+    fetchSessionForUser();
+  }, []);
 
   const handleChange = (e) => {
     const [selectedSessionId, internalSessionId] = e.target.value.split("|");
@@ -247,7 +264,7 @@ export default function Page({ params }) {
 
     try {
       if (response.status === 200) {
-        setSessions(response.data.data); 
+        setSessions(response.data.data);
       } else {
         console.error("Failed to fetch sessions, status:", response.status);
       }
@@ -264,7 +281,7 @@ export default function Page({ params }) {
   useEffect(() => {
     if (!isAdmin) return;
     fetchSessions();
-  }, [sessionId, selectedSession,isAdmin]);
+  }, [sessionId, selectedSession, isAdmin]);
 
   useEffect(() => {
     if (!sessionId) return;

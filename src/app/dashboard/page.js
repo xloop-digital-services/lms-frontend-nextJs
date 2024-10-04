@@ -26,7 +26,7 @@ export default function Page() {
       ) : ( */}
       <>
         {isStudent ? (
-          userData.session === false ? (
+          userData.session === null ? (
             <>
               <NoSessionPage />
             </>
@@ -36,7 +36,7 @@ export default function Page() {
         ) : isAdmin ? (
           <AdminDashboard />
         ) : isInstructor ? (
-          userData.session === false ? (
+          userData.session === null ? (
             <>
               <NoSessionPage />
             </>

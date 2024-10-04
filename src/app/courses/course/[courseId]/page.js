@@ -9,6 +9,7 @@ import {
   getInstructorSessionsbyCourseId,
   getModuleByCourseId,
   getProgressForCourse,
+  getUserSessions,
   listSessionByCourseId,
   updateCourse,
   updateModule,
@@ -47,7 +48,6 @@ export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
   const { userData } = useAuth();
   const courseId = params.courseId;
-  const session = userData?.session?.find((s) => s.courseId);
   const isStudent = userData?.Group === "student";
   const isAdmin = userData?.Group === "admin";
   const [courseData, setCourseData] = useState([]);
@@ -76,6 +76,9 @@ export default function Page({ params }) {
   const group = userData?.Group;
   const isInstructor = userData?.Group === "instructor";
   const [sessions, setSessions] = useState([]);
+  const [sessionsUser, setSessionsUser] = useState([]);
+  const [session, setSession] = useState(null);
+
   const [selectedSession, setSelectedSession] = useState();
   const userId = group === "instructor" ? userData?.User?.id : adminUserId;
   const [sessionId, setSessionId] = useState(null);
@@ -112,6 +115,27 @@ export default function Page({ params }) {
       console.log("error", error);
     }
   }
+
+  async function fetchSessionForUser() {
+    const response = await getUserSessions();
+    setLoader(true);
+    try {
+      if (response.status === 200) {
+        setSessionsUser(response.data?.session);
+        const session = response.data?.session.find((s) => s.courseId);
+        setSession(session);
+        setLoader(false);
+        console.log(response?.data);
+      } else {
+        console.error("Failed to fetch user, status:", response.status);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+  useEffect(() => {
+    fetchSessionForUser();
+  }, []);
 
   const handleCreateSkill = async (e) => {
     e.preventDefault();
