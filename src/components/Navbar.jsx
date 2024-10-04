@@ -100,7 +100,7 @@ export default function Navbar() {
         <div className="mx-auto px-2 sm:px-6 lg:px-8">
           <div className="relative flex h-20 items-center justify-between">
             <div className="hidden sm:flex justify start ml-20">
-              <Link href="/dashboard" passHref>
+              {/* <Link href="/dashboard" passHref>
                 <Image
                   src={logo}
                   alt="logo"
@@ -108,11 +108,11 @@ export default function Navbar() {
                   height={100}
                   // className={`w-full h-full `}
                 />
-              </Link>
+              </Link> */}
             </div>
 
             {loader ? (
-              <CircularProgress  />
+              <CircularProgress />
             ) : (
               <div className="flex justify-end items-center w-full">
                 <div className="absolute inset-y-0 right-0 flex justify-center items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
@@ -170,7 +170,7 @@ export default function Navbar() {
                     </div>
                     <div>
                       <div className="flex justify-end items-center cursor-pointer text-blue-500">
-                        <div className="text-blue-500" >
+                        <div className="text-blue-500">
                           <p className="text-md capitalize">{`${user?.first_name} ${user?.last_name}`}</p>
                           <p className="text-xs uppercase">
                             {user?.registration_id}
@@ -178,7 +178,7 @@ export default function Navbar() {
                         </div>
                         <div className={`ml-1`} onClick={toggleDropdown}>
                           <svg
-                            xmlns="http://www.w3.org/2000/svg" 
+                            xmlns="http://www.w3.org/2000/svg"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"

@@ -56,12 +56,13 @@ function SideBar() {
             <FaBars size={24} />
           </button>
           {/* <div className="hidden sm:flex justify start "> */}
-          <Link href="/dashboard" passHref>
+          <Link href="/dashboard" className="mr-8" passHref>
             <Image
               src={logo}
               alt="logo"
               width={230}
               height={100}
+              className="ml-8"
               // className={`w-full h-full `}
             />
           </Link>

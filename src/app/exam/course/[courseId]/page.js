@@ -63,7 +63,7 @@ export default function Page({ params }) {
         const foundSession = sessions.find(
           (session) => Number(session.course?.id) === Number(courseId)
         );
-        if (foundSession) {
+        if (isStudent && foundSession) {
           setSessionId(foundSession.id);
         }
       } else {

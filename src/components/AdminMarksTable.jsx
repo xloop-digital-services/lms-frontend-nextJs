@@ -167,16 +167,16 @@ const AdminMarksTable = ({ assessments, courseId, setFetch, title }) => {
                               assessment?.remarks || "-"
                             )}
                           </td>
-                          <td className="px-6 py-4  text-sm font-medium text-surface-100">
+                          <td className="px-6 py-4 flex justify-center items-center text-sm font-medium text-surface-100">
                             <p
-                              className={`w-[120px] text-center px-4 py-2 text-[12px] rounded-lg ${
+                              className={`w-[130px] text-center px-4 py-2 text-[12px] rounded-lg ${
                                 assessment?.status === "Submitted"
-                                  ? "bg-mix-300 w-[120px]"
+                                  ? "bg-mix-300"
                                   : assessment?.status === "Pending"
-                                  ? "bg-mix-500 text-[#fff] w-[120px]"
+                                  ? "bg-mix-500 text-[#fff]"
                                   : assessment?.status === "Late Submission"
-                                  ? "bg-mix-600 text-[#fff] w-[110px]"
-                                  : "bg-mix-200 w-[120px]"
+                                  ? "bg-mix-600 text-[#fff] "
+                                  : "bg-mix-200"
                               }`}
                             >
                               {assessment?.status}
@@ -190,12 +190,12 @@ const AdminMarksTable = ({ assessments, courseId, setFetch, title }) => {
                                 Graded
                               </button>
                             ) : assessment?.status !== "Submitted" ? (
-                              <button className=" text-center px-4 py-2 text-[12px] rounded-lg text-sm bg-gray-300 text-blue-300">
+                              <button className=" text-center text-[12px] rounded-lg text-sm bg-gray-300 text-blue-300">
                                 You cant grade right now
                               </button>
                             ) : isEditing === assessment.submission_id ? (
                               <button
-                                className="w-[110px] text-center px-4 py-2 text-[12px] rounded-lg text-sm bg-mix-300 text-surface-200"
+                                className="w-[110px] text-center px-4 py-2 text-[12px] rounded-lg text-sm bg-blue-300 text-surface-200"
                                 onClick={() =>
                                   handleSave(
                                     assessment.submission_id,

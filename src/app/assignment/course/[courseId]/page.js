@@ -62,7 +62,7 @@ export default function Page({ params }) {
           (session) => Number(session.course?.id) === Number(courseId)
         );
 
-        if (foundSession) {
+        if (isStudent && foundSession) {
           setSessionId(foundSession.id);
         }
       } else {

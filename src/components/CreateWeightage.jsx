@@ -7,7 +7,7 @@ import {
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
-export default function CreateWeightage({ courseId, onCreation }) {
+export default function CreateWeightage({ courseId, onCreation, sessionId }) {
   const [assignmentsWeightage, setAssignmentsWeightage] = useState("");
   const [quizzesWeightage, setQuizzesWeightage] = useState("");
   const [projectsWeightage, setProjectsWeightage] = useState("");
@@ -45,8 +45,13 @@ export default function CreateWeightage({ courseId, onCreation }) {
       quizzes_weightage: quizzesWeightage,
       projects_weightage: projectsWeightage,
       exams_weightage: examsWeightage,
+      session: sessionId,
     };
     try {
+      if (!sessionId) {
+        toast.error("Select a session to create the assignment.");
+        return;
+      }
       const response = await assignWeightages(data);
       if (response.status === 200 || response.status === 201) {
         toast.success(

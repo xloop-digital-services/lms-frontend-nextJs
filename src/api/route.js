@@ -372,10 +372,10 @@ export const assignWeightages = async (data) => {
 };
 
 //get all weightage for course(admin)
-export const getWeightages = async (courseId) => {
+export const getWeightages = async (courseId, sessionId) => {
   try {
     const response = await axiosInstance.get(
-      `course/course_weightages/<int:course_id>/session/<int:session_id>/'`
+      `course/course_weightages/${courseId}/session/${sessionId}/`
     );
     return response;
   } catch (error) {
