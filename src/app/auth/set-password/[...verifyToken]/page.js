@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import logo from "../../../../public/assets/img/xCelerate - Logo.png";
+import logo from "../../../../../public/assets/img/xCelerate-Logo.png";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import { setNewPassword } from "@/api/route";
@@ -89,13 +89,13 @@ export default function Page({ params }) {
   return (
     <div className="w-full max-w-lg mx-auto p-6 mt-[10%] font-inter flex flex-col justify-center ">
       <div className="flex items-center justify-center">
-      <Image
-            src={logo}
-            alt="logo"
-            width={300}
-            height={50}
-            className=" object-contain"
-          />
+        <Image
+          src={logo}
+          alt="logo"
+          width={300}
+          height={50}
+          className=" object-contain"
+        />
       </div>
       <div className="mt-8 bg-surface-100 rounded-xl shadow-lg ">
         <div className="p-4 sm:p-7">

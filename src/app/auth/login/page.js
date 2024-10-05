@@ -2,7 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import logo from "../../../../public/assets/img/xCelerate - Logo.png";
+import logo from "../../../../public/assets/img/xCelerate-Logo.png";
 import { BsEyeSlashFill } from "react-icons/bs";
 import { IoEyeSharp } from "react-icons/io5";
 import { useAuth } from "@/providers/AuthContext";

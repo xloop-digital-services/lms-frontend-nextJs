@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import logo from "../../../../public/assets/img/xCelerate - Logo.png";
+import logo from "../../../../public/assets/img/xCelerate-Logo.png";
 import { IoEyeSharp } from "react-icons/io5";
 import { BsEyeSlashFill } from "react-icons/bs";
 import Image from "next/image";

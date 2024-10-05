@@ -4,7 +4,7 @@ import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import userIcon from "../../public/assets/img/images.png";
-import logo from "../../public/assets/img/xCelerate - Logo.png";
+import logo from "../../public/assets/img/xCelerate-Logo.png";
 import { FaBell, FaSignOutAlt, FaUser, FaUsers } from "react-icons/fa";
 import Notifications from "./Notifications";
 import { getUserProfile } from "@/api/route";

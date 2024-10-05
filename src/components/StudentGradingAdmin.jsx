@@ -15,7 +15,11 @@ import {
 } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
 
-export default function StudentGradingAdmin({ courseId, regId: propRegId, sessionId }) {
+export default function StudentGradingAdmin({
+  courseId,
+  regId: propRegId,
+  sessionId,
+}) {
   const { width } = useWindowSize();
   const { isSidebarOpen } = useSidebar();
   const [isOpen, setIsOpen] = useState(false);
@@ -37,7 +41,6 @@ export default function StudentGradingAdmin({ courseId, regId: propRegId, sessio
   const toggleOpen = () => {
     setIsOpen(!isOpen);
   };
-
 
   console.log(sessionId);
   const handleOptionSelect = (option) => {
@@ -67,6 +70,28 @@ export default function StudentGradingAdmin({ courseId, regId: propRegId, sessio
     fetchOverallProgress();
   }, []);
 
+  useEffect(() => {
+    if (!regId || !sessionId) return;
+    fetchOverallProgress();
+    fetchAssignmentProgress();
+    fetchQuizProgress();
+    fetchProjectProgress();
+    fetchExamProgress();
+  }, [regId, sessionId]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   async function fetchAssignmentProgress() {
     const response = await getAssignmentProgress(courseId, sessionId, regId);
     setLoader(true);
@@ -145,28 +170,6 @@ export default function StudentGradingAdmin({ courseId, regId: propRegId, sessio
     setOpenSection(openSection === section ? null : section);
   };
 
-  useEffect(() => {
-    if (!regId || !sessionId) return;
-    fetchOverallProgress();
-    fetchAssignmentProgress();
-    fetchQuizProgress();
-    fetchProjectProgress();
-    fetchExamProgress();
-  }, [regId, sessionId]);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
   return (
     <>
       <div className="my-5 space-y-3">

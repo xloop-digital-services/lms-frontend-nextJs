@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import { resetPassword } from "@/api/route";
-import logo from "../../../../public/assets/img/xCelerate - Logo.png";
+import logo from "../../../../public/assets/img/xCelerate-Logo.png";
 import Image from "next/image";
 import { CircularProgress } from "@mui/material";
 

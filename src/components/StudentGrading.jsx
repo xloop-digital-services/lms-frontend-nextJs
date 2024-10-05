@@ -99,6 +99,28 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
     if (!regId) return;
     fetchOverallProgress();
   }, []);
+  useEffect(() => {
+    if (!regId || !sessionId) return;
+    fetchOverallProgress();
+    fetchAssignmentProgress();
+    fetchQuizProgress();
+    fetchProjectProgress();
+    fetchExamProgress();
+  }, [regId, sessionId]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   async function fetchAssignmentProgress() {
     const response = await getAssignmentProgress(courseId, sessionId, regId);
@@ -178,28 +200,6 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
     setOpenSection(openSection === section ? null : section);
   };
 
-  useEffect(() => {
-    if (!regId || !sessionId) return;
-    fetchOverallProgress();
-    fetchAssignmentProgress();
-    fetchQuizProgress();
-    fetchProjectProgress();
-    fetchExamProgress();
-  }, [regId, sessionId]);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
   return (
     <>
       <div className="my-5 space-y-3">
@@ -208,7 +208,9 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
             className=" flex justify-between items-center "
             onClick={() => handleToggleSection("Quiz")}
           >
-            <p className="text-[17px] font-semibold text-[#022567] font-exo">Quiz</p>
+            <p className="text-[17px] font-semibold text-[#022567] font-exo">
+              Quiz
+            </p>
             <span className="">
               <IoIosArrowDown />
             </span>
@@ -235,7 +237,9 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
             className=" flex justify-between items-center "
             onClick={() => handleToggleSection("Assignment")}
           >
-            <p className="text-[17px] font-semibold text-[#022567] font-exo">Assignment</p>
+            <p className="text-[17px] font-semibold text-[#022567] font-exo">
+              Assignment
+            </p>
             <span className="">
               <IoIosArrowDown />
             </span>
@@ -262,7 +266,9 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
             className=" flex justify-between items-center "
             onClick={() => handleToggleSection("Project")}
           >
-            <p className="text-[17px] font-semibold text-[#022567] font-exo">Project</p>
+            <p className="text-[17px] font-semibold text-[#022567] font-exo">
+              Project
+            </p>
             <span className="">
               <IoIosArrowDown />
             </span>
@@ -289,7 +295,9 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
             className=" flex justify-between items-center "
             onClick={() => handleToggleSection("Exam")}
           >
-            <p className="text-[17px] font-semibold text-[#022567] font-exo">Exam</p>
+            <p className="text-[17px] font-semibold text-[#022567] font-exo">
+              Exam
+            </p>
             <span className="">
               <IoIosArrowDown />
             </span>

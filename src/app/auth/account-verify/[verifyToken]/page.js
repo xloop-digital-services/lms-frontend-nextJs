@@ -1,6 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
-import logo from "../../../../public/assets/img/xCelerate - Logo.png";
+// import logo from "../../../../public/assets/img/xCelerate-Logo.png";
+import logo from "../../../../../public/assets/img/xCelerate-Logo.png"
 import Image from "next/image";
 import { useState } from "react";
 import { VerifyEmail } from "@/api/route";
