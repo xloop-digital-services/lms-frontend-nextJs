@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import logo from "../../public/assets/img/logo.png";
+import logo from "../../public/assets/img/logo1.png";
 import bg from "../../public/assets/img/bg.jpg";
 import cityAreas from "../../public/data/cityAreas.json";
 import Image from "next/image";
