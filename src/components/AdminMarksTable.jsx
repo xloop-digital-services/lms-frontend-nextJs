@@ -102,7 +102,7 @@ const AdminMarksTable = ({ assessments, courseId, setFetch, title }) => {
                 </div>
               ) : (
                 <table className="min-w-full divide-y divide-dark-300 dark:divide-gray-700">
-                  <thead className="bg-dark-100 dark:bg-gray-700">
+                  <thead className="bg-dark-100 text-[#022567] dark:bg-gray-700">
                     <tr>
                       <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
                         Registration Id
@@ -145,7 +145,7 @@ const AdminMarksTable = ({ assessments, courseId, setFetch, title }) => {
                                 name="marks_obtain"
                                 value={editData.marks_obtain}
                                 onChange={handleChange}
-                                className="py-3 px-4 block w-full outline-none border-b border-dark-500 text-sm focus:border-blue-300 focus:ring-[#03A1D8]"
+                                className="py-3 px-4 block w-full outline-none border-b border-dark-500 text-sm focus:border-blue-300 focus:ring-blue-300"
                               />
                             ) : (
                               assessment?.grade || 0
@@ -161,7 +161,7 @@ const AdminMarksTable = ({ assessments, courseId, setFetch, title }) => {
                                 name="remarks"
                                 value={editData.remarks}
                                 onChange={handleChange}
-                                className="py-3 px-4 block w-full outline-none border-b border-dark-500 text-sm focus:border-blue-300 focus:ring-[#03A1D8]"
+                                className="py-3 px-4 block w-full outline-none border-b border-dark-500 text-sm focus:border-blue-300 focus:ring-blue-300"
                               />
                             ) : (
                               assessment?.remarks || "-"

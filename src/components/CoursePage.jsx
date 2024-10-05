@@ -56,7 +56,7 @@ export default function CoursePage({ path, heading }) {
       <div className="bg-surface-100 p-8 rounded-xl">
         {!(heading === "program") && (
           <>
-            <h2 className="text-xl font-bold pb-1 font-exo">{heading}</h2>
+            <h2 className="text-xl text-[#022567] font-bold pb-1 font-exo">{heading}</h2>
             <p className="pb-6">Select a course to view the {heading}</p>
           </>
         )}

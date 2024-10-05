@@ -1,6 +1,10 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { IoIosArrowDown, IoIosCloseCircleOutline, IoMdClose } from "react-icons/io";
+import {
+  IoIosArrowDown,
+  IoIosCloseCircleOutline,
+  IoMdClose,
+} from "react-icons/io";
 import SessionsTable from "@/components/SessionsTable";
 import SessionCreationModal from "@/components/Modal/SessionCreationModal";
 import { useSidebar } from "@/providers/useSidebar";
@@ -13,7 +17,7 @@ export default function Page() {
   const [selectedLocationId, setSelectedLocationId] = useState(null);
   // const [isMobile, setIsMobile] = useState(window.innerWidth <= 845);
   const [selectedCity, setSelectedCity] = useState("select city");
-  const [selectedLocation, setSelectedLocation] = useState("Location");
+  const [selectedLocation, setSelectedLocation] = useState("Select location");
   const [selectedBatch, setSelectedBatch] = useState("select batch");
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [isLocationOpen, setIsLocationOpen] = useState(false);
@@ -147,7 +151,7 @@ export default function Page() {
   };
 
   const handleLocationSelect = (location) => {
-    setSelectedLocation(location.name);
+    setSelectedLocation(location.location_name);
     setSelectedLocationId(location.id); // Store the ID for later use
     setIsLocationOpen(false);
     setIsLocationSelected(true);
@@ -160,7 +164,7 @@ export default function Page() {
   };
 
   const clearLocationFilter = () => {
-    setSelectedLocation("Location");
+    setSelectedLocation("Select location");
     setIsLocationSelected(false);
     setIsLocationOpen(false);
   };
@@ -177,7 +181,7 @@ export default function Page() {
       <div className="bg-surface-100 p-6 rounded-xl">
         <div className="w-full flex xlg:flex-row flex-col justify-between items-center gap-4">
           <div>
-            <p className="font-bold text-xl font-exo">Class Details</p>
+            <p className="font-bold text-xl text-[#022567] font-exo">Class Details</p>
           </div>
           <div className="flex gap-3 sm:flex-row flex-col text-base lg:text-sm">
             <div className="flex gap-3 ">
@@ -248,21 +252,28 @@ export default function Page() {
                     <IoIosArrowDown />
                   </span>
                 </button>
-
                 {isLocationOpen && (
                   <div
                     ref={dropdownRef}
-                    className="absolute z-10 w-[200px] max-h-[200px] overflow-auto scrollbar-webkit mt-1 bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                    className="absolute z-20 w-[200px] max-h-[250px] overflow-auto scrollbar-webkit mt-1 bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                   >
-                    {LocationOptions && LocationOptions.length > 0 ? (
-                      LocationOptions.map((option, index) => (
+                    {sessions && sessions.length > 0 ? (
+                      // Filter duplicates based on both name and city
+                      [
+                        ...new Map(
+                          sessions.map((item) => [
+                            `${item.location_name}`,
+                            item,
+                          ])
+                        ).values(),
+                      ].map((option, index) => (
                         <div
                           key={index}
                           onClick={() => handleLocationSelect(option)}
                           className="p-2 cursor-pointer"
                         >
-                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
-                            {option.name}, {option.city}
+                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
+                            {option.location_name}
                           </div>
                         </div>
                       ))
@@ -318,7 +329,7 @@ export default function Page() {
             {/* Create Session Button */}
             <div>
               <button
-                className="text-[#fff] bg-[#03A1D8] md:w-[200px] px-4 xlg:py-4 py-3 w-full rounded-lg"
+                className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] md:w-[200px] px-4 xlg:py-4 py-3 w-full rounded-lg"
                 onClick={handleOpenSessionModal}
               >
                 Schedule a new class
@@ -345,6 +356,10 @@ export default function Page() {
               setUpdateSession={setUpdateSession}
               updateSession={updateSession}
             />
+          ) : loading ? (
+            <div className="flex justify-center items-center w-full p-4">
+              <CircularProgress size={20} />
+            </div>
           ) : (
             <p>No class is scheduled in this location</p>
           )}

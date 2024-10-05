@@ -204,7 +204,12 @@ export default function GetAttendanceAdminTable({
       <div>
         <div className=" flex w-full gap-2 max-md:flex-col">
           <div className="w-full">
-            <label>Select Session</label>
+            <label className="text-blue-500 text-bold">
+              {" "}
+              <label className="text-blue-500 font-semibold">
+                Select Session
+              </label>
+            </label>
             <select
               value={selectedSessionId}
               onChange={handleChange}
@@ -229,7 +234,7 @@ export default function GetAttendanceAdminTable({
             </select>
           </div>
           <div className="w-full">
-            <p>Select Date</p>
+          <label className="text-blue-500 font-semibold">Select Date</label>
             <input
               type="date"
               value={date}

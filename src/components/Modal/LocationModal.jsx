@@ -56,7 +56,7 @@ const LocationModal = ({
         const response = await createLocation(data);
         if (response.data.status_code === 201) {
           console.log("location created", response?.data?.message);
-          toast.success(response?.data?.message);
+          toast.success('Location created successfully!');
           setUpdateLocation(!updateLocation);
           setLoading(false);
           setOpenModal(false);
@@ -118,8 +118,8 @@ const LocationModal = ({
   };
 
   return (
-    <div className="backDropOverlay h-screen flex justify-center items-center">
-      <div className="w-[550px] z-[1000] mx-auto my-20">
+    <div className="backDropOverlay h-[98vh] flex justify-center items-center overflow-y-hidden ">
+      <div className="w-[550px] z-[1000] mx-auto ">
         {loading && (
           <div className="absolute inset-0 w-full p-2 flex items-center justify-center bg-surface-100 bg-opacity-30 z-[1100]">
             <CircularProgress size={30} />
@@ -136,7 +136,7 @@ const LocationModal = ({
                 fontWeight: 700,
                 fontSize: "17px",
                 lineHeight: "24.2px",
-                color: "#07224D",
+                color: "#022567",
               }}
               className="text-start  px-2 py-[10px]"
             >
@@ -174,7 +174,7 @@ const LocationModal = ({
                           onClick={() => handleCitySelect(option)}
                           className="p-2 cursor-pointer "
                         >
-                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
                             {option.name}
                           </div>
                         </div>
@@ -209,7 +209,7 @@ const LocationModal = ({
                           onClick={() => handleLocationSelect(option)}
                           className="p-2 cursor-pointer "
                         >
-                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
                             {option.name}
                           </div>
                         </div>
@@ -260,7 +260,7 @@ const LocationModal = ({
               <button
                 type="submit"
                 onClick={handlLocationCreation}
-                className="w-fit flex justify-center py-3 px-12 text-sm font-medium rounded-lg text-dark-100 bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
+                className="w-fit flex justify-center py-3 px-12 text-sm font-medium rounded-lg text-dark-100 bg-blue-300 hover:bg-[#3272b6] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
               >
                 {loading && (
                   <CircularProgress size={19} style={{ color: "#fffff" }} />

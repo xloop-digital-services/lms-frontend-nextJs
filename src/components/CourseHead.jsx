@@ -85,11 +85,11 @@ const CourseHead = ({
           >
             <div className="flex my-2 justify-center items-center ">
               {program === "program" ? (
-                <h2 className=" font-exo text-xl font-bold">
+                <h2 className="text-blue-500 font-exo text-xl font-bold">
                   {programData.name}
                 </h2>
               ) : (
-                <h2 className="font-exo text-xl font-bold">
+                <h2 className="font-exo text-blue-500 text-xl font-bold">
                   {courseData.name}
                 </h2>
               )}
@@ -122,23 +122,25 @@ const CourseHead = ({
 
               {title ? (
                 <>
-                 {(!isStudent && (title !== 'Edit course' || (title === 'Edit course' && isAdmin))) && (
-                    <button
-                      className=" flex justify-center items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl hover:bg-[#4296b3]"
-                      onClick={() => setIsEditing(!isEditing)}
-                    >
-                      {isEditing ? (
-                        <p className="flex justify-center items-center gap-2">
-                          <FaTimes />
-                          Cancel
-                        </p>
-                      ) : (
-                        <p className="flex justify-center items-center gap-2">
-                          <FaEdit /> {title}
-                        </p>
-                      )}
-                    </button>
-                  )}
+                  {!isStudent &&
+                    (title !== "Edit course" ||
+                      (title === "Edit course" && isAdmin)) && (
+                      <button
+                        className=" flex justify-center items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl hover:bg-[#4296b3]"
+                        onClick={() => setIsEditing(!isEditing)}
+                      >
+                        {isEditing ? (
+                          <p className="flex justify-center items-center gap-2">
+                            <FaTimes />
+                            Cancel
+                          </p>
+                        ) : (
+                          <p className="flex justify-center items-center gap-2">
+                            <FaEdit /> {title}
+                          </p>
+                        )}
+                      </button>
+                    )}
                 </>
               ) : null}
             </div>
@@ -166,8 +168,8 @@ const CourseHead = ({
       {rating && (
         <div className="mr-2 flex items-center mb-8 max-sm:flex-col">
           <div className="flex bg-[#EBF6FF] w-fit py-[9px] px-5 rounded-lg items-center space-x-2 max-md:mt-2 ">
-            <p className="bg-[#03A1D8] w-2 h-2 rounded-full"></p>
-            <p className="text-[#03A1D8] uppercase text-[12px] ">{rating}</p>
+            <p className="bg-blue-300 w-2 h-2 rounded-full"></p>
+            <p className="text-blue-300 uppercase text-[12px] ">{rating}</p>
           </div>
         </div>
       )}

@@ -311,7 +311,7 @@ export default function Page({ params }) {
         />
         {isAdmin && (
           <div className="w-full">
-            <label>Select Session</label>
+            <label className="text-blue-500"> <label className="text-blue-500 font-semibold">Select Session</label></label>
             <select
               value={selectedSession || ""}
               onChange={handleChange}
@@ -341,7 +341,7 @@ export default function Page({ params }) {
         )}
         {isInstructor && (
           <div className="w-full">
-            <label>Select Session</label>
+            <label className="text-blue-500"> <label className="text-blue-500 font-semibold">Select Session</label></label>
             <select
               value={selectedSession || ""}
               onChange={handleChangeInstructor}

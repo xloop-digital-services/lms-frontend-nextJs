@@ -321,72 +321,72 @@ const AdminDashboard = () => {
     >
       <div className="text-[#07224D] flex flex-col gap-5">
         {/* <h2 className=" font-exo text-3xl font-bold">Admin Dashboard</h2> */}
-        <div className="flex gap-5">
-          {" "}
-          {/* Adding a unique key */}
-          <Link href="/user-management/users" className="w-full">
-            <div className="bg-[#ffffff] min-w-[32%] flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
+        <div className="flex gap-5 flex-wrap xmd:flex-nowrap">
+          <Link href="/user-management/users" className="w-full xmd:w-1/3">
+            <div className="bg-[#ffffff] flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
               <div className="flex flex-col text-sm h-full justify-center items-center">
                 Total Users
-                <span className="text-xl font-semibold font-exo text-[#32324D]">
+                <span className="text-xl font-semibold font-exo text-[#022567]">
                   {allUsers}
                 </span>
               </div>
               <div className="space-y-2">
                 <div className="flex flex-col text-[12px] justify-center items-center">
                   Active Users
-                  <span className="text-base font-semibold font-exo text-[#32324D]">
+                  <span className="text-base font-semibold font-exo text-[#022567]">
                     {allActiveUsers}
                   </span>
                 </div>
                 <div className="flex flex-col text-[12px] justify-center items-center">
                   Inactive Users
-                  <span className="text-base font-semibold font-exo text-[#32324D]">
+                  <span className="text-base font-semibold font-exo text-[#022567]">
                     {allInActiveUsers}
                   </span>
                 </div>
               </div>
             </div>
           </Link>
-          <div className="bg-[#ffffff] min-w-[32%] flex justify-between px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
+
+          <div className="bg-[#ffffff] w-full xmd:w-1/3 flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
             <div className="flex flex-col text-sm h-full justify-center items-center">
               Total Students
-              <span className="text-xl font-semibold font-exo text-[#32324D]">
+              <span className="text-xl font-semibold font-exo text-[#022567]">
                 {allStudents}
               </span>
             </div>
             <div className="space-y-2">
               <div className="flex flex-col text-[12px] justify-center items-center">
                 Active Students
-                <span className="text-base font-semibold font-exo text-[#32324D]">
+                <span className="text-base font-semibold font-exo text-[#022567]">
                   {allActiveStudents}
                 </span>
               </div>
               <div className="flex flex-col text-[12px] justify-center items-center">
                 Inactive Students
-                <span className="text-base font-semibold font-exo text-[#32324D]">
+                <span className="text-base font-semibold font-exo text-[#022567]">
                   {allInActiveStudents}
                 </span>
               </div>
             </div>
           </div>
-          <div className="bg-[#ffffff] min-w-[32%] flex justify-between px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
+
+          <div className="bg-[#ffffff] w-full xmd:w-1/3 flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
             <div className="flex flex-col text-sm h-full justify-center items-center">
               Total Instructors
-              <span className="text-xl font-semibold font-exo text-[#32324D]">
+              <span className="text-xl font-semibold font-exo text-[#022567]">
                 {allInstructors}
               </span>
             </div>
             <div className="space-y-2">
               <div className="flex flex-col text-[12px] justify-center items-center">
                 Active Instructors
-                <span className="text-base font-semibold font-exo text-[#32324D]">
+                <span className="text-base font-semibold font-exo text-[#022567]">
                   {allActiveInstructors}
                 </span>
               </div>
               <div className="flex flex-col text-[12px] justify-center items-center">
                 Inactive Instructors
-                <span className="text-base font-semibold font-exo text-[#32324D]">
+                <span className="text-base font-semibold font-exo text-[#022567]">
                   {allInActiveInstructors}
                 </span>
               </div>
@@ -395,9 +395,9 @@ const AdminDashboard = () => {
         </div>
 
         <div className="flex gap-4 xmd:flex-row flex-col">
-          <div className="bg-[#ffffff] xmd:w-[70%] w-full overflow-x-auto scrollbar-webkit p-5 rounded-xl  h-[450px]">
+          <div className="bg-[#ffffff] xmd:w-[66.5%] w-full overflow-x-auto scrollbar-webkit p-5 rounded-xl  h-[450px]">
             <div className="border border-dark-300 rounded-xl p-3 h-full w-full">
-              <div className="font-bold font-exo text-[#32324D] text-lg pb-2">
+              <div className="font-bold font-exo text-[#022567] text-lg pb-2">
                 Capacity in Different Cities
               </div>
               <div>
@@ -406,17 +406,17 @@ const AdminDashboard = () => {
             </div>
           </div>
           <div className="bg-[#ffffff] min-w-[32%] p-4 rounded-xl  h-[450px]">
-            <div className="flex w-full flex-col items-start">
-              <div className="font-bold font-exo text-[#32324D] text-lg">
+            <div className="flex w-full xmd:flex-col justify-between xmd:items-start items-center">
+              <div className="font-bold font-exo text-[#022567] text-lg">
                 Applications Status Overview
               </div>
               <div className="flex gap-2  justify-between items-center">
-                <div>
+                <div className="relative">
                   <button
                     onClick={toggleUsers}
                     className={`${
                       !isUserSelected ? "text-[#92A7BE]" : "text-[#424b55]"
-                    } flex justify-between mt-1 items-center xl:max-w-[200px] md:max-w-[170px] w-[140px]  gap-1 hover:text-[#0e1721] px-4 xlg:py-3  py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                    } flex justify-between mt-1 items-center xl:max-w-[200px] md:max-w-[170px] w-[240px]  gap-1 hover:text-[#0e1721] px-4 xlg:py-3  py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                   >
                     {selectedUser || userOptions[0]}
                     <span
@@ -431,7 +431,7 @@ const AdminDashboard = () => {
                   {isUserOpen && (
                     <div
                       ref={userDown}
-                      className="absolute capitalize z-50 w-fit xl:w-[120px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                      className="absolute capitalize z-50 xl:max-w-[200px] md:max-w-[170px] w-[240px]  mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                     >
                       {userOptions.map((option, index) => (
                         <div
@@ -448,12 +448,12 @@ const AdminDashboard = () => {
                   )}
                 </div>
                 {selectedUser.toLowerCase() === "student" ? (
-                  <div className={`${!isUserSelected && "hidden"}`}>
+                  <div className={`${!isUserSelected && "hidden"} relative`}>
                     <button
                       onClick={toggleProgramOpen}
                       className={`${
                         !isProgramSelected ? "text-[#92A7BE]" : "text-[#424b55]"
-                      } flex justify-between items-center min-w-[300px] w-full truncate px-4 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                      } flex justify-between items-center w-full px-4 xlg:py-3  py-2 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                       style={{
                         // maxWidth: "220px", // Set the maximum width of the button
                         whiteSpace: "nowrap",
@@ -461,7 +461,9 @@ const AdminDashboard = () => {
                         textOverflow: "ellipsis",
                       }}
                     >
-                      {selectedProgram}
+                      <span className="xl:max-w-[190px] xmd:max-w-[100px] w-[200px] truncate">
+                        {selectedProgram}
+                      </span>
                       <span
                         className={`${
                           isProgramOpen
@@ -476,11 +478,11 @@ const AdminDashboard = () => {
                     {isProgramOpen && (
                       <div
                         ref={dropdownRef}
-                        className="absolute z-50 mt-1  md:max-w-[300px] w-full  max-h-[240px] overflow-auto scrollbar-webkit  bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                        className="absolute z-50 mt-1  w-full  max-h-[240px] overflow-y-auto scrollbar-webkit  bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                         style={{
                           // maxWidth: "220px", // Set the maximum width of the button
                           whiteSpace: "nowrap",
-                          overflow: "hidden",
+                          // overflow: "hidden",
                           // textOverflow: "ellipsis",
                         }}
                       >
@@ -490,6 +492,7 @@ const AdminDashboard = () => {
                               key={index}
                               onClick={() => handleProgramSelect(option)}
                               className="p-2 cursor-pointer"
+                              title={option.name}
                             >
                               <div className="px-4 py-2 hover:bg-[#03a3d838] truncate hover:text-[#03A1D8] hover:font-semibold rounded-lg">
                                 {option.name}
@@ -505,14 +508,16 @@ const AdminDashboard = () => {
                     )}
                   </div>
                 ) : (
-                  <div className={`${!isUserSelected && "hidden"}`}>
+                  <div className={`${!isUserSelected && "hidden"} relative`}>
                     <button
                       onClick={toggleSkillOpen}
                       className={`${
                         !isSkillSelected ? " text-[#92A7BE]" : "text-[#424b55]"
-                      } flex justify-between mt-1 items-center   min-w-[300px] w-full gap-1 hover:text-[#0e1721] px-4 xlg:py-3 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                      } flex justify-between mt-1 items-center w-full gap-1 hover:text-[#0e1721] px-4 xlg:py-3 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                     >
-                      {selectedSkill}
+                      <span className="xl:max-w-[190px] xmd:max-w-[100px] w-[200px] truncate">
+                        {selectedSkill}
+                      </span>
                       <span className="">
                         <IoIosArrowDown />
                       </span>
@@ -521,7 +526,7 @@ const AdminDashboard = () => {
                     {isSkillOpen && (
                       <div
                         ref={dropdownRef}
-                        className="absolute z-50 mt-1 md:max-w-[300px] w-full max-h-[200px] overflow-auto scrollbar-webkit  bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                        className="absolute z-50 mt-1 w-full max-h-[240px] overflow-y-auto scrollbar-webkit  bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                       >
                         {allSkills && allSkills.length > 0 ? (
                           allSkills.map((option) => (
@@ -529,6 +534,7 @@ const AdminDashboard = () => {
                               key={option.id}
                               onClick={() => handleSkillSelect(option)}
                               className="p-2 cursor-pointer"
+                              title={option.name}
                             >
                               <div className="px-4 py-2 hover:bg-[#03a3d838] truncate hover:text-[#03A1D8] hover:font-semibold rounded-lg">
                                 {option.name}
@@ -580,9 +586,9 @@ const AdminDashboard = () => {
             </div>
           </div>
         </div>
-        <div className="bg-[#ffffff] rounded-xl p-5 pb-0 max-h-[260px] ">
-          <div className="flex items-center">
-            <h1 className="font-bold font-exo  text-[#32324D] text-lg  w-full">
+        <div className="bg-[rgb(255,255,255)] rounded-xl p-5 pb-0 xmd:max-h-[260px] max-h-[465px] ">
+          <div className="flex nsm:items-center nsm:flex-row flex-col ">
+            <h1 className="font-bold font-exo  text-[#022567] text-lg sm:w-[200px] w-[180px]  xlg:w-full">
               <Link href="/batch" className="w-fit">
                 Batch Details
               </Link>
@@ -606,7 +612,7 @@ const AdminDashboard = () => {
                     !isSelected && !options[0]
                       ? " text-[#92A7BE]"
                       : "text-[#424b55]"
-                  } flex justify-between text-sm z-50 items-center w-full md:w-[200px] hover:text-[#0e1721] px-4 py-2 text-left bg-white border border-[#92A7BE] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                  } flex justify-between text-sm gap-1 z-50 items-center w-full md:w-[200px] hover:text-[#0e1721] px-4 py-2 text-left bg-white border border-[#92A7BE] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
                   {selectedStatus || options[0]}
                   <span className="">
@@ -636,7 +642,7 @@ const AdminDashboard = () => {
             </div>
           </div>
 
-          <div className="max-h-[155px] mt-3 overflow-y-auto overflow-x-hidden scrollbar-webkit">
+          <div className="xmd:max-h-[155px] max-h-[355px] mt-3 overflow-y-auto overflow-x-hidden scrollbar-webkit">
             {loadingBatch ? (
               <div className="flex justify-center items-center w-full h-full p-5">
                 <CircularProgress size={20} />

@@ -74,7 +74,7 @@ export default function Page() {
                 <div className="text-sm leading-5">
                   <Link
                     href="/auth/reset-password"
-                    className="font-medium text-[#03A1D8] hover:text-[#3092b2] focus:outline-none focus:underline transition ease-in-out duration-150"
+                    className="font-medium text-blue-300 hover:text-[#3272b6] focus:outline-none focus:underline transition ease-in-out duration-150"
                   >
                     Forgot your password?
                   </Link>
@@ -108,7 +108,7 @@ export default function Page() {
               <span className="block w-full rounded-lg shadow-sm">
                 <button
                   type="submit"
-                  className={`w-full flex justify-center gap-4 py-3 px-4 text-sm font-medium rounded-lg text-dark-100 bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out ${
+                  className={`w-full flex justify-center gap-4 py-3 px-4 text-sm font-medium rounded-lg text-dark-100 bg-blue-300 hover:bg-[#3272b6] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out ${
                     loading ? "read-only" : ""
                   }`}
                 >
@@ -123,12 +123,12 @@ export default function Page() {
           {/* <div className="text-[#8A8A95] text-sm text-center mt-3 space-y-3">
             <p>
               Dont have an account?
-              <span className="text-[#03A1D8] decoration-1 hover:underline font-medium pl-1 cursor-pointer">
+              <span className="text-blue-300 decoration-1 hover:underline font-medium pl-1 cursor-pointer">
                 <Link href="/auth/signup">SignUp</Link>
               </span>
             </p>
             <p>or</p>
-            <button className="w-full flex justify-center py-3 px-4 hover:text-surface-100 border bg-transparent text-sm font-medium rounded-lg text-[#03A1D8] border-[#03A1D8] hover:bg-blue-300 focus:outline-none focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+            <button className="w-full flex justify-center py-3 px-4 hover:text-surface-100 border bg-transparent text-sm font-medium rounded-lg text-blue-300 border-blue-300 hover:bg-blue-300 focus:outline-none focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
               <Link href="/auth/signup">Register Now</Link>
             </button>
           </div> */}

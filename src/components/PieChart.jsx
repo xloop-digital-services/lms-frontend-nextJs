@@ -14,7 +14,7 @@ const PieChart = ({verified, unverified, pending, shortlisted}) => {
           datasets: [
             {
               data: [verified, unverified ,pending, shortlisted],
-              backgroundColor: ["#18A07A", "#d84848", "#f29d41", '#03a1d8'],
+              backgroundColor: ["#18A07A", "#d84848", "#f29d41", '#0074EE'],
             },
           ],
         }}

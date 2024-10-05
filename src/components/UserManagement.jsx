@@ -72,7 +72,9 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
             selectedOption.toLowerCase()
           );
 
-          if (response.data.status_code === 200) {
+
+          if (response.data.status_code === 200 && response.data.data.data.length > 0) {
+
             setApplications(
               response?.data?.data.data.map((data) => data.application)
             );
@@ -88,7 +90,11 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
 
             // console.log(response?.data?.data?.[0].?id)
             setLoadingUsers(false);
-          } // console.log("response from both idss", response.data);
+          }  else {
+            setMessage("no data found");
+            setLoadingUsers(false);
+          }
+          console.log("response from both idss", response.data);
         } catch (error) {
           console.log("error is occuring while both", error);
           // setMessage(response.data.message);
@@ -255,7 +261,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
         }}
       >
         <div>
-          <p className="text-xl font-bold">{heading}</p>
+          <p className="text-xl font-bold text-[#022567]">{heading}</p>
         </div>
         <div className="w-full flex items-center gap-4">
           {/* <div className="flex grow">
@@ -288,7 +294,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                     onClick={() => handleOptionSelect(option)}
                     className="p-2 cursor-pointer "
                   >
-                    <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                    <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#0074EE] hover:font-semibold rounded-lg">
                       {option}
                     </div>
                   </div>
@@ -322,7 +328,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                         handleToggleSection(program.name, program.id)
                       }
                     >
-                      <div className="flex gap-3 text-[17px] font-semibold font-exo">
+                      <div className="flex gap-3 text-[17px] text-[#022567] font-semibold font-exo">
                         {program.name}
                         <div
                           className="mt-1 text-[12px] text-blue-300 font-bold"
@@ -387,7 +393,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                                           }
                                           className="p-2 cursor-pointer"
                                         >
-                                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#0074EE] hover:font-semibold rounded-lg">
                                             {value}{" "}
                                           </div>
                                         </div>
@@ -463,7 +469,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                     className="flex nsm:flex-row flex-col space-y-2 justify-between items-center"
                     onClick={() => handleToggleSection(skill.name, skill.id)}
                   >
-                    <div className="flex gap-3 text-[17px] font-semibold font-exo">
+                    <div className="flex gap-3 text-[#022567] text-[17px] font-semibold font-exo">
                       {skill.name}
                       <div
                         className="mt-1 text-[12px] text-blue-300 font-bold"
@@ -520,7 +526,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                                         onClick={() => handleStatusSelect(key)}
                                         className="p-2 cursor-pointer"
                                       >
-                                        <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                                        <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#0074EE] hover:font-semibold rounded-lg">
                                           {value}{" "}
                                         </div>
                                       </div>
@@ -656,7 +662,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
             //                               }
             //                               className="p-2 cursor-pointer"
             //                             >
-            //                               <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+            //                               <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
             //                                 {option}
             //                               </div>
             //                             </div>

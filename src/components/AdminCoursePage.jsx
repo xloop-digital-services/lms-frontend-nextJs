@@ -88,7 +88,7 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
       <div className="bg-surface-100 p-8 rounded-xl">
         <div className="flex justify-between max-md:flex-col max-md:items-center">
           <div className="flex flex-col">
-            <h2 className="font-exo text-xl font-bold flex pb-2 justify-start items-center">
+            <h2 className="font-exo text-xl text-[#022567] font-bold flex pb-2 justify-start items-center">
               {title}
             </h2>
             <p className="pb-4">Select a scheduled class to view the {title}</p>
@@ -96,7 +96,7 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
           {route1 === "programs" || route1 === "courses" ? (
             <>
               <Link href={`/${route1}/create-a-${route}`}>
-                <button className=" flex justify-center items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl mr-4  hover:bg-[#4296b3]">
+                <button className=" flex justify-center items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl mr-4  hover:bg-[#3272b6]">
                   <FaPlus /> Create a New {route}
                 </button>
               </Link>

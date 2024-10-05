@@ -12,10 +12,11 @@ import {
   IoMdClose,
 } from "react-icons/io";
 import { toast, ToastContainer } from "react-toastify";
+import { CircularProgress } from "@mui/material";
 
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
-  const [selectedCity, setSelectedCity] = useState("City");
+  const [selectedCity, setSelectedCity] = useState("Select city");
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [cityOptions, setCityOptions] = useState([]);
   const [isCitySelected, setIsCitySelected] = useState(false); // Fix typo
@@ -52,7 +53,7 @@ export default function Page() {
   };
 
   const handleCitySelect = (option) => {
-    setSelectedCity(option.name);
+    setSelectedCity(option);
     setIsCityOpen(false);
     setIsCitySelected(true);
   };
@@ -85,7 +86,7 @@ export default function Page() {
       <div className="bg-surface-100 p-6 rounded-xl">
         <div className="w-full flex justify-between items-center gap-4">
           <div>
-            <p className="font-bold text-xl">Locations Details</p>
+            <p className="font-bold text-[#022567] text-xl">Locations Details</p>
           </div>
           <div className="flex gap-3">
             <div className="relative">
@@ -116,25 +117,35 @@ export default function Page() {
               {isCityOpen && (
                 <div
                   ref={cityDown}
-                  className="absolute z-10 w-[200px] mt-1 bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                  className={`absolute z-20 sm:w-[200px] mt-1 max-h-[250px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out`}
+                  // style={{
+                  //   height:
+                  //     locations.length * 40 < 300
+                  //       ? `${locations.length * 0}px`
+                  //       : "250px",
+                  //   // maxHeight: "250px",
+                  //   overflowY: locations.length * 40 > 300 ? "auto" : "unset", // Enable scrolling only if list exceeds 300px
+                  // }}
                 >
-                  {cityOptions.map((option, index) => (
-                    <div
-                      key={index}
-                      onClick={() => handleCitySelect(option)}
-                      className="p-2 cursor-pointer"
-                    >
-                      <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
-                        {option.name}
+                  {[...new Set(locations.map((option) => option.city))].map(
+                    (city, index) => (
+                      <div
+                        key={index}
+                        onClick={() => handleCitySelect(city)}
+                        className="p-2 cursor-pointer"
+                      >
+                        <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#0074EE] hover:font-semibold rounded-lg">
+                          {city}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    )
+                  )}
                 </div>
               )}
             </div>
             <div>
               <button
-                className="text-[#fff] bg-[#03A1D8] p-4 md:px-8 rounded-lg hover:cursor-pointer"
+                className="text-[#fff] bg-[#0074EE] hover:bg-[#3272b6] p-4 md:px-8 rounded-lg hover:cursor-pointer"
                 onClick={handleLocationCreate}
               >
                 Create a new location
@@ -156,8 +167,11 @@ export default function Page() {
               No Location is found in this city
             </p>
           ))}{" "}
-        {!isCitySelected &&
-          filteredCityList.length === 0 &&
+        { loading ? (
+          <div className="flex justify-center items-center w-full p-4">
+            <CircularProgress size={20} />
+          </div>
+        ) : !isCitySelected && filteredCityList.length === 0 && (
           locations.length > 0 && (
             <LocationsTable
               locations={locations}
@@ -166,7 +180,8 @@ export default function Page() {
               setUpdateLocation={setUpdateLocation}
               updateLocation={updateLocation}
             />
-          )}
+          )
+        )}
       </div>
       {openModal && (
         <LocationModal

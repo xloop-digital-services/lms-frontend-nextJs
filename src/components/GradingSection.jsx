@@ -266,7 +266,9 @@ export const GradingSection = ({
         onClick={() => handleToggleSection(title)}
       >
         <div className="flex flex-col">
-          <p className="text-[17px] font-semibold font-exo">{title}</p>
+          <p className="text-[17px] font-semibold text-[#022567] font-exo">
+            {title}
+          </p>
           {selectedValue && (
             <div>
               <p className="font-semibold text-sm text-blue-300">
@@ -302,7 +304,6 @@ export const GradingSection = ({
                     <IoIosArrowDown />
                   </span>
                 </button>
-
                 {isOpen && (
                   <div
                     className="absolute capitalize z-40 min-w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
@@ -316,11 +317,11 @@ export const GradingSection = ({
                             handleSelect(option.id);
                             setSelectedValue(option.question || option.title);
                             setSelectedDesc(option.description);
-                            setTotalMarks(option.total_grade || 0); // Update total marks for selected option
+                            setTotalMarks(option.total_grade || 0);
                           }}
                           className="p-2 cursor-pointer"
                         >
-                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
                             {option.question || option.title}
                           </div>
                         </div>

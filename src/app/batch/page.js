@@ -9,10 +9,11 @@ import cityAreas from "../../../public/data/cityAreas.json";
 import useClickOutside from "@/providers/useClickOutside";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { toast } from "react-toastify";
+import { CircularProgress } from "@mui/material";
 
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
-  const [selectedCity, setSelectedCity] = useState("City");
+  const [selectedCity, setSelectedCity] = useState("Select city");
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [batches, setBatches] = useState([]);
@@ -40,7 +41,6 @@ export default function Page() {
       setLoading(false);
     }
   };
-  console.log('kiteni barr in bacth')
   useEffect(() => {
     handleListingAllBatches();
   }, [updateBatch]);
@@ -50,10 +50,10 @@ export default function Page() {
       batch.city.toLowerCase().includes(selectedCity.toLowerCase())
     );
     setFilterCity(filteredList);
-  }, [selectedCity]);
+  }, [selectedCity, batches]);
 
   const handleResetFilter = () => {
-    setSelectedCity("City");
+    setSelectedCity("Select city");
     setUpdateBatch(true);
     setIscitySelected(false);
   };
@@ -63,7 +63,7 @@ export default function Page() {
   };
 
   const handleCitySelect = (option) => {
-    setSelectedCity(option.name);
+    setSelectedCity(option);
     setIsCityOpen(false);
     setIscitySelected(true);
   };
@@ -86,7 +86,7 @@ export default function Page() {
       <div className="bg-surface-100 p-6 rounded-xl">
         <div className="w-full mx-auto flex sm:flex-row flex-col sm:justify-between items-center  gap-4">
           <div>
-            <p className="font-bold text-xl">Batch Details</p>
+            <p className="font-bold text-[#022567] text-xl">Batch Details</p>
           </div>
           <div className="flex gap-3">
             <div>
@@ -110,19 +110,29 @@ export default function Page() {
               {isCityOpen && (
                 <div
                   ref={mousedown}
-                  className="absolute z-10 sm:w-[200px] sm:h-full  max-h-[400px] overflow-auto scrollbar-webkit mt-1 bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                  className={`absolute z-20 sm:w-[200px] mt-1 max-h-[250px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out`}
+                  // style={{
+                  //   height:
+                  //     batches.length * 40 < 300
+                  //       ? `${batches.length * 40}px`
+                  //       : "300px",
+                  //   maxHeight: "300px",
+                  //   overflowY: batches.length * 40 > 300 ? "auto" : "unset", // Enable scrolling only if list exceeds 300px
+                  // }}
                 >
-                  {city0ptions.map((option, index) => (
-                    <div
-                      key={index}
-                      onClick={() => handleCitySelect(option)}
-                      className="p-2 cursor-pointer "
-                    >
-                      <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
-                        {option.name}
+                  {[...new Set(batches.map((option) => option.city))].map(
+                    (city, index) => (
+                      <div
+                        key={index}
+                        onClick={() => handleCitySelect(city)}
+                        className="p-2 cursor-pointer"
+                      >
+                        <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
+                          {city}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    )
+                  )}
                 </div>
               )}
             </div>
@@ -182,7 +192,7 @@ export default function Page() {
             </div> */}
             <div>
               <button
-                className="text-[#fff] bg-[#03A1D8] sm:flex text-sm sm:p-4 px-3 py-3 md:px-8 rounded-lg hover:cursor-pointer"
+                className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] sm:flex text-sm sm:p-4 px-3 py-3 md:px-8 rounded-lg hover:cursor-pointer"
                 onClick={handleBatchCreate}
               >
                 Create <span className="sm:flex hidden px-1">a new </span> batch
@@ -204,15 +214,19 @@ export default function Page() {
           ) : !isCitySelected && batches.length > 0 ? (
             <div className="mt-4">
               <BatchTable
-                batches={filterCity}
+                batches={batches}
                 setUpdateBatch={setUpdateBatch}
                 updateBatch={updateBatch}
                 loading={loading}
                 setLoading={setLoading}
               />
             </div>
+          ) : loading ? (
+            <div className="flex justify-center items-center w-full p-4">
+              <CircularProgress size={20} />
+            </div>
           ) : (
-            <p className="pt-5 py-2 text-center text-dark-300">No Batch found in this city</p>
+            <p>No Batch found in this city</p>
           )}
         </div>
       </div>

@@ -106,7 +106,7 @@ export default function Page({ params }) {
             <p className="mt-2 text-sm text-dark-600">
               Remember your password?
               <a
-                className="text-[#03A1D8] decoration-1 hover:underline font-medium pl-1 cursor-pointer"
+                className="text-blue-300 decoration-1 hover:underline font-medium pl-1 cursor-pointer"
                 href="/auth/login"
               >
                 Login here
@@ -132,7 +132,7 @@ export default function Page({ params }) {
                       placeholder="Enter new password"
                       value={newPassword}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="py-3 px-4 block w-full outline-none border border-dark-200 rounded-md text-sm focus:border-blue-300 focus:ring-[#03A1D8] shadow-sm"
+                      className="py-3 px-4 block w-full outline-none border border-dark-200 rounded-md text-sm focus:border-blue-300 focus:ring-blue-300 shadow-sm"
                       required
                       aria-describedby="email-error"
                     />
@@ -163,7 +163,7 @@ export default function Page({ params }) {
                       placeholder="Confirm by password"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="py-3 px-4 block w-full outline-none border border-dark-200 rounded-md text-sm focus:border-blue-300 focus:ring-[#03A1D8] shadow-sm"
+                      className="py-3 px-4 block w-full outline-none border border-dark-200 rounded-md text-sm focus:border-blue-300 focus:ring-blue-300 shadow-sm"
                       required
                       aria-describedby="email-error"
                     />
@@ -181,7 +181,7 @@ export default function Page({ params }) {
                 </div>
                 <button
                   type="submit"
-                  className="w-full flex justify-center gap-4 py-3 px-4 text-sm font-medium rounded-lg text-dark-100 bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
+                  className="w-full flex justify-center gap-4 py-3 px-4 text-sm font-medium rounded-lg text-dark-100 bg-blue-300 hover:bg-[#3272b6] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
                   onClick={handlePassword}
                 >
                   {loading && (

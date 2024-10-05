@@ -131,7 +131,7 @@ const Grading = ({ courseId }) => {
     <div className="">
       {isAdmin && (
         <div className="w-full">
-          <label>Select Session</label>
+          <label> <label className="text-blue-500 font-semibold">Select Session</label></label>
           <select
             value={selectedSession || ""}
             onChange={handleChange}
@@ -161,7 +161,7 @@ const Grading = ({ courseId }) => {
       )}
       {isInstructor && (
         <div className="w-full">
-          <label>Select Session</label>
+          <label> <label className="text-blue-500 font-semibold">Select Session</label></label>
           <select
             value={selectedSession || ""}
             onChange={handleChangeInstructor}
@@ -236,7 +236,7 @@ const Grading = ({ courseId }) => {
         <div className="my-4">
           <button
             onClick={handleCreateWeightage}
-            className="bg-blue-300 from-dark-600 justify-end text-surface-100 p-2 rounded-md w-48 my-2 flex justify-center"
+            className="bg-blue-300 hover:bg-[#3272b6] from-dark-600 justify-end text-surface-100 p-2 rounded-md w-48 my-2 flex justify-center"
             type="submit"
           >
             {assignWeightage ? "Cancel" : "Assign Weightages"}

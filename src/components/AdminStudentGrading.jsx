@@ -112,7 +112,7 @@ const AdminStudentGrading = ({ courseId }) => {
   return (
     <div className="flex flex-col">
       <div>
-        <label>Select Session</label>
+        <label className="text-blue-500"> <label className="text-blue-500 font-semibold">Select Session</label></label>
 
         <select
           value={selectedSessionId}
@@ -154,7 +154,7 @@ const AdminStudentGrading = ({ courseId }) => {
           <div className="border border-dark-300 rounded-lg divide-y divide-dark-200 dark:border-gray-700 dark:divide-gray-700">
             <div className="overflow-hidden rounded-lg">
               <table className="min-w-full divide-y divide-dark-300 dark:divide-gray-700">
-                <thead className="bg-dark-100 dark:bg-gray-700">
+                <thead className="bg-dark-100 text-[#022567] dark:bg-gray-700">
                   <tr>
                     <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]">
                       Student ID

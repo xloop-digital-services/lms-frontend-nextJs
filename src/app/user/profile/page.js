@@ -350,7 +350,7 @@ function Profile() {
                   !isDisabled
                     ? "bg-blue-200 cursor-not-allowed"
                     : "bg-blue-300 cursor-pointer"
-                } flex w-full h-14 items-center justify-center rounded-lg py-1.5 font-semibold leading-6 text-base text-surface-100 shadow-sm outline-blue-300 focus:outline-blue-300 focus-visible:outline mb-4`}
+                } flex hidden w-full h-14 items-center justify-center rounded-lg py-1.5 font-semibold leading-6 text-base text-surface-100 shadow-sm outline-blue-300 focus:outline-blue-300 focus-visible:outline mb-4`}
               >
                 Edit profile
               </button>
@@ -456,23 +456,25 @@ function Profile() {
                 </div>
               </div>
               <div className="flex sm:flex-row flex-col lg:w-[100%]">
-                <div className="mb-4 sm:mb-0 w-full lg:w-[50%] md:w-[50%]">
-                  <label htmlFor="program">Program</label>
-                  <div className="relative flex items-center mt-2 sm:pr-4">
-                    <FaBookOpen className="absolute left-3 text-dark-600 mt-2 " />
-                    <input
-                      id="program"
-                      disabled
-                      value={program}
-                      onChange={(e) => setProgram(e.target.value)}
-                      name="program"
-                      type="text"
-                      className={`${
-                        !isDisabled && " text-dark-400"
-                      } block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 text-blue-500 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 pl-10 sm:text-sm sm:leading-6`}
-                    />
+                {isStudent && (
+                  <div className="mb-4 sm:mb-0 w-full lg:w-[50%] md:w-[50%]">
+                    <label htmlFor="program">Program</label>
+                    <div className="relative flex items-center mt-2 sm:pr-4">
+                      <FaBookOpen className="absolute left-3 text-dark-600 mt-2 " />
+                      <input
+                        id="program"
+                        disabled
+                        value={program}
+                        onChange={(e) => setProgram(e.target.value)}
+                        name="program"
+                        type="text"
+                        className={`${
+                          !isDisabled && " text-dark-400"
+                        } block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 text-blue-500 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 pl-10 sm:text-sm sm:leading-6`}
+                      />
+                    </div>
                   </div>
-                </div>
+                )}
                 <div className="lg:w-[50%] w-full md:w-[50%]">
                   <label htmlFor="city">City</label>
                   <div className="relative flex items-center mt-2">

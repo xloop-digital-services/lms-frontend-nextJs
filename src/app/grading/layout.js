@@ -12,13 +12,13 @@ export const metadata = {
 export default function CoursesLayout({ children }) {
   return (
     <>
-      {/* <AuthProvider> */}
+      <AuthProvider>
         <SidebarProvider>
           <Navbar />
           <SideBar />
           {children}
         </SidebarProvider>
-      {/* </AuthProvider> */}
+      </AuthProvider>
     </>
   );
 }

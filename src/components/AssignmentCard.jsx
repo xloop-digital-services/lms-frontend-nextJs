@@ -24,9 +24,9 @@ const AssignmentCard = ({ id, category, content, title, priority, type }) => {
                 {type}
               </p>
               <div className="flex w-full bg-[#EBF6FF] w-w-fit py-[9px] px-5 rounded-lg items-center space-x-2">
-                <p className="bg-[#03A1D8] w-2 h-2 rounded-full"></p>
+                <p className="bg-blue-300 w-2 h-2 rounded-full"></p>
                 <p
-                  className="text-[#03A1D8] uppercase text-[12px] font-bold"
+                  className="text-blue-300 uppercase text-[12px] font-bold"
                   style={{ whiteSpace: "pre" }}
                 >
                   {category}
@@ -56,7 +56,7 @@ const AssignmentCard = ({ id, category, content, title, priority, type }) => {
 
               <Link
                 href={`/${type}/course/${id}`}
-                className={`text-[#fcfeff] bg-[#03A1D8] p-1 rounded-full ${
+                className={`text-[#fcfeff] bg-blue-300 p-1 rounded-full ${
                   content ? "" : "hidden"
                 }`}
               >

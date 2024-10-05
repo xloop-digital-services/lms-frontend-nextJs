@@ -176,7 +176,7 @@ export default function CreateField({
         }}
       >
         <div className="bg-surface-100 flex flex-col p-8 rounded-xl">
-          <h2 className="font-exo text-xl font-bold">Add a {title}</h2>
+          <h2 className="font-exo text-[#022567] text-xl font-bold">Add a {title}</h2>
 
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col mt-4">
@@ -339,7 +339,7 @@ export default function CreateField({
                       e.preventDefault();
                       handleOpenSessionModal();
                     }}
-                    className="flex text-center justify-center items-center gap-2 text-surface-100 bg-blue-300 py-2 px-4 mt-4 rounded-md mr-4 hover:bg-[#4296b3]"
+                    className="flex text-center justify-center items-center gap-2 text-surface-100 bg-blue-300 py-2 px-4 mt-4 rounded-md mr-4 hover:bg-[#3272b6]"
                     // onClick={handleSession}
                   >
                     {" "}
@@ -383,7 +383,7 @@ export default function CreateField({
               )}
               <button
                 type="submit"
-                className="flex text-center justify-center items-center gap-2 text-surface-100 bg-blue-300 py-2 px-4 mt-4 rounded-md mr-4 hover:bg-[#4296b3]"
+                className="flex text-center justify-center items-center gap-2 text-surface-100 bg-blue-300 py-2 px-4 mt-4 rounded-md mr-4 hover:bg-[#3272b6]"
               >
                 Create a {title}
               </button>

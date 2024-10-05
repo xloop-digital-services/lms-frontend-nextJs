@@ -314,7 +314,7 @@ const SessionCreationModal = ({
                 fontWeight: 700,
                 fontSize: "17px",
                 lineHeight: "24.2px",
-                color: "#07224D",
+                color: "#022567",
               }}
               className="text-start  px-2 xsm:py-[10px] pb-[5px]"
             >
@@ -360,7 +360,7 @@ const SessionCreationModal = ({
                           onClick={() => handleBatchSelect(option)}
                           className="p-2 cursor-pointer "
                         >
-                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
                             {option}
                           </div>
                         </div>
@@ -413,7 +413,7 @@ const SessionCreationModal = ({
                           onClick={() => handleCourseSelect(name)}
                           className="p-2 cursor-pointer"
                         >
-                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
                             {name.name}
                           </div>
                         </div>
@@ -467,7 +467,7 @@ const SessionCreationModal = ({
                           onClick={() => handleLocationSelect(option)}
                           className="p-2 cursor-pointer"
                         >
-                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
                             {option.name}
                           </div>
                         </div>
@@ -617,7 +617,7 @@ const SessionCreationModal = ({
                 <button
                   type="submit"
                   onClick={handleSessionCreation}
-                  className="w-fit flex justify-center py-3 px-12 text-sm font-medium rounded-lg text-dark-100 bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
+                  className="w-fit flex justify-center py-3 px-12 text-sm font-medium rounded-lg text-dark-100 bg-blue-300 hover:bg-[#3272b6] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
                 >
                   Schedule
                 </button>

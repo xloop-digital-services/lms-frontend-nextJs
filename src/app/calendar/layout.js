@@ -12,15 +12,15 @@ export const metadata = {
 export default function CalendarLayout({ children }) {
   return (
     <>
-      {/* <AuthProvider> */}
-      <SidebarProvider>
-        <div>
-          <Navbar />
-        </div>
-        <SideBar />
-        {children}
-      </SidebarProvider>
-      {/* </AuthProvider> */}
+      <AuthProvider>
+        <SidebarProvider>
+          <div>
+            <Navbar />
+          </div>
+          <SideBar />
+          {children}
+        </SidebarProvider>
+      </AuthProvider>
     </>
   );
 }

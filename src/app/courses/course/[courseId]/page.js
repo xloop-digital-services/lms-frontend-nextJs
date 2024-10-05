@@ -447,23 +447,23 @@ export default function Page({ params }) {
     }
   }, []);
 
-  useEffect(() => {
-    if (!isStudent) return;
+  // useEffect(() => {
+  //   if (!isStudent) return;
 
-    if (userData?.session) {
-      setSessions(userData.session);
-      setLoader(false);
-      const foundSession = userData.session.find(
-        (session) => Number(session.course?.id) === Number(courseId)
-      );
+  //   if (userData?.session) {
+  //     setSessions(userData.session);
+  //     setLoader(false);
+  //     const foundSession = userData.session.find(
+  //       (session) => Number(session.course?.id) === Number(courseId)
+  //     );
 
-      if (foundSession) {
-        setSessionId(foundSession.id);
-      }
-    } else {
-      setLoader(true);
-    }
-  }, [userData, isStudent, courseId]);
+  //     if (foundSession) {
+  //       setSessionId(foundSession.id);
+  //     }
+  //   } else {
+  //     setLoader(true);
+  //   }
+  // }, [userData, isStudent, courseId]);
 
   const handleChange = (e) => {
     const [selectedSessionId, internalSessionId] = e.target.value.split("|");

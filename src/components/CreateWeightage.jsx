@@ -75,7 +75,7 @@ export default function CreateWeightage({ courseId, onCreation, sessionId }) {
   }
   return (
     <div>
-      <h2 className="text-lg my-4 font-bold"> Weightages</h2>
+      <h2 className="text-lg my-4 font-exo text-[#022567] font-bold"> Weightages</h2>
       <div className="my-3">
         <label>Quiz Weightage</label>
         <input
@@ -134,7 +134,7 @@ export default function CreateWeightage({ courseId, onCreation, sessionId }) {
       </div>
       <button
         onClick={handleSubmitWeightage}
-        className="bg-blue-300 from-dark-600 justify-end text-surface-100 p-2 rounded-md w-20 my-2 flex justify-center"
+        className="bg-blue-300 hover:bg-[#3272b6] from-dark-600 justify-end text-surface-100 p-2 rounded-md w-20 my-2 flex justify-center"
         type="submit"
       >
         Submit
