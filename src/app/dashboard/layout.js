@@ -9,7 +9,7 @@ export default function DashboardLayout({ children }) {
   const { userData } = useAuth();
   return (
     <>
-      <AuthProvider>
+      {/* <AuthProvider> */}
         <SidebarProvider>
           {userData?.Group === "admin" ? (
             <SideBar />
@@ -24,7 +24,7 @@ export default function DashboardLayout({ children }) {
 
           {children}
         </SidebarProvider>
-      </AuthProvider>
+      {/* </AuthProvider> */}
     </>
   );
 }

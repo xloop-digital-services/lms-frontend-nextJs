@@ -33,7 +33,6 @@ export function AuthProvider({ children }) {
       Cookies.set("userData", JSON.stringify(userData));
       const group = userData?.Group;
       Cookies.set("userGroup", group);
-
     }
   }, [userData]);
   const isInstructor = Cookies.get("userGroup") === "instructor";
@@ -106,7 +105,7 @@ export function AuthProvider({ children }) {
     Cookies.remove("userGroup");
     Cookies.remove("access_token");
     Cookies.remove("refresh_token");
-    router.push("/login");
+    router.push("/auth/login");
   };
 
   return (
@@ -123,7 +122,7 @@ export function AuthProvider({ children }) {
         userData,
         loading,
         handleShowPassword,
-        isInstructor
+        isInstructor,
       }}
     >
       {children}

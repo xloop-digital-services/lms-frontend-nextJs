@@ -71,13 +71,17 @@ function SideBar() {
         <nav className="flex flex-col p-2 text-blue-500 sidebar  bg-blue-500">
           <div className="flex flex-col h-screen">
             <div className=" flex flex-col justify-between lg:h-[90%] h-[75%] overflow-y-auto scrollbar-webkit pb-4">
+              {/* <nav className="flex flex-col p-2 text-blue-500 sidebar  bg-blue-500  h-screen">
+          <div className="flex flex-col  h-[91%] overflow-y-auto scrollbar-webkit pb-4">
+            <div className=" flex flex-col justify-between lg:h-[90%] mr-2"> */}
+
               <div className=" py-4 rounded flex flex-col">
                 <Link
                   href="/dashboard"
-                  className={`p-4 flex gap-4 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
+                  className={`p-4 flex gap-4 rounded-xl ${
                     isLinkActive("/dashboard")
-                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100 "
-                      : "text-dark-600"
+                      ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
+                      : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
                   }`}
                 >
                   <FaHome size={24} />
@@ -85,12 +89,12 @@ function SideBar() {
                 </Link>
                 <div className={`${!isAdmin && "hidden"}`}>
                   <div
-                    className={`p-4 flex flex-col group gap-4 mt-2 cursor-pointer rounded-xl hover:text-blue-300 ${
+                    className={`p-4 flex flex-col group gap-4 mt-2 cursor-pointer rounded-xl ${
                       isLinkActive("/user-management") ||
-                      isLinkActive("/user-management/approved") ||
-                      isLinkActive("/user-management/shortlist")
-                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
-                        : "text-dark-600"
+                      isLinkActive("/user-management/applicants") ||
+                      isLinkActive("/user-management/users")
+                        ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
+                        : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
                     }`}
                   >
                     <div
@@ -104,11 +108,11 @@ function SideBar() {
                           size={24}
                           className={`${
                             isLinkActive("/user-management") ||
-                            isLinkActive("/user-management/approved") ||
-                            isLinkActive("/user-management/shortlist")
-                              ? " bg-blue-300"
-                              : " bg-dark-600"
-                          } text-surface-100 p-1 rounded-md group-hover:bg-blue-300`}
+                            isLinkActive("/user-management/applicants") ||
+                            isLinkActive("/user-management/users")
+                              ? " text-blue-300 bg-blue-600"
+                              : " bg-dark-600 text-[#07224d]"
+                          }  group-hover:text-[#07224da0] p-1 rounded-md  group-hover:bg-blue-600`}
                         />{" "}
                         <p
                           className={`flex-grow text-center ${
@@ -135,7 +139,7 @@ function SideBar() {
                               className={`${
                                 isLinkActive("/user-management/applicants") &&
                                 "font-semibold"
-                              } hover:font-semibold `}
+                              } hover:font-semibold hover:text-blue-200`}
                             >
                               Applicants
                             </Link>
@@ -146,7 +150,7 @@ function SideBar() {
                               className={`${
                                 isLinkActive("/user-management/users") &&
                                 "font-semibold"
-                              } hover:font-semibold `}
+                              } hover:font-semibold hover:text-blue-200`}
                             >
                               Verified Users
                             </Link>
@@ -157,10 +161,10 @@ function SideBar() {
                   </div>
                   <Link
                     href="/location"
-                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
+                    className={`p-4 flex gap-4 mt-2 rounded-xl ${
                       isLinkActive("/location")
-                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
-                        : "text-dark-600"
+                        ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
+                        : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
                     }`}
                   >
                     <FaLocationDot size={24} />
@@ -168,10 +172,10 @@ function SideBar() {
                   </Link>
                   <Link
                     href="/batch"
-                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
+                    className={`p-4 flex gap-4 mt-2 rounded-xl ${
                       isLinkActive("/batch")
-                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
-                        : "text-dark-600"
+                        ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
+                        : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
                     }`}
                   >
                     <FaListAlt size={24} />
@@ -179,19 +183,19 @@ function SideBar() {
                   </Link>
                   <Link
                     href="/class-scheduling"
-                    className={`p-4  flex gap-4 group mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
+                    className={`p-4  flex gap-4 group mt-2 rounded-xl  ${
                       isLinkActive("/class-scheduling")
-                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100 "
-                        : "text-dark-600"
+                        ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
+                        : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
                     }`}
                   >
                     <FaListCheck
                       size={24}
                       className={`${
                         isLinkActive("/class-scheduling")
-                          ? " bg-blue-300"
-                          : " bg-dark-600"
-                      } text-surface-100 p-1 rounded-md group-hover:bg-blue-300`}
+                          ? " text-blue-300 bg-blue-600"
+                          : " bg-dark-600 text-[#07224d]"
+                      }  group-hover:text-[#07224da0] p-1 rounded-md  group-hover:bg-blue-600`}
                     />
                     Class Scheduling
                   </Link>
@@ -200,10 +204,10 @@ function SideBar() {
                 {(isAdmin || isStudent) && (
                   <Link
                     href="/programs"
-                    className={`p-4 flex gap-4 rounded-xl border-dark-300  hover:text-blue-300 ${
+                    className={`p-4 flex mt-2 gap-4 rounded-xl ${
                       isLinkActive("/programs")
-                        ? "text-blue-300 bg-blue-600 "
-                        : "text-dark-600"
+                        ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
+                        : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
                     }`}
                   >
                     <FaBookOpen size={24} />
@@ -215,10 +219,10 @@ function SideBar() {
 
                 <Link
                   href="/courses"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
+                  className={`p-4  flex gap-4 mt-2 rounded-xl ${
                     isLinkActive("/courses")
-                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
-                      : "text-dark-600"
+                      ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
+                      : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
                   }`}
                 >
                   <FaBookOpen size={24} />
@@ -228,10 +232,10 @@ function SideBar() {
                 {/* <div className={`${isAdmin && "hidden"}`}> */}
                 <Link
                   href="/attendance"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40  ${
+                  className={`p-4  flex gap-4 mt-2 rounded-xl ${
                     isLinkActive("/attendance")
-                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
-                      : "text-dark-600"
+                      ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
+                      : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
                   }`}
                 >
                   <FaClipboard size={24} />
@@ -240,10 +244,10 @@ function SideBar() {
 
                 <Link
                   href="/assignment"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
+                  className={`p-4  flex gap-4 mt-2 rounded-xl ${
                     isLinkActive("/assignment")
-                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
-                      : "text-dark-600"
+                      ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
+                      : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
                   }`}
                 >
                   <FaTasks size={24} />
@@ -251,10 +255,10 @@ function SideBar() {
                 </Link>
                 <Link
                   href="/quiz"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
+                  className={`p-4  flex gap-4 mt-2 rounded-xl ${
                     isLinkActive("/quiz")
-                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
-                      : "text-dark-600"
+                      ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
+                      : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
                   }`}
                 >
                   <FaClipboardList size={24} />
@@ -262,10 +266,10 @@ function SideBar() {
                 </Link>
                 <Link
                   href="/project"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
+                  className={`p-4  flex gap-4 mt-2 rounded-xl  ${
                     isLinkActive("/project")
-                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
-                      : "text-dark-600"
+                      ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
+                      : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
                   }`}
                 >
                   <FaLaptopCode size={24} />
@@ -273,10 +277,10 @@ function SideBar() {
                 </Link>
                 <Link
                   href="/exam"
-                  className={`p-4 flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
+                  className={`p-4 flex gap-4 mt-2 rounded-xl ${
                     isLinkActive("/exam")
-                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
-                      : "text-dark-600"
+                      ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
+                      : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
                   }`}
                 >
                   <FaFile size={24} />
@@ -284,10 +288,10 @@ function SideBar() {
                 </Link>
                 <Link
                   href="/grading"
-                  className={`p-4 flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
+                  className={`p-4 flex gap-4 mt-2 rounded-xl ${
                     isLinkActive("/grading")
-                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
-                      : "text-dark-600"
+                      ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
+                      : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
                   }`}
                 >
                   <FaClipboardCheck size={24} />
@@ -296,10 +300,10 @@ function SideBar() {
                 {!isStudent && (
                   <Link
                     href="/students"
-                    className={`p-4 flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
+                    className={`p-4 flex gap-4 mt-2 rounded-xl ${
                       isLinkActive("/students")
-                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
-                        : "text-dark-600"
+                        ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
+                        : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
                     }`}
                   >
                     <FaUsers size={24} />
@@ -309,10 +313,10 @@ function SideBar() {
                 {!isAdmin && (
                   <Link
                     href="/calendar"
-                    className={`p-4  flex gap-4 mt-2 rounded-xl  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
+                    className={`p-4  flex gap-4 mt-2 rounded-xl ${
                       isLinkActive("/calendar")
-                        ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
-                        : "text-dark-600"
+                        ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
+                        : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
                     }`}
                   >
                     <FaCalendar size={24} />
@@ -323,10 +327,10 @@ function SideBar() {
               <div className="flex flex-col">
                 <Link
                   href="/user/profile"
-                  className={`p-4 flex gap-4 border rounded-xl border-dark-300  hover:text-blue-300 hover:bg-[#e6f8ff] hover:bg-opacity-40 ${
+                  className={`p-4 flex gap-4 border rounded-xl border-dark-300  ${
                     isLinkActive("/user/profile")
-                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
-                      : "text-dark-600"
+                      ? "bg-blue-300 text-blue-600 hover:bg-opacity-60 hover:text-blue-300"
+                      : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
                   }`}
                 >
                   <FaUser size={24} />
@@ -336,10 +340,10 @@ function SideBar() {
                 <Link
                   href="/auth/login"
                   onClick={logOutUser}
-                  className={`p-4 flex gap-4 mt-2 border rounded-xl border-dark-300 hover:text-blue-300 ${
+                  className={`p-4 flex gap-4 mt-2 border rounded-xl border-dark-300  ${
                     isLinkActive("/auth/login")
-                      ? "text-blue-300 bg-blue-600 hover:bg-blue-600 hover:bg-opacity-100"
-                      : "text-dark-600"
+                      ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
+                      : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
                   }`}
                 >
                   <FaSignOutAlt size={24} />
