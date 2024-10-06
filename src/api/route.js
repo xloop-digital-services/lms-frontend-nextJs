@@ -842,7 +842,6 @@ export const getInstructorPreferredSessions = async (userId) => {
   }
 };
 
-
 export const getInstructorSessionsbyCourseId = async (
   userId,
   group,
@@ -858,14 +857,20 @@ export const getInstructorSessionsbyCourseId = async (
   }
 };
 
-export const DeleteAssignedSessions = async (userId, selectedOption, sessionId) => {
+export const DeleteAssignedSessions = async (
+  userId,
+  selectedOption,
+  sessionId
+) => {
   try {
-    const response = await axiosInstance.delete(`/user-sessions/${userId}/?group_name=${selectedOption}&pk=${sessionId}`)
+    const response = await axiosInstance.delete(
+      `/user-sessions/${userId}/?group_name=${selectedOption}&pk=${sessionId}`
+    );
     return response;
   } catch (error) {
     throw error;
   }
-}
+};
 
 //get all skills
 export const getAllSkills = async () => {
@@ -1129,6 +1134,7 @@ export const updateProject = async (projectData, projectId) => {
       `/course/projects/${projectId}/`,
       projectData
     );
+    return response;
   } catch (error) {
     throw error;
   }
@@ -1141,6 +1147,7 @@ export const deleteProject = async (projectData, projectId) => {
       `/course/projects/${projectId}/`,
       projectData
     );
+    return response;
   } catch (error) {
     throw error;
   }
@@ -1167,6 +1174,7 @@ export const updateExam = async (examData, examId) => {
       `/course/exams/${examId}/`,
       examData
     );
+    return response;
   } catch (error) {
     throw error;
   }

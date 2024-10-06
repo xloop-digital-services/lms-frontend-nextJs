@@ -84,11 +84,11 @@ export default function Page() {
       }}
     >
       <div className="bg-surface-100 p-6 rounded-xl">
-        <div className="w-full mx-auto flex sm:flex-row flex-col sm:justify-between items-center  gap-4">
+        <div className="w-full mx-auto flex sm:flex-row flex-col sm:justify-between items-center gap-4 max-md:flex-col">
           <div>
             <p className="font-bold text-[#022567] text-xl">Batch Details</p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-3 max-md:flex-col">
             <div>
               <button
                 onClick={toggleCityOpen}

@@ -219,7 +219,7 @@ export default function Page({ params }) {
     );
 
     if (!assignmentToDelete) {
-      toast.error("Assignment not found");
+      toast.error("Exam not found");
       return;
     }
 
@@ -230,13 +230,13 @@ export default function Page({ params }) {
       const response = await deleteExam(formData, assignmentToDelete.id);
 
       if (response.status === 200) {
-        toast.success("Assignment deleted successfully!");
+        toast.success("Exam deleted successfully!");
         fetchAssignments();
       } else {
-        toast.error("Error deleting assignment", response?.message);
+        toast.error("Error deleting exam", response?.message);
       }
     } catch (error) {
-      toast.error("Error deleting assignment", error);
+      toast.error("Error deleting exam", error);
       console.error(error);
     }
   };
@@ -323,7 +323,7 @@ export default function Page({ params }) {
                   // Combine session_id and instructor_id in value
                   const optionValue = `${session?.session_name}|${session?.id}`;
                   return (
-                    <option key={session?.session_id} value={optionValue}>
+                    <option key={session?.id} value={optionValue}>
                       {session.session_name}
                     </option>
                   );
@@ -521,7 +521,7 @@ export default function Page({ params }) {
                 type="submit"
                 onClick={handleAssignmentCreation}
                 disabled={loading}
-                className={`w-40 my-4 flex justify-center py-3 px-4 text-sm font-medium rounded-lg text-surface-100 
+                className={`w-44 my-4 flex justify-center py-3 px-4 text-sm font-medium rounded-lg text-surface-100 
     ${
       loading
         ? "bg-blue-300 text-surface-100"

@@ -146,7 +146,7 @@ const Grading = ({ courseId }) => {
                 // Combine session_id and instructor_id in value
                 const optionValue = `${session?.session_name}|${session?.id}`;
                 return (
-                  <option key={session?.session_id} value={optionValue}>
+                  <option key={session?.id} value={optionValue}>
                     {session.session_name}
                   </option>
                 );

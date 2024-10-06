@@ -203,13 +203,14 @@ export default function Page({ params }) {
       toast.error("Assignment not found");
       return;
     }
-
-    if (!selectedSession) {
-      console.error("No session selected");
-      return;
-    }
-
-    formData.append("status", 2);
+    setCurrentAssignment(assignmentToEdit);
+    setQuestion(assignmentToEdit.question);
+    setDescription(assignmentToEdit.description);
+    setDueDate(assignmentToEdit.due_date);
+    setResubmission(assignmentToEdit.no_of_resubmissions_allowed);
+    setFile(assignmentToEdit.content);
+    setCreatingQuiz(true);
+    setTotalGrade(assignmentToEdit.total_grade);
   };
 
   const handleDeleteAssignment = async (id) => {
@@ -311,7 +312,9 @@ export default function Page({ params }) {
         />
         {isAdmin && (
           <div className="w-full">
-            <label className="text-blue-500"> <label className="text-blue-500 font-semibold">Select Session</label></label>
+            <label className="text-blue-500 font-semibold">
+              Select Session
+            </label>
             <select
               value={selectedSession || ""}
               onChange={handleChange}
@@ -322,11 +325,11 @@ export default function Page({ params }) {
               </option>
               {Array.isArray(sessions) && sessions.length > 0 ? (
                 sessions.map((session) => {
-                  console.log("Mapping session:", session);
-                  // Combine session_id and instructor_id in value
+                  // console.log("Mapping session:", session);
+                  // Combine session_name and id in value
                   const optionValue = `${session?.session_name}|${session?.id}`;
                   return (
-                    <option key={session?.session_id} value={optionValue}>
+                    <option key={session?.id} value={optionValue}>
                       {session.session_name}
                     </option>
                   );
@@ -339,9 +342,15 @@ export default function Page({ params }) {
             </select>
           </div>
         )}
+
         {isInstructor && (
           <div className="w-full">
-            <label className="text-blue-500"> <label className="text-blue-500 font-semibold">Select Session</label></label>
+            <label className="text-blue-500">
+              {" "}
+              <label className="text-blue-500 font-semibold">
+                Select Session
+              </label>
+            </label>
             <select
               value={selectedSession || ""}
               onChange={handleChangeInstructor}
@@ -474,7 +483,7 @@ export default function Page({ params }) {
                 type="submit"
                 onClick={handleAssignmentCreation}
                 disabled={loading}
-                className={`w-40 my-4 flex justify-center py-3 px-4 text-sm font-medium rounded-lg text-surface-100 
+                className={`w-44 my-4 flex justify-center py-3 px-4 text-sm font-medium rounded-lg text-surface-100 
     ${
       loading
         ? "bg-blue-300 text-surface-100"

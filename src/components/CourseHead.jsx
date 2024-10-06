@@ -50,6 +50,8 @@ const CourseHead = ({
     }
   }
 
+ 
+
   async function fetchProgramById() {
     try {
       const response = await getProgramById(id);

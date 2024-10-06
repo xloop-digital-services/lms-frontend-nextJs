@@ -32,7 +32,9 @@ const UploadingFile = ({
     ".txt",
     ".zip",
   ];
-
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
   const handleBrowse = (event) => {
     const selectedFile = event.target.files[0];
     handleFileSelection(selectedFile);
@@ -69,7 +71,7 @@ const UploadingFile = ({
   };
 
   const handleUpload = async (type) => {
-    setLoader(true); 
+    setLoader(true);
     if (file === null) {
       toast.warn("File is not selected");
       setLoader(false);
@@ -97,15 +99,15 @@ const UploadingFile = ({
 
       const response = await uploadFunction(formData);
       if (response.status === 201) {
-        toast.success(`${type} has been submitted`);
+        toast.success(`${capitalizeFirstLetter(type)} has been submitted`);
         setComment("");
-        setLoader(false); 
+        setLoader(false);
         setUploadFile(false);
         setUpdateStatus(true);
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "An error occurred");
-      setLoader(false); 
+      setLoader(false);
       setUploadFile(false);
     }
   };
