@@ -220,9 +220,15 @@ const AdminDataStructure = ({
                           <td className="px-6 py-4  text-center whitespace-nowrap text-sm text-gray-800">
                             {quiz?.total_grade || "-"}
                           </td>
-                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
-                            {formatDateTime(quiz?.due_date)}
-                          </td>
+                          {field === "exam" ? (
+                            <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                              {quiz?.due_date}
+                            </td>
+                          ) : (
+                            <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                              {formatDateTime(quiz?.due_date)}
+                            </td>
+                          )}
                           {assessment === "Exam" && (
                             <>
                               <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">

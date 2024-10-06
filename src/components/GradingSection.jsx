@@ -306,7 +306,7 @@ export const GradingSection = ({
                 </button>
                 {isOpen && (
                   <div
-                    className="absolute capitalize z-40 min-w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                    className="absolute capitalize sm:w-[200px] max-h-[250px] overflow-auto scrollbar-webkit z-40 min-w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                     onClick={(e) => e.stopPropagation()}
                   >
                     {options?.length > 0 ? (

@@ -308,7 +308,12 @@ export default function Page({ params }) {
         />{" "}
         {isAdmin && (
           <div className="w-full">
-            <label className="text-blue-500" > <label className="text-blue-500 font-semibold">Select Session</label></label>
+            <label className="text-blue-500">
+              {" "}
+              <label className="text-blue-500 font-semibold">
+                Select Session
+              </label>
+            </label>
             <select
               value={selectedSession || ""}
               onChange={handleChange}
@@ -338,7 +343,12 @@ export default function Page({ params }) {
         )}
         {isInstructor && (
           <div className="w-full">
-            <label className="text-blue-500 font-semibold"> <label className="text-blue-500 font-semibold">Select Session</label></label>
+            <label className="text-blue-500 font-semibold">
+              {" "}
+              <label className="text-blue-500 font-semibold">
+                Select Session
+              </label>
+            </label>
             <select
               value={selectedSession || ""}
               onChange={handleChangeInstructor}
@@ -467,7 +477,7 @@ export default function Page({ params }) {
               <div className="my-2">
                 <label className="text-md">Due Date</label>
                 <input
-                  type="datetime-local"
+                  type="date"
                   className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
                   value={dueDate}
                   onChange={(e) => setDueDate(e.target.value)}

@@ -29,6 +29,7 @@ export default function Page({ params }) {
   const [courses, setCourses] = useState([]);
   const [fetch, setFetch] = useState(false);
   const [programStatus, setProgramStatus] = useState(0);
+  const displayedCourses = new Set();
 
   async function fetchProgramById() {
     try {
@@ -126,8 +127,21 @@ export default function Page({ params }) {
       console.error("Error fetching courses:", error);
     }
   }
+
   const removeCourse = (courseToRemove) => {
-    setInputCourses(inputCourses.filter((course) => course !== courseToRemove));
+    setInputCourses((prevCourses) =>
+      prevCourses.filter((courseId) => courseId !== courseToRemove)
+    );
+    setCourseData((prevCourses) =>
+      prevCourses.filter((course) => course.id !== courseToRemove)
+    );
+
+    setProgramData((prevProgramData) => ({
+      ...prevProgramData,
+      courses: prevProgramData.courses.filter(
+        (courseId) => courseId !== courseToRemove
+      ),
+    }));
   };
 
   useEffect(() => {
@@ -157,9 +171,6 @@ export default function Page({ params }) {
               id={programId}
               chr={null}
               program="program"
-              // rating="Top Instructor"
-              instructorName="Maaz"
-              // shortDesc={programData.short_description}
               setFetch={setFetch}
               title="Edit program"
               setIsEditing={setIsEditing}
@@ -233,28 +244,32 @@ export default function Page({ params }) {
                 />
 
                 <div className="relative flex flex-wrap items-center gap-2 bg-white outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 shadow-sm ring-1 ring-inset focus:ring-inset p-2 sm:text-sm sm:leading-6">
-                  {courseData?.map((courseId) => {
+                  {courseData?.map((course) => {
+                    if (displayedCourses.has(course.id)) return null;
+                    displayedCourses.add(course.id);
+
                     return (
                       <div
-                        key={courseId.id}
-                        value={courseId.courses}
+                        key={course.id}
                         className="flex items-center space-x-2 px-3 py-1 bg-blue-600 border border-blue-300 rounded-full"
                       >
-                        <span>{courseId?.name}</span>
+                        <span>{course?.name}</span>
                         <FaTimes
                           className="cursor-pointer"
-                          onClick={() => removeCourse(courseId.id)}
+                          onClick={() => removeCourse(course.id)}
                         />
                       </div>
                     );
                   })}
 
                   {inputCourses?.map((courseId) => {
+                    if (displayedCourses.has(courseId)) return null;
+                    displayedCourses.add(courseId);
+
                     const course = courses.find((c) => c.id === courseId);
                     return (
                       <div
                         key={courseId}
-                        // value={programData.courses}
                         className="flex items-center space-x-2 px-3 py-1 bg-blue-600 border border-blue-300 rounded-full"
                       >
                         <span>{course?.name}</span>
@@ -265,13 +280,6 @@ export default function Page({ params }) {
                       </div>
                     );
                   })}
-                  <input
-                    id="courses-names"
-                    disabled
-                    placeholder="Select courses"
-                    className="flex-grow outline-none bg-surface-100 placeholder-dark-300"
-                  />
-
                   <select
                     value=""
                     onChange={handleSelectChange}
@@ -328,28 +336,6 @@ export default function Page({ params }) {
                   />
                 ))}
               </div>
-              {/* </div>
-              ) : (
-                <div className="flex gap-3 flex-wrap">
-                  {courseData?.map((course, index) => (
-                    <Link
-                      key={course.id}
-                      href={`/courses/course/${course.id}`}
-                      className="mx-1"
-                    >
-                      <CourseCard
-                        id={course.id}
-                        courseName={course.name}
-                        courseDesc={course.short_description}
-                        image={courseImg}
-                        // route={`course`}
-                        // route1="courses"
-                        status={course.status}
-                      />
-                    </Link>
-                  ))}
-                </div>
-              )} */}
             </div>
           </div>
         </div>
