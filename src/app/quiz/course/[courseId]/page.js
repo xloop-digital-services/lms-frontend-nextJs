@@ -59,7 +59,7 @@ export default function Page({ params }) {
         const foundSession = sessions.find(
           (session) => Number(session.course?.id) === Number(courseId)
         );
-        if (isStudent && foundSession) {
+        if (foundSession) {
           setSessionId(foundSession.id);
         }
       } else {
@@ -306,7 +306,12 @@ export default function Page({ params }) {
         />
         {isAdmin && (
           <div className="w-full">
-            <label className="text-blue-500"> <label className="text-blue-500 font-semibold">Select Session</label></label>
+            <label className="text-blue-500">
+              {" "}
+              <label className="text-blue-500 font-semibold">
+                Select Session
+              </label>
+            </label>
             <select
               value={selectedSession || ""}
               onChange={handleChange}
@@ -336,7 +341,12 @@ export default function Page({ params }) {
         )}
         {isInstructor && (
           <div className="w-full">
-            <label className="text-blue-500"> <label className="text-blue-500 font-semibold">Select Session</label></label>
+            <label className="text-blue-500">
+              {" "}
+              <label className="text-blue-500 font-semibold">
+                Select Session
+              </label>
+            </label>
             <select
               value={selectedSession || ""}
               onChange={handleChangeInstructor}

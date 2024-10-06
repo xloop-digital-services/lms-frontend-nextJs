@@ -56,13 +56,11 @@ export default function Page({ params }) {
         const sessions = response.data?.session || [];
         console.log(sessions);
         const coursesData = sessions.map((session) => session.course);
-        // setCourses(coursesData);
-        // setLoading(false);
         const foundSession = sessions.find(
           (session) => Number(session.course?.id) === Number(courseId)
         );
 
-        if (isStudent && foundSession) {
+        if (foundSession) {
           setSessionId(foundSession.id);
         }
       } else {
@@ -96,6 +94,8 @@ export default function Page({ params }) {
     setSelectedSession(value);
     setSessionId(value);
   };
+
+  console.log(sessionId);
 
   async function fetchAssignments() {
     const response = await getAssignmentsByCourseId(courseId, sessionId);
@@ -291,7 +291,7 @@ export default function Page({ params }) {
     if (isStudent) {
       fetchAssignmentProgress();
     }
-  }, [userId, sessionId, selectedSession, updateStatus]);
+  }, [userId, sessionId, selectedSession, updateStatus, isStudent]);
 
   return (
     <div

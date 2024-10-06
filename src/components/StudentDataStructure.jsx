@@ -185,7 +185,7 @@ const StudentDataStructure = ({
                                       title="download"
                                       onClick={(e) => {
                                         e.preventDefault();
-                                        downloadFile(quiz.content);
+                                        downloadFile(quiz.content_url);
                                       }}
                                     >
                                       {quiz.question || quiz.title}
