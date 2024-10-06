@@ -51,7 +51,7 @@ const UserApprovalTable = ({
                     </th> */}
                       <th
                         scope="col"
-                        className=" py-4 pr-16 text-center text-xs font-medium text-gray-500 uppercase w-[22%]"
+                        className=" py-4 px-6 text-start text-xs font-medium text-gray-500 uppercase w-[22%]"
                       >
                         Email
                       </th>
@@ -67,12 +67,12 @@ const UserApprovalTable = ({
                       >
                         Contact No.
                       </th>
-                      <th
+                      {/* <th
                         scope="col"
                         className="px-14 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
                       >
                         Status
-                      </th>
+                      </th> */}
                       <th
                         scope="col"
                         className="px-6 py-4 rounded-lg text-center text-xs font-medium text-gray-500 uppercase w-[10%]"
@@ -126,7 +126,7 @@ const UserApprovalTable = ({
                             {/* <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800">
                             16 years
                           </td> */}
-                            <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
+                            {/* <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
                               <div className="whitespace-nowrap flex w-full justify-start text-sm text-surface-100">
                                 <p
                                   className={`${
@@ -138,7 +138,7 @@ const UserApprovalTable = ({
                                   {user?.application_status || "-"}
                                 </p>
                               </div>
-                            </td>
+                            </td> */}
                             <td className="px-6 py-4 whitespace-nowrap w-full text-sm flex items-center justify-center gap-3">
                               {/* <div
                               className="flex items-center justify-center  group text-blue-300"

@@ -75,7 +75,7 @@ function SideBar() {
           <div className="flex flex-col  h-[91%] overflow-y-auto scrollbar-webkit pb-4">
             <div className=" flex flex-col justify-between lg:h-[90%] mr-2"> */}
 
-              <div className=" py-4 rounded flex flex-col">
+              <div className=" py-4 rounded flex flex-col pr-2">
                 <Link
                   href="/dashboard"
                   className={`p-4 flex gap-4 rounded-xl ${
@@ -324,7 +324,7 @@ function SideBar() {
                   </Link>
                 )}
               </div>
-              <div className="flex flex-col">
+              <div className="flex flex-col pr-2">
                 <Link
                   href="/user/profile"
                   className={`p-4 flex gap-4 border rounded-xl border-dark-300  ${
