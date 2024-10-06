@@ -161,8 +161,10 @@ export default function ApplicationForm() {
 
   const handleProgramSelect = (program) => {
     if (!selectedProgram.includes(program.name)) {
-      setSelectedProgram([...selectedProgram, program.name]);
-      setProgramId([...programId, program.id]);
+      if (selectedProgram.length < 3) {
+        setSelectedProgram([...selectedProgram, program.name]);
+        setProgramId([...programId, program.id]);
+      }
     } else {
       // If program is already selected, remove it
       setSelectedProgram(
@@ -186,8 +188,10 @@ export default function ApplicationForm() {
 
   const handleSkillSelect = (program) => {
     if (!selectedSkill.includes(program.name)) {
-      setSelectedSkill([...selectedSkill, program.name]);
-      setSkillId([...skillId, program.id]);
+      if (selectedSkill.length < 3) {
+        setSelectedSkill([...selectedSkill, program.name]);
+        setSkillId([...skillId, program.id]);
+      }
     } else {
       // If program is already selected, remove it
       setSelectedSkill(
@@ -214,6 +218,7 @@ export default function ApplicationForm() {
     setCityShortName(option.shortName);
     setIsCityOpen(false);
     setIsCitySelected(true);
+    setLocationName([]);
     // setAllLocations(option.areas);
   };
   const toggleLocationOpen = () => {
@@ -222,8 +227,11 @@ export default function ApplicationForm() {
 
   const handleLocationSelect = (program) => {
     if (!locationName.includes(program.name)) {
-      setLocationName([...locationName, program.name]);
-      setLocationId([...locationId, program.id]);
+      if (locationName.length < 3) {
+        // Add the program if less than 3 are selected
+        setLocationName([...locationName, program.name]);
+        setLocationId([...locationId, program.id]);
+      }
     } else {
       // If program is already selected, remove it
       setLocationName(
@@ -231,8 +239,9 @@ export default function ApplicationForm() {
       );
       setLocationId(locationId.filter((selected) => selected !== program.id));
     }
-    // setLocationCode(program.shortName);
-    // setIsLocationOpen(false);
+
+    // setLocationCode(program.shortName); // Uncomment if needed
+    // setIsLocationOpen(false); // Uncomment if needed
     setIsLocationSelected(true);
   };
 
@@ -625,7 +634,9 @@ export default function ApplicationForm() {
 
           <div className="flex flex-col w-full space-y-4 mt-9  mx-4">
             <div className="flex xsm:flex-row flex-col xsm:gap-0 gap-4 w-full items-center  justify-center">
-              <p className="lg:w-[150px] w-[60%] lg:text-start text-center">Register as: </p>
+              <p className="lg:w-[150px] w-[60%] lg:text-start text-center">
+                Register as:{" "}
+              </p>
               <div className="flex lg:justify-evenly lg:gap-0 gap-10 xsm:justify-start justify-center items-start w-full">
                 <div className="flex gap-2">
                   <input
@@ -672,7 +683,7 @@ export default function ApplicationForm() {
             {selectedRole === "student" ? (
               <div className=" relative space-y-2 text-[15px] w-full">
                 <p>
-                  Programs{" "}
+                  Programs
                   <span className="text-[12px] text-dark-400">(maximum 3)</span>{" "}
                 </p>
                 <button
