@@ -50,7 +50,9 @@ export default function MainCourseCard({
                 </div>
                 <p>
                   Instructor Name:{" "}
-                  <span className="text-blue-300">{instructor}</span>
+                  <span className="text-blue-300">
+                    {instructor ? instructor : "To be Assigned"}
+                  </span>
                 </p>
 
                 {progress ? <Progress progress={progress} /> : null}

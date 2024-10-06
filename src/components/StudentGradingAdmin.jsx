@@ -172,6 +172,13 @@ export default function StudentGradingAdmin({
 
   return (
     <>
+      <h2 className="text-md font-semi-bold text-blue-500">
+        Registration Id of Student:{" "}
+        <span className="font-bold px-2 py-1 rounded-md bg-gray-100 text-black">
+          {regId}
+        </span>
+      </h2>
+
       <div className="my-5 space-y-3">
         <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
           <div

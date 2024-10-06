@@ -24,10 +24,10 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
   const [toggleSession, setToggleSession] = useState(false);
   const [isSessionOpen, setIsSessionOpen] = useState(false);
   const [sessionId, setSessionId] = useState(null);
-  const sessionDown = useRef(null)
+  const sessionDown = useRef(null);
   // console.log(userData?.Group);
 
-  useClickOutside(sessionDown, () => setIsSessionOpen(false))
+  useClickOutside(sessionDown, () => setIsSessionOpen(false));
   async function fetchAllCourses() {
     setLoading(true);
     try {
@@ -66,8 +66,9 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
   };
 
   useEffect(() => {
-    isAdmin && fetchAllCourses();
-  }, []);
+    if (isAdmin && title === "Programs") return; 
+    fetchAllCourses(); 
+  }, [isAdmin, title]);
 
   const handleSessionToggle = (session) => {
     setIsSessionOpen(true);

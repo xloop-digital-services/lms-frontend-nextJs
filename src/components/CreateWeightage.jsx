@@ -13,6 +13,7 @@ export default function CreateWeightage({ courseId, onCreation, sessionId }) {
   const [projectsWeightage, setProjectsWeightage] = useState("");
   const [examsWeightage, setExamsWeightage] = useState("");
   const [loader, setLoader] = useState(false);
+
   const sum = (a, b, c, d) => {
     return (
       parseFloat(a || 0) +
@@ -22,23 +23,19 @@ export default function CreateWeightage({ courseId, onCreation, sessionId }) {
     );
   };
 
-  //   async function fetchWeightages() {
-  //     const response = await getWeightages();
-  //     setLoader(true);
-  //     try {
-  //       if (response.status === 200) {
-  //         setProgress(response.data);
-  //         // setLoader(false);
-  //         // console.log(progress);
-  //         // console.log(response.data);
-  //       } else {
-  //         console.error("Failed to fetch courses", response.status);
-  //       }
-  //     } catch (error) {
-  //       console.log("error", error);
-  //     }
-  //   }
   async function handleSubmitWeightage() {
+    const totalWeightage = sum(
+      quizzesWeightage,
+      assignmentsWeightage,
+      projectsWeightage,
+      examsWeightage
+    );
+
+    if (totalWeightage !== 100) {
+      toast.error("Total weightage must be exactly 100%");
+      return;
+    }
+
     const data = {
       course: courseId,
       assignments_weightage: assignmentsWeightage,
@@ -47,17 +44,16 @@ export default function CreateWeightage({ courseId, onCreation, sessionId }) {
       exams_weightage: examsWeightage,
       session: sessionId,
     };
+
     try {
       if (!sessionId) {
         toast.error("Select a session to create the assignment.");
         return;
       }
+
       const response = await assignWeightages(data);
       if (response.status === 200 || response.status === 201) {
-        toast.success(
-          "Weightages Created successfully",
-          response?.data.message
-        );
+        toast.success("Weightages Created successfully", response?.data.message);
         setExamsWeightage("");
         setAssignmentsWeightage("");
         setProjectsWeightage("");
@@ -65,7 +61,6 @@ export default function CreateWeightage({ courseId, onCreation, sessionId }) {
         if (onCreation) {
           onCreation();
         }
-        // fetchWeightages()
       } else {
         toast.error("Error creating weightages", response.data?.message);
       }
@@ -73,6 +68,7 @@ export default function CreateWeightage({ courseId, onCreation, sessionId }) {
       toast.error("Error creating weightages", response.data?.message);
     }
   }
+
   return (
     <div>
       <h2 className="text-lg my-4 font-exo text-[#022567] font-bold"> Weightages</h2>

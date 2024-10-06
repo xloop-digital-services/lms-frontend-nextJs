@@ -433,19 +433,18 @@ export default function Page({ params }) {
   }, [sessionId]);
 
   useEffect(() => {
-    fetchAllSkills();
+    // fetchAllSkills();
     // fetchSkillbyId();
     {
       isStudent && fetchCourseProgress();
     }
     fetchAllSkills();
-  }, []);
+  }, [courseId]);
 
   useEffect(() => {
-    if (courseId) {
-      fetchCoursesById();
-    }
-  }, []);
+    if (!courseId) return;
+    fetchCoursesById();
+  }, [courseId]);
 
   const handleChange = (e) => {
     const [selectedSessionId, internalSessionId] = e.target.value.split("|");
@@ -503,7 +502,7 @@ export default function Page({ params }) {
   useEffect(() => {
     if (!isAdmin) return;
     fetchSessions();
-  }, [sessionId, selectedSession]);
+  }, [sessionId, selectedSession, isAdmin]);
   return (
     <>
       {loader ? (
@@ -705,7 +704,7 @@ export default function Page({ params }) {
                   </div>
                 </div>
                 <button
-                  className=" flex justify-center my-2 items-center w-32 gap-2  text-surface-100 bg-blue-300 px-2 py-3 rounded-xl mr-4 hover:bg-[#4296b3]"
+                  className=" flex justify-center my-2 items-center w-32 gap-2  text-surface-100 bg-blue-300 px-2 py-3 rounded-xl mr-4 hover:bg-blue-700"
                   onClick={handleSave}
                 >
                   Save Changes
@@ -841,7 +840,7 @@ export default function Page({ params }) {
                 <h2 className="text-xl font-exo font-bold">Modules</h2>
                 {!isStudent && (
                   <button
-                    className=" flex justify-center items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl hover:bg-[#4296b3]"
+                    className=" flex justify-center items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl hover:bg-blue-700"
                     onClick={() => setCreatingModule(!isCreatingModule)}
                     disabled={loader}
                   >
@@ -850,7 +849,7 @@ export default function Page({ params }) {
                     ) : isCreatingModule ? (
                       <p className="flex justify-center items-center gap-2">
                         <FaTimes />
-                        Cancel Edit
+                        Cancel
                       </p>
                     ) : (
                       <p className="flex justify-center items-center gap-2">
@@ -892,7 +891,7 @@ export default function Page({ params }) {
                       onChange={handleFileUpload}
                     />
                     <button
-                      className="flex justify-center items-center gap-2 mt-4 text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-[#4296b3]"
+                      className="flex justify-center items-center gap-2 mt-4 text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-blue-700"
                       onClick={() =>
                         document.querySelector('input[type="file"]').click()
                       }
@@ -901,7 +900,7 @@ export default function Page({ params }) {
                       Upload File
                     </button>
                     <button
-                      className=" flex justify-center items-center gap-2 mt-4 text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-[#4296b3]"
+                      className=" flex justify-center items-center gap-2 mt-4 text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-blue-700"
                       onClick={handleCreateModule}
                     >
                       <FaCheck /> Create Module
@@ -921,7 +920,7 @@ export default function Page({ params }) {
                       {!isStudent && (
                         <div className="flex">
                           <button
-                            className=" flex justify-center mt-4 items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-[#4296b3]"
+                            className=" flex justify-center mt-4 items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-blue-700"
                             onClick={() => {
                               if (moduleId === module.id) {
                                 setIsEditingModule(false);
@@ -945,7 +944,7 @@ export default function Page({ params }) {
                           <button
                             onClick={() => handleDeleteClick(module.id)}
                             title="Delete Module"
-                            className=" flex justify-center mt-4 items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-[#4296b3]"
+                            className=" flex justify-center mt-4 items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-blue-700"
                           >
                             <p className="flex justify-center items-center gap-2">
                               <FaTrash />
@@ -954,7 +953,7 @@ export default function Page({ params }) {
                           {moduleId === module.id ? (
                             <>
                               <button
-                                className=" flex justify-center items-center gap-2 mt-4 text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-[#4296b3]"
+                                className=" flex justify-center items-center gap-2 mt-4 text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-blue-700"
                                 onClick={handleSaveModule}
                               >
                                 <FaCheck />
@@ -965,7 +964,7 @@ export default function Page({ params }) {
                                 className="hidden"
                               />
                               <button
-                                className="flex justify-center items-center gap-2 mt-4 text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-[#4296b3]"
+                                className="flex justify-center items-center gap-2 mt-4 text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-blue-700"
                                 onClick={() =>
                                   document
                                     .querySelector('input[type="file"]')

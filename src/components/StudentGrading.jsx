@@ -96,7 +96,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
   }
 
   useEffect(() => {
-    if (!regId) return;
+    if (!regId || !sessionId) return;
     fetchOverallProgress();
   }, []);
   useEffect(() => {

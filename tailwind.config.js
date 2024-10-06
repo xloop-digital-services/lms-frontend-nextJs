@@ -13,7 +13,7 @@ module.exports = {
         xxlg: "845px",
         nsm: "560px",
         xsm: "450px",
-         // Define custom breakpoint `xsm` with min-width of 450px
+        // Define custom breakpoint `xsm` with min-width of 450px
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
@@ -29,6 +29,7 @@ module.exports = {
         200: "#8BB8FF",
         100: "#D0E9F8",
         600: "#e6f8ff",
+        700: "#3272b6",
       },
       dark: {
         900: "#000",

@@ -117,6 +117,7 @@ const Grading = ({ courseId }) => {
     }
   }
   const handleWeightageCreationSuccess = () => {
+    // if (!sessionId) return;
     fetchWeightages();
     setAssignWeightage(false);
   };
@@ -124,14 +125,19 @@ const Grading = ({ courseId }) => {
     if (!sessionId) return;
     fetchWeightages();
   }, [sessionId]);
-  
+
   // console.log(sessionId);
   // console.log(weightage);
   return (
     <div className="">
       {isAdmin && (
         <div className="w-full">
-          <label> <label className="text-blue-500 font-semibold">Select Session</label></label>
+          <label>
+            {" "}
+            <label className="text-blue-500 font-semibold">
+              Select Session
+            </label>
+          </label>
           <select
             value={selectedSession || ""}
             onChange={handleChange}
@@ -161,7 +167,12 @@ const Grading = ({ courseId }) => {
       )}
       {isInstructor && (
         <div className="w-full">
-          <label> <label className="text-blue-500 font-semibold">Select Session</label></label>
+          <label>
+            {" "}
+            <label className="text-blue-500 font-semibold">
+              Select Session
+            </label>
+          </label>
           <select
             value={selectedSession || ""}
             onChange={handleChangeInstructor}

@@ -55,7 +55,6 @@ export function AuthProvider({ children }) {
         setUserData(response.data.response);
         storeToken(response.data.response.token, response.data);
 
-        router.push("/dashboard");
         toast.success("Login Successful! Redirecting...", {
           position: "top-right",
           autoClose: 2000,
@@ -65,6 +64,8 @@ export function AuthProvider({ children }) {
           draggable: true,
           progress: undefined,
         });
+
+        router.push("/dashboard");
         setLoading(false);
       } else {
         toast.error("Login failed. Please check your credentials.", {
@@ -76,7 +77,7 @@ export function AuthProvider({ children }) {
           draggable: true,
           progress: undefined,
         });
-        setLoading(false);
+        setLoading(false); 
       }
     } catch (error) {
       console.error("Error during login:", error);
@@ -89,7 +90,7 @@ export function AuthProvider({ children }) {
         draggable: true,
         progress: undefined,
       });
-      setLoading(false);
+      setLoading(false); // stop the loader on error
       if (error.message === "Network Error") {
         toast.error(error.message, "Check your internet connection");
       }

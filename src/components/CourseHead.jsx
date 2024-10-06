@@ -35,23 +35,20 @@ const CourseHead = ({
   const [courseData, setCourseData] = useState([]);
   const [programData, setProgramData] = useState([]);
   const [loader, setLoader] = useState(false);
+
   async function fetchCoursesById() {
-    const response = await getCourseById(id);
+    setLoader(true);
     try {
+      const response = await getCourseById(id);
       if (response.status === 200) {
         setCourseData(response?.data?.data);
-        // setFetch(true);
-        // console.log(courseData);
-      } else {
-        // console.error("Failed to fetch user, status:", response.status);
       }
     } catch (error) {
-      // console.log("error", error);
+      console.error("Error fetching course:", error);
+    } finally {
+      setLoader(false);
     }
   }
-
- 
-
   async function fetchProgramById() {
     try {
       const response = await getProgramById(id);
@@ -78,7 +75,9 @@ const CourseHead = ({
   return (
     <div className=" ">
       {loader ? (
-        <CircularProgress />
+        <div className="h-screen flex justify-center items-center bg-surface-100">
+          <CircularProgress />
+        </div>
       ) : (
         <div className="flex flex-col">
           <div
@@ -128,7 +127,7 @@ const CourseHead = ({
                     (title !== "Edit course" ||
                       (title === "Edit course" && isAdmin)) && (
                       <button
-                        className=" flex justify-center items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl hover:bg-[#4296b3]"
+                        className=" flex justify-center items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl hover:bg-blue-700"
                         onClick={() => setIsEditing(!isEditing)}
                       >
                         {isEditing ? (
@@ -153,7 +152,7 @@ const CourseHead = ({
                 <p className="flex items-center text-blue-300 font-semibold">
                   {studentInstructorName
                     ? `Instructor: ${studentInstructorName}`
-                    : null}
+                    : "Instructor: To be Assigned"}
                 </p>
               )}
           {program === "program" ? (
