@@ -79,7 +79,7 @@ const UploadingFile = ({
     }
 
     const formData = new FormData();
-    formData.append(`${type}_submitted_file`, file);
+    formData.append(`submitted_file`, file);
     formData.append("comments", comment);
     formData.append(type, assignmentID);
 

@@ -63,7 +63,7 @@ export default function Page({ params }) {
         const foundSession = sessions.find(
           (session) => Number(session.course?.id) === Number(courseId)
         );
-        if (foundSession) {
+        if (isStudent && foundSession) {
           setSessionId(foundSession.id);
         }
       } else {
@@ -81,7 +81,7 @@ export default function Page({ params }) {
 
   useEffect(() => {
     fetchSessionForUser();
-  }, []);
+  }, [isStudent]);
   const handleChange = (e) => {
     const [selectedSessionId, internalSessionId] = e.target.value.split("|");
     const selectedSession = sessions.find(
@@ -99,9 +99,11 @@ export default function Page({ params }) {
 
   async function fetchAssignments() {
     const response = await getExamByCourseId(courseId, sessionId);
+    setLoading(true);
     try {
       if (response.status === 200) {
         setAssignments(response?.data?.data);
+        setLoading(false);
       } else {
         console.error("Failed to fetch exam, status:", response.status);
       }
@@ -306,110 +308,118 @@ export default function Page({ params }) {
           isEditing={isCreatingQuiz}
           setIsEditing={setCreatingQuiz}
         />{" "}
-        {isAdmin && (
-          <div className="w-full">
-            <label className="text-blue-500">
-              {" "}
-              <label className="text-blue-500 font-semibold">
-                Select Session
-              </label>
-            </label>
-            <select
-              value={selectedSession || ""}
-              onChange={handleChange}
-              className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-            >
-              <option value="" disabled>
-                Select a session
-              </option>
-              {Array.isArray(sessions) && sessions.length > 0 ? (
-                sessions.map((session) => {
-                  console.log("Mapping session:", session);
-                  // Combine session_id and instructor_id in value
-                  const optionValue = `${session?.session_name}|${session?.id}`;
-                  return (
-                    <option key={session?.id} value={optionValue}>
-                      {session.session_name}
-                    </option>
-                  );
-                })
-              ) : (
-                <option value="" disabled>
-                  No sessions available
-                </option>
-              )}
-            </select>
+        {loading ? (
+          <div className="flex h-screen bg-surface-100 justify-center py-10">
+            <CircularProgress />
           </div>
-        )}
-        {isInstructor && (
-          <div className="w-full">
-            <label className="text-blue-500 font-semibold">
-              {" "}
-              <label className="text-blue-500 font-semibold">
-                Select Session
-              </label>
-            </label>
-            <select
-              value={selectedSession || ""}
-              onChange={handleChangeInstructor}
-              className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-            >
-              <option value="" disabled>
-                Select a session
-              </option>
-              {Array.isArray(sessions) && sessions.length > 0 ? (
-                sessions.map((session) => {
-                  console.log("Mapping session:", session);
-                  const optionValue = `${session.session_id}`;
-                  return (
-                    <option key={session.session_id} value={optionValue}>
-                      {session.location} -{" "}
-                      {session.session_name || session.course} -{" "}
-                      {session.start_time} - {session.end_time}
+        ) : (
+          <>
+            {isAdmin && (
+              <div className="w-full">
+                <label className="text-blue-500">
+                  {" "}
+                  <label className="text-blue-500 font-semibold">
+                    Select Session
+                  </label>
+                </label>
+                <select
+                  value={selectedSession || ""}
+                  onChange={handleChange}
+                  className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                >
+                  <option value="" disabled>
+                    Select a session
+                  </option>
+                  {Array.isArray(sessions) && sessions.length > 0 ? (
+                    sessions.map((session) => {
+                      console.log("Mapping session:", session);
+                      // Combine session_id and instructor_id in value
+                      const optionValue = `${session?.session_name}|${session?.id}`;
+                      return (
+                        <option key={session?.id} value={optionValue}>
+                          {session.session_name}
+                        </option>
+                      );
+                    })
+                  ) : (
+                    <option value="" disabled>
+                      No sessions available
                     </option>
-                  );
-                })
-              ) : (
-                <option value="" disabled>
-                  No sessions available
-                </option>
-              )}
-            </select>
-          </div>
-        )}
-        <h2 className="text-xl font-exo font-bold mb-4">Exam instructions</h2>
-        <ul className="text-dark-400 list-decimal">
-          <li className="py-2 mx-4">
-            Timing: Complete and submit your exam by the specified end time.
-          </li>
-          <li className="py-2 mx-4">
-            Technical Requirements: Ensure a stable internet connection and use
-            a compatible browser.
-          </li>
-          <li className="py-2 mx-4">
-            Exam Environment: Find a quiet, distraction-free place to take the
-            exam.{" "}
-          </li>
-          <li className="py-2 mx-4">
-            Academic Integrity: Complete the exam independently without
-            unauthorized assistance.
-          </li>
-          <li className="py-2 mx-4">
-            Submission: Review and submit your answers before the deadline.
-          </li>
-          <li className="py-2 mx-4">
-            Technical Issues: Contact support immediately if technical issues
-            arise.
-          </li>
-          <li className="py-2 mx-4">
-            Additional Instructions: Follow any additional instructions
-            provided.
-          </li>
-        </ul>
-        <p className="pt-2 text-mix-200">Note: No Resubmissions allowed*</p>
-        <hr className="my-4 text-dark-200 "></hr>
-        <div className="flex">
-          {/* {assignments.map((assign, index) => {
+                  )}
+                </select>
+              </div>
+            )}
+            {isInstructor && (
+              <div className="w-full">
+                <label className="text-blue-500 font-semibold">
+                  {" "}
+                  <label className="text-blue-500 font-semibold">
+                    Select Session
+                  </label>
+                </label>
+                <select
+                  value={selectedSession || ""}
+                  onChange={handleChangeInstructor}
+                  className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                >
+                  <option value="" disabled>
+                    Select a session
+                  </option>
+                  {Array.isArray(sessions) && sessions.length > 0 ? (
+                    sessions.map((session) => {
+                      console.log("Mapping session:", session);
+                      const optionValue = `${session.session_id}`;
+                      return (
+                        <option key={session.session_id} value={optionValue}>
+                          {session.location} -{" "}
+                          {session.session_name || session.course} -{" "}
+                          {session.start_time} - {session.end_time}
+                        </option>
+                      );
+                    })
+                  ) : (
+                    <option value="" disabled>
+                      No sessions available
+                    </option>
+                  )}
+                </select>
+              </div>
+            )}
+            <h2 className="text-xl font-exo font-bold mb-4">
+              Exam instructions
+            </h2>
+            <ul className="text-dark-400 list-decimal">
+              <li className="py-2 mx-4">
+                Timing: Complete and submit your exam by the specified end time.
+              </li>
+              <li className="py-2 mx-4">
+                Technical Requirements: Ensure a stable internet connection and
+                use a compatible browser.
+              </li>
+              <li className="py-2 mx-4">
+                Exam Environment: Find a quiet, distraction-free place to take
+                the exam.{" "}
+              </li>
+              <li className="py-2 mx-4">
+                Academic Integrity: Complete the exam independently without
+                unauthorized assistance.
+              </li>
+              <li className="py-2 mx-4">
+                Submission: Review and submit your answers before the deadline.
+              </li>
+              <li className="py-2 mx-4">
+                Technical Issues: Contact support immediately if technical
+                issues arise.
+              </li>
+              <li className="py-2 mx-4">
+                Additional Instructions: Follow any additional instructions
+                provided.
+              </li>
+            </ul>
+            <p className="pt-2 text-mix-200">Note: No Resubmissions allowed*</p>
+            <hr className="my-4 text-dark-200 "></hr>
+            <div className="flex">
+              {/* {assignments.map((assign, index) => {
             return (
               <p key={index}>
                 {" "}
@@ -417,121 +427,123 @@ export default function Page({ params }) {
               </p>
             );
           })} */}
-          {/* <p className="text-dark-400 text-sm flex items-center px-4">
+              {/* <p className="text-dark-400 text-sm flex items-center px-4">
             {" "}
             Total Marks: 100
           </p> */}
-        </div>
-        {isCreatingQuiz && (
-          <>
-            <div className="flex justify-between max-md:flex-col">
-              <h2 className="text-lg font-bold my-4">
-                {currentAssignment ? "Update Exam" : "Create Exam"}
-              </h2>
-
-              <div className="flex items-center my-4">
-                <span className="mr-4 text-md">Exam Status</span>
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={assignmentStatus === 1}
-                    onChange={() =>
-                      setAssignmentStatus((prevStatus) =>
-                        prevStatus === 0 ? 1 : 0
-                      )
-                    }
-                    className="sr-only"
-                  />
-                  <div className="w-11 h-6 bg-blue-600 rounded-full"></div>
-                  <div
-                    className={`absolute w-4 h-4 bg-blue-300 rounded-full shadow-md transform transition-transform ${
-                      assignmentStatus === 1 ? "translate-x-5" : "translate-x-1"
-                    }`}
-                  ></div>
-                </label>
-                <span className="ml-4 text-md">
-                  {assignmentStatus === 1 ? "Active" : "Inactive"}
-                </span>
-              </div>
             </div>
-            <form onSubmit={handleAssignmentCreation}>
-              <div className="my-2">
-                <label className="text-md">Exam Question</label>
-                <input
-                  type="text"
-                  className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
-                  value={question}
-                  onChange={(e) => setQuestion(e.target.value)}
-                />
-              </div>
+            {isCreatingQuiz && (
+              <>
+                <div className="flex justify-between max-md:flex-col">
+                  <h2 className="text-lg font-bold my-4">
+                    {currentAssignment ? "Update Exam" : "Create Exam"}
+                  </h2>
 
-              <div className="my-2">
-                <label className="text-md">Exam description</label>
-                <input
-                  type="text"
-                  className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-              </div>
-              <div className="my-2">
-                <label className="text-md">Due Date</label>
-                <input
-                  type="date"
-                  className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
-                  value={dueDate}
-                  onChange={(e) => setDueDate(e.target.value)}
-                />
-              </div>
-              <div className="flex gap-2 my-2 sm:flex-row flex-col lg:w-[100%]">
-                <div className="mb-2 sm:mb-0 w-full">
-                  <label className="text-md">Upload Exam</label>
-                  <input
-                    required
-                    type="file"
-                    className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
-                    onChange={(e) => setFile(e.target.files[0])}
-                  />
+                  <div className="flex items-center my-4">
+                    <span className="mr-4 text-md">Exam Status</span>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={assignmentStatus === 1}
+                        onChange={() =>
+                          setAssignmentStatus((prevStatus) =>
+                            prevStatus === 0 ? 1 : 0
+                          )
+                        }
+                        className="sr-only"
+                      />
+                      <div className="w-11 h-6 bg-blue-600 rounded-full"></div>
+                      <div
+                        className={`absolute w-4 h-4 bg-blue-300 rounded-full shadow-md transform transition-transform ${
+                          assignmentStatus === 1
+                            ? "translate-x-5"
+                            : "translate-x-1"
+                        }`}
+                      ></div>
+                    </label>
+                    <span className="ml-4 text-md">
+                      {assignmentStatus === 1 ? "Active" : "Inactive"}
+                    </span>
+                  </div>
                 </div>
-                <div className="mb-2 sm:mb-0 w-full">
-                  <label className="text-md">Total Marks</label>
+                <form onSubmit={handleAssignmentCreation}>
+                  <div className="my-2">
+                    <label className="text-md">Exam Question</label>
+                    <input
+                      type="text"
+                      className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                      value={question}
+                      onChange={(e) => setQuestion(e.target.value)}
+                    />
+                  </div>
 
-                  <input
-                    type="number"
-                    min={0}
-                    className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
-                    value={totalGrade}
-                    onChange={(e) => setTotalGrade(e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="flex w-full gap-x-4 max-md:flex-col">
-                <div className="my-2 flex-1 ">
-                  <label className="text-md">Exam Start Time</label>
-                  <input
-                    type="time"
-                    className="w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
-                    value={startTime}
-                    onChange={(e) => setStartTime(e.target.value)}
-                  />
-                </div>
+                  <div className="my-2">
+                    <label className="text-md">Exam description</label>
+                    <input
+                      type="text"
+                      className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                    />
+                  </div>
+                  <div className="my-2">
+                    <label className="text-md">Due Date</label>
+                    <input
+                      type="date"
+                      className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                      value={dueDate}
+                      onChange={(e) => setDueDate(e.target.value)}
+                    />
+                  </div>
+                  <div className="flex gap-2 my-2 sm:flex-row flex-col lg:w-[100%]">
+                    <div className="mb-2 sm:mb-0 w-full">
+                      <label className="text-md">Upload Exam</label>
+                      <input
+                        required
+                        type="file"
+                        className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                        onChange={(e) => setFile(e.target.files[0])}
+                      />
+                    </div>
+                    <div className="mb-2 sm:mb-0 w-full">
+                      <label className="text-md">Total Marks</label>
 
-                <div className="my-2 flex-1">
-                  <label className="text-md">Exam End Time</label>
-                  <input
-                    type="time"
-                    className="w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
-                    value={endTime}
-                    onChange={(e) => setEndTime(e.target.value)}
-                  />
-                </div>
-              </div>
+                      <input
+                        type="number"
+                        min={0}
+                        className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                        value={totalGrade}
+                        onChange={(e) => setTotalGrade(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex w-full gap-x-4 max-md:flex-col">
+                    <div className="my-2 flex-1 ">
+                      <label className="text-md">Exam Start Time</label>
+                      <input
+                        type="time"
+                        className="w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                        value={startTime}
+                        onChange={(e) => setStartTime(e.target.value)}
+                      />
+                    </div>
 
-              <button
-                type="submit"
-                onClick={handleAssignmentCreation}
-                disabled={loading}
-                className={`w-44 my-4 flex justify-center py-3 px-4 text-sm font-medium rounded-lg text-surface-100 
+                    <div className="my-2 flex-1">
+                      <label className="text-md">Exam End Time</label>
+                      <input
+                        type="time"
+                        className="w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                        value={endTime}
+                        onChange={(e) => setEndTime(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    onClick={handleAssignmentCreation}
+                    disabled={loading}
+                    className={`w-44 my-4 flex justify-center py-3 px-4 text-sm font-medium rounded-lg text-surface-100 
     ${
       loading
         ? "bg-blue-300 text-surface-100"
@@ -541,44 +553,46 @@ export default function Page({ params }) {
     } 
     focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 
     transition duration-150 ease-in-out`}
-              >
-                {loading ? (
-                  <CircularProgress size={20} style={{ color: "white" }} />
-                ) : currentAssignment ? (
-                  "Update Exam"
-                ) : (
-                  "Create Exam"
-                )}
-              </button>
-            </form>
+                  >
+                    {loading ? (
+                      <CircularProgress size={20} style={{ color: "white" }} />
+                    ) : currentAssignment ? (
+                      "Update Exam"
+                    ) : (
+                      "Create Exam"
+                    )}
+                  </button>
+                </form>
+              </>
+            )}
+            <div className="mt-10">
+              {isStudent ? (
+                <StudentDataStructure
+                  quizzes={assignments}
+                  setQuizzes={setAssignments}
+                  key={assignments.id}
+                  field="exam"
+                  onUpdateQuiz={handleUpdateAssignment}
+                  assessment="Exam"
+                  setUpdateStatus={setUpdateStatus}
+                  handleUpdateAssignment={handleUpdateAssignment}
+                />
+              ) : (
+                <AdminDataStructure
+                  quizzes={assignments}
+                  setQuizzes={setAssignments}
+                  key={assignments.id}
+                  field="exam"
+                  onUpdateQuiz={handleUpdateAssignment}
+                  assessment="Exam"
+                  setUpdateStatus={setUpdateStatus}
+                  handleUpdateAssignment={handleUpdateAssignment}
+                  onDelete={handleDeleteAssignment}
+                />
+              )}
+            </div>
           </>
         )}
-        <div className="mt-10">
-          {isStudent ? (
-            <StudentDataStructure
-              quizzes={assignments}
-              setQuizzes={setAssignments}
-              key={assignments.id}
-              field="exam"
-              onUpdateQuiz={handleUpdateAssignment}
-              assessment="Exam"
-              setUpdateStatus={setUpdateStatus}
-              handleUpdateAssignment={handleUpdateAssignment}
-            />
-          ) : (
-            <AdminDataStructure
-              quizzes={assignments}
-              setQuizzes={setAssignments}
-              key={assignments.id}
-              field="exam"
-              onUpdateQuiz={handleUpdateAssignment}
-              assessment="Exam"
-              setUpdateStatus={setUpdateStatus}
-              handleUpdateAssignment={handleUpdateAssignment}
-              onDelete={handleDeleteAssignment}
-            />
-          )}
-        </div>
       </div>
     </div>
   );

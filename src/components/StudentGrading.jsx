@@ -189,13 +189,6 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
     }
   }
 
-  const options = [
-    "Hammad Siddiqui",
-    "Javeria Lodhi",
-    "Sarah Patel",
-    "Hira Fatima",
-  ];
-
   const handleToggleSection = (section) => {
     setOpenSection(openSection === section ? null : section);
   };

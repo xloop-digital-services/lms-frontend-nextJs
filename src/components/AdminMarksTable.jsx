@@ -7,6 +7,7 @@ import {
   updateQuizGrading,
 } from "@/api/route";
 import { toast } from "react-toastify";
+import { downloadFile } from "@/app/courses/course/[courseId]/page";
 
 const AdminMarksTable = ({ assessments, courseId, setFetch, title }) => {
   const [loading, setLoading] = useState(true);
@@ -117,6 +118,9 @@ const AdminMarksTable = ({ assessments, courseId, setFetch, title }) => {
                         Remarks
                       </th>
                       <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
+                        Submitted file
+                      </th>
+                      <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
                         Status
                       </th>
                       <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
@@ -167,6 +171,23 @@ const AdminMarksTable = ({ assessments, courseId, setFetch, title }) => {
                               assessment?.remarks || "-"
                             )}
                           </td>
+                          <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800 ">
+                            {assessment.submitted_file === null ? (
+                              "-"
+                            ) : (
+                              <a
+                                href="#"
+                                className="cursor-pointer flex justify-center items-center text-black hover:text-[#2563eb] hover:underline"
+                                title="download"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  downloadFile(assessment.submitted_file);
+                                }}
+                              >
+                                {assessment.submitted_file.split("/").pop()}
+                              </a>
+                            )}
+                          </td>
                           <td className="px-6 py-4 flex justify-center items-center text-sm font-medium text-surface-100">
                             <p
                               className={`w-[130px] text-center px-4 py-2 text-[12px] rounded-lg ${
@@ -182,10 +203,10 @@ const AdminMarksTable = ({ assessments, courseId, setFetch, title }) => {
                               {assessment?.status}
                             </p>
                           </td>
+
                           <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
-                            {(assessment?.grade > 0 &&
-                              assessment.status === "Submitted") ||
-                            assessment.status === "Late Submission" ? (
+                            {assessment?.grade > 0 &&
+                            assessment.submitted_file ? (
                               <button className="w-[110px] text-center px-4 py-2 text-[12px] rounded-lg text-sm bg-mix-300 text-surface-200">
                                 Graded
                               </button>
@@ -195,7 +216,7 @@ const AdminMarksTable = ({ assessments, courseId, setFetch, title }) => {
                               </button>
                             ) : isEditing === assessment.submission_id ? (
                               <button
-                                className="w-[110px] text-center px-4 py-2 text-[12px] rounded-lg text-sm bg-blue-300 text-surface-200"
+                                className="w-[110px] hover:bg-blue-700 text-center px-4 py-2 text-[12px] rounded-lg text-sm bg-blue-300 text-surface-200"
                                 onClick={() =>
                                   handleSave(
                                     assessment.submission_id,

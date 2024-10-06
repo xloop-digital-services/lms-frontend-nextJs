@@ -293,13 +293,17 @@ const StudentDataStructure = ({
                             ) : null}
                             <td className="px-12 py-3 whitespace-nowrap text-blue-300  ">
                               <div className="flex items-center justify-center gap-4 ">
-                                <div>
+                                <a
+                                  href={quiz.submitted_file}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
                                   <MdRemoveRedEye
                                     title="pdf view"
                                     className="cursor-pointer"
                                     size={23}
                                   />
-                                </div>
+                                </a>
                                 {isAdmin && edit && (
                                   <>
                                     <LuUpload

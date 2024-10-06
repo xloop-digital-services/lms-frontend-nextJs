@@ -56,9 +56,11 @@ export const GradingSection = ({
 
   async function fetchAssignments() {
     const response = await getAssignmentsByCourseId(courseId, sessionId);
+    setLoader(true);
     try {
       if (response.status === 200) {
         setOptions(response?.data?.data);
+        setLoader(false);
         // console.log(quizzes);
       } else {
         console.error("Failed to fetch user, status:", response.status);
@@ -69,9 +71,11 @@ export const GradingSection = ({
   }
   async function fetchQuizzes() {
     const response = await getQuizByCourseId(courseId, sessionId);
+    setLoader(true);
     try {
       if (response.status === 200) {
         setOptions(response?.data?.data);
+        setLoader(false);
         // console.log(quizzes);
       } else {
         console.error("Failed to fetch user, status:", response.status);
@@ -83,9 +87,11 @@ export const GradingSection = ({
 
   async function fetchExams() {
     const response = await getExamByCourseId(courseId, sessionId);
+    setLoader(true);
     try {
       if (response.status === 200) {
         setOptions(response?.data?.data);
+        setLoader(false);
         // console.log(quizzes);
       } else {
         console.error("Failed to fetch user, status:", response.status);
@@ -97,9 +103,11 @@ export const GradingSection = ({
 
   async function fetchProjects() {
     const response = await getProjectByCourseId(courseId, sessionId);
+    setLoader(true);
     try {
       if (response.status === 200) {
         setOptions(response?.data?.data);
+        setLoader(false);
         // console.log(quizzes);
       } else {
         console.error("Failed to fetch user, status:", response.status);
@@ -292,7 +300,7 @@ export const GradingSection = ({
               <div className="z-50">
                 <button
                   onClick={toggleOpen}
-                  className="flex justify-between z-30 items-center min-w-[200px] text-[#92A7BE] hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border  border-[#92A7BE] rounded-lg  focus:outline-none  transition duration-300 ease-in-out"
+                  className="flex justify-between z-30 items-center sm:w-[200px] max-h-[250px] text-[#92A7BE] hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border  border-[#92A7BE] rounded-lg  focus:outline-none  transition duration-300 ease-in-out"
                 >
                   {selectedValue ? selectedValue : `Select ${title}`}
 
