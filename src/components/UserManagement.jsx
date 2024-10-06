@@ -353,12 +353,12 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
               // Display Program Logic
               program.map((program) => (
                 <div
-                  className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col"
+                  className="border border-dark-300 w-full  px-4 rounded-lg cursor-pointer flex flex-col"
                   key={program.id}
                 >
                   <div className="flex nsm:flex-row flex-col space-y-2 justify-between items-center">
                     <div
-                      className="flex gap-3 text-[17px] text-[#022567] font-semibold font-exo w-full"
+                      className="flex gap-3 text-[17px] text-[#022567] py-4 font-semibold font-exo w-full"
                       onClick={() =>
                         handleToggleSection(program.name, program.id)
                       }
@@ -450,7 +450,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                   >
                     {isProgramSectionOpen &&
                       programSection === program.name && (
-                        <div className="mt-2">
+                        <div className="pb-4">
                           {heading === "Applicants" ? (
                             <DevelopmentTable
                               loading={loading}
@@ -489,12 +489,12 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
           ) : skills && skills.length > 0 ? (
             skills.map((skill) => (
               <div
-                className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col"
+                className="border border-dark-300 w-full px-4 rounded-lg cursor-pointer flex flex-col"
                 key={skill.id}
               >
                 <div className="flex nsm:flex-row flex-col space-y-2 justify-between items-center">
                   <div
-                    className="flex gap-3 text-[#022567] text-[17px] font-semibold font-exo w-full"
+                    className="flex gap-3 text-[#022567] text-[17px] p-4 font-semibold font-exo w-full"
                     onClick={() => handleToggleSection(skill.name, skill.id)}
                   >
                     {skill.name}
@@ -580,7 +580,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                   }`}
                 >
                   {isSkillSectionOpen && skillSection === skill.name && (
-                    <div className="mt-2">
+                    <div className="pb-4">
                       {heading === "Applicants" ? (
                         <DevelopmentTable
                           loading={loading}

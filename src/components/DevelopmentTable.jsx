@@ -150,6 +150,8 @@ const DevelopmentTable = ({
                               >
                                 {user?.application_status === "approved"
                                   ? user?.account_status
+                                  : user?.application_status === "short_listed"
+                                  ? "shortlisted"
                                   : user?.application_status}
                               </p>
                             </div>

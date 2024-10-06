@@ -42,7 +42,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   const [date, setDate] = useState(null);
   const [toggle, setToggle] = useState(false);
   // console.log(group, userId);
-  async function fetchSessions() {
+  const fetchSessions = async () => {
     const response = await getInstructorSessionsbyCourseId(
       userId,
       group,
@@ -53,12 +53,24 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
       if (response.status === 200) {
         setSessions(response.data.data); // Store the sessions data
       } else {
-        console.error("Failed to fetch sessions, status:", response.status);
+        console.error("Failed to fetch sessions, status:", response);
+        toast.error("no session found in 200");
       }
     } catch (error) {
-      console.log("error", error);
+      console.log('errror araha')
+      if (error.response) {
+        if (error.response.status === 404) {
+          // // toast.error("No session found");
+          // console.log("No session found");
+          setSessions([]);
+        } else {
+          console.error("Error with status code:", error.response.status);
+        }
+      } else {
+        console.error("Request failed:", error.message);
+      }
     }
-  }
+  };
 
   const fetchAllSessions = async () => {
     try {
@@ -279,22 +291,23 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                 <option value="" disabled>
                   Select a session
                 </option>
-                {Array.isArray(sessions) && isInstructor
-                  ? sessions.map((session) => (
-                      <option
-                        key={session.session_id}
-                        value={session.session_id}
-                      >
-                        {session.location} - {session.course} -{" "}
-                        {session.start_time} - {session.end_time}
-                      </option>
-                    ))
-                  : sessions.map((session) => (
-                      <option key={session.id} value={session.id}>
-                        {session.location_name} - {session.course.name} -{" "}
-                        {session.start_time} - {session.end_time}
-                      </option>
-                    ))}
+                {Array.isArray(sessions) && isInstructor ? (
+                  sessions.map((session) => (
+                    <option key={session.session_id} value={session.session_id}>
+                      {session.location} - {session.course} -{" "}
+                      {session.start_time} - {session.end_time}
+                    </option>
+                  ))
+                ) : isAdmin ? (
+                  sessions.map((session) => (
+                    <option key={session.id} value={session.id}>
+                      {session.location_name} - {session.course.name} -{" "}
+                      {session.start_time} - {session.end_time}
+                    </option>
+                  ))
+                ) : (
+                  <p>no session found</p>
+                )}
               </select>
             </div>
             <div className="w-full">
@@ -372,8 +385,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                                 checked={att.status === parseInt(status)}
                                 disabled={true}
                                 className="w-4 h-4 rounded-full border-2 
-                                group-hover:cursor-default   
-                                disabled:opacity-100 disabled:bg-dark-600"
+                                group-hover:cursor-default disabled:text-blue-300"
                                 // disabled={isAttendancePosted}
                               />
                               <p className="group-hover:cursor-default">
