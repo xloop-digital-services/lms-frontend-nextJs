@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 import { FaUpload } from "react-icons/fa";
 import { CircularProgress } from "@mui/material";
 import { useRouter } from "next/navigation";
+import { IoClose } from "react-icons/io5";
 
 export default function ApplicationForm() {
   const router = useRouter();
@@ -160,8 +161,10 @@ export default function ApplicationForm() {
 
   const handleProgramSelect = (program) => {
     if (!selectedProgram.includes(program.name)) {
-      setSelectedProgram([...selectedProgram, program.name]);
-      setProgramId([...programId, program.id]);
+      if (selectedProgram.length < 3) {
+        setSelectedProgram([...selectedProgram, program.name]);
+        setProgramId([...programId, program.id]);
+      }
     } else {
       // If program is already selected, remove it
       setSelectedProgram(
@@ -172,14 +175,23 @@ export default function ApplicationForm() {
     // setIsProgramOpen(false);
     setIsProgramSelected(true);
   };
+
+  const handleRemovePrograms = (program) => {
+    setSelectedProgram(
+      selectedProgram.filter((selected) => selected !== program)
+    );
+  };
+
   const toggleSkillOpen = () => {
     setIsSkillOpen(!isSkillOpen);
   };
 
   const handleSkillSelect = (program) => {
     if (!selectedSkill.includes(program.name)) {
-      setSelectedSkill([...selectedSkill, program.name]);
-      setSkillId([...skillId, program.id]);
+      if (selectedSkill.length < 3) {
+        setSelectedSkill([...selectedSkill, program.name]);
+        setSkillId([...skillId, program.id]);
+      }
     } else {
       // If program is already selected, remove it
       setSelectedSkill(
@@ -190,6 +202,14 @@ export default function ApplicationForm() {
     // setIsSkillOpen(false);
     setIsSkillSelected(true);
   };
+
+  const handleRemoveSkill = (skillName) => {
+    // Remove skill when the remove icon is clicked
+    setSelectedSkill(
+      selectedSkill.filter((selected) => selected !== skillName)
+    );
+  };
+
   const toggleCityOpen = () => {
     setIsCityOpen(!isCityOpen);
   };
@@ -198,6 +218,7 @@ export default function ApplicationForm() {
     setCityShortName(option.shortName);
     setIsCityOpen(false);
     setIsCitySelected(true);
+    setLocationName([]);
     // setAllLocations(option.areas);
   };
   const toggleLocationOpen = () => {
@@ -206,8 +227,11 @@ export default function ApplicationForm() {
 
   const handleLocationSelect = (program) => {
     if (!locationName.includes(program.name)) {
-      setLocationName([...locationName, program.name]);
-      setLocationId([...locationId, program.id]);
+      if (locationName.length < 3) {
+        // Add the program if less than 3 are selected
+        setLocationName([...locationName, program.name]);
+        setLocationId([...locationId, program.id]);
+      }
     } else {
       // If program is already selected, remove it
       setLocationName(
@@ -215,9 +239,19 @@ export default function ApplicationForm() {
       );
       setLocationId(locationId.filter((selected) => selected !== program.id));
     }
-    // setLocationCode(program.shortName);
-    // setIsLocationOpen(false);
+
+    // setLocationCode(program.shortName); // Uncomment if needed
+    // setIsLocationOpen(false); // Uncomment if needed
     setIsLocationSelected(true);
+  };
+
+  const handleRemoveLocations = (program) => {
+    // Remove the program from the selected locations
+    setLocationName(locationName.filter((name) => name !== program));
+    // Remove the corresponding ID as well
+    setLocationId(
+      locationId.filter((id, index) => locationName[index] !== program)
+    );
   };
 
   useEffect(() => {
@@ -503,7 +537,7 @@ export default function ApplicationForm() {
             <div className=" relative space-y-2 text-[15px] w-full">
               <p>
                 Location{" "}
-                <span className="text-[12px] text-dark-400">(atleast 3)</span>
+                <span className="text-[12px] text-dark-400">(maximum 3)</span>
               </p>
               <div>
                 <button
@@ -517,12 +551,19 @@ export default function ApplicationForm() {
                   {locationName.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
                       {locationName.map((program, index) => (
-                        <span
-                          key={index}
-                          className="bg-[#d0e9f888] px-2 py-1 text-blue-300 rounded"
-                        >
-                          {program}
-                        </span>
+                        <>
+                          <span
+                            key={index}
+                            className="bg-[#d0e9f888] px-2 py-1 text-blue-300 rounded flex gap-1 items-center cursor-default"
+                          >
+                            {program}
+                            <span className="cursor-pointer hover:bg-[#0d192125]">
+                              <IoClose
+                                onClick={() => handleRemoveLocations(program)}
+                              />
+                            </span>
+                          </span>
+                        </>
                       ))}
                     </div>
                   ) : (
@@ -538,22 +579,30 @@ export default function ApplicationForm() {
                 allLocations.length > 0 ? (
                   <div
                     ref={cityDown}
-                    className="absolute  top-full left-0 z-10 w-full mt-2 lg:max-h-[170px] max-h-[150px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                    className="absolute  top-full left-0 z-10 w-full mt-2 lg:max-h-[160px] max-h-[150px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                   >
-                    {allLocations.map(
-                      (option, index) =>
-                        option.city === selectedCity && (
-                          <div
-                            key={index}
-                            onClick={() => handleLocationSelect(option)}
-                            className="p-2 cursor-pointer "
-                          >
-                            <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
-                              {option.name}
-                            </div>
+                    {[
+                      ...new Map(
+                        allLocations
+                          .filter((option) => option.city === selectedCity) // Filter by selected city
+                          .map((location) => [location.name, location]) // Create map entries using name as key
+                      ).values(),
+                    ] // Extract unique values
+                      .map((option, index) => (
+                        <div
+                          key={index}
+                          onClick={() => handleLocationSelect(option)}
+                          className={`m-2 cursor-pointer ${
+                            locationName.includes(option.name)
+                              ? "bg-[#03a3d84c] text-[#03A1D8] font-semibold rounded-lg"
+                              : ""
+                          }`}
+                        >
+                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                            {option.name}
                           </div>
-                        )
-                    )}
+                        </div>
+                      ))}
                   </div>
                 ) : (
                   isLocationOpen &&
@@ -583,9 +632,11 @@ export default function ApplicationForm() {
           </div>
           <div className="bg-gradient-to-t from-transparent via-dark-200 to-transparent h-full lg:flex hidden w-[2px] py-6"></div>
 
-          <div className="flex flex-col w-full space-y-4 mt-4 px-4">
+          <div className="flex flex-col w-full space-y-4 mt-9  mx-4">
             <div className="flex xsm:flex-row flex-col xsm:gap-0 gap-4 w-full items-center  justify-center">
-              <p className="lg:w-[150px] w-[60%] text-center">Register as: </p>
+              <p className="lg:w-[150px] w-[60%] lg:text-start text-center">
+                Register as:{" "}
+              </p>
               <div className="flex lg:justify-evenly lg:gap-0 gap-10 xsm:justify-start justify-center items-start w-full">
                 <div className="flex gap-2">
                   <input
@@ -609,7 +660,7 @@ export default function ApplicationForm() {
                 </div>
               </div>
             </div>
-            <div className="space-y-2 text-[15px] w-full lg:pt-10 pt-6">
+            <div className="space-y-2 text-[15px] w-full lg:pt-5 pt-6">
               <p>Applying Year</p>
               <input
                 className="border border-dark-300 outline-none p-3 rounded-lg w-full"
@@ -632,8 +683,8 @@ export default function ApplicationForm() {
             {selectedRole === "student" ? (
               <div className=" relative space-y-2 text-[15px] w-full">
                 <p>
-                  Programs{" "}
-                  <span className="text-[12px] text-dark-400">(atleast 3)</span>{" "}
+                  Programs
+                  <span className="text-[12px] text-dark-400">(maximum 3)</span>{" "}
                 </p>
                 <button
                   onClick={toggleProgramOpen}
@@ -648,9 +699,14 @@ export default function ApplicationForm() {
                       {selectedProgram.map((program, index) => (
                         <span
                           key={index}
-                          className="bg-[#d0e9f888] px-2 py-1 text-blue-300 rounded"
+                          className="bg-[#d0e9f888] px-2 py-1 text-blue-300 rounded flex items-center gap-1"
                         >
                           {program}
+                          <span className="cursor-pointer hover:bg-[#0d192125]">
+                            <IoClose
+                              onClick={() => handleRemovePrograms(program)}
+                            />
+                          </span>
                         </span>
                       ))}
                     </div>
@@ -667,7 +723,11 @@ export default function ApplicationForm() {
                     ref={cityDown}
                     className="absolute  top-full left-0 mt-2 z-10 w-full lg:max-h-[170px] max-h-[150px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                   >
-                    {allPrograms.map((option, index) => (
+                    {[
+                      ...new Map(
+                        allPrograms.map((program) => [program.name, program]) // Ensures unique programs
+                      ).values(),
+                    ].map((option, index) => (
                       <div
                         key={index}
                         onClick={() => handleProgramSelect(option)}
@@ -676,7 +736,7 @@ export default function ApplicationForm() {
                         <div
                           className={`px-4 py-1 ${
                             selectedProgram.includes(option.name)
-                              ? "bg-[#03a3d838] text-[#03A1D8] font-semibold"
+                              ? "bg-[#03a3d84c] text-[#03A1D8] font-semibold"
                               : ""
                           } hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg`}
                         >
@@ -693,7 +753,7 @@ export default function ApplicationForm() {
                   <p>
                     Skills{" "}
                     <span className="text-[12px] text-dark-400">
-                      (atleast 3)
+                      (maximum 3)
                     </span>
                   </p>
                   <button
@@ -709,9 +769,14 @@ export default function ApplicationForm() {
                         {selectedSkill.map((skill, index) => (
                           <span
                             key={index}
-                            className="bg-[#d0e9f888] px-2 py-1 text-blue-300 rounded"
+                            className="bg-[#d0e9f888] px-2 py-1 text-blue-300 rounded flex items-center gap-1"
                           >
                             {skill}
+                            <span className="cursor-pointer hover:bg-[#0d192125]">
+                              <IoClose
+                                onClick={() => handleRemoveSkill(skill)}
+                              />
+                            </span>
                           </span>
                         ))}
                       </div>
@@ -728,13 +793,23 @@ export default function ApplicationForm() {
                       ref={cityDown}
                       className="absolute  top-full left-0 z-10 w-full lg:max-h-[170px] max-h-[150px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
                     >
-                      {allSkills.map((option, index) => (
+                      {[
+                        ...new Map(
+                          allSkills.map((skill) => [skill.name, skill]) // Ensures unique skills
+                        ).values(),
+                      ].map((option, index) => (
                         <div
                           key={index}
                           onClick={() => handleSkillSelect(option)}
                           className="p-2 cursor-pointer "
                         >
-                          <div className="px-4 py-1 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                          <div
+                            className={`px-4 py-1 ${
+                              selectedSkill.includes(option.name)
+                                ? "bg-[#03a3d84c] text-[#03A1D8] font-semibold"
+                                : ""
+                            } hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg`}
+                          >
                             {option.name}
                           </div>
                         </div>

@@ -72,9 +72,10 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
             selectedOption.toLowerCase()
           );
 
-
-          if (response.data.status_code === 200 && response.data.data.data.length > 0) {
-
+          if (
+            response.data.status_code === 200 &&
+            response.data.data.data.length > 0
+          ) {
             setApplications(
               response?.data?.data.data.map((data) => data.application)
             );
@@ -90,7 +91,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
 
             // console.log(response?.data?.data?.[0].?id)
             setLoadingUsers(false);
-          }  else {
+          } else {
             setMessage("no data found");
             setLoadingUsers(false);
           }
@@ -152,10 +153,15 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
       };
       handleUserByStatus();
     }
-  }, [programID, selectedOption, selectedStatus, statusUpdated]);
+  }, [programID, selectedStatus, selectedOption, statusUpdated]);
 
   useEffect(() => {
     const handleApplicationsNumber = async () => {
+      setApprovedRequest(null);
+      setverfiedRequest(null);
+      setUnverifiedRequest(null);
+      setPendingRequest(null);
+      setShortlisted(null);
       try {
         const response = await getApplicationsTotalNumber(
           programID,
@@ -173,41 +179,70 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
       }
     };
     handleApplicationsNumber();
-  }, [selectedStatus, programID, selectedOption, statusUpdated]);
+  }, [programID, selectedOption, statusUpdated]);
 
-  useEffect(() => {
-    const handleCoursesByPrograms = async () => {
-      setLoadingCourses(true);
-      try {
-        const response = await getCourseByProgId(programID);
-        // console.log("courses res", response?.data?.data);
-        setCourses(response?.data?.data.map((course) => course.name));
-        setLoadingCourses(false);
-      } catch (error) {
-        console.log("Courses fetching error", error.response);
-        setLoadingCourses(false);
-      }
-    };
-    handleCoursesByPrograms();
-  }, [programID]);
+  // useEffect(() => {
+  //   const handleCoursesByPrograms = async () => {
+  //     setLoadingCourses(true);
+  //     try {
+  //       const response = await getCourseByProgId(programID);
+  //       // console.log("courses res", response?.data?.data);
+  //       setCourses(response?.data?.data.map((course) => course.name));
+  //       setLoadingCourses(false);
+  //     } catch (error) {
+  //       console.log("Courses fetching error", error.response);
+  //       setLoadingCourses(false);
+  //     }
+  //   };
+  //   handleCoursesByPrograms();
+  // }, [programID]);
 
   // console.log('courses Name', courses)
 
   const handleToggleSection = (section, id) => {
    
+    // Assign ProgramID or approvedProgramID based on heading
     if (heading === "Applicants") {
       setPorgramID(id);
     } else {
       setapprovedProgramID(id);
     }
+
+    // Logic for "student" (Programs section)
     if (selectedOption.toLowerCase() === "student") {
-      setProgramSection(section);
-      setIsProgramSectionOpen(true);
-    } else {
-      setSkillSection(section);
-      setIsSkillSectionOpen(true);
+      if (programSection === section && isProgramSectionOpen) {
+        // Close program section if it's already open
+        setIsProgramSectionOpen(false);
+        setProgramSection(null);
+        console.log("Program section closed");
+      } else {
+        // Open the program section
+        setProgramSection(section);
+        setIsProgramSectionOpen(true);
+        console.log("Program section opened");
+      }
+    }
+
+    // Logic for "instructor" (Skills section)
+    else {
+      if (skillSection === section && isSkillSectionOpen) {
+        // Close skill section if it's already open
+        setIsSkillSectionOpen(false);
+        setSkillSection(null);
+        console.log("Skill section closed");
+      } else {
+        // Open the skill section
+        setSkillSection(section);
+        setIsSkillSectionOpen(true);
+        // Ensure program section is closed when opening a skill section
+        console.log("Skill section opened");
+      }
     }
   };
+
+  // console.log("heading0,", heading);
+  // console.log("prgramopen", isProgramSectionOpen);
+  // console.log("prgramopen", programSection);
 
   const handletoggleCourse = (courseName) => {
     setCourseName(courseName);
@@ -223,7 +258,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
 
   const toggleStatusOpen = (e) => {
     e.stopPropagation();
-    setStatusOpen(!statusOpen);
+    setStatusOpen(true);
   };
 
   const handleStatusSelect = (option) => {
@@ -235,7 +270,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   const statusDisplayMap = {
     pending: "Pending",
     approved: "Approved",
-    short_listed: "Short Listed",
+    short_listed: "Shortlisted",
   };
 
   const options = ["Student", "Instructor"];
@@ -309,175 +344,33 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
             flexGrow: 1, // Allow this section to grow and take up remaining space
           }}
         >
-          {
-            loadingProgram ? (
-              <div className="w-full h-full flex items-center justify-center">
-                <CircularProgress />
-              </div>
-            ) : selectedOption.toLowerCase() === "student" ? (
-              program && program.length > 0 ? (
-                // Display Program Logic
-                program.map((program) => (
-                  <div
-                    className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col"
-                    key={program.id}
-                  >
+          {loadingProgram ? (
+            <div className="w-full h-full flex items-center justify-center">
+              <CircularProgress />
+            </div>
+          ) : selectedOption.toLowerCase() === "student" ? (
+            program && program.length > 0 ? (
+              // Display Program Logic
+              program.map((program) => (
+                <div
+                  className="border border-dark-300 w-full  px-4 rounded-lg cursor-pointer flex flex-col"
+                  key={program.id}
+                >
+                  <div className="flex nsm:flex-row flex-col space-y-2 justify-between items-center">
                     <div
-                      className="flex nsm:flex-row flex-col space-y-2 justify-between items-center"
+                      className="flex gap-3 text-[17px] text-[#022567] py-4 font-semibold font-exo w-full"
                       onClick={() =>
                         handleToggleSection(program.name, program.id)
                       }
                     >
-                      <div className="flex gap-3 text-[17px] text-[#022567] font-semibold font-exo">
-                        {program.name}
-                        <div
-                          className="mt-1 text-[12px] text-blue-300 font-bold"
-                          title={`number of ${selectedStatus} applications`}
-                        >
-                          {heading === "Applicants" &&
-                          isProgramSectionOpen &&
-                          programSection === program.name ? (
-                            selectedStatus === "pending" ? (
-                              <p>( {pendingRequest} )</p>
-                            ) : selectedStatus === "approved" ? (
-                              <p className="tracking-wide flex gap-2">
-                                <span>( {approvedRequest} )</span>
-                                <span>
-                                  (verified: {verifiedRequest}, unverified:{" "}
-                                  {unverifiedRequest})
-                                </span>
-                              </p>
-                            ) : (
-                              <p>( {shortListRequest} )</p>
-                            )
-                          ) : (
-                            isProgramSectionOpen &&
-                            programSection === program.name && (
-                              <p>( {count} )</p>
-                            )
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        {heading === "Applicants" &&
-                          isProgramSectionOpen &&
-                          programSection === program.name && (
-                            <div className="z-20">
-                              <button
-                                onClick={toggleStatusOpen}
-                                className="flex justify-between z-30 items-center min-w-[200px] text-[#92A7BE] hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-[#92A7BE] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
-                              >
-                                {/* {selectedStatus || status[0]} */}
-                                {selectedStatus
-                                  ? statusDisplayMap[selectedStatus]
-                                  : statusDisplayMap[status[0]]}
-                                <span className="">
-                                  <IoIosArrowDown />
-                                </span>
-                              </button>
-
-                              {statusOpen && (
-                                <div
-                                  ref={dropStatus}
-                                  className="absolute  z-40 min-w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
-                                >
-                                  {Object.entries(statusDisplayMap).length >
-                                  0 ? (
-                                    Object.entries(statusDisplayMap).map(
-                                      ([key, value], index) => (
-                                        <div
-                                          key={index}
-                                          onClick={() =>
-                                            handleStatusSelect(key)
-                                          }
-                                          className="p-2 cursor-pointer"
-                                        >
-                                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#0074EE] hover:font-semibold rounded-lg">
-                                            {value}{" "}
-                                          </div>
-                                        </div>
-                                      )
-                                    )
-                                  ) : (
-                                    <div>No status available</div>
-                                  )}
-                                </div>
-                              )}
-                            </div>
-                          )}
-
-                        <span className="">
-                          <IoIosArrowDown />
-                        </span>
-                      </div>
-                    </div>
-                    <div
-                      className={`transition-container ${
-                        isProgramSectionOpen && programSection === program.name
-                          ? "max-height-full"
-                          : "max-height-0"
-                      }`}
-                    >
-                      {isProgramSectionOpen &&
-                        programSection === program.name && (
-                          <div className="mt-2">
-                            {heading === "Applicants" ? (
-                              <DevelopmentTable
-                                loading={loading}
-                                selectedStatus={selectedStatus}
-                                selectedOption={selectedOption.toLowerCase()}
-                                userByProgramID={userByProgramID}
-                                message={message}
-                                setStatusUpdated={setStatusUpdated}
-                                statusUpdated={statusUpdated}
-                              />
-                            ) : (
-                              <UserApprovalTable
-                                loadingUsers={loadingUsers}
-                                selectedOption={selectedOption.toLowerCase()}
-                                applications={applications}
-                                locations={locations}
-                                userPrograms={userPrograms}
-                                userSkills={userSkills}
-                                users={users}
-                                message={message}
-                                count={count}
-                                approvedProgramID={approvedProgramID}
-                              />
-                            )}
-                          </div>
-                        )}
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="text-dark-300 text-center">
-                  No programs found
-                </div>
-              )
-            ) : // Display Skills Logic
-            loadingSkills ? (
-              <div className="text-dark-300 text-center">Loading skills...</div>
-            ) : skills && skills.length > 0 ? (
-              skills.map((skill) => (
-                <div
-                  className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col"
-                  key={skill.id}
-                >
-                  <div
-                    className="flex nsm:flex-row flex-col space-y-2 justify-between items-center"
-                    onClick={() => handleToggleSection(skill.name, skill.id)}
-                  >
-                    <div className="flex gap-3 text-[#022567] text-[17px] font-semibold font-exo">
-                      {skill.name}
+                      {program.name}
                       <div
                         className="mt-1 text-[12px] text-blue-300 font-bold"
                         title={`number of ${selectedStatus} applications`}
                       >
                         {heading === "Applicants" &&
-                        isSkillSectionOpen &&
-                        skillSection === skill.name ? (
+                        isProgramSectionOpen &&
+                        programSection === program.name ? (
                           selectedStatus === "pending" ? (
                             <p>( {pendingRequest} )</p>
                           ) : selectedStatus === "approved" ? (
@@ -492,16 +385,16 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                             <p>( {shortListRequest} )</p>
                           )
                         ) : (
-                          isSkillSectionOpen &&
-                          skillSection === skill.name && <p>( {count} )</p>
+                          isProgramSectionOpen &&
+                          programSection === program.name && <p>( {count} )</p>
                         )}
                       </div>
                     </div>
 
                     <div className="flex items-center gap-2">
                       {heading === "Applicants" &&
-                        isSkillSectionOpen &&
-                        skillSection === skill.name && (
+                        isProgramSectionOpen &&
+                        programSection === program.name && (
                           <div className="z-20">
                             <button
                               onClick={toggleStatusOpen}
@@ -511,13 +404,16 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                               {selectedStatus
                                 ? statusDisplayMap[selectedStatus]
                                 : statusDisplayMap[status[0]]}
-                              <span className="">
+                              <span>
                                 <IoIosArrowDown />
                               </span>
                             </button>
 
                             {statusOpen && (
-                              <div className="absolute capitalize z-40 min-w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out">
+                              <div
+                                ref={dropStatus}
+                                className="absolute  z-40 min-w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                              >
                                 {Object.entries(statusDisplayMap).length > 0 ? (
                                   Object.entries(statusDisplayMap).map(
                                     ([key, value], index) => (
@@ -547,166 +443,175 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                   </div>
                   <div
                     className={`transition-container ${
-                      isSkillSectionOpen && skillSection === skill.name
+                      isProgramSectionOpen && programSection === program.name
                         ? "max-height-full"
                         : "max-height-0"
                     }`}
                   >
-                    {isSkillSectionOpen && skillSection === skill.name && (
-                      <div className="mt-2">
-                        {heading === "Applicants" ? (
-                          <DevelopmentTable
-                            loading={loading}
-                            selectedStatus={selectedStatus}
-                            selectedOption={selectedOption.toLowerCase()}
-                            userByProgramID={userByProgramID}
-                            setStatusUpdated={setStatusUpdated}
-                            statusUpdated={statusUpdated}
-                          />
-                        ) : (
-                          <UserApprovalTable
-                            loadingUsers={loadingUsers}
-                            selectedOption={selectedOption.toLowerCase()}
-                            applications={applications}
-                            locations={locations}
-                            userPrograms={userPrograms}
-                            userSkills={userSkills}
-                            users={users}
-                            message={message}
-                            count={count}
-                            approvedProgramID={approvedProgramID}
-                          />
-                        )}
-                      </div>
-                    )}
+                    {isProgramSectionOpen &&
+                      programSection === program.name && (
+                        <div className="pb-4">
+                          {heading === "Applicants" ? (
+                            <DevelopmentTable
+                              loading={loading}
+                              selectedStatus={selectedStatus}
+                              selectedOption={selectedOption.toLowerCase()}
+                              userByProgramID={userByProgramID}
+                              message={message}
+                              setStatusUpdated={setStatusUpdated}
+                              statusUpdated={statusUpdated}
+                            />
+                          ) : (
+                            <UserApprovalTable
+                              loadingUsers={loadingUsers}
+                              selectedOption={selectedOption.toLowerCase()}
+                              applications={applications}
+                              locations={locations}
+                              userPrograms={userPrograms}
+                              userSkills={userSkills}
+                              users={users}
+                              message={message}
+                              count={count}
+                              approvedProgramID={approvedProgramID}
+                            />
+                          )}
+                        </div>
+                      )}
                   </div>
                 </div>
               ))
             ) : (
-              <div className="text-dark-300 text-center">No skills found</div>
+              <div className="text-dark-300 text-center">No programs found</div>
             )
-            // : (
-            //   program &&
-            //   program.length > 0 &&
-            //   program.map((program) => (
-            //     <div
-            //       className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col"
-            //       key={program.id}
-            //     >
-            //       {/* Program Section */}
-            //       <div
-            //         className="flex flex-col space-y-2"
-            //         onClick={() => handleToggleSection(program.name, program.id)}
-            //       >
-            //         <div className="flex gap-3 text-[17px] font-semibold font-exo">
-            //           {program.name}
-            //           {/* Number of Applications by Status */}
-            //           {openSection === program.name && (
-            //             <div
-            //               className="mt-1 text-[12px] text-blue-300 font-bold"
-            //               title={`Number of ${selectedStatus} applications`}
-            //             >
-            //               {selectedStatus === "pending" ? (
-            //                 <p>({pendingRequest})</p>
-            //               ) : selectedStatus === "approved" ? (
-            //                 <p>({approvedRequest})</p>
-            //               ) : (
-            //                 <p>({shortListRequest})</p>
-            //               )}
-            //             </div>
-            //           )}
-            //         </div>
-            //       </div>
+          ) : // Display Skills Logic
+          loadingSkills ? (
+            <div className="text-dark-300 text-center">Loading skills...</div>
+          ) : skills && skills.length > 0 ? (
+            skills.map((skill) => (
+              <div
+                className="border border-dark-300 w-full px-4 rounded-lg cursor-pointer flex flex-col"
+                key={skill.id}
+              >
+                <div className="flex nsm:flex-row flex-col space-y-2 justify-between items-center">
+                  <div
+                    className="flex gap-3 text-[#022567] text-[17px] p-4 font-semibold font-exo w-full"
+                    onClick={() => handleToggleSection(skill.name, skill.id)}
+                  >
+                    {skill.name}
+                    <div
+                      className="mt-1 text-[12px] text-blue-300 font-bold"
+                      title={`number of ${selectedStatus} applications`}
+                    >
+                      {heading === "Applicants" &&
+                      isSkillSectionOpen &&
+                      skillSection === skill.name ? (
+                        selectedStatus === "pending" ? (
+                          <p>( {pendingRequest} )</p>
+                        ) : selectedStatus === "approved" ? (
+                          <p className="tracking-wide flex gap-2">
+                            <span>( {approvedRequest} )</span>
+                            <span>
+                              (verified: {verifiedRequest}, unverified:{" "}
+                              {unverifiedRequest})
+                            </span>
+                          </p>
+                        ) : (
+                          <p>( {shortListRequest} )</p>
+                        )
+                      ) : (
+                        isSkillSectionOpen &&
+                        skillSection === skill.name && <p>( {count} )</p>
+                      )}
+                    </div>
+                  </div>
 
-            //       {/* Courses Section */}
-            //       {openSection === program.name && (
-            //         <div className="mt-4">
-            //           {loadingCourses ? (
-            //             <div className="w-full h-full flex items-center justify-center">
-            //               <CircularProgress />
-            //             </div>
-            //           ) : courses && courses.length > 0 ? (
-            //             courses.map((course, index) => (
-            //               <div
-            //                 className={`${selectedCourse === course ? 'border-blue-300' : 'border-dark-300'} border border-b-0  w-full p-4 rounded-lg cursor-pointer flex flex-col`}
-            //                 key={index}
-            //               >
-            //                 <div
-            //                   className="flex nsm:flex-row flex-col space-y-2 justify-between items-center"
-            //                   onClick={() => handletoggleCourse(course)}
-            //                 >
-            //                   <div className={`${selectedCourse === course && 'text-blue-300'} flex gap-3 text-[17px] font-semibold font-exo`}>
-            //                     {course}
-            //                   </div>
-            //                   {/* Status Dropdown Button */}
-            //                   {selectedCourse === course && (
-            //                     <div className=" gap-2">
-            //                       <button
-            //                         onClick={toggleStatusOpen}
-            //                         className="flex justify-between z-30 items-center min-w-[200px] text-[#92A7BE] hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-[#92A7BE] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
-            //                       >
-            //                         {selectedStatus || status[0]}
-            //                         <span>
-            //                           <IoIosArrowDown />
-            //                         </span>
-            //                       </button>
+                  <div className="flex items-center gap-2">
+                    {heading === "Applicants" &&
+                      isSkillSectionOpen &&
+                      skillSection === skill.name && (
+                        <div className="z-20">
+                          <button
+                            onClick={toggleStatusOpen}
+                            className="flex justify-between z-30 items-center min-w-[200px] text-[#92A7BE] hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-[#92A7BE] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+                          >
+                            {/* {selectedStatus || status[0]} */}
+                            {selectedStatus
+                              ? statusDisplayMap[selectedStatus]
+                              : statusDisplayMap[status[0]]}
+                            <span className="">
+                              <IoIosArrowDown />
+                            </span>
+                          </button>
 
-            //                       {/* Status Dropdown Options */}
-            //                       {statusOpen && (
-            //                         <div className="absolute capitalize z-40 min-w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out">
-            //                           {status.map((option, index) => (
-            //                             <div
-            //                               key={index}
-            //                               onClick={() =>
-            //                                 handleStatusSelect(option)
-            //                               }
-            //                               className="p-2 cursor-pointer"
-            //                             >
-            //                               <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
-            //                                 {option}
-            //                               </div>
-            //                             </div>
-            //                           ))}
-            //                         </div>
-            //                       )}
-            //                     </div>
-            //                   )}
-            //                 </div>
+                          {statusOpen && (
+                            <div className="absolute capitalize z-40 min-w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out">
+                              {Object.entries(statusDisplayMap).length > 0 ? (
+                                Object.entries(statusDisplayMap).map(
+                                  ([key, value], index) => (
+                                    <div
+                                      key={index}
+                                      onClick={() => handleStatusSelect(key)}
+                                      className="p-2 cursor-pointer"
+                                    >
+                                      <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#0074EE] hover:font-semibold rounded-lg">
+                                        {value}{" "}
+                                      </div>
+                                    </div>
+                                  )
+                                )
+                              ) : (
+                                <div>No status available</div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      )}
 
-            //                 {/* Development Table Section */}
-            //                 {selectedCourse === course && (
-            //                   <div
-            //                     className={`transition-container ${
-            //                       selectedCourse === course
-            //                         ? "max-height-full"
-            //                         : "max-height-0"
-            //                     }`}
-            //                   >
-            //                     <div className="mt-2">
-            //                       <DevelopmentTable
-            //                         loading={loading}
-            //                         selectedStatus={selectedStatus}
-            //                         selectedOption={selectedOption}
-            //                         userByProgramID={userByProgramID}
-            //                         setStatusUpdated={setStatusUpdated}
-            //                         statusUpdated={statusUpdated}
-            //                       />
-            //                     </div>
-            //                   </div>
-            //                 )}
-            //               </div>
-            //             ))
-            //           ) : (
-            //             <div className="text-dark-300 text-center">
-            //               No courses found
-            //             </div>
-            //           )}
-            //         </div>
-            //       )}
-            //     </div>
-            //   ))
-            // )
-          }
+                    <span className="">
+                      <IoIosArrowDown />
+                    </span>
+                  </div>
+                </div>
+                <div
+                  className={`transition-container ${
+                    isSkillSectionOpen && skillSection === skill.name
+                      ? "max-height-full"
+                      : "max-height-0"
+                  }`}
+                >
+                  {isSkillSectionOpen && skillSection === skill.name && (
+                    <div className="pb-4">
+                      {heading === "Applicants" ? (
+                        <DevelopmentTable
+                          loading={loading}
+                          selectedStatus={selectedStatus}
+                          selectedOption={selectedOption.toLowerCase()}
+                          userByProgramID={userByProgramID}
+                          setStatusUpdated={setStatusUpdated}
+                          statusUpdated={statusUpdated}
+                        />
+                      ) : (
+                        <UserApprovalTable
+                          loadingUsers={loadingUsers}
+                          selectedOption={selectedOption.toLowerCase()}
+                          applications={applications}
+                          locations={locations}
+                          userPrograms={userPrograms}
+                          userSkills={userSkills}
+                          users={users}
+                          message={message}
+                          count={count}
+                          approvedProgramID={approvedProgramID}
+                        />
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="text-dark-300 text-center">No skills found</div>
+          )}
         </div>
       </div>
     </div>

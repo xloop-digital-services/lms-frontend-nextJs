@@ -36,6 +36,7 @@ import DeleteConfirmationPopup from "@/components/Modal/DeleteConfirmationPopUp"
 
 export const downloadFile = async (filePath) => {
   console.log("ye raha", filePath);
+  if (!filePath) return;
   const link = document.createElement("a");
   link.href = filePath;
   link.download = filePath.split("/").pop();

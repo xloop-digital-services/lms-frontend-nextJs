@@ -1054,7 +1054,12 @@ export const updateAssignment = async (assignmentData, assignmentId) => {
   try {
     const response = await axiosInstance.put(
       `/course/assignments/${assignmentId}/`,
-      assignmentData
+      assignmentData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
     );
     return response;
   } catch (error) {
@@ -1094,7 +1099,12 @@ export const updateQuiz = async (quizData, quizId) => {
   try {
     const response = await axiosInstance.put(
       `/course/quizzes/${quizId}/`,
-      quizData
+      quizData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
     );
     return response;
   } catch (error) {
@@ -1132,7 +1142,12 @@ export const updateProject = async (projectData, projectId) => {
   try {
     const response = await axiosInstance.put(
       `/course/projects/${projectId}/`,
-      projectData
+      projectData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
     );
     return response;
   } catch (error) {
@@ -1172,7 +1187,12 @@ export const updateExam = async (examData, examId) => {
   try {
     const response = await axiosInstance.put(
       `/course/exams/${examId}/`,
-      examData
+      examData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
     );
     return response;
   } catch (error) {

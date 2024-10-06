@@ -74,7 +74,7 @@ const SessionCreationModal = ({
         capacity &&
         startTime &&
         endTime &&
-        selectedDays
+        selectedDays.length > 0
       ) {
         try {
           // Format time to "hh:mm:ss" or "hh:mm:ss.uuuuuu" (24-hour format) before sending to backend

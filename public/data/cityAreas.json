@@ -12,7 +12,10 @@
             { "name": "North Karachi", "shortName": "NKH" },
             { "name": "Orangi Town", "shortName": "OTN" },
             { "name": "Malir", "shortName": "MLR" },
-            { "name": "Landhi", "shortName": "LDI" }
+            { "name": "Landhi", "shortName": "LDI" },
+            {  "name": "Magnitude" ,"shortName": "MGT"},
+            {  "name": "Meteorite", "shortName": "MET"},
+            {  "name": "Twilight", "shortName": "TWI"}
         ]
     },
     {
