@@ -79,7 +79,7 @@ export default function Page({ params }) {
   const [sessions, setSessions] = useState([]);
   const [sessionsUser, setSessionsUser] = useState([]);
   const [session, setSession] = useState(null);
-
+  const [studentInstructorName, setStudentInstructorName] = useState(null);
   const [selectedSession, setSelectedSession] = useState();
   const userId = group === "instructor" ? userData?.User?.id : adminUserId;
   const [sessionId, setSessionId] = useState(null);
@@ -120,17 +120,32 @@ export default function Page({ params }) {
   async function fetchSessionForUser() {
     const response = await getUserSessions();
     setLoader(true);
+
     try {
       if (response.status === 200) {
         const sessions = response.data?.session || [];
         console.log(sessions);
-        const coursesData = sessions.map((session) => session.course);
+
+        // Map through sessions to extract the course data and instructor name
+        const coursesData = sessions.map((session) => {
+          return {
+            course: session.course,
+            instructorName:
+              session.instructor?.instructor_name || "To be Assigned",
+          };
+        });
+
         const foundSession = sessions.find(
           (session) => Number(session.course?.id) === Number(courseId)
         );
 
         if (isStudent && foundSession) {
           setSessionId(foundSession.id);
+
+          // Set the instructor name for the found session
+          setStudentInstructorName(
+            foundSession.instructor?.instructor_name || "To be Assigned"
+          );
         }
       } else {
         console.error(
@@ -544,6 +559,9 @@ export default function Page({ params }) {
               setIsEditing={setIsEditing}
               isEditing={isEditing}
               title="Edit course"
+              instructorName={
+                studentInstructorName ? studentInstructorName : ""
+              }
             />
 
             {isEditing ? (

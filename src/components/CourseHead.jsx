@@ -8,7 +8,7 @@ import { CircularProgress } from "@mui/material";
 
 const CourseHead = ({
   rating,
-  // instructorName,
+  instructorName,
   id,
   progress,
   name,
@@ -150,8 +150,8 @@ const CourseHead = ({
             ? null
             : isStudent && (
                 <p className="flex items-center text-blue-300 font-semibold">
-                  {studentInstructorName
-                    ? `Instructor: ${studentInstructorName}`
+                  {instructorName
+                    ? `Instructor: ${instructorName}`
                     : "Instructor: To be Assigned"}
                 </p>
               )}
