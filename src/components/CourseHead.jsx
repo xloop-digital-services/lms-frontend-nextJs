@@ -127,7 +127,7 @@ const CourseHead = ({
                     (title !== "Edit course" ||
                       (title === "Edit course" && isAdmin)) && (
                       <button
-                        className=" flex justify-center items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl hover:bg-blue-700"
+                        className="flex justify-center items-center gap-2 text-surface-100 bg-blue-300 p-4 rounded-xl hover:bg-blue-700"
                         onClick={() => {
                           if (isEditing) {
                             window.location.reload();

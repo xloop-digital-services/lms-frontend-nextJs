@@ -975,7 +975,7 @@ export default function Page({ params }) {
                           >
                             <p className="flex justify-center items-center gap-2">
                               <FaTrash />
-                            </p>
+                            </p>  
                           </button>
                           {moduleId === module.id ? (
                             <>
