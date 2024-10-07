@@ -586,7 +586,7 @@ const AdminDashboard = () => {
             </div>
           </div>
         </div>
-        <div className="bg-[rgb(255,255,255)] rounded-xl p-5 pb-0 xmd:max-h-[260px] max-h-[465px] ">
+        <div className="bg-[rgb(255,255,255)] rounded-xl p-5 pb-0 xmd:max-h-[260px] h-[240px] ">
           <div className="flex nsm:items-center nsm:flex-row flex-col ">
             <h1 className="font-bold font-exo  text-[#022567] text-lg sm:w-[200px] w-[180px]  xlg:w-full">
               <Link href="/batch" className="w-fit">
@@ -642,7 +642,7 @@ const AdminDashboard = () => {
             </div>
           </div>
 
-          <div className="xmd:max-h-[155px] max-h-[355px] mt-3 overflow-y-auto overflow-x-hidden scrollbar-webkit">
+          <div className="xmd:max-h-[160px] max-h-[355px] mt-3 overflow-y-auto overflow-x-hidden scrollbar-webkit">
             {loadingBatch ? (
               <div className="flex justify-center items-center w-full h-full p-5">
                 <CircularProgress size={20} />
