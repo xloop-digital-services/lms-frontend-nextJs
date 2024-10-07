@@ -176,7 +176,9 @@ export default function CreateField({
         }}
       >
         <div className="bg-surface-100 flex flex-col p-8 rounded-xl">
-          <h2 className="font-exo text-[#022567] text-xl font-bold">Add a {title}</h2>
+          <h2 className="font-exo text-[#022567] text-xl font-bold">
+            Add a {title}
+          </h2>
 
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col mt-4">
@@ -232,7 +234,11 @@ export default function CreateField({
               </div>
 
               <div className="my-4 sm:mb-0">
-                <label>Course Names</label>
+                {route === "program" ? (
+                  <label>Course Names</label>
+                ) : (
+                  <label>Skills Names</label>
+                )}
                 <div className="sm:pr-4">
                   <div className="rounded-md relative flex flex-col bg-white outline-dark-300 focus:outline-blue-300 font-sans border-0 mt-2 shadow-sm ring-1 ring-inset focus:ring-inset p-2 sm:text-sm sm:leading-6">
                     <div className="flex flex-wrap items-center gap-2">

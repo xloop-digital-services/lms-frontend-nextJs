@@ -248,18 +248,6 @@ function SideBar() {
                 </Link>
 
                 {/* <div className={`${isAdmin && "hidden"}`}> */}
-                <Link
-                  href="/attendance"
-                  ref={isLinkActive("/attendance") ? activeLinkRef : null}
-                  className={`p-4 mx-3 flex gap-4 mt-2 rounded-xl ${
-                    isLinkActive("/attendance")
-                      ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
-                      : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
-                  }`}
-                >
-                  <FaClipboard size={24} />
-                  Attendance
-                </Link>
 
                 <Link
                   href="/assignment"
@@ -320,6 +308,18 @@ function SideBar() {
                 >
                   <FaClipboardCheck size={24} />
                   Grading
+                </Link>
+                <Link
+                  href="/attendance"
+                  ref={isLinkActive("/attendance") ? activeLinkRef : null}
+                  className={`p-4 mx-3 flex gap-4 mt-2 rounded-xl ${
+                    isLinkActive("/attendance")
+                      ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
+                      : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
+                  }`}
+                >
+                  <FaClipboard size={24} />
+                  Attendance
                 </Link>
                 {!isStudent && (
                   <Link
