@@ -128,7 +128,13 @@ const CourseHead = ({
                       (title === "Edit course" && isAdmin)) && (
                       <button
                         className=" flex justify-center items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl hover:bg-blue-700"
-                        onClick={() => setIsEditing(!isEditing)}
+                        onClick={() => {
+                          if (isEditing) {
+                            window.location.reload();
+                          } else {
+                            setIsEditing(!isEditing);
+                          }
+                        }}
                       >
                         {isEditing ? (
                           <p className="flex justify-center items-center gap-2">
