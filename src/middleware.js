@@ -15,18 +15,18 @@ const restrictedPathsInstructor = [
 ];
 
 const restrictedPaths = [
-  "programs",
+  "/programs",
   "/courses",
   "/assignment",
   "/attendance",
   "/calendar",
-  "exam",
-  "grading",
+  "/exam",
+  "/grading",
   "/quiz",
   "/project",
   "/students",
   "/batch",
-  "location",
+  "/location",
   "/class-scheduling",
   "/user-management",
 ];
