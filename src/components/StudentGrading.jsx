@@ -34,6 +34,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
   const [sessionId, setSessionId] = useState(null);
   //   const courseId = params.courseId;
   // const userId = userData?.user_data?.user;
+  const [studentInstructorName, setStudentInstructorName] = useState(null);
   const regId = isStudent ? userData?.user_data?.registration_id : propRegId;
   // const regId = userData?.user_data?.registration_id;
   // console.log(regId);
@@ -43,17 +44,27 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
   async function fetchSessionForUser() {
     const response = await getUserSessions();
     setLoader(true);
+
     try {
       if (response.status === 200) {
         const sessions = response.data?.session || [];
         console.log(sessions);
-        // const coursesData = sessions.map((session) => session.course);
-        // setLoading(false);
+        const coursesData = sessions.map((session) => {
+          return {
+            course: session.course,
+            instructorName:
+              session.instructor?.instructor_name || "To be Assigned",
+          };
+        });
         const foundSession = sessions.find(
           (session) => Number(session.course?.id) === Number(courseId)
         );
-        if (foundSession) {
+
+        if (isStudent && foundSession) {
           setSessionId(foundSession.id);
+          setStudentInstructorName(
+            foundSession.instructor?.instructor_name || "To be Assigned"
+          );
         }
       } else {
         console.error(
@@ -195,151 +206,163 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
 
   return (
     <>
-      <div className="my-5 space-y-3">
-        <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
-          <div
-            className=" flex justify-between items-center "
-            onClick={() => handleToggleSection("Quiz")}
-          >
-            <p className="text-[17px] font-semibold text-[#022567] font-exo">
-              Quiz
-            </p>
-            <span className="">
-              <IoIosArrowDown />
-            </span>
+      <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4">
+        <CourseHead
+          id={courseId}
+          // rating="Top Instructor"
+          // instructorName="Maaz"
+          haveStatus={true}
+          program="course"
+          instructorName={studentInstructorName ? studentInstructorName : ""}
+        />
+        <div className="my-5 space-y-3">
+          <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
+            <div
+              className=" flex justify-between items-center "
+              onClick={() => handleToggleSection("Quiz")}
+            >
+              <p className="text-[17px] font-semibold text-[#022567] font-exo">
+                Quiz
+              </p>
+              <span className="">
+                <IoIosArrowDown />
+              </span>
+            </div>
+            <div
+              className={`transition-container ${
+                openSection === "Quiz" ? "max-height-full" : "max-height-0"
+              }`}
+            >
+              {openSection === "Quiz" && (
+                <div className="mt-2">
+                  <StudentMarksTable
+                    key={quiz.id}
+                    field={openSection}
+                    assessments={quiz?.data}
+                  />
+                </div>
+              )}
+            </div>
           </div>
-          <div
-            className={`transition-container ${
-              openSection === "Quiz" ? "max-height-full" : "max-height-0"
-            }`}
-          >
-            {openSection === "Quiz" && (
-              <div className="mt-2">
-                <StudentMarksTable
-                  key={quiz.id}
-                  field={openSection}
-                  assessments={quiz?.data}
-                />
-              </div>
-            )}
-          </div>
-        </div>
 
-        <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
-          <div
-            className=" flex justify-between items-center "
-            onClick={() => handleToggleSection("Assignment")}
-          >
-            <p className="text-[17px] font-semibold text-[#022567] font-exo">
-              Assignment
-            </p>
-            <span className="">
-              <IoIosArrowDown />
-            </span>
+          <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
+            <div
+              className=" flex justify-between items-center "
+              onClick={() => handleToggleSection("Assignment")}
+            >
+              <p className="text-[17px] font-semibold text-[#022567] font-exo">
+                Assignment
+              </p>
+              <span className="">
+                <IoIosArrowDown />
+              </span>
+            </div>
+            <div
+              className={`transition-container ${
+                openSection === "Assignment"
+                  ? "max-height-full"
+                  : "max-height-0"
+              }`}
+            >
+              {openSection === "Assignment" && (
+                <div className="mt-2">
+                  <StudentMarksTable
+                    key={assignment.id}
+                    field={openSection}
+                    assessments={assignment?.data}
+                  />
+                </div>
+              )}
+            </div>
           </div>
-          <div
-            className={`transition-container ${
-              openSection === "Assignment" ? "max-height-full" : "max-height-0"
-            }`}
-          >
-            {openSection === "Assignment" && (
-              <div className="mt-2">
-                <StudentMarksTable
-                  key={assignment.id}
-                  field={openSection}
-                  assessments={assignment?.data}
-                />
-              </div>
-            )}
-          </div>
-        </div>
 
-        <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
-          <div
-            className=" flex justify-between items-center "
-            onClick={() => handleToggleSection("Project")}
-          >
-            <p className="text-[17px] font-semibold text-[#022567] font-exo">
-              Project
-            </p>
-            <span className="">
-              <IoIosArrowDown />
-            </span>
+          <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
+            <div
+              className=" flex justify-between items-center "
+              onClick={() => handleToggleSection("Project")}
+            >
+              <p className="text-[17px] font-semibold text-[#022567] font-exo">
+                Project
+              </p>
+              <span className="">
+                <IoIosArrowDown />
+              </span>
+            </div>
+            <div
+              className={`transition-container ${
+                openSection === "Project" ? "max-height-full" : "max-height-0"
+              }`}
+            >
+              {openSection === "Project" && (
+                <div className="mt-2">
+                  <StudentMarksTable
+                    key={project.id}
+                    field={openSection}
+                    assessments={project?.data}
+                  />
+                </div>
+              )}
+            </div>
           </div>
-          <div
-            className={`transition-container ${
-              openSection === "Project" ? "max-height-full" : "max-height-0"
-            }`}
-          >
-            {openSection === "Project" && (
-              <div className="mt-2">
-                <StudentMarksTable
-                  key={project.id}
-                  field={openSection}
-                  assessments={project?.data}
-                />
-              </div>
-            )}
-          </div>
-        </div>
 
-        <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
-          <div
-            className=" flex justify-between items-center "
-            onClick={() => handleToggleSection("Exam")}
-          >
-            <p className="text-[17px] font-semibold text-[#022567] font-exo">
-              Exam
-            </p>
-            <span className="">
-              <IoIosArrowDown />
-            </span>
-          </div>
-          <div
-            className={`transition-container ${
-              openSection === "Exam" ? "max-height-full" : "max-height-0"
-            }`}
-          >
-            {openSection === "Exam" && (
-              <div className="mt-2">
-                <StudentMarksTable
-                  key={exam.id}
-                  field={openSection}
-                  assessments={exam?.data}
-                />
-              </div>
-            )}
+          <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
+            <div
+              className=" flex justify-between items-center "
+              onClick={() => handleToggleSection("Exam")}
+            >
+              <p className="text-[17px] font-semibold text-[#022567] font-exo">
+                Exam
+              </p>
+              <span className="">
+                <IoIosArrowDown />
+              </span>
+            </div>
+            <div
+              className={`transition-container ${
+                openSection === "Exam" ? "max-height-full" : "max-height-0"
+              }`}
+            >
+              {openSection === "Exam" && (
+                <div className="mt-2">
+                  <StudentMarksTable
+                    key={exam.id}
+                    field={openSection}
+                    assessments={exam?.data}
+                  />
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
-      {/* <div
+        {/* <div
             className={`transition-container ${
               openSection !== null ? "max-height-0" : "max-height-full"
             }`}
           > */}
-      <div className={`font-semibold text-[#022567] font-exo py-3 `}>
-        Student Performance Overview
+        <div className={`font-semibold text-[#022567] font-exo py-3 `}>
+          Student Performance Overview
+        </div>
+        {progress ? (
+          <PerformanceTable
+            assignmentScore={progress?.assignments?.grades}
+            assignmentWeightage={progress?.assignments?.weightage}
+            assignmentWeightedScore={progress?.assignments?.percentage}
+            quizWeightage={progress?.quizzes?.weightage}
+            quizScore={progress?.quizzes?.grades}
+            quizWeightedScore={progress?.quizzes?.percentage}
+            projectWeightage={progress?.projects?.weightage}
+            projectScore={progress?.projects?.grades}
+            projectWeightedScore={progress?.projects?.percentage}
+            examsWeightage={progress?.exams?.weightage}
+            examsScore={progress?.exams?.grades}
+            examsWeightedScore={progress?.exams?.percentage}
+          />
+        ) : (
+          <p className="text-blue-300 h-12 w-full flex justify-center items-center">
+            No Weightages for this course assigned yet
+          </p>
+        )}
       </div>
-      {progress ? (
-        <PerformanceTable
-          assignmentScore={progress?.assignments?.grades}
-          assignmentWeightage={progress?.assignments?.weightage}
-          assignmentWeightedScore={progress?.assignments?.percentage}
-          quizWeightage={progress?.quizzes?.weightage}
-          quizScore={progress?.quizzes?.grades}
-          quizWeightedScore={progress?.quizzes?.percentage}
-          projectWeightage={progress?.projects?.weightage}
-          projectScore={progress?.projects?.grades}
-          projectWeightedScore={progress?.projects?.percentage}
-          examsWeightage={progress?.exams?.weightage}
-          examsScore={progress?.exams?.grades}
-          examsWeightedScore={progress?.exams?.percentage}
-        />
-      ) : (
-        <p className="text-blue-300 h-12 w-full flex justify-center items-center">
-          No Weightages for this course assigned yet
-        </p>
-      )}
     </>
   );
 }

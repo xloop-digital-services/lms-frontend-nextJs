@@ -44,21 +44,32 @@ export default function Page({ params }) {
   const [selectedSession, setSelectedSession] = useState();
   const userId = group === "instructor" ? userData?.User?.id : adminUserId;
   const [sessionId, setSessionId] = useState(null);
+  const [studentInstructorName, setStudentInstructorName] = useState(null);
 
   async function fetchSessionForUser() {
     const response = await getUserSessions();
     setLoading(true);
+
     try {
       if (response.status === 200) {
         const sessions = response.data?.session || [];
         console.log(sessions);
-        // const coursesData = sessions.map((session) => session.course);
-        // setLoading(false);
+        const coursesData = sessions.map((session) => {
+          return {
+            course: session.course,
+            instructorName:
+              session.instructor?.instructor_name || "To be Assigned",
+          };
+        });
         const foundSession = sessions.find(
           (session) => Number(session.course?.id) === Number(courseId)
         );
+
         if (isStudent && foundSession) {
           setSessionId(foundSession.id);
+          setStudentInstructorName(
+            foundSession.instructor?.instructor_name || "To be Assigned"
+          );
         }
       } else {
         console.error(
@@ -282,6 +293,7 @@ export default function Page({ params }) {
           title="Create Project"
           isEditing={isCreatingQuiz}
           setIsEditing={setCreatingQuiz}
+          instructorName={studentInstructorName ? studentInstructorName : ""}
         />
 
         {loading ? (

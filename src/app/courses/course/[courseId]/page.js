@@ -125,8 +125,6 @@ export default function Page({ params }) {
       if (response.status === 200) {
         const sessions = response.data?.session || [];
         console.log(sessions);
-
-        // Map through sessions to extract the course data and instructor name
         const coursesData = sessions.map((session) => {
           return {
             course: session.course,
@@ -134,15 +132,12 @@ export default function Page({ params }) {
               session.instructor?.instructor_name || "To be Assigned",
           };
         });
-
         const foundSession = sessions.find(
           (session) => Number(session.course?.id) === Number(courseId)
         );
 
         if (isStudent && foundSession) {
           setSessionId(foundSession.id);
-
-          // Set the instructor name for the found session
           setStudentInstructorName(
             foundSession.instructor?.instructor_name || "To be Assigned"
           );

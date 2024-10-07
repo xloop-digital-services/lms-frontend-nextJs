@@ -11,6 +11,12 @@ export default function AdminAttendance({ courseId }) {
   console.log(courseId);
   return (
     <div className=" bg-surface-100  rounded-xl ">
+      <CourseHead
+        id={courseId}
+        // rating="Top Instructor"
+        program="course"
+        instructorName="Maaz"
+      />
       <GetAttendanceTable courseId={courseId} />
     </div>
   );

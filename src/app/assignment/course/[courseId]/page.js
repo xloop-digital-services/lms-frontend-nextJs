@@ -46,22 +46,33 @@ export default function Page({ params }) {
   const regId = userData?.user_data?.registration_id;
   const isAdmin = userData?.Group === "admin";
   const isInstructor = userData?.Group === "instructor";
+  const [studentInstructorName, setStudentInstructorName] = useState(null);
   const userId = group === "instructor" ? userData?.User?.id : adminUserId;
 
   async function fetchSessionForUser() {
     const response = await getUserSessions();
     setLoading(true);
+
     try {
       if (response.status === 200) {
         const sessions = response.data?.session || [];
         console.log(sessions);
-        const coursesData = sessions.map((session) => session.course);
+        const coursesData = sessions.map((session) => {
+          return {
+            course: session.course,
+            instructorName:
+              session.instructor?.instructor_name || "To be Assigned",
+          };
+        });
         const foundSession = sessions.find(
           (session) => Number(session.course?.id) === Number(courseId)
         );
 
         if (isStudent && foundSession) {
           setSessionId(foundSession.id);
+          setStudentInstructorName(
+            foundSession.instructor?.instructor_name || "To be Assigned"
+          );
         }
       } else {
         console.error(
@@ -311,6 +322,7 @@ export default function Page({ params }) {
           title="Create Assignment"
           isEditing={isCreatingQuiz}
           setIsEditing={setCreatingQuiz}
+          instructorName={studentInstructorName ? studentInstructorName : ""}
         />
         {loading ? (
           <div className="flex h-screen bg-surface-100 justify-center py-10">

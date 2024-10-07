@@ -14,6 +14,7 @@ import {
 import CreateWeightage from "./CreateWeightage";
 import GetWeightage from "./GetWeightage";
 import { useAuth } from "@/providers/AuthContext";
+import CourseHead from "./CourseHead";
 
 const Grading = ({ courseId }) => {
   // const quiz = ["quiz1", "quiz2", "quiz3", "quiz4"];
@@ -129,7 +130,15 @@ const Grading = ({ courseId }) => {
   // console.log(sessionId);
   // console.log(weightage);
   return (
-    <div className="">
+    // <div className="">
+    <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4">
+      <CourseHead
+        id={courseId}
+        // rating="Top Instructor"
+        // instructorName="Maaz"
+        haveStatus={true}
+        program="course"
+      />{" "}
       {isAdmin && (
         <div className="w-full">
           <label>
@@ -238,7 +247,6 @@ const Grading = ({ courseId }) => {
         {assignWeightage ? "Cancel" : "Assign Weightages"}
       </button>
       {assignWeightage && <CreateWeightage courseId={courseId} />} */}
-
       {weightagesExist ? (
         <div className="my-4">
           <GetWeightage weigh={weightage} />
