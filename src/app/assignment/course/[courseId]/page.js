@@ -307,7 +307,7 @@ export default function Page({ params }) {
           id={courseId}
           program="course"
           progress={assignmentProgress?.progress_percentage}
-          haveStatus={true}
+          haveStatus={isStudent ? true : false}
           title="Create Assignment"
           isEditing={isCreatingQuiz}
           setIsEditing={setCreatingQuiz}

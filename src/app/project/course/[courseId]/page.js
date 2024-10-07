@@ -278,7 +278,7 @@ export default function Page({ params }) {
           // rating="Top Instructor"
           // instructorName="Maaz"
           // progress={assignmentProgress?.progress_percentage}
-          haveStatus={true}
+          haveStatus={isStudent ? true : false}
           title="Create Project"
           isEditing={isCreatingQuiz}
           setIsEditing={setCreatingQuiz}

@@ -122,21 +122,32 @@ export default function Page({ params }) {
     setLoader(true);
     try {
       if (response.status === 200) {
-        setSessionsUser(response.data?.session);
-        const session = response.data?.session.find((s) => s.courseId);
-        setSession(session);
-        setLoader(false);
-        console.log(response?.data);
+        const sessions = response.data?.session || [];
+        console.log(sessions);
+        const coursesData = sessions.map((session) => session.course);
+        const foundSession = sessions.find(
+          (session) => Number(session.course?.id) === Number(courseId)
+        );
+
+        if (isStudent && foundSession) {
+          setSessionId(foundSession.id);
+        }
       } else {
-        console.error("Failed to fetch user, status:", response.status);
+        console.error(
+          "Failed to fetch user sessions, status:",
+          response.status
+        );
       }
     } catch (error) {
-      console.log("error", error);
+      console.log("Error:", error);
+    } finally {
+      setLoader(false);
     }
   }
+
   useEffect(() => {
     fetchSessionForUser();
-  }, []);
+  }, [isStudent]);
 
   const handleCreateSkill = async (e) => {
     e.preventDefault();
@@ -428,6 +439,8 @@ export default function Page({ params }) {
       console.error("Error deleting the module", error);
     }
   };
+
+  // console.log(sessionId);
   useEffect(() => {
     if (!sessionId) return;
     fetchModules();

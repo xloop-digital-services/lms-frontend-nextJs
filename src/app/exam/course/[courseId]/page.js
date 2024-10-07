@@ -303,7 +303,7 @@ export default function Page({ params }) {
         <CourseHead
           id={courseId}
           program="course"
-          haveStatus={true}
+          haveStatus={isStudent ? true : false}
           title="Create Exam"
           isEditing={isCreatingQuiz}
           setIsEditing={setCreatingQuiz}
