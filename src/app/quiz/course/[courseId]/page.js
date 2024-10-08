@@ -209,12 +209,14 @@ export default function Page({ params }) {
     setCurrentAssignment(assignmentToEdit);
     setQuestion(assignmentToEdit.question);
     setDescription(assignmentToEdit.description);
-    setDueDate(assignmentToEdit.due_date);
+    setDueDate(assignmentToEdit.due_date.slice(0, 16));
     setResubmission(assignmentToEdit.no_of_resubmissions_allowed);
     setFile(assignmentToEdit.content);
     setCreatingQuiz(true);
     setTotalGrade(assignmentToEdit.total_grade);
   };
+
+  // console.log(currentAssignment?.content?.split("/").pop());
 
   const handleDeleteAssignment = async (id) => {
     const assignmentToDelete = assignments.find(
@@ -495,6 +497,11 @@ export default function Page({ params }) {
                         className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
                         onChange={(e) => setFile(e.target.files[0])}
                       />
+                      {currentAssignment && currentAssignment.content && (
+                        <p className="text-sm text-gray-500 mt-2">
+                          Current file: {currentAssignment.content}
+                        </p>
+                      )}
                     </div>
                   </div>
                   <button

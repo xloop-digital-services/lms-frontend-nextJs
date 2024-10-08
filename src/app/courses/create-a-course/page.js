@@ -49,7 +49,6 @@ export default function Page() {
     try {
       const response = await createCourse(courseData);
       if (response.status === 201) {
-        router.push("/courses");
         toast.success("Course created successfully!");
         setCreatingProgram(courseData);
         setAbout("");

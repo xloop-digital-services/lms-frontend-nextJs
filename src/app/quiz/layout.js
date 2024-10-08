@@ -9,7 +9,7 @@ export const metadata = {
   description: "Learning Management System",
 };
 
-export default function CoursesLayout({ children }) {
+export default function QuizLayout({ children }) {
   return (
     <>
       <AuthProvider>

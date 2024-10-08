@@ -39,7 +39,6 @@ export default function Page() {
     try {
       const response = await createProgram(program);
       if (response.status === 201) {
-        router.push("/programs");
         toast.success("Program created successfully!");
         setCreatingProgram(program);
         setAbout("");

@@ -279,13 +279,23 @@ const AdminDataStructure = ({
                           )}
                           <th
                             scope="col"
-                            className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[12%]"
+                            className="relative px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]"
                           >
-                            {quiz.status === 0
-                              ? "Inactive"
-                              : quiz.status === 1
-                              ? "active"
-                              : "-"}
+                            <p
+                      className={`w-[110px] text-center px-4 py-2 text-[12px] rounded-lg ${
+                                quiz.status === 0
+                                  ? "bg-mix-200 text-surface-100"
+                                  : quiz.status === 1
+                                  ? "bg-mix-300 text-surface-100"
+                                  : "bg-gray-200 text-gray-600"
+                              }`}
+                            >
+                              {quiz.status === 0
+                                ? "Inactive"
+                                : quiz.status === 1
+                                ? "Active"
+                                : "-"}
+                            </p>
                           </th>
                           <td className="px-12 py-3 whitespace-nowrap text-blue-300  ">
                             <div className="flex items-center justify-center gap-4">

@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import { FaPlus, FaTimes } from "react-icons/fa";
 import { toast } from "react-toastify";
 import SessionCreationModal from "./Modal/SessionCreationModal";
+import { useRouter } from "next/navigation";
 
 export default function CreateField({
   title,
@@ -34,6 +35,7 @@ export default function CreateField({
   fetchAllSkills,
   create,
 }) {
+  const router = useRouter();
   const { isSidebarOpen } = useSidebar();
   const [addModule, setAddModule] = useState(false);
   const [module, setModule] = useState("");
@@ -90,6 +92,10 @@ export default function CreateField({
 
   const handleAddModule = () => {
     setAddModule(!addModule);
+  };
+
+  const goBack = () => {
+    router.back();
   };
 
   const handleOpenSessionModal = () => setOpenModal(true);
@@ -388,6 +394,7 @@ export default function CreateField({
                 </>
               )}
               <button
+                onClick={goBack}
                 type="submit"
                 className="flex text-center justify-center items-center gap-2 text-surface-100 bg-blue-300 py-2 px-4 mt-4 rounded-md mr-4 hover:bg-[#3272b6]"
               >
