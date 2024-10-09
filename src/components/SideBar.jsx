@@ -39,6 +39,7 @@ function SideBar() {
 
   const ToggleOptions = () => {
     setIsOpen(!isOpen);
+    
   };
 
   return (
