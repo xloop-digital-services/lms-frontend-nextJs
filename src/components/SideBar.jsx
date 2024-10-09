@@ -1,9 +1,9 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSidebar } from "@/providers/useSidebar";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { IoIosArrowDown } from "react-icons/io";
 import { FaListCheck, FaLocationDot } from "react-icons/fa6";
 import logo from "../../public/assets/img/logo.png";
@@ -17,13 +17,12 @@ import {
   FaFile,
   FaHome,
   FaLaptopCode,
+  FaListAlt,
   FaSignOutAlt,
   FaTasks,
   FaUser,
-  FaListAlt,
   FaUsers,
 } from "react-icons/fa";
-
 import { useAuth } from "@/providers/AuthContext";
 
 function SideBar() {
@@ -32,10 +31,21 @@ function SideBar() {
   const isAdmin = userData?.Group === "admin";
   const isStudent = userData?.Group === "student";
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const activeLinkRef = useRef(null);
   const isLinkActive = (path) => {
     return pathname === path || pathname.includes(path);
   };
-  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (activeLinkRef.current) {
+      activeLinkRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [pathname]);
 
   const ToggleOptions = () => {
     setIsOpen(!isOpen);
@@ -55,33 +65,27 @@ function SideBar() {
           >
             <FaBars size={24} />
           </button>
-          {/* <div className="hidden sm:flex justify start "> */}
           <Link href="/dashboard" className="mr-8" passHref>
             <Image
               src={logo}
               alt="logo"
               width={230}
               height={100}
-              className="ml-8"
-              // className={`w-full h-full `}
+              className="ml-8 my-1"
             />
           </Link>
-          {/* </div>   */}
         </div>
-        <nav className="flex flex-col p-2 text-blue-500 sidebar  bg-blue-500">
+        <nav className="flex flex-col p-2 text-blue-500 sidebar bg-blue-500">
           <div className="flex flex-col h-screen">
-            <div className=" flex flex-col justify-between lg:h-[90%] h-[75%] overflow-y-auto scrollbar-webkit pb-4">
-              {/* <nav className="flex flex-col p-2 text-blue-500 sidebar  bg-blue-500  h-screen">
-          <div className="flex flex-col  h-[91%] overflow-y-auto scrollbar-webkit pb-4">
-            <div className=" flex flex-col justify-between lg:h-[90%] mr-2"> */}
-
-              <div className=" py-4 rounded flex flex-col pr-2">
+            <div className="flex flex-col justify-between lg:h-[90%] h-[75%] overflow-y-auto scrollbar-webkit pb-4">
+              <div className="py-4 rounded flex flex-col">
                 <Link
                   href="/dashboard"
-                  className={`p-4 flex gap-4 rounded-xl ${
+                  ref={isLinkActive("/dashboard") ? activeLinkRef : null}
+                  className={`p-4 mx-3 flex gap-4 rounded-xl ${
                     isLinkActive("/dashboard")
                       ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
-                      : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
+                      : "text-dark-600 hover:text-blue-600 hover:bg-[#e6f8ff] hover:bg-opacity-40"
                   }`}
                 >
                   <FaHome size={24} />
@@ -89,12 +93,12 @@ function SideBar() {
                 </Link>
                 <div className={`${!isAdmin && "hidden"}`}>
                   <div
-                    className={`p-4 flex flex-col group gap-4 mt-2 cursor-pointer rounded-xl ${
+                    className={`p-4 mx-3 flex flex-col group gap-4 mt-2 cursor-pointer rounded-xl ${
                       isLinkActive("/user-management") ||
                       isLinkActive("/user-management/applicants") ||
                       isLinkActive("/user-management/users")
                         ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
-                        : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
+                        : "text-dark-600 hover:text-blue-600 hover:bg-[#e6f8ff] hover:bg-opacity-40"
                     }`}
                   >
                     <div
@@ -110,10 +114,10 @@ function SideBar() {
                             isLinkActive("/user-management") ||
                             isLinkActive("/user-management/applicants") ||
                             isLinkActive("/user-management/users")
-                              ? " text-blue-300 bg-blue-600"
-                              : " bg-dark-600 text-[#07224d]"
-                          }  group-hover:text-[#07224da0] p-1 rounded-md  group-hover:bg-blue-600`}
-                        />{" "}
+                              ? "text-blue-300 bg-blue-600"
+                              : "bg-dark-600 text-[#07224d]"
+                          } group-hover:text-[#07224da0] p-1 rounded-md group-hover:bg-blue-600`}
+                        />
                         <p
                           className={`flex-grow text-center ${
                             isLinkActive("/user-management") && "font-semibold"
@@ -122,10 +126,7 @@ function SideBar() {
                           User Management
                         </p>
                       </div>
-                      <button
-                        // onClick={ToggleOptions}
-                        className="group-hover:cursor-pointer"
-                      >
+                      <button className="group-hover:cursor-pointer">
                         <IoIosArrowDown size={22} />
                       </button>
                     </div>
@@ -136,6 +137,11 @@ function SideBar() {
                           <li>
                             <Link
                               href="/user-management/applicants"
+                              ref={
+                                isLinkActive("/user-management/applicants")
+                                  ? activeLinkRef
+                                  : null
+                              }
                               className={`${
                                 isLinkActive("/user-management/applicants") &&
                                 "font-semibold"
@@ -147,6 +153,11 @@ function SideBar() {
                           <li>
                             <Link
                               href="/user-management/users"
+                              ref={
+                                isLinkActive("/user-management/users")
+                                  ? activeLinkRef
+                                  : null
+                              }
                               className={`${
                                 isLinkActive("/user-management/users") &&
                                 "font-semibold"
@@ -161,7 +172,8 @@ function SideBar() {
                   </div>
                   <Link
                     href="/location"
-                    className={`p-4 flex gap-4 mt-2 rounded-xl ${
+                    ref={isLinkActive("/location") ? activeLinkRef : null}
+                    className={`p-4 mx-3 flex gap-4 mt-2 rounded-xl ${
                       isLinkActive("/location")
                         ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
                         : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
@@ -172,7 +184,8 @@ function SideBar() {
                   </Link>
                   <Link
                     href="/batch"
-                    className={`p-4 flex gap-4 mt-2 rounded-xl ${
+                    ref={isLinkActive("/batch") ? activeLinkRef : null}
+                    className={`p-4 mx-3 flex gap-4 mt-2 rounded-xl ${
                       isLinkActive("/batch")
                         ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
                         : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
@@ -183,7 +196,10 @@ function SideBar() {
                   </Link>
                   <Link
                     href="/class-scheduling"
-                    className={`p-4  flex gap-4 group mt-2 rounded-xl  ${
+                    ref={
+                      isLinkActive("/class-scheduling") ? activeLinkRef : null
+                    }
+                    className={`p-4 mx-3 flex gap-4 group mt-2 rounded-xl  ${
                       isLinkActive("/class-scheduling")
                         ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
                         : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
@@ -204,7 +220,8 @@ function SideBar() {
                 {(isAdmin || isStudent) && (
                   <Link
                     href="/programs"
-                    className={`p-4 flex mt-2 gap-4 rounded-xl ${
+                    ref={isLinkActive("/programs") ? activeLinkRef : null}
+                    className={`p-4 mx-3 flex mt-2 gap-4 rounded-xl ${
                       isLinkActive("/programs")
                         ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
                         : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
@@ -219,7 +236,8 @@ function SideBar() {
 
                 <Link
                   href="/courses"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl ${
+                  ref={isLinkActive("/courses") ? activeLinkRef : null}
+                  className={`p-4 mx-3 flex gap-4 mt-2 rounded-xl ${
                     isLinkActive("/courses")
                       ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
                       : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
@@ -230,21 +248,11 @@ function SideBar() {
                 </Link>
 
                 {/* <div className={`${isAdmin && "hidden"}`}> */}
-                <Link
-                  href="/attendance"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl ${
-                    isLinkActive("/attendance")
-                      ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
-                      : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
-                  }`}
-                >
-                  <FaClipboard size={24} />
-                  Attendance
-                </Link>
 
                 <Link
                   href="/assignment"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl ${
+                  ref={isLinkActive("/assignment") ? activeLinkRef : null}
+                  className={`p-4 mx-3 flex gap-4 mt-2 rounded-xl ${
                     isLinkActive("/assignment")
                       ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
                       : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
@@ -255,7 +263,8 @@ function SideBar() {
                 </Link>
                 <Link
                   href="/quiz"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl ${
+                  ref={isLinkActive("/quiz") ? activeLinkRef : null}
+                  className={`p-4 mx-3 flex gap-4 mt-2 rounded-xl ${
                     isLinkActive("/quiz")
                       ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
                       : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
@@ -266,7 +275,8 @@ function SideBar() {
                 </Link>
                 <Link
                   href="/project"
-                  className={`p-4  flex gap-4 mt-2 rounded-xl  ${
+                  ref={isLinkActive("/project") ? activeLinkRef : null}
+                  className={`p-4 mx-3 flex gap-4 mt-2 rounded-xl  ${
                     isLinkActive("/project")
                       ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
                       : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
@@ -277,7 +287,8 @@ function SideBar() {
                 </Link>
                 <Link
                   href="/exam"
-                  className={`p-4 flex gap-4 mt-2 rounded-xl ${
+                  ref={isLinkActive("/exam") ? activeLinkRef : null}
+                  className={`p-4 mx-3 flex gap-4 mt-2 rounded-xl ${
                     isLinkActive("/exam")
                       ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
                       : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
@@ -288,7 +299,8 @@ function SideBar() {
                 </Link>
                 <Link
                   href="/grading"
-                  className={`p-4 flex gap-4 mt-2 rounded-xl ${
+                  ref={isLinkActive("/grading") ? activeLinkRef : null}
+                  className={`p-4 mx-3 flex gap-4 mt-2 rounded-xl ${
                     isLinkActive("/grading")
                       ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
                       : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
@@ -297,10 +309,23 @@ function SideBar() {
                   <FaClipboardCheck size={24} />
                   Grading
                 </Link>
+                <Link
+                  href="/attendance"
+                  ref={isLinkActive("/attendance") ? activeLinkRef : null}
+                  className={`p-4 mx-3 flex gap-4 mt-2 rounded-xl ${
+                    isLinkActive("/attendance")
+                      ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
+                      : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
+                  }`}
+                >
+                  <FaClipboard size={24} />
+                  Attendance
+                </Link>
                 {!isStudent && (
                   <Link
                     href="/students"
-                    className={`p-4 flex gap-4 mt-2 rounded-xl ${
+                    ref={isLinkActive("/students") ? activeLinkRef : null}
+                    className={`p-4 mx-3 flex gap-4 mt-2 rounded-xl ${
                       isLinkActive("/students")
                         ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
                         : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
@@ -313,7 +338,8 @@ function SideBar() {
                 {!isAdmin && (
                   <Link
                     href="/calendar"
-                    className={`p-4  flex gap-4 mt-2 rounded-xl ${
+                    ref={isLinkActive("/calendar") ? activeLinkRef : null}
+                    className={`p-4 mx-3 flex gap-4 mt-2 rounded-xl ${
                       isLinkActive("/calendar")
                         ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
                         : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
@@ -324,10 +350,11 @@ function SideBar() {
                   </Link>
                 )}
               </div>
-              <div className="flex flex-col pr-2">
+              <div className="flex flex-col">
                 <Link
                   href="/user/profile"
-                  className={`p-4 flex gap-4 border rounded-xl border-dark-300  ${
+                  ref={isLinkActive("/user/profile") ? activeLinkRef : null}
+                  className={`p-4 mx-3 flex gap-4 border rounded-xl border-dark-300  ${
                     isLinkActive("/user/profile")
                       ? "bg-blue-300 text-blue-600 hover:bg-opacity-60 hover:text-blue-300"
                       : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
@@ -340,7 +367,7 @@ function SideBar() {
                 <Link
                   href="/auth/login"
                   onClick={logOutUser}
-                  className={`p-4 flex gap-4 mt-2 border rounded-xl border-dark-300  ${
+                  className={`p-4 mx-3 flex gap-4 mt-2 border rounded-xl border-dark-300  ${
                     isLinkActive("/auth/login")
                       ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
                       : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
