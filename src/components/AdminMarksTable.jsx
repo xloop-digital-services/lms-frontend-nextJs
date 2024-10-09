@@ -8,12 +8,13 @@ import {
 } from "@/api/route";
 import { toast } from "react-toastify";
 import { downloadFile } from "@/app/courses/course/[courseId]/page";
+import { FaEdit } from "react-icons/fa";
 
 const AdminMarksTable = ({ assessments, courseId, setFetch, title }) => {
   const [loading, setLoading] = useState(true);
   const [editData, setEditData] = useState({});
   const [isEditing, setIsEditing] = useState(null);
-  const [gradedAssessments, setGradedAssessments] = useState({}); // Track which assessments are graded
+  const [gradedAssessments, setGradedAssessments] = useState({});
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -205,51 +206,61 @@ const AdminMarksTable = ({ assessments, courseId, setFetch, title }) => {
                           </td>
 
                           <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
-                            {assessment?.grade > 0 &&
-                            assessment.submitted_file ? (
-                              <button className="w-[110px] text-center px-4 py-2 text-[12px] rounded-lg text-sm bg-mix-300 text-surface-200">
-                                Graded
-                              </button>
-                            ) : assessment?.status !== "Submitted" ? (
-                              <button className=" text-center text-[12px] rounded-lg text-sm bg-gray-300 text-blue-300">
-                                You cant grade right now
-                              </button>
-                            ) : isEditing === assessment.submission_id ? (
-                              <button
-                                className="w-[110px] hover:bg-blue-700 text-center px-4 py-2 text-[12px] rounded-lg text-sm bg-blue-300 text-surface-200"
-                                onClick={() =>
-                                  handleSave(
-                                    assessment.submission_id,
-                                    // ||
-                                    //   (assessment.assignment &&
-                                    //   assessment.registration_id
+                            <div className="flex">
+                              {assessment?.grade > 0 &&
+                              assessment.submitted_file ? (
+                                <button className="w-[110px] text-center px-4 py-2 text-[12px] rounded-lg text-sm bg-mix-300 text-surface-200">
+                                  Graded
+                                </button>
+                              ) : assessment?.status !== "Submitted" ? (
+                                <button className=" text-center text-[12px] rounded-lg text-sm bg-gray-300 text-blue-300">
+                                  You cant grade right now
+                                </button>
+                              ) : isEditing === assessment.submission_id ? (
+                                <button
+                                  className="w-[110px] hover:bg-blue-700 text-center px-4 py-2 text-[12px] rounded-lg text-sm bg-blue-300 text-surface-200"
+                                  onClick={() =>
+                                    handleSave(
+                                      assessment.submission_id,
+                                      // ||
+                                      //   (assessment.assignment &&
+                                      //   assessment.registration_id
 
-                                    //     ? assessment.assignment
-                                    //     : null),
-                                    assessment.status
-                                  )
-                                }
-                              >
-                                Grade
-                              </button>
-                            ) : (
-                              <button
-                                onClick={() =>
-                                  handleEditClick(
-                                    assessment.submission_id,
-                                    // ||
-                                    //   (assessment.assignment &&
-                                    //   assessment.registration_id
-                                    //     ? assessment.assignment
-                                    //     : null),
-                                    assessment
-                                  )
-                                }
-                                className="w-[110px] text-center px-4 py-2 text-[12px] rounded-lg text-sm bg-blue-300 text-surface-200"
-                              >
-                                Grade
-                              </button>
-                            )}
+                                      //     ? assessment.assignment
+                                      //     : null),
+                                      assessment.status
+                                    )
+                                  }
+                                >
+                                  Grade
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={() =>
+                                    handleEditClick(
+                                      assessment.submission_id,
+                                      // ||
+                                      //   (assessment.assignment &&
+                                      //   assessment.registration_id
+                                      //     ? assessment.assignment
+                                      //     : null),
+                                      assessment
+                                    )
+                                  }
+                                  className="w-[110px] text-center px-4 py-2 text-[12px] rounded-lg text-sm bg-blue-300 text-surface-200"
+                                >
+                                  Grade
+                                </button>
+                              )}
+                              {assessment.remarks && (
+                                <button
+                                  title="Edit Grading"
+                                  className="ml-2 text-center flex items-center justify-center px-4 py-2 text-[12px] rounded-lg bg-blue-300 hover:bg-blue-700 text-surface-100"
+                                >
+                                  <FaEdit size={18} />
+                                </button>
+                              )}
+                            </div>
                           </td>
                         </tr>
                       ))

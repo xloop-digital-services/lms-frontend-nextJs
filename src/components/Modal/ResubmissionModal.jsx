@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { IoClose } from "react-icons/io5";
 import {
+  resubmitAssignment,
+  resubmitExam,
+  resubmitProject,
+  resubmitQuiz,
   uploadAssignment,
   uploadExam,
   uploadProject,
@@ -9,12 +13,13 @@ import {
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 
-const UploadingFile = ({
+const ResubmissionModal = ({
   field,
   heading,
-  setUploadFile,
+  setResubmitFile,
   assignmentID,
   setUpdateStatus,
+  submissionId,
 }) => {
   const [comment, setComment] = useState("");
   const [fileUploaded, setFileUploaded] = useState(null);
@@ -70,7 +75,7 @@ const UploadingFile = ({
     setIsDragOver(false);
   };
 
-  const handleUpload = async (type) => {
+  const handleResubmit = async (type) => {
     setLoader(true);
     if (file === null) {
       toast.warn("File is not selected");
@@ -85,10 +90,10 @@ const UploadingFile = ({
 
     try {
       const uploadFunctionMap = {
-        quiz: uploadQuiz,
-        exam: uploadExam,
-        project: uploadProject,
-        assignment: uploadAssignment,
+        quiz: resubmitQuiz,
+        exam: resubmitExam,
+        project: resubmitProject,
+        assignment: resubmitAssignment,
       };
 
       const uploadFunction = uploadFunctionMap[type];
@@ -97,35 +102,35 @@ const UploadingFile = ({
         throw new Error("Invalid upload type");
       }
 
-      const response = await uploadFunction(formData);
-      if (response.status === 201) {
-        toast.success(`${capitalizeFirstLetter(type)} has been submitted`);
+      const response = await uploadFunction(submissionId, formData);
+      if (response.status === 200 || response.status === 201) {
+        toast.success(`${capitalizeFirstLetter(type)} has been resubmitted`);
         setComment("");
         setLoader(false);
-        setUploadFile(false);
+        setResubmitFile(false);
         setUpdateStatus(true);
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "An error occurred");
       setLoader(false);
-      setUploadFile(false);
+      setResubmitFile(false);
     }
   };
 
-  const handleUploadExam = async () => {
-    await handleUpload("exam");
+  const handleUploadAssignment = async () => {
+    await handleResubmit("assignment");
   };
 
-  const handleUploadAssignment = async () => {
-    await handleUpload("assignment");
+  const handleUploadExam = async () => {
+    await handleResubmit("exam");
   };
 
   const handleUploadQuiz = async () => {
-    await handleUpload("quiz");
+    await handleResubmit("quiz");
   };
 
   const handleUploadProject = async () => {
-    await handleUpload("project");
+    await handleResubmit("project");
   };
 
   const handleUploadation = () => {
@@ -157,9 +162,9 @@ const UploadingFile = ({
               }}
               className="text-start px-2 py-[10px]"
             >
-              Upload {heading}
+              Resubmit {heading}
             </h1>
-            <button className="px-2" onClick={() => setUploadFile(false)}>
+            <button className="px-2" onClick={() => setResubmitFile(false)}>
               <IoClose size={21} />
             </button>
           </div>
@@ -241,4 +246,4 @@ const UploadingFile = ({
   );
 };
 
-export default UploadingFile;
+export default ResubmissionModal;

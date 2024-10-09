@@ -106,7 +106,7 @@ export default function Page({ params }) {
     setSessionId(value);
   };
 
-  console.log(sessionId);
+  // console.log(sessionId);
 
   async function fetchAssignments() {
     setLoading(true);
