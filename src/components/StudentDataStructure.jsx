@@ -7,6 +7,7 @@ import { FaCheck, FaEdit, FaFileDownload, FaTrash } from "react-icons/fa";
 import { downloadFile } from "@/app/courses/course/[courseId]/page";
 import { useAuth } from "@/providers/AuthContext";
 import { formatDateTime } from "./AdminDataStructure";
+import ResubmissionModal from "./Modal/ResubmissionModal";
 
 const StudentDataStructure = ({
   quizzes,
@@ -21,8 +22,10 @@ const StudentDataStructure = ({
   setUpdateStatus,
 }) => {
   const [uploadFile, setUploadFile] = useState(false);
+  const [resubmitFile, setResubmitFile] = useState(false);
   const [edit, setEdit] = useState(false);
   const [iD, setId] = useState("");
+  const [resubmissionId, setResubmissionId] = useState("");
   const { userData } = useAuth();
   const isAdmin = userData?.Group === "admin";
 
@@ -31,11 +34,12 @@ const StudentDataStructure = ({
     setUploadFile(!uploadFile);
   };
 
-  const handleFileResubmit = (id) => {
+  const handleFileResubmit = (id, subId) => {
     setId(id);
-    setUploadFile(!uploadFile);
+    setResubmissionId(subId);
+    setResubmitFile(!resubmitFile);
+    console.log("quiz id", id, "submission Id", subId);
   };
-
 
   const handleEditAssessment = (id) => {
     setId(id);
@@ -338,16 +342,37 @@ const StudentDataStructure = ({
                                       <LuUpload
                                         size={20}
                                         onClick={
-                                          quiz?.submission_status !==
-                                            "Submitted" ||
-                                          quiz?.submission_status ===
-                                            "Late Submission"
-                                            ? () =>
-                                                handleFileUpload(quiz?.id)
-                                                  ? quiz?.no_of_resubmissions_allowed >
+                                          quiz?.id
+                                            ? // quiz?.submission_status ===
+                                              //   "Submitted" ||
+                                              // quiz?.submission_status ===
+                                              //   "Late Submission"
+                                              () => {
+                                                if (
+                                                  quiz?.submission_id &&
+                                                  quiz?.remaining_resubmissions >
                                                     0
-                                                  : () =>
-                                                      handleFileUpload(quiz)
+                                                ) {
+                                                  handleFileResubmit(
+                                                    quiz?.id,
+                                                    quiz?.submission_id
+                                                  );
+                                                }
+                                                if (
+                                                  quiz?.submission_status !==
+                                                  "Submitted"
+                                                ) {
+                                                  handleFileUpload(quiz?.id);
+                                                }
+                                                if (
+                                                  quiz?.submission_status ===
+                                                    "Submitted" &&
+                                                  quiz?.remaining_resubmissions ===
+                                                    0
+                                                ) {
+                                                  null;
+                                                }
+                                              }
                                             : null
                                         }
                                         disabled={
@@ -370,10 +395,15 @@ const StudentDataStructure = ({
                                             ? "cursor-not-allowed opacity-50"
                                             : "cursor-pointer hover:opacity-80"
                                         } rounded-lg ${
-                                          quiz?.no_of_resubmissions_allowed > 0
+                                          quiz?.remaining_resubmissions > 0
                                             ? "cursor-pointer hover:opacity-80 "
                                             : "text-gray-300 "
-                                        }`}
+                                        }  ${
+                                          quiz?.submission_status ===
+                                            "Submitted" &&
+                                          quiz?.remaining_resubmissions === 0
+                                        } ?  ? "cursor-pointer hover:opacity-80 "
+                                            : "text-gray-300 "`}
                                         title="upload"
                                       />
                                     </div>
@@ -408,6 +438,17 @@ const StudentDataStructure = ({
           heading={assessment}
           setUploadFile={setUploadFile}
           assignmentID={iD}
+          setUpdateStatus={setUpdateStatus}
+        />
+      )}
+
+      {resubmitFile && (
+        <ResubmissionModal
+          field={field}
+          heading={assessment}
+          setResubmitFile={setResubmitFile}
+          assignmentID={iD}
+          submissionId={resubmissionId}
           setUpdateStatus={setUpdateStatus}
         />
       )}

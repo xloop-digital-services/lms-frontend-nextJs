@@ -311,6 +311,19 @@ export const updateQuizGrading = async (quizData) => {
   }
 };
 
+//edit quizzes Grading (admin)
+export const editQuizGrading = async (gradingId, quizData) => {
+  try {
+    const response = await axiosInstance.put(
+      `course/quiz_grading/${gradingId}`,
+      quizData
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 //get assignments Grading (admin)
 export const getAssignmentGrading = async (courseId, assignId, sessionId) => {
   try {
@@ -336,6 +349,19 @@ export const updateAssignmentGrading = async (assignData) => {
   }
 };
 
+//edit assignment Grading (admin)
+export const editAssignmentGrading = async (gradingId, assignData) => {
+  try {
+    const response = await axiosInstance.put(
+      `course/assignments_grading/${gradingId}`,
+      assignData
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 //get project Grading (admin)
 export const getProjectGrading = async (courseId, projId, sessionId) => {
   try {
@@ -353,6 +379,19 @@ export const updateProjectGrading = async (projectData) => {
   try {
     const response = await axiosInstance.post(
       `course/project_gradings/`,
+      projectData
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//edit project Grading (admin)
+export const editProjectGrading = async (gradingId, projectData) => {
+  try {
+    const response = await axiosInstance.put(
+      `course/project_gradings/${gradingId}`,
       projectData
     );
     return response;
@@ -413,6 +452,19 @@ export const updateExamGrading = async (examData) => {
   try {
     const response = await axiosInstance.post(
       `course/exam_gradings/`,
+      examData
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//edit exam Grading (admin)
+export const editExamGrading = async (gradingId, examData) => {
+  try {
+    const response = await axiosInstance.put(
+      `course/exam_gradings/${gradingId}`,
       examData
     );
     return response;
@@ -503,7 +555,7 @@ export const uploadAssignment = async (assignment) => {
 export const resubmitAssignment = async (submissionId, assignment) => {
   try {
     const response = await axiosInstance.put(
-      `/course/submissions/${submissionId}`,
+      `/course/submissions/${submissionId}/`,
       assignment,
       {
         headers: {
@@ -521,7 +573,7 @@ export const resubmitAssignment = async (submissionId, assignment) => {
 export const resubmitQuiz = async (submissionId, quiz) => {
   try {
     const response = await axiosInstance.put(
-      `/course/quiz_submissions/${submissionId}`,
+      `/course/quiz_submissions/${submissionId}/`,
       quiz,
       {
         headers: {
@@ -557,7 +609,7 @@ export const resubmitProject = async (submissionId, project) => {
 export const resubmitExam = async (submissionId, exam) => {
   try {
     const response = await axiosInstance.put(
-      `/course/exam_submissions/${submissionId}`,
+      `/course/exam_submissions/${submissionId}/`,
       exam,
       {
         headers: {
