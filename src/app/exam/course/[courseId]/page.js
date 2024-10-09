@@ -136,7 +136,7 @@ export default function Page({ params }) {
     formData.append("title", question);
     formData.append("description", description);
     if (file) {
-      formData.append("exam_submitted_file", file);
+      formData.append("submitted_file", file);
     }
     formData.append("due_date", dueDate);
     // formData.append("no_of_resubmissions_allowed", resubmission);
@@ -199,12 +199,12 @@ export default function Page({ params }) {
     setCurrentAssignment(assignmentToEdit);
     setQuestion(assignmentToEdit.question);
     setDescription(assignmentToEdit.description);
-    setDueDate(formatDateTime(assignmentToEdit.due_date));
+    setDueDate(assignmentToEdit.due_date.slice(0, 16));
     setStartTime(assignmentToEdit.start_time);
     setEndTime(assignmentToEdit.end_time);
     setTotalGrade(assignmentToEdit.total_grade);
     // setResubmission(assignmentToEdit.no_of_resubmissions_allowed);
-    setFile(assignmentToEdit.exam_submitted_file);
+    setFile(assignmentToEdit.submitted_file);
     setCreatingQuiz(true);
   };
 
