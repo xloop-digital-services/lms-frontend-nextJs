@@ -9,39 +9,48 @@ export const SidebarProvider = ({ children }) => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
 
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
-
-  // Function to update the sidebar state based on window width
-  const updateSidebarState = () => {
-    setSidebarOpen(window.innerWidth > 1400);
-  };
-
   useEffect(() => {
-    // Retrieve sidebar state from localStorage on mount
+    const updateSidebarState = () => {
+      setSidebarOpen(window.innerWidth > 1400);
+    };
+
+    updateSidebarState();
+
+    const handleResize = () => {
+      updateSidebarState();
+    };
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("resize", handleResize);
+    }
+
+    return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("resize", handleResize);
+      }
+    };
+  }, []);
+  useEffect(() => {
     const savedSidebarState = localStorage.getItem("sidebarOpen");
     if (savedSidebarState !== null) {
       setSidebarOpen(JSON.parse(savedSidebarState));
-    } else {
-      // Initialize sidebar based on screen size
-      updateSidebarState();
     }
-
-    // Handle window resize and media query changes
     const mediaQuery = window.matchMedia("(max-width: 1400px)");
-    const handleResize = () => updateSidebarState();
-    const handleScreenSizeChange = (e) => setSidebarOpen(!e.matches);
-
-    // Add event listeners for resize and media query changes
-    window.addEventListener("resize", handleResize);
+    const handleScreenSizeChange = (e) => {
+      if (e.matches) {
+        setSidebarOpen(false);
+      }
+    };
+    if (mediaQuery.matches) {
+      setSidebarOpen(false);
+    }
     mediaQuery.addEventListener("change", handleScreenSizeChange);
 
     return () => {
-      // Cleanup event listeners
-      window.removeEventListener("resize", handleResize);
       mediaQuery.removeEventListener("change", handleScreenSizeChange);
     };
   }, []);
 
-  // Save sidebar state to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem("sidebarOpen", JSON.stringify(isSidebarOpen));
   }, [isSidebarOpen]);

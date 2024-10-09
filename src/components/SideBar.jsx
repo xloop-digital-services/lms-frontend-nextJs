@@ -26,7 +26,7 @@ import {
 import { useAuth } from "@/providers/AuthContext";
 
 function SideBar() {
-  const { isSidebarOpen, toggleSidebar } = useSidebar();
+  const { isSidebarOpen, toggleSidebar   } = useSidebar();
   const { logOutUser, userData } = useAuth();
   const isAdmin = userData?.Group === "admin";
   const isStudent = userData?.Group === "student";
