@@ -371,6 +371,19 @@ export const assignWeightages = async (data) => {
   }
 };
 
+//update weightage for course(admin)
+export const updateWeightages = async (weightageId, data) => {
+  try {
+    const response = await axiosInstance.put(
+      `course/weightages/${weightageId}/`,
+      data
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 //get all weightage for course(admin)
 export const getWeightages = async (courseId, sessionId) => {
   try {
@@ -468,12 +481,84 @@ export const getProgressForAssignment = async (courseId) => {
   }
 };
 
-//upload assignments
+//upload submission of assignments
 export const uploadAssignment = async (assignment) => {
   try {
     const response = await axiosInstance.post(
       "/course/submissions/",
       assignment,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//upload resubmission of assignments
+export const resubmitAssignment = async (submissionId, assignment) => {
+  try {
+    const response = await axiosInstance.put(
+      `/course/submissions/${submissionId}`,
+      assignment,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//upload resubmission of quiz
+export const resubmitQuiz = async (submissionId, quiz) => {
+  try {
+    const response = await axiosInstance.put(
+      `/course/quiz_submissions/${submissionId}`,
+      quiz,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//upload resubmission of project
+export const resubmitProject = async (submissionId, project) => {
+  try {
+    const response = await axiosInstance.put(
+      `/course/project_submissions/${submissionId}`,
+      project,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//upload resubmission of exam
+export const resubmitExam = async (submissionId, exam) => {
+  try {
+    const response = await axiosInstance.put(
+      `/course/exam_submissions/${submissionId}`,
+      exam,
       {
         headers: {
           "Content-Type": "multipart/form-data",

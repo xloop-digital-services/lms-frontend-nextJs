@@ -55,8 +55,13 @@ export const SidebarProvider = ({ children }) => {
     localStorage.setItem("sidebarOpen", JSON.stringify(isSidebarOpen));
   }, [isSidebarOpen]);
 
+  const contextValue = {
+    isSidebarOpen,
+    toggleSidebar,
+  };
+
   return (
-    <SidebarContext.Provider value={{ isSidebarOpen, toggleSidebar }}>
+    <SidebarContext.Provider value={contextValue}>
       {children}
     </SidebarContext.Provider>
   );

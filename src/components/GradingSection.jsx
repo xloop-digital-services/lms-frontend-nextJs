@@ -335,7 +335,9 @@ export const GradingSection = ({
                         </div>
                       ))
                     ) : (
-                      <div className="text-center py-4">No data found</div>
+                      <div className="text-center py-4 text-dark-300">
+                        No data found
+                      </div>
                     )}
                   </div>
                 )}

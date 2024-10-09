@@ -7,21 +7,21 @@ import {
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
+export const sum = (a, b, c, d) => {
+  return (
+    parseFloat(a || 0) +
+    parseFloat(b || 0) +
+    parseFloat(c || 0) +
+    parseFloat(d || 0)
+  );
+};
+
 export default function CreateWeightage({ courseId, onCreation, sessionId }) {
   const [assignmentsWeightage, setAssignmentsWeightage] = useState("");
   const [quizzesWeightage, setQuizzesWeightage] = useState("");
   const [projectsWeightage, setProjectsWeightage] = useState("");
   const [examsWeightage, setExamsWeightage] = useState("");
   const [loader, setLoader] = useState(false);
-
-  const sum = (a, b, c, d) => {
-    return (
-      parseFloat(a || 0) +
-      parseFloat(b || 0) +
-      parseFloat(c || 0) +
-      parseFloat(d || 0)
-    );
-  };
 
   async function handleSubmitWeightage() {
     const totalWeightage = sum(
@@ -47,13 +47,16 @@ export default function CreateWeightage({ courseId, onCreation, sessionId }) {
 
     try {
       if (!sessionId) {
-        toast.error("Select a session to create the assignment.");
+        toast.error("Select a session to assign the weightages.");
         return;
       }
 
       const response = await assignWeightages(data);
       if (response.status === 200 || response.status === 201) {
-        toast.success("Weightages Created successfully", response?.data.message);
+        toast.success(
+          "Weightages Created successfully",
+          response?.data.message
+        );
         setExamsWeightage("");
         setAssignmentsWeightage("");
         setProjectsWeightage("");
@@ -71,7 +74,10 @@ export default function CreateWeightage({ courseId, onCreation, sessionId }) {
 
   return (
     <div>
-      <h2 className="text-lg my-4 font-exo text-[#022567] font-bold"> Weightages</h2>
+      <h2 className="text-lg my-4 font-exo text-[#022567] font-bold">
+        {" "}
+        Weightages
+      </h2>
       <div className="my-3">
         <label>Quiz Weightage</label>
         <input

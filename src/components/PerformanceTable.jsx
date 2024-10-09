@@ -20,7 +20,7 @@ const PerformanceTable = ({
           <div className="border border-dark-300 rounded-lg divide-y divide-dark-200 dark:border-gray-700 dark:divide-gray-700">
             <div className="overflow-hidden rounded-lg">
               <table className="min-w-full divide-y divide-dark-300 dark:divide-gray-700">
-                <thead className="bg-dark-100 text-[#022567] dark:bg-gray-700">
+                <thead className="bg-[#ffff] text-[#022567] sticky top-0 z-10 shadow-sm shadow-dark-200">
                   <tr>
                     <th
                       scope="col"
@@ -114,11 +114,11 @@ const PerformanceTable = ({
                       Total
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-800 text-center">
-                      {
-                        (assignmentWeightage +
-                        quizWeightage +
-                        examsWeightage +
-                        projectWeightage||0
+                      {(
+                        assignmentWeightage +
+                          quizWeightage +
+                          examsWeightage +
+                          projectWeightage || 0
                       ).toFixed(2)}
                       %
                     </td>

@@ -276,8 +276,8 @@ const ApprovalUserModal = ({
   };
 
   return (
-    <div className="backDropOverlay w-full min-h-screen flex items-center">
-      <div className="min-w-[70%] z-[1000] mx-auto my-20 relative cursor-default">
+    <div className="backDropOverlay h-screen flex items-center justify-center ">
+      <div className="w-[70%] z-[1000] mx-auto my-20 relative cursor-default">
         {loadingAssign && (
           <div className="absolute inset-0 flex items-center justify-center bg-surface-100 bg-opacity-30 z-[1100]">
             <CircularProgress size={30} />
@@ -326,7 +326,7 @@ const ApprovalUserModal = ({
                               userProgramCourses.length > 0 &&
                               userProgramCourses.map((course) => (
                                 <div key={course.id}>
-                                  <p className="px-4 w-[270px]">
+                                  <p className="px-4 w-[330px]">
                                     {" "}
                                     - {course.name}
                                   </p>

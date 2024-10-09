@@ -23,8 +23,7 @@ const LocationModal = ({
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [isLocationSelected, setIsLocationSelected] = useState(false);
   const [capacity, setCapacity] = useState(null);
-  const [error, setError] = useState(""); 
-
+  const [error, setError] = useState("");
 
   const cityDown = useRef(null);
   const modalDown = useRef(null);
@@ -56,7 +55,7 @@ const LocationModal = ({
         const response = await createLocation(data);
         if (response.data.status_code === 201) {
           console.log("location created", response?.data?.message);
-          toast.success('Location created successfully!');
+          toast.success("Location created successfully!");
           setUpdateLocation(!updateLocation);
           setLoading(false);
           setOpenModal(false);
@@ -118,7 +117,7 @@ const LocationModal = ({
   };
 
   return (
-    <div className="backDropOverlay h-[98vh] flex justify-center items-center overflow-y-hidden ">
+    <div className="backDropOverlay h-screen flex justify-center items-center overflow-y-hidden ">
       <div className="w-[550px] z-[1000] mx-auto ">
         {loading && (
           <div className="absolute inset-0 w-full p-2 flex items-center justify-center bg-surface-100 bg-opacity-30 z-[1100]">

@@ -112,8 +112,8 @@ const AdminStudentGrading = ({ courseId }) => {
   return (
     <div className="flex flex-col">
       <div>
-        <label className="text-blue-500"> <label className="text-blue-500 font-semibold">Select Session</label></label>
-
+        {" "}
+        <label className="text-blue-500 font-semibold">Select Session</label>
         <select
           value={selectedSessionId}
           onChange={handleChange}

@@ -172,21 +172,26 @@ export default function Page() {
   const handleOpenSessionModal = () => setOpenModal(true);
 
   return (
-    <div
-      className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-32 font-inter ${
-        isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 xxlg:px-8 px-3"
-      }`}
-      style={{ width: isSidebarOpen ? "81%" : "100%" }}
-    >
-      <div className="bg-surface-100 p-6 rounded-xl">
-        <div className="w-full flex xlg:flex-row flex-col justify-between items-center gap-4">
-          <div>
-            <p className="font-bold text-xl text-[#022567] font-exo">Class Details</p>
-          </div>
-          <div className="flex gap-3 sm:flex-row flex-col text-base lg:text-sm">
-            <div className="flex gap-3 ">
-              {/* City Dropdown */}
-              {/* <div>
+    <>
+      <div
+        className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-32 font-inter ${
+          isSidebarOpen
+            ? "translate-x-64 ml-20 "
+            : "translate-x-0 xxlg:px-8 px-3"
+        }`}
+        style={{ width: isSidebarOpen ? "81%" : "100%" }}
+      >
+        <div className="bg-surface-100 p-6 rounded-xl">
+          <div className="w-full flex xlg:flex-row flex-col justify-between items-center gap-4">
+            <div>
+              <p className="font-bold text-xl text-[#022567] font-exo">
+                Class Details
+              </p>
+            </div>
+            <div className="flex gap-3 sm:flex-row flex-col text-base lg:text-sm">
+              <div className="flex gap-3 ">
+                {/* City Dropdown */}
+                {/* <div>
                 <button
                   onClick={toggleCityOpen}
                   className={`${
@@ -231,62 +236,62 @@ export default function Page() {
                 )}
               </div> */}
 
-              {/* Location Dropdown  */}
-              <div>
-                <button
-                  onClick={toggleLocationOpen}
-                  className={`${
-                    !isLocationSelected ? " text-[#92A7BE]" : "text-[#424b55]"
-                  } flex justify-between items-center w-full  lg:w-[200px] gap-1 hover:text-[#0e1721] px-4 xlg:py-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
-                >
-                  {selectedLocation}
-                  {isLocationSelected && (
-                    <span
-                      onClick={clearLocationFilter}
-                      className="ml-2 text-red-500 cursor-pointer"
-                    >
-                      <IoIosCloseCircleOutline size={20} />
-                    </span>
-                  )}
-                  <span className="">
-                    <IoIosArrowDown />
-                  </span>
-                </button>
-                {isLocationOpen && (
-                  <div
-                    ref={dropdownRef}
-                    className="absolute z-20 w-[200px] max-h-[250px] overflow-auto scrollbar-webkit mt-1 bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                {/* Location Dropdown  */}
+                <div>
+                  <button
+                    onClick={toggleLocationOpen}
+                    className={`${
+                      !isLocationSelected ? " text-[#92A7BE]" : "text-[#424b55]"
+                    } flex justify-between items-center w-full  lg:w-[200px] gap-1 hover:text-[#0e1721] px-4 xlg:py-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                   >
-                    {sessions && sessions.length > 0 ? (
-                      // Filter duplicates based on both name and city
-                      [
-                        ...new Map(
-                          sessions.map((item) => [
-                            `${item.location_name}`,
-                            item,
-                          ])
-                        ).values(),
-                      ].map((option, index) => (
-                        <div
-                          key={index}
-                          onClick={() => handleLocationSelect(option)}
-                          className="p-2 cursor-pointer"
-                        >
-                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
-                            {option.location_name}
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-[12px] text-dark-400 text-center p-1">
-                        No location available
-                      </p>
+                    {selectedLocation}
+                    {isLocationSelected && (
+                      <span
+                        onClick={clearLocationFilter}
+                        className="ml-2 text-red-500 cursor-pointer"
+                      >
+                        <IoIosCloseCircleOutline size={20} />
+                      </span>
                     )}
-                  </div>
-                )}
-              </div>
+                    <span className="">
+                      <IoIosArrowDown />
+                    </span>
+                  </button>
+                  {isLocationOpen && (
+                    <div
+                      ref={dropdownRef}
+                      className="absolute z-20 w-[200px] max-h-[250px] overflow-auto scrollbar-webkit mt-1 bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                    >
+                      {sessions && sessions.length > 0 ? (
+                        // Filter duplicates based on both name and city
+                        [
+                          ...new Map(
+                            sessions.map((item) => [
+                              `${item.location_name}`,
+                              item,
+                            ])
+                          ).values(),
+                        ].map((option, index) => (
+                          <div
+                            key={index}
+                            onClick={() => handleLocationSelect(option)}
+                            className="p-2 cursor-pointer"
+                          >
+                            <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
+                              {option.location_name}
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <p className="text-[12px] text-dark-400 text-center p-1">
+                          No location available
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
 
-              {/* Batch Dropdown *
+                {/* Batch Dropdown *
               <div>
                 <button
                   onClick={toggleBatchOpen}
@@ -325,48 +330,49 @@ export default function Page() {
                   </div>
                 )}
               </div> */}
+              </div>
+              {/* Create Session Button */}
+              <div>
+                <button
+                  className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] md:w-[200px] px-4 xlg:py-4 py-3 w-full rounded-lg"
+                  onClick={handleOpenSessionModal}
+                >
+                  Schedule a new class
+                </button>
+              </div>
             </div>
-            {/* Create Session Button */}
-            <div>
-              <button
-                className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] md:w-[200px] px-4 xlg:py-4 py-3 w-full rounded-lg"
-                onClick={handleOpenSessionModal}
-              >
-                Schedule a new class
-              </button>
-            </div>
+          </div>
+
+          {/* Sessions Table */}
+          <div>
+            {loading ? (
+              <div className="flex justify-center items-center w-full p-4">
+                <CircularProgress size={20} />
+              </div>
+            ) : isLocationSelected && filterLocation.length > 0 ? (
+              <SessionsTable
+                sessions={filterLocation}
+                loading={loading}
+                setLoading={setLoading}
+                setUpdateSession={setUpdateSession}
+                updateSession={updateSession}
+              />
+            ) : !isLocationSelected && sessions.length > 0 ? (
+              <SessionsTable
+                sessions={sessions}
+                loading={loading}
+                setLoading={setLoading}
+                setUpdateSession={setUpdateSession}
+                updateSession={updateSession}
+              />
+            ) : (
+              <p>No class is scheduled in this location</p>
+            )}
           </div>
         </div>
 
-        {/* Sessions Table */}
-        <div>
-          {isLocationSelected && filterLocation.length > 0 ? (
-            <SessionsTable
-              sessions={filterLocation}
-              loading={loading}
-              setLoading={setLoading}
-              setUpdateSession={setUpdateSession}
-              updateSession={updateSession}
-            />
-          ) : !isLocationSelected && sessions.length > 0 ? (
-            <SessionsTable
-              sessions={sessions}
-              loading={loading}
-              setLoading={setLoading}
-              setUpdateSession={setUpdateSession}
-              updateSession={updateSession}
-            />
-          ) : loading ? (
-            <div className="flex justify-center items-center w-full p-4">
-              <CircularProgress size={20} />
-            </div>
-          ) : (
-            <p>No class is scheduled in this location</p>
-          )}
-        </div>
+        {/* Session Creation Modal */}
       </div>
-
-      {/* Session Creation Modal */}
       <div>
         {openModal && (
           <SessionCreationModal
@@ -380,6 +386,6 @@ export default function Page() {
           />
         )}
       </div>
-    </div>
+    </>
   );
 }

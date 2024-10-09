@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { IoClose } from "react-icons/io5";
 import {
+  resubmitAssignment,
+  resubmitExam,
+  resubmitProject,
+  resubmitQuiz,
   uploadAssignment,
   uploadExam,
   uploadProject,
@@ -112,8 +116,50 @@ const UploadingFile = ({
     }
   };
 
+  const handleResubmit = async (type) => {
+    setLoader(true);
+    if (file === null) {
+      toast.warn("File is not selected");
+      setLoader(false);
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append(`submitted_file`, file);
+    formData.append("comments", comment);
+    formData.append(type, assignmentID);
+
+    try {
+      const uploadFunctionMap = {
+        quiz: resubmitQuiz,
+        exam: resubmitExam,
+        project: resubmitProject,
+        assignment: resubmitAssignment,
+      };
+
+      const uploadFunction = uploadFunctionMap[type];
+
+      if (!uploadFunction) {
+        throw new Error("Invalid upload type");
+      }
+
+      const response = await uploadFunction(formData);
+      if (response.status === 201) {
+        toast.success(`${capitalizeFirstLetter(type)} has been resubmitted`);
+        setComment("");
+        setLoader(false);
+        setUploadFile(false);
+        setUpdateStatus(true);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "An error occurred");
+      setLoader(false);
+      setUploadFile(false);
+    }
+  };
+
   const handleUploadExam = async () => {
-    await handleUpload("exam");
+    await handleUpload("exam",);
   };
 
   const handleUploadAssignment = async () => {

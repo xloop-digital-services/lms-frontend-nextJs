@@ -10,12 +10,12 @@ import DeleteConfirmationPopup from "./Modal/DeleteConfirmationPopUp";
 export function formatDateTime(apiDateTime) {
   const dateObject = new Date(apiDateTime);
 
-  const day = String(dateObject.getUTCDate()).padStart(2, "0");
-  const month = String(dateObject.getUTCMonth() + 1).padStart(2, "0");
-  const year = dateObject.getUTCFullYear();
+  const day = String(dateObject.getDate()).padStart(2, "0");
+  const month = String(dateObject.getMonth() + 1).padStart(2, "0");
+  const year = dateObject.getFullYear();
 
-  let hours = dateObject.getUTCHours();
-  const minutes = String(dateObject.getUTCMinutes()).padStart(2, "0");
+  let hours = dateObject.getHours();
+  const minutes = String(dateObject.getMinutes()).padStart(2, "0");
   const ampm = hours >= 12 ? "PM" : "AM";
 
   hours = hours % 12;
@@ -282,7 +282,7 @@ const AdminDataStructure = ({
                             className="relative px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]"
                           >
                             <p
-                      className={`w-[110px] text-center px-4 py-2 text-[12px] rounded-lg ${
+                              className={`w-[110px] text-center px-4 py-2 text-[12px] rounded-lg ${
                                 quiz.status === 0
                                   ? "bg-mix-200 text-surface-100"
                                   : quiz.status === 1

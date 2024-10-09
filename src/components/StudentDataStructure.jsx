@@ -31,6 +31,12 @@ const StudentDataStructure = ({
     setUploadFile(!uploadFile);
   };
 
+  const handleFileResubmit = (id) => {
+    setId(id);
+    setUploadFile(!uploadFile);
+  };
+
+
   const handleEditAssessment = (id) => {
     setId(id);
     setEdit(!edit);
@@ -59,364 +65,337 @@ const StudentDataStructure = ({
               </div>
             </div> */}
               <div className="overflow-hidden rounded-lg">
-                <table className="min-w-full divide-y divide-dark-300 dark:divide-gray-700">
-                  <thead className="bg-dark-100 text-[#022567] dark:bg-gray-700">
-                    <tr>
-                      <th
-                        scope="col"
-                        className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[25%]"
-                      >
-                        {assessment}
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
-                      >
-                        Status
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
-                      >
-                        Created Date
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
-                      >
-                        Total Marks
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
-                      >
-                        Due Date
-                      </th>
-                      {assessment === "Exam" && (
-                        <>
-                          <th
-                            scope="col"
-                            className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
-                          >
-                            Start Time
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
-                          >
-                            End Time
-                          </th>
-                        </>
-                      )}
+                <div className="relative max-h-[56vh] overflow-y-auto scrollbar-webkit">
+                  <table className="min-w-full divide-y divide-dark-300 dark:divide-gray-700">
+                    <thead className=" bg-[#ffff] text-[#022567] sticky top-0 z-10 shadow-sm shadow-dark-200">
+                      <tr>
+                        <th
+                          scope="col"
+                          className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[25%]"
+                        >
+                          {assessment}
+                        </th>
 
-                      <th
-                        scope="col"
-                        className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
-                      >
-                        Submission Date
-                      </th>
-                      {field === "exam" ? null : (
-                        <>
+                        <th
+                          scope="col"
+                          className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
+                        >
+                          Created Date
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
+                        >
+                          Total Marks
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
+                        >
+                          Due Date
+                        </th>
+                        {assessment === "Exam" && (
+                          <>
+                            <th
+                              scope="col"
+                              className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
+                            >
+                              Start Time
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
+                            >
+                              End Time
+                            </th>
+                          </>
+                        )}
+
+                        <th
+                          scope="col"
+                          className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
+                        >
+                          Submission Date
+                        </th>
+                        {field === "exam" ? null : (
+                          <>
+                            <th
+                              scope="col"
+                              className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
+                            >
+                              Resubmissions allowed
+                            </th>
+
+                            <th
+                              scope="col"
+                              className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
+                            >
+                              Resubmissions Left
+                            </th>
+                          </>
+                        )}
+                        {isAdmin ? (
                           <th
                             scope="col"
-                            className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
+                            className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[12%]"
                           >
-                            Resubmissions allowed
+                            Status
                           </th>
-                          {/*                        
-                         <th
-                         scope="col"
-                         className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
-                       >
-                         Resubmissions Left
-                       </th> */}
-                        </>
-                      )}
-                      {isAdmin ? (
+                        ) : null}
+                        <th
+                          scope="col"
+                          className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
+                        >
+                          Status
+                        </th>
                         <th
                           scope="col"
                           className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[12%]"
                         >
-                          Status
+                          Action
                         </th>
-                      ) : null}
-                      <th
-                        scope="col"
-                        className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[12%]"
-                      >
-                        Action
-                      </th>
-                    </tr>
-                  </thead>
+                      </tr>
+                    </thead>
 
-                  <tbody className="divide-y divide-dark-200 dark:divide-gray-700">
-                    {quizzes && quizzes.length > 0 ? (
-                      quizzes?.map((quiz, index) => {
-                        return (
-                          <tr key={index}>
-                            <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800 ">
-                              {edit && iD === quiz.id ? (
+                    <tbody className="divide-y divide-dark-200 dark:divide-gray-700">
+                      {quizzes && quizzes.length > 0 ? (
+                        quizzes?.map((quiz, index) => {
+                          return (
+                            <tr key={index}>
+                              <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800 ">
+                                {edit && iD === quiz.id ? (
+                                  <>
+                                    <th
+                                      scope="col"
+                                      className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
+                                    >
+                                      <textarea
+                                        rows="2"
+                                        className="block outline-dark-300 p-4 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset sm:text-sm sm:leading-6"
+                                        value={quiz.question || quiz.title}
+                                        onChange={(e) =>
+                                          handleQuestionChange(
+                                            quiz.id,
+                                            e.target.value
+                                          )
+                                        }
+                                      />
+                                    </th>
+                                  </>
+                                ) : (
+                                  <>
+                                    {quiz.content === null ? (
+                                      quiz.question || quiz.title
+                                    ) : (
+                                      <a
+                                        href="#"
+                                        className="cursor-pointer flex justify-center items-center text-black hover:text-[#2563eb] hover:underline"
+                                        title="download"
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          downloadFile(quiz.content);
+                                        }}
+                                      >
+                                        {quiz.question || quiz.title}
+                                        {/* {quiz.assignment_name} */}
+                                      </a>
+                                    )}
+                                  </>
+                                )}
+                              </td>
+
+                              <td className="px-6 py-4  text-center whitespace-nowrap text-sm text-gray-800">
+                                {formatDateTime(quiz?.created_at)}
+                              </td>
+                              <td className="px-6 py-4  text-center whitespace-nowrap text-sm text-gray-800">
+                                {quiz?.total_grade || "-"}
+                              </td>
+                              <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                                {formatDateTime(quiz?.due_date)}
+                              </td>
+                              {assessment === "Exam" && (
+                                <>
+                                  <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                                    {quiz?.start_time}
+                                  </td>
+                                  <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                                    {quiz?.end_time}
+                                  </td>
+                                </>
+                              )}
+                              <td className="px-6 py-4  text-center whitespace-nowrap text-sm text-gray-800">
+                                {quiz?.submitted_at
+                                  ? formatDateTime(quiz?.submitted_at)
+                                  : "-"}
+                              </td>
+
+                              {field === "exam" ? null : (
+                                //  : edit ? (
+                                //   <th
+                                //     scope="col"
+                                //     className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
+                                //   >
+
+                                //     <input
+                                //       type="number"
+                                //       min={0}
+                                //       className="block w-20 outline-dark-300 p-4 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset sm:text-sm sm:leading-6"
+                                //       // value={resubmission}
+                                //       // onChange={(e) => setResubmission(e.target.value)}
+                                //     />
+                                //   </th>
+                                // ) :
                                 <>
                                   <th
                                     scope="col"
                                     className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
                                   >
-                                    <textarea
-                                      rows="2"
-                                      className="block outline-dark-300 p-4 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset sm:text-sm sm:leading-6"
-                                      value={quiz.question || quiz.title}
-                                      onChange={(e) =>
-                                        handleQuestionChange(
-                                          quiz.id,
-                                          e.target.value
-                                        )
-                                      }
-                                    />
+                                    {quiz?.no_of_resubmissions_allowed}
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
+                                  >
+                                    {quiz?.remaining_resubmissions}
                                   </th>
                                 </>
-                              ) : (
-                                <>
-                                  {quiz.content === null ? (
-                                    quiz.question || quiz.title
-                                  ) : (
-                                    <a
-                                      href="#"
-                                      className="cursor-pointer flex justify-center items-center text-black hover:text-[#2563eb] hover:underline"
-                                      title="download"
-                                      onClick={(e) => {
-                                        e.preventDefault();
-                                        downloadFile(quiz.content);
-                                      }}
-                                    >
-                                      {quiz.question || quiz.title}
-                                      {/* {quiz.assignment_name} */}
-                                    </a>
-                                  )}
-                                </>
                               )}
-                            </td>
-                            <td className="px-12 py-2  whitespace-nowrap text-sm text-surface-100">
-                              <p
-                                className={`w-[120px] text-center px-4 py-2 text-[12px] rounded-lg ${
-                                  quiz?.submission_status === "Submitted"
-                                    ? "bg-mix-300 w-[120px]"
-                                    : quiz?.submission_status === "Pending"
-                                    ? "bg-mix-500 text-[#fff] w-[120px]"
-                                    : quiz?.submission_status ===
-                                      "Late Submission"
-                                    ? "bg-mix-600 text-[#fff] w-[110px]"
-                                    : "bg-mix-200 w-[120px]"
-                                }`}
-                              >
-                                {quiz?.submission_status}
-                              </p>
-                            </td>
-                            <td className="px-6 py-4  text-center whitespace-nowrap text-sm text-gray-800">
-                              {formatDateTime(quiz?.created_at)}
-                            </td>
-                            <td className="px-6 py-4  text-center whitespace-nowrap text-sm text-gray-800">
-                              {quiz?.total_grade || "-"}
-                            </td>
-                            <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
-                              {formatDateTime(quiz?.due_date)}
-                            </td>
-                            {assessment === "Exam" && (
-                              <>
-                                <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
-                                  {quiz?.start_time}
-                                </td>
-                                <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
-                                  {quiz?.end_time}
-                                </td>
-                              </>
-                            )}
-                            <td className="px-6 py-4  text-center whitespace-nowrap text-sm text-gray-800">
-                              {quiz?.submitted_at
-                                ? formatDateTime(quiz?.submitted_at)
-                                : "-"}
-                            </td>
-
-                            {field === "exam" ? null : (
-                              //  : edit ? (
-                              //   <th
-                              //     scope="col"
-                              //     className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
-                              //   >
-
-                              //     <input
-                              //       type="number"
-                              //       min={0}
-                              //       className="block w-20 outline-dark-300 p-4 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset sm:text-sm sm:leading-6"
-                              //       // value={resubmission}
-                              //       // onChange={(e) => setResubmission(e.target.value)}
-                              //     />
-                              //   </th>
-                              // ) :
-                              <>
-                                <th
-                                  scope="col"
-                                  className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
-                                >
-                                  {quiz?.no_of_resubmissions_allowed}
-                                </th>
-                                {/* <th
-                                  scope="col"
-                                  className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
-                                >
-                                  {quiz?.remaining_resubmissions}
-                                </th> */}
-                              </>
-                            )}
-                            {isAdmin && !edit ? (
-                              <th
-                                scope="col"
-                                className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[12%]"
-                              >
-                                {quiz.status === 0
-                                  ? "Inactive"
-                                  : quiz.status === 1
-                                  ? "active"
-                                  : "-"}
-                              </th>
-                            ) : isAdmin && edit ? (
-                              <>
+                              {isAdmin && !edit ? (
                                 <th
                                   scope="col"
                                   className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[12%]"
                                 >
-                                  <select className=" bg-surface-100 block p-2 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5">
-                                    <option value="active">Active</option>
-                                    <option>Inactive</option>
-                                  </select>
+                                  {quiz.status === 0
+                                    ? "Inactive"
+                                    : quiz.status === 1
+                                    ? "active"
+                                    : "-"}
                                 </th>
-                              </>
-                            ) : null}
-                            <td className="px-12 py-3 whitespace-nowrap text-blue-300  ">
-                              <div className="flex items-center justify-center gap-4 ">
-                                <a
-                                  href={quiz.submitted_file}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  <MdRemoveRedEye
-                                    title="pdf view"
-                                    className="cursor-pointer"
-                                    size={23}
-                                  />
-                                </a>
-                                {isAdmin && edit && (
-                                  <>
-                                    <LuUpload
-                                      size={20}
-                                      className={`
-                                      "cursor-pointer hover:opacity-80"
-                                    `}
-                                      title="upload"
-                                      // style={{
-                                      //   pointerEvents:
-                                      //     quiz?.status === "Submitted"
-                                      //       ? "none"
-                                      //       : "auto",
-                                      // }}
-                                    />
-
-                                    <FaCheck
-                                      size={20}
-                                      className={`
-                                      "cursor-pointer hover:opacity-80"
-                                    `}
-                                      title="Save"
-                                      onClick={() => onUpdateQuiz(iD)}
-                                    />
-                                  </>
-                                )}
-                                {isAdmin ? null : (
-                                  <div>
-                                    <LuUpload
-                                      size={20}
-                                      onClick={
-                                        quiz?.submission_status !==
-                                          "Submitted" ||
-                                        quiz?.submission_status ===
-                                          "Late Submission"
-                                          ? () => handleFileUpload(quiz?.id)
-                                          : undefined
-                                      }
-                                      className={`${
-                                        quiz?.submission_status ===
-                                          "Submitted" ||
-                                        quiz?.submission_status ===
-                                          "Late Submission"
-                                          ? "cursor-not-allowed opacity-50"
-                                          : "cursor-pointer hover:opacity-80"
-                                      }`}
-                                      title="upload"
-                                      // style={{
-                                      //   pointerEvents:
-                                      //     quiz?.submission_status ===
-                                      //     "Submitted"
-                                      //       ? "none"
-                                      //       : "auto",
-                                      // }}
-                                    />
-                                  </div>
-                                )}
-
-                                {/* {isAdmin ? (
-                                  <div
-                                    title="edit"
-                                    className="cursor-pointer"
-                                    onClick={() =>
-                                      handleEditAssessment(quiz?.id)
-                                    }
+                              ) : isAdmin && edit ? (
+                                <>
+                                  <th
+                                    scope="col"
+                                    className="px-4 py-4  text-center text-xs font-medium text-gray-500 uppercase w-[12%]"
                                   >
-                                    <FaEdit />{" "}
-                                  </div>
+                                    <select className=" bg-surface-100 block p-2 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5">
+                                      <option value="active">Active</option>
+                                      <option>Inactive</option>
+                                    </select>
+                                  </th>
+                                </>
+                              ) : null}
+                              <td className=" py-2  whitespace-nowrap text-sm text-surface-100">
+                                <p
+                                  className={`w-[120px] text-center px-4 py-2 text-[12px] rounded-lg ${
+                                    quiz?.submission_status === "Submitted"
+                                      ? "bg-mix-300 w-[120px]"
+                                      : quiz?.submission_status === "Pending"
+                                      ? "bg-mix-500 text-[#fff] w-[120px]"
+                                      : quiz?.submission_status ===
+                                        "Late Submission"
+                                      ? "bg-mix-600 text-[#fff] w-[110px]"
+                                      : "bg-mix-200 w-[120px]"
+                                  }`}
+                                >
+                                  {quiz?.submission_status}
+                                </p>
+                              </td>
+                              <td className="px-12 py-3 whitespace-nowrap text-blue-300  ">
+                                <div className="flex items-center justify-center gap-4 ">
+                                  <a
+                                    href={quiz.submitted_file}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    <MdRemoveRedEye
+                                      title="pdf view"
+                                      className="cursor-pointer"
+                                      size={23}
+                                    />
+                                  </a>
+                                  {isAdmin && edit && (
+                                    <>
+                                      <LuUpload
+                                        size={20}
+                                        className={`
+                                      "cursor-pointer hover:opacity-80"
+                                    `}
+                                        title="upload"
+                                      />
 
-                                <div title="delete" className="cursor-pointer">
-                                  <FaTrash />{" "}
+                                      <FaCheck
+                                        size={20}
+                                        className={`
+                                      "cursor-pointer hover:opacity-80"
+                                    `}
+                                        title="Save"
+                                        onClick={() => onUpdateQuiz(iD)}
+                                      />
+                                    </>
+                                  )}
+                                  {isAdmin ? null : (
+                                    <div>
+                                      <LuUpload
+                                        size={20}
+                                        onClick={
+                                          quiz?.submission_status !==
+                                            "Submitted" ||
+                                          quiz?.submission_status ===
+                                            "Late Submission"
+                                            ? () =>
+                                                handleFileUpload(quiz?.id)
+                                                  ? quiz?.no_of_resubmissions_allowed >
+                                                    0
+                                                  : () =>
+                                                      handleFileUpload(quiz)
+                                            : null
+                                        }
+                                        disabled={
+                                          quiz?.remaining_resubmissions === 0 &&
+                                          (quiz?.submission_status ===
+                                            "Submitted" ||
+                                            quiz?.submission_status ===
+                                              "Late Submission")
+                                        }
+                                        // className={`px-4 py-2 rounded-lg ${
+                                        //   quiz?.remaining_resubmissions > 0
+                                        //     ? "bg-blue-500 text-white"
+                                        //     : "bg-gray-300 cursor-not-allowed"
+                                        // }`}
+                                        className={`${
+                                          quiz?.submission_status ===
+                                            "Submitted" ||
+                                          quiz?.submission_status ===
+                                            "Late Submission"
+                                            ? "cursor-not-allowed opacity-50"
+                                            : "cursor-pointer hover:opacity-80"
+                                        } rounded-lg ${
+                                          quiz?.no_of_resubmissions_allowed > 0
+                                            ? "cursor-pointer hover:opacity-80 "
+                                            : "text-gray-300 "
+                                        }`}
+                                        title="upload"
+                                      />
+                                    </div>
+                                  )}
                                 </div>
-                                ) : null} */}
-
-                                {/* <div
-                              className="flex items-center gap-2 group "
-                              key={file.id}
-                              >
-                                <a
-                                  href={quiz.content}
-                                  className="cursor-pointer flex justify-center items-center"
-                                  download
-                                >
-                                  <FaFileDownload 
-                                    size={20}
-                                    fill="#03A1D8"
-                                    className="hover:cursor-pointer"
-                                    title="download"
-                                  />
-                                  <button
-                                    onClick={() => downloadFile(quiz.content)}
-                                    download
-                                    className="flex items-center text-blue-300 hover:cursor-pointer"
-                                  >
-                                    {quiz.content?.split("/").pop()} 
-                                  </button>
-                                </a>
-                                 {/* <p>{downloadStatus}</p> 
-                              </div>  */}
-                              </div>
-                            </td>
-                          </tr>
-                        );
-                      })
-                    ) : (
-                      <tr>
-                        <td colSpan="6" className="text-center py-4">
-                          No data found
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+                              </td>
+                            </tr>
+                          );
+                        })
+                      ) : (
+                        <tr>
+                          <td
+                            colSpan="8"
+                            className="text-center py-4 text-dark-300"
+                          >
+                            No data found
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>

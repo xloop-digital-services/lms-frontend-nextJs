@@ -246,7 +246,8 @@ const ApprovedTable = ({ selectedOption }) => {
                         <input
                           id="hs-table-pagination-checkbox-1"
                           type="checkbox"
-                          className="border-dark-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
+                          className="border-dark-200 rounded text-blue-600 focus:ring-blue-500 
+                          bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
                         />
                         <label
                           for="hs-table-pagination-checkbox-1"

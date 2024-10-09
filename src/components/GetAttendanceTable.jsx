@@ -274,7 +274,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
               <select
                 value={selectedSession}
                 onChange={(e) => handleChange(e)}
-                className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                className={` bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5`}
               >
                 <option value="" disabled>
                   Select a session
@@ -316,145 +316,147 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
         <div className="p-1.5 min-w-full inline-block align-middle">
           <div className="mt-2 border border-dark-300 rounded-lg divide-y divide-dark-200 dark:border-gray-700 dark:divide-gray-700">
             <div className="overflow-hidden rounded-lg">
-              <table className="min-w-full divide-y divide-dark-300 dark:divide-gray-700">
-                <thead className="bg-dark-100 text-[#022567] dark:bg-gray-700">
-                  <tr>
-                    <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]">
-                      Student ID
-                    </th>
-                    <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]">
-                      Student Name
-                    </th>
-                    {date && selectedSession && attendance.length > 0 && (
-                      <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]">
-                        Date
-                      </th>
-                    )}
-                    <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]">
-                      Action
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-dark-200 dark:divide-gray-700 overflow-y-scroll scrollbar-webkit">
-                  {getting ? (
+              <div className="relative max-h-[52vh] overflow-y-auto scrollbar-webkit">
+                <table className="min-w-full divide-y divide-dark-300 dark:divide-gray-700">
+                  <thead className="bg-[#ffff] text-[#022567] sticky top-0 z-10 shadow-sm shadow-dark-200">
                     <tr>
-                      <td
-                        colSpan="8"
-                        className="px-6 py-2 text-center whitespace-nowrap text-sm text-dark-300"
-                      >
-                        <CircularProgress size={20} />
-                      </td>
+                      <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]">
+                        Student ID
+                      </th>
+                      <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]">
+                        Student Name
+                      </th>
+                      {date && selectedSession && attendance.length > 0 && (
+                        <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]">
+                          Date
+                        </th>
+                      )}
+                      <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]">
+                        Action
+                      </th>
                     </tr>
-                  ) : date && selectedSession && attendance.length > 0 ? (
-                    attendance.map((att, index) => (
-                      <tr key={index}>
-                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
-                          {att.student} {/* Adjusted to match API response */}
+                  </thead>
+                  <tbody className="divide-y divide-dark-200 dark:divide-gray-700 overflow-y-scroll scrollbar-webkit">
+                    {getting ? (
+                      <tr>
+                        <td
+                          colSpan="8"
+                          className="px-6 py-2 text-center whitespace-nowrap text-sm text-dark-300"
+                        >
+                          <CircularProgress size={20} />
                         </td>
-                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
-                          {att.student_name}{" "}
-                          {/* Adjusted to match API response */}
-                        </td>
-                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
-                          {att.date || "-"}{" "}
-                          {/* Adjusted to match API response */}
-                        </td>
-                        <td className="px-6 py-4 gap-3 flex text-center justify-center items-center whitespace-nowrap text-sm text-gray-800">
-                          {["0", "1", "2"].map((status) => (
-                            <div
-                              key={status}
-                              className="space-x-2 flex items-center group"
-                            >
-                              <input
-                                type="radio"
-                                name={`attendance-${att.student}`}
-                                value={status}
-                                checked={att.status === parseInt(status)}
-                                disabled={true}
-                                className="w-4 h-4 rounded-full border-2 
+                      </tr>
+                    ) : date && selectedSession && attendance.length > 0 ? (
+                      attendance.map((att, index) => (
+                        <tr key={index}>
+                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                            {att.student} {/* Adjusted to match API response */}
+                          </td>
+                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                            {att.student_name}{" "}
+                            {/* Adjusted to match API response */}
+                          </td>
+                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                            {att.date || "-"}{" "}
+                            {/* Adjusted to match API response */}
+                          </td>
+                          <td className="px-6 py-4 gap-3 flex text-center justify-center items-center whitespace-nowrap text-sm text-gray-800">
+                            {["0", "1", "2"].map((status) => (
+                              <div
+                                key={status}
+                                className="space-x-2 flex items-center group"
+                              >
+                                <input
+                                  type="radio"
+                                  name={`attendance-${att.student}`}
+                                  value={status}
+                                  checked={att.status === parseInt(status)}
+                                  disabled={true}
+                                  className="w-4 h-4 rounded-full border-2 
                                 group-hover:cursor-default   
                                 disabled:opacity-100 disabled:bg-dark-600"
-                                // disabled={isAttendancePosted}
-                              />
-                              <p className="group-hover:cursor-default">
-                                {status === "0"
-                                  ? "P"
-                                  : status === "1"
-                                  ? "A"
-                                  : "L"}
-                              </p>
-                            </div>
-                          ))}
+                                  // disabled={isAttendancePosted}
+                                />
+                                <p className="group-hover:cursor-default">
+                                  {status === "0"
+                                    ? "P"
+                                    : status === "1"
+                                    ? "A"
+                                    : "L"}
+                                </p>
+                              </div>
+                            ))}
+                          </td>
+                        </tr>
+                      ))
+                    ) : getting ? (
+                      <tr>
+                        <td
+                          colSpan="8"
+                          className="px-6 py-2 text-center whitespace-nowrap text-sm text-dark-300"
+                        >
+                          <CircularProgress size={20} />
                         </td>
                       </tr>
-                    ))
-                  ) : getting ? (
-                    <tr>
-                      <td
-                        colSpan="8"
-                        className="px-6 py-2 text-center whitespace-nowrap text-sm text-dark-300"
-                      >
-                        <CircularProgress size={20} />
-                      </td>
-                    </tr>
-                  ) : date === formattedDate &&
-                    Array.isArray(getAttendance) &&
-                    getAttendance.length > 0 ? (
-                    getAttendance.map((att, index) => (
-                      <tr key={index}>
-                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
-                          {att.student || att.registration_id}
-                        </td>
-                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
-                          {att.full_name || att.user}
-                        </td>
+                    ) : date === formattedDate &&
+                      Array.isArray(getAttendance) &&
+                      getAttendance.length > 0 ? (
+                      getAttendance.map((att, index) => (
+                        <tr key={index}>
+                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                            {att.student || att.registration_id}
+                          </td>
+                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                            {att.full_name || att.user}
+                          </td>
 
-                        <td className="px-6 py-4 gap-3 flex text-center justify-center items-center whitespace-nowrap text-sm text-gray-800">
-                          {["0", "1", "2"].map((status) => (
-                            <div
-                              key={status}
-                              className="space-x-2 flex items-center group"
-                            >
-                              <input
-                                type="radio"
-                                name={`attendance-${att.registration_id}`}
-                                value={status}
-                                checked={
-                                  selectedAttendance[att.registration_id] ===
-                                  parseInt(status)
-                                }
-                                onChange={() =>
-                                  handleAttendanceChange(
-                                    att.registration_id,
+                          <td className="px-6 py-4 gap-3 flex text-center justify-center items-center whitespace-nowrap text-sm text-gray-800">
+                            {["0", "1", "2"].map((status) => (
+                              <div
+                                key={status}
+                                className="space-x-2 flex items-center group"
+                              >
+                                <input
+                                  type="radio"
+                                  name={`attendance-${att.registration_id}`}
+                                  value={status}
+                                  checked={
+                                    selectedAttendance[att.registration_id] ===
                                     parseInt(status)
-                                  )
-                                }
-                                className="w-4 h-4 rounded-full border-2 border-blue-300 group-hover:cursor-pointer"
-                              />
-                              <p className="group-hover:cursor-pointer">
-                                {status === "0"
-                                  ? "P"
-                                  : status === "1"
-                                  ? "A"
-                                  : "L"}
-                              </p>
-                            </div>
-                          ))}
+                                  }
+                                  onChange={() =>
+                                    handleAttendanceChange(
+                                      att.registration_id,
+                                      parseInt(status)
+                                    )
+                                  }
+                                  className="w-4 h-4 rounded-full border-2 border-blue-300 group-hover:cursor-pointer"
+                                />
+                                <p className="group-hover:cursor-pointer">
+                                  {status === "0"
+                                    ? "P"
+                                    : status === "1"
+                                    ? "A"
+                                    : "L"}
+                                </p>
+                              </div>
+                            ))}
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td
+                          colSpan="8"
+                          className="px-6 py-4 text-center whitespace-nowrap text-sm text-dark-300"
+                        >
+                          No attendance marked
                         </td>
                       </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td
-                        colSpan="8"
-                        className="px-6 py-4 text-center whitespace-nowrap text-sm text-dark-300"
-                      >
-                        No attendance marked
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
