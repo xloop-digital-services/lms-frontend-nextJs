@@ -1,59 +1,36 @@
 "use client";
-import { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 const SidebarContext = createContext();
 
-export const useSidebar = () => useContext(SidebarContext);
-
 export const SidebarProvider = ({ children }) => {
-  const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
   useEffect(() => {
     const updateSidebarState = () => {
-      setSidebarOpen(window.innerWidth > 1400);
+      setIsSidebarOpen(window.innerWidth > 1400);
     };
 
-    updateSidebarState();
+    updateSidebarState(); 
 
     const handleResize = () => {
       updateSidebarState();
     };
 
-    if (typeof window !== "undefined") {
-      window.addEventListener("resize", handleResize);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', handleResize);
     }
 
     return () => {
-      if (typeof window !== "undefined") {
-        window.removeEventListener("resize", handleResize);
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('resize', handleResize);
       }
     };
   }, []);
-  useEffect(() => {
-    const savedSidebarState = localStorage.getItem("sidebarOpen");
-    if (savedSidebarState !== null) {
-      setSidebarOpen(JSON.parse(savedSidebarState));
-    }
-    const mediaQuery = window.matchMedia("(max-width: 1400px)");
-    const handleScreenSizeChange = (e) => {
-      if (e.matches) {
-        setSidebarOpen(false);
-      }
-    };
-    if (mediaQuery.matches) {
-      setSidebarOpen(false);
-    }
-    mediaQuery.addEventListener("change", handleScreenSizeChange);
 
-    return () => {
-      mediaQuery.removeEventListener("change", handleScreenSizeChange);
-    };
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("sidebarOpen", JSON.stringify(isSidebarOpen));
-  }, [isSidebarOpen]);
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   const contextValue = {
     isSidebarOpen,
@@ -65,4 +42,12 @@ export const SidebarProvider = ({ children }) => {
       {children}
     </SidebarContext.Provider>
   );
+};
+
+export const useSidebar = () => {
+  const context = useContext(SidebarContext);
+  if (!context) {
+    throw new Error("useSidebar must be used within a SidebarProvider");
+  }
+  return context;
 };
