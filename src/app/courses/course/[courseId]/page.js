@@ -990,7 +990,6 @@ export default function Page({ params }) {
                         <div className="flex">
                           {moduleId === module.id ? (
                             <div className="flex items-center mx-4 mt-4">
-
                               <span className="mr-4 text-md">
                                 Module Status
                               </span>
@@ -1018,11 +1017,11 @@ export default function Page({ params }) {
                                 {moduleStatus === 1 ? "Active" : "Inactive"}
                               </span>
                             </div>
-                          )   : (
+                          ) : (
                             <p
-                              className={`flex justify-center px-2 mt-4 items-center gap-2 text-surface-100 rounded-xl mr-4 ${
+                              className={`flex justify-center px-4 mt-4 items-center gap-2 text-surface-100 rounded-lg mr-4 ${
                                 module?.status === 1
-                                  ? "bg-mix-300 -110px]"
+                                  ? "bg-mix-300 w-[110px]"
                                   : module?.status === 0
                                   ? "bg-mix-200 w-[110px]"
                                   : "bg-dark-700 w-110px]"
