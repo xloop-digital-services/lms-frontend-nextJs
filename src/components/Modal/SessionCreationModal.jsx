@@ -99,8 +99,11 @@ const SessionCreationModal = ({
         } catch (error) {
           console.log(
             "error while session creation",
-            error.response?.data.message
+            error.response
           );
+          if(error.response.status === 400){
+            toast.error(error.response.data.error[0])
+          }
           // toast.error("error in class scheduling");
           setLoadingCreation(false);
         }
@@ -182,49 +185,52 @@ const SessionCreationModal = ({
     }
   };
 
-  const handleStartTimeChange = (event) => {
-    // Get the value from the input field
-    const time = event.target.value; // 'HH:mm' format
-
-    // Convert the time to a JavaScript Date object for comparison (if needed)
-    const [hours, minutes] = time.split(":");
-    const startTimeDate = new Date();
-    startTimeDate.setHours(hours);
-    startTimeDate.setMinutes(minutes);
-
-    // Update the state with the time string
-    setStartTime(time); // If you want to keep it in 'HH:mm' format
+  const convertTimeToDate = (timeString) => {
+    const [hours, minutes] = timeString.split(":");
+    const date = new Date();
+    date.setHours(hours);
+    date.setMinutes(minutes);
+    date.setSeconds(0); // To avoid issues with slight second differences
+    return date;
   };
 
-  const handleEndTimeChange = (event) => {
-    // Get the value from the input field
-    const time = event.target.value; // 'HH:mm' format
+  const handleStartTimeChange = (event) => {
+    const time = event.target.value;
+    setStartTime(time);
+    console.log("Start time:", time);
 
-    // Convert the time to a JavaScript Date object for comparison (if needed)
-    const [hours, minutes] = time.split(":");
-    const endTimeDate = new Date();
-    endTimeDate.setHours(hours);
-    endTimeDate.setMinutes(minutes);
-
-    // Update the state with the time string
-    setEndTime(time); // If you want to keep it in 'HH:mm' format
-
-    // Validate end time against start time
-    if (startTime) {
-      const [startHours, startMinutes] = startTime.split(":");
-      const startTimeDate = new Date();
-      startTimeDate.setHours(startHours);
-      startTimeDate.setMinutes(startMinutes);
-
+    // Validate again when the start time changes, to reset any lingering errors
+    if (endTime && time) {
+      const startTimeDate = convertTimeToDate(time);
+      const endTimeDate = convertTimeToDate(endTime);
       if (endTimeDate <= startTimeDate) {
         setTimeErrorMessage("End time should be greater than start time");
       } else {
-        setTimeErrorMessage("");
+        setTimeErrorMessage(""); // Clear error if times are valid
       }
-    } else {
-      setTimeErrorMessage("");
     }
   };
+
+  const handleEndTimeChange = (event) => {
+    const time = event.target.value;
+    setEndTime(time);
+    console.log("End time:", time);
+
+    if (startTime) {
+      const startTimeDate = convertTimeToDate(startTime);
+      const endTimeDate = convertTimeToDate(time);
+
+      // Validate that end time is greater than start time
+      if (endTimeDate <= startTimeDate) {
+        setTimeErrorMessage("End time should be greater than start time");
+      } else {
+        setTimeErrorMessage(""); // Clear error when valid
+      }
+    } else {
+      setTimeErrorMessage(""); // Clear error if no start time
+    }
+  };
+
   const toggleLocationOpen = () => {
     setIsLocationOpen(!isLocationOpen);
   };
@@ -316,7 +322,7 @@ const SessionCreationModal = ({
                 lineHeight: "24.2px",
                 color: "#022567",
               }}
-              className="text-start  px-2 xsm:py-[10px] pb-[5px]"
+              className="text-start  px-2 xsm:py-[10px] pb-[5px] font-exo"
             >
               Scheduling a class
             </h1>
@@ -324,7 +330,7 @@ const SessionCreationModal = ({
               <IoClose size={21} />
             </button>
           </div>
-          <div className="bg-surface-100 xsm:p-6 px-3 py-4 rounded-xl xsm:space-y-5 space-y-2">
+          <div className="bg-surface-100 xsm:p-6 px-3 py-4 rounded-xl xsm:space-y-5 space-y-2 font-inter">
             <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
               {/* <div className="space-y-2 text-[15px] w-full">
                 <p>Batch</p>
@@ -524,7 +530,7 @@ const SessionCreationModal = ({
                   {/* <FaCalendar className="absolute right-3 top-1/2 transform -translate-y-1/2 text-dark-400 pointer-events-none" /> */}
                 </div>
                 {dateErrorMessage && (
-                  <p className="text-[#D84848] text-[12px] mt-2">
+                  <p className="text-mix-200 text-[12px] mt-2">
                     {dateErrorMessage}
                   </p>
                 )}
@@ -558,7 +564,7 @@ const SessionCreationModal = ({
                   />
                 </div>
                 {timeErrorMessage && (
-                  <p className="text-[#D84848] text-[12px] mt-2">
+                  <p className="text-mix-200 text-[12px] mt-2">
                     {timeErrorMessage}
                   </p>
                 )}

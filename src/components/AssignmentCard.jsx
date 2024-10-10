@@ -44,7 +44,7 @@ const AssignmentCard = ({ id, category, content, title, priority, type }) => {
                 <div className="w-full ">
                   <p
                     style={{ whiteSpace: "pre-line" }}
-                    className={`w-full flex justify-center mt-2 uppercase py-2 px-5 rounded-lg text-[12px] font-semibold bg-[#FBE7E9] text-[#D84848] `}
+                    className={`w-full flex justify-center mt-2 uppercase py-2 px-5 rounded-lg text-[12px] font-semibold bg-[#FBE7E9] text-mix-200 `}
                     // priority === "HIGH"
                     //   ? "bg-[#FBE7E9] text-[#D84848]"
                     //   : "bg-[#FEF0C7] text-[#F8A029]"

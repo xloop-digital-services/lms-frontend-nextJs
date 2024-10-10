@@ -68,10 +68,10 @@ const ShortListUserTable = ({selectedOption}) => {
                                         <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium flex space-x-2">
                                           
                                             <div className='flex items-center group text-dark-600' title="Reject">
-                                                <IoMdCloseCircle size={24} className='group-hover:text-[#D84848]' />
+                                                <IoMdCloseCircle size={24} className='group-hover:text-mix-200' />
                                             </div>
                                             <div className='flex items-center group text-dark-600' title="Approve">
-                                                <FaCheckCircle size={20} className='group-hover:text-[#18A07A]' />
+                                                <FaCheckCircle size={20} className='group-hover:text-mix-300' />
                                             </div>0
                                         </td>
     
@@ -106,10 +106,10 @@ const ShortListUserTable = ({selectedOption}) => {
                                         <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium flex space-x-2">
                                           
                                             <div className='flex items-center group text-dark-600' title="Reject">
-                                                <IoMdCloseCircle size={24} className='group-hover:text-[#D84848]' />
+                                                <IoMdCloseCircle size={24} className='group-hover:text-mix-200' />
                                             </div>
                                             <div className='flex items-center group text-dark-600' title="Approve">
-                                                <FaCheckCircle size={20} className='group-hover:text-[#18A07A]' />
+                                                <FaCheckCircle size={20} className='group-hover:text-mix-300' />
                                             </div>
                                         </td>
     
@@ -144,10 +144,10 @@ const ShortListUserTable = ({selectedOption}) => {
                                         <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium flex space-x-2">
                                           
                                             <div className='flex items-center group text-dark-600' title="Reject">
-                                                <IoMdCloseCircle size={24} className='group-hover:text-[#D84848]' />
+                                                <IoMdCloseCircle size={24} className='group-hover:text-mix-200' />
                                             </div>
                                             <div className='flex items-center group text-dark-600' title="Approve">
-                                                <FaCheckCircle size={20} className='group-hover:text-[#18A07A]' />
+                                                <FaCheckCircle size={20} className='group-hover:text-mix-300' />
                                             </div>
                                         </td>
     

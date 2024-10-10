@@ -182,7 +182,7 @@ export default function CreateField({
         }}
       >
         <div className="bg-surface-100 flex flex-col p-8 rounded-xl">
-          <h2 className="font-exo text-[#022567] text-xl font-bold">
+        <h2 className="font-exo text-blue-500 text-xl font-bold">
             Add a {title}
           </h2>
 

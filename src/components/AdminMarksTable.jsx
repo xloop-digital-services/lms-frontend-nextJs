@@ -10,7 +10,13 @@ import { toast } from "react-toastify";
 import { downloadFile } from "@/app/courses/course/[courseId]/page";
 import { FaEdit } from "react-icons/fa";
 
-const AdminMarksTable = ({ assessments, courseId, setFetch, title }) => {
+const AdminMarksTable = ({
+  assessments,
+  courseId,
+  setFetch,
+  title,
+  totalMarks,
+}) => {
   const [loading, setLoading] = useState(true);
   const [editData, setEditData] = useState({});
   const [isEditing, setIsEditing] = useState(null);
@@ -43,6 +49,10 @@ const AdminMarksTable = ({ assessments, courseId, setFetch, title }) => {
   };
 
   const handleSave = async (id, status) => {
+    if (editData.marks_obtain > editData.total_grade) {
+      toast.error("Obtained marks are greater than total marks.");
+      return;
+    }
     try {
       const data = {
         total_grade: editData.total_marks,
@@ -84,11 +94,11 @@ const AdminMarksTable = ({ assessments, courseId, setFetch, title }) => {
           [id]: true,
         }));
       } else {
-        toast.error("Error grading the student", response?.data?.message);
+        toast.error("Error grading the student", response?.message);
       }
     } catch (error) {
-      console.error("Failed to update grading", error);
-      toast.error("Failed to grade the assessment");
+      console.error("Failed to grade", error);
+      toast.error("Failed to grade the assessment", error);
     }
   };
 
@@ -104,7 +114,7 @@ const AdminMarksTable = ({ assessments, courseId, setFetch, title }) => {
                 </div>
               ) : (
                 <table className="min-w-full divide-y divide-dark-300 dark:divide-gray-700">
-                  <thead className="bg-dark-100 text-[#022567] dark:bg-gray-700">
+                  <thead className="bg-surface-100 text-blue-500 shadow-sm shadow-dark-200">
                     <tr>
                       <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
                         Registration Id

@@ -1,8 +1,43 @@
 {
-    "rewrites": [
-      {
-        "source": "/(.*)", 
-        "destination": "/"  
-      }
-    ]
-  }
+  "routes": [
+    { "src": "/_not-found", "dest": "/_not-found" },
+    { "src": "/application", "dest": "/application" },
+    { "src": "/application/submitted", "dest": "/application/submitted" },
+    { "src": "/assignment", "dest": "/assignment" },
+    { "src": "/assignment/course/(.*)", "dest": "/assignment/course/[courseId]" },
+    { "src": "/attendance", "dest": "/attendance" },
+    { "src": "/attendance/course/(.*)", "dest": "/attendance/course/[courseId]" },
+    { "src": "/auth/account-verify/(.*)", "dest": "/auth/account-verify/[verifyToken]" },
+    { "src": "/auth/login", "dest": "/auth/login" },
+    { "src": "/auth/reset-password", "dest": "/auth/reset-password" },
+    { "src": "/auth/reset-password/thanks", "dest": "/auth/reset-password/thanks" },
+    { "src": "/auth/set-password/(.*)", "dest": "/auth/set-password/[...verifyToken]" },
+    { "src": "/auth/signup", "dest": "/auth/signup" },
+    { "src": "/batch", "dest": "/batch" },
+    { "src": "/calendar", "dest": "/calendar" },
+    { "src": "/class-scheduling", "dest": "/class-scheduling" },
+    { "src": "/courses", "dest": "/courses" },
+    { "src": "/courses/course/(.*)", "dest": "/courses/course/[courseId]" },
+    { "src": "/courses/create-a-course", "dest": "/courses/create-a-course" },
+    { "src": "/dashboard", "dest": "/dashboard" },
+    { "src": "/exam", "dest": "/exam" },
+    { "src": "/exam/course/(.*)", "dest": "/exam/course/[courseId]" },
+    { "src": "/grading", "dest": "/grading" },
+    { "src": "/grading/course/(.*)", "dest": "/grading/course/[courseId]" },
+    { "src": "/location", "dest": "/location" },
+    { "src": "/programs", "dest": "/programs" },
+    { "src": "/programs/create-a-program", "dest": "/programs/create-a-program" },
+    { "src": "/programs/program/(.*)", "dest": "/programs/program/[programId]" },
+    { "src": "/project", "dest": "/project" },
+    { "src": "/project/course/(.*)", "dest": "/project/course/[courseId]" },
+    { "src": "/quiz", "dest": "/quiz" },
+    { "src": "/quiz/course/(.*)", "dest": "/quiz/course/[courseId]" },
+    { "src": "/students", "dest": "/students" },
+    { "src": "/students/course/(.*)", "dest": "/students/course/[courseId]" },
+    { "src": "/students/course/(.*)/student/(.*)/(.*)", "dest": "/students/course/[courseId]/student/[sessionId]/[regId]" },
+    { "src": "/user-management", "dest": "/user-management" },
+    { "src": "/user-management/applicants", "dest": "/user-management/applicants" },
+    { "src": "/user-management/users", "dest": "/user-management/users" },
+    { "src": "/user/profile", "dest": "/user/profile" }
+  ]
+}

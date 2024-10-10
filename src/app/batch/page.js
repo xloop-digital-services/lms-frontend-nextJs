@@ -4,12 +4,13 @@ import { IoIosArrowDown } from "react-icons/io";
 import { useSidebar } from "@/providers/useSidebar";
 import BatchTable from "@/components/BatchTable";
 import BatchModal from "@/components/Modal/BatchModal";
-import { filterByCity, listAllBatches } from "@/api/route";
+import { DeleteBatch, filterByCity, listAllBatches } from "@/api/route";
 import cityAreas from "../../../public/data/cityAreas.json";
 import useClickOutside from "@/providers/useClickOutside";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
+import DeleteConfirmationPopup from "@/components/Modal/DeleteConfirmationPopUp";
 
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
@@ -22,6 +23,8 @@ export default function Page() {
   const [city0ptions, setCityOptions] = useState([]);
   const [isCitySelected, setIscitySelected] = useState(false);
   const [filterCity, setFilterCity] = useState([]);
+  const [selectedBatch, setSelectedBatch] = useState(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const mousedown = useRef(null);
 
   useClickOutside(mousedown, () => setIsCityOpen(false));
@@ -72,6 +75,20 @@ export default function Page() {
     setIsOpenModal(!isOpenModal);
   };
 
+  const handleDelete = async () => {
+    try {
+      setLoading(true);
+      const response = await DeleteBatch(selectedBatch);
+      toast.success("Batch deleted successfully!");
+      console.log("deleting the batch", response);
+      setUpdateBatch(!updateBatch);
+      setConfirmDelete(false);
+      setLoading(false);
+    } catch (error) {
+      console.log("error while deleting the batch", error);
+    }
+  };
+
   return (
     <>
       <div
@@ -87,7 +104,7 @@ export default function Page() {
         <div className="bg-surface-100 p-6 rounded-xl">
           <div className="w-full mx-auto flex sm:flex-row flex-col sm:justify-between items-center gap-4 max-md:flex-col">
             <div>
-              <p className="font-bold text-[#022567] text-xl">Batch Details</p>
+              <p className="font-bold text-blue-500 text-xl">Batch Details</p>
             </div>
             <div className="flex gap-3 max-md:flex-col">
               <div>
@@ -211,6 +228,10 @@ export default function Page() {
                   updateBatch={updateBatch}
                   loading={loading}
                   setLoading={setLoading}
+                  setSelectedBatch={setSelectedBatch}
+                  setConfirmDelete={setConfirmDelete}
+                  selectedBatch={selectedBatch}
+                  confirmDelete={confirmDelete}
                 />
               </div>
             ) : !isCitySelected && batches.length > 0 ? (
@@ -221,6 +242,10 @@ export default function Page() {
                   updateBatch={updateBatch}
                   loading={loading}
                   setLoading={setLoading}
+                  setSelectedBatch={setSelectedBatch}
+                  setConfirmDelete={setConfirmDelete}
+                  selectedBatch={selectedBatch}
+                  confirmDelete={confirmDelete}
                 />
               </div>
             ) : loading ? (
@@ -240,6 +265,15 @@ export default function Page() {
             setUpdateBatch={setUpdateBatch}
             cityOptions={city0ptions}
             updateBatch={updateBatch}
+          />
+        )}
+      </div>
+      <div>
+        {confirmDelete && (
+          <DeleteConfirmationPopup
+            setConfirmDelete={setConfirmDelete}
+            handleDelete={handleDelete}
+            field="batch"
           />
         )}
       </div>

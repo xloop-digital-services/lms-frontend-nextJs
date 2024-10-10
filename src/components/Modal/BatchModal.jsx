@@ -388,7 +388,7 @@ const BatchModal = ({
                   {/* <FaCalendar className="absolute right-3 top-1/2 transform -translate-y-1/2 text-dark-400 pointer-events-none" /> */}
                 </div>
                 {errorMessage && (
-                  <p className="text-[#D84848] text-[12px] mt-2">
+                  <p className="text-mix-200 text-[12px] mt-2">
                     {errorMessage}
                   </p>
                 )}

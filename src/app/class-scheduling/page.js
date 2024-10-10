@@ -8,9 +8,15 @@ import {
 import SessionsTable from "@/components/SessionsTable";
 import SessionCreationModal from "@/components/Modal/SessionCreationModal";
 import { useSidebar } from "@/providers/useSidebar";
-import { listAllSessions, listAllLocations, listAllBatches } from "@/api/route";
+import {
+  listAllSessions,
+  listAllLocations,
+  listAllBatches,
+  DeleteSession,
+} from "@/api/route";
 import useClickOutside from "@/providers/useClickOutside";
 import { CircularProgress } from "@mui/material";
+import DeleteConfirmationPopup from "@/components/Modal/DeleteConfirmationPopUp";
 
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
@@ -34,6 +40,8 @@ export default function Page() {
   const [openModal, setOpenModal] = useState(false);
   const [updateSession, setUpdateSession] = useState(false);
   const [filterLocation, setfilterLocation] = useState([]);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [selectedSession, setSelectedSession] = useState(null);
   const dropdownRef = useRef(null);
 
   // Update states based on screen size
@@ -171,6 +179,22 @@ export default function Page() {
 
   const handleOpenSessionModal = () => setOpenModal(true);
 
+  const handleDelete = async () => {
+    try {
+      setLoading(true);
+      const response = await DeleteSession(selectedSession);
+      console.log("deleting the session", response);
+      toast.success("Class schedule deleted successfully!");
+      setUpdateSession(!updateSession);
+      setConfirmDelete(false);
+      setLoading(false);
+    } catch (error) {
+      console.log("error while deleting the lcoation", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <div
@@ -184,7 +208,7 @@ export default function Page() {
         <div className="bg-surface-100 p-6 rounded-xl">
           <div className="w-full flex xlg:flex-row flex-col justify-between items-center gap-4">
             <div>
-              <p className="font-bold text-xl text-[#022567] font-exo">
+              <p className="font-bold text-xl text-blue-500 font-exo">
                 Class Details
               </p>
             </div>
@@ -356,6 +380,10 @@ export default function Page() {
                 setLoading={setLoading}
                 setUpdateSession={setUpdateSession}
                 updateSession={updateSession}
+                setSelectedSession={setSelectedSession}
+                setConfirmDelete={setConfirmDelete}
+                selectedSession={selectedSession}
+                confirmDelete={confirmDelete}
               />
             ) : !isLocationSelected && sessions.length > 0 ? (
               <SessionsTable
@@ -364,6 +392,10 @@ export default function Page() {
                 setLoading={setLoading}
                 setUpdateSession={setUpdateSession}
                 updateSession={updateSession}
+                setSelectedSession={setSelectedSession}
+                setConfirmDelete={setConfirmDelete}
+                selectedSession={selectedSession}
+                confirmDelete={confirmDelete}
               />
             ) : (
               <p>No class is scheduled in this location</p>
@@ -383,6 +415,15 @@ export default function Page() {
             setUpdateSession={setUpdateSession}
             updateSession={updateSession}
             loadingBatch={loadingBatch}
+          />
+        )}
+      </div>
+      <div>
+        {confirmDelete && (
+          <DeleteConfirmationPopup
+            setConfirmDelete={setConfirmDelete}
+            handleDelete={handleDelete}
+            field="session"
           />
         )}
       </div>

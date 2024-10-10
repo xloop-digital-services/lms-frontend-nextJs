@@ -277,7 +277,7 @@ const ApprovalUserModal = ({
 
   return (
     <div className="backDropOverlay h-screen flex items-center justify-center ">
-      <div className="w-[70%] z-[1000] mx-auto my-20 relative cursor-default">
+      <div className="w-[60%] z-[1000] mx-auto my-20 relative cursor-default">
         {loadingAssign && (
           <div className="absolute inset-0 flex items-center justify-center bg-surface-100 bg-opacity-30 z-[1100]">
             <CircularProgress size={30} />
@@ -388,7 +388,7 @@ const ApprovalUserModal = ({
                   className={`${
                     status === "pending"
                       ? "bg-[#DDF8EE] text-blue-300 border border-blue-300"
-                      : "bg-[#18A07A]"
+                      : "bg-mix-300"
                   } w-[120px] text-center px-4 py-2 rounded-lg capitalize`}
                 >
                   {status}
@@ -466,7 +466,7 @@ const ApprovalUserModal = ({
                              ${
                                isSelected
                                  ? "bg-blue-100 text-blue-800"
-                                 : "bg-[#ffff]"
+                                 : "bg-surface-100"
                              }
                     hover:bg-dark-200 transition-colors duration-200 ease-in-out`}
                               >
@@ -483,7 +483,7 @@ const ApprovalUserModal = ({
                                 onClick={() => handleSelectSession(session)}
                                 className={`py-2 px-4 cursor-pointer m-2 rounded-md
                        ${
-                         isSelected ? "bg-blue-100 text-blue-800" : "bg-[#ffff]"
+                         isSelected ? "bg-blue-100 text-blue-800" : "bg-surface-100"
                        }
               hover:bg-dark-200 transition-colors duration-200 ease-in-out`}
                               >

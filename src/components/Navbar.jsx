@@ -238,7 +238,7 @@ export default function Navbar() {
                       <Link
                         href="/auth/login"
                         passHref
-                        className="flex items-center px-4 py-2 text-[#022567] hover:bg-gray-200"
+                        className="flex items-center px-4 py-2 text-blue-500 hover:bg-gray-200"
                         onClick={logOutUser}
                       >
                         <FaSignOutAlt size={17} className="mr-2" />

@@ -318,7 +318,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
             <div className="overflow-hidden rounded-lg">
               <div className="relative max-h-[52vh] overflow-y-auto scrollbar-webkit">
                 <table className="min-w-full divide-y divide-dark-300 dark:divide-gray-700">
-                  <thead className="bg-[#ffff] text-[#022567] sticky top-0 z-10 shadow-sm shadow-dark-200">
+                <thead className="bg-surface-100 text-blue-500 sticky top-0 z-10 shadow-sm shadow-dark-200">
                     <tr>
                       <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]">
                         Student ID

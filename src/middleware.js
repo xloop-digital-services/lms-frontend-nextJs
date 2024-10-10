@@ -104,6 +104,7 @@ export const config = {
     "/user/:path*",
     "/quiz/:path*",
     "/assignment/:path*",
+    "/assignment/course/:path*",
     "/project/:path*",
     "/exam/:path*",
     "/grading/:path*",

@@ -32,12 +32,12 @@ const DeleteConfirmationPopup = ({
         ) : (
           <div className="bg-[#EBF6FF] p-3 rounded-2xl">
             <div className="flex justify-between items-center mb-4">
-              <h1 className="font-bold text-xl font-exo text-[#022567]">Confirmation</h1>
+              <h1 className="font-bold text-xl font-exo text-blue-500">Confirmation</h1>
               <button className="p-2" onClick={() => setConfirmDelete(false)}>
                 <IoClose size={25} />
               </button>
             </div>
-            <div className="bg-[#fff] p-4 rounded-2xl text-center">
+            <div className="bg-surface-100 p-4 rounded-2xl text-center">
               {field === "assigned class" ? (
                 <p>Are you sure you want to remove this {field}?</p>
               ) : (
@@ -51,7 +51,7 @@ const DeleteConfirmationPopup = ({
                   Cancel
                 </button>
                 <button
-                  className="bg-[#D84848] text-surface-100 rounded-lg px-5 py-2.5 hover:bg-[#be4141]"
+                  className="bg-mix-200 text-surface-100 rounded-lg px-5 py-2.5 hover:bg-[#be4141]"
                   onClick={handleDeleteAction}
                   disabled={loading}
                 >

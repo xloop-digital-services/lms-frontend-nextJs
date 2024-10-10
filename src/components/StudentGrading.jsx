@@ -221,7 +221,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
               className=" flex justify-between items-center "
               onClick={() => handleToggleSection("Quiz")}
             >
-              <p className="text-[17px] font-semibold text-[#022567] font-exo">
+              <p className="text-[17px] font-semibold text-blue-500 font-exo">
                 Quiz
               </p>
               <span className="">
@@ -250,7 +250,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
               className=" flex justify-between items-center "
               onClick={() => handleToggleSection("Assignment")}
             >
-              <p className="text-[17px] font-semibold text-[#022567] font-exo">
+              <p className="text-[17px] font-semibold text-blue-500 font-exo">
                 Assignment
               </p>
               <span className="">
@@ -281,7 +281,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
               className=" flex justify-between items-center "
               onClick={() => handleToggleSection("Project")}
             >
-              <p className="text-[17px] font-semibold text-[#022567] font-exo">
+             <p className="text-[17px] font-semibold text-blue-500 font-exo">
                 Project
               </p>
               <span className="">
@@ -310,7 +310,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
               className=" flex justify-between items-center "
               onClick={() => handleToggleSection("Exam")}
             >
-              <p className="text-[17px] font-semibold text-[#022567] font-exo">
+               <p className="text-[17px] font-semibold text-blue-500 font-exo">
                 Exam
               </p>
               <span className="">
@@ -339,7 +339,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
               openSection !== null ? "max-height-0" : "max-height-full"
             }`}
           > */}
-        <div className={`font-semibold text-[#022567] font-exo py-3 `}>
+        <div className={`font-semibold text-blue-500 font-exo py-3 `}>
           Student Performance Overview
         </div>
         {progress ? (

@@ -66,7 +66,9 @@ export default function StudentProgram({ path, progress, heading, role }) {
         ) : (
           <>
             <div className="bg-surface-100 p-8 rounded-xl ">
-              <h2 className="text-xl text-[#022567] font-bold pb-1">{heading}</h2>
+              <h2 className="text-xl text-blue-500 font-bold pb-1">
+                {heading}
+              </h2>
               <p className="pb-6">Select a course to view the {heading}</p>
               <div className="flex flex-col w-full gap-4">
                 {/* {program?.map(([program]) => { */}

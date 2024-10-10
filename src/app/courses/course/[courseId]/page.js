@@ -27,7 +27,6 @@ import {
   FaTrash,
   FaUpload,
 } from "react-icons/fa";
-import JsFileDownloader from "js-file-downloader";
 import { useAuth } from "@/providers/AuthContext";
 import { toast } from "react-toastify";
 import { Upload, UploadFile } from "@mui/icons-material";
@@ -86,6 +85,7 @@ export default function Page({ params }) {
   const [selectedModule, setSelectedModule] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [skill, setSkill] = useState();
+  const [moduleStatus, setModuleStatus] = useState(0);
   // console.log(isAdmin)
   const [skillName, setSkillName] = useState("");
 
@@ -289,6 +289,7 @@ export default function Page({ params }) {
       course: courseId,
       files: file,
       session: sessionId,
+      status: moduleStatus,
     };
 
     try {
@@ -304,6 +305,7 @@ export default function Page({ params }) {
       formData.append("course", moduleData.course);
       formData.append("files", file);
       formData.append("session", sessionId);
+      formData.append("status", moduleStatus);
 
       const response = await createModule(moduleData);
 
@@ -392,6 +394,7 @@ export default function Page({ params }) {
       formData.append("course", moduleData.course);
       formData.append("files", file);
       formData.append("session", sessionId);
+      formData.append("status", moduleStatus);
 
       const response = await updateModule(formData, moduleId);
       if (response.status === 200) {
@@ -563,7 +566,7 @@ export default function Page({ params }) {
               <div className="flex flex-col">
                 <div>
                   <div className="flex justify-between my-2">
-                    <label className="text-lg font-exo font-bold">
+                    <label className="text-lg font-exo text-blue-500 font-bold">
                       Course Name
                     </label>
                     <div className="flex items-center">
@@ -602,7 +605,7 @@ export default function Page({ params }) {
                     setCourseData({ ...courseData, name: e.target.value })
                   }
                 />
-                <label className="text-lg font-exo font-bold">
+                <label className="text-lg mt-2 text-blue-500 font-exo font-bold">
                   Short Description
                 </label>
                 <input
@@ -615,7 +618,7 @@ export default function Page({ params }) {
                     })
                   }
                 />
-                <label className="font-exo text-lg font-bold mt-4">
+                <label className="font-exo text-blue-500 text-lg font-bold mt-4">
                   About the Course
                 </label>
                 <textarea
@@ -628,7 +631,7 @@ export default function Page({ params }) {
                 />
 
                 <div className="my-4 sm:mb-0">
-                  <label className="text-lg font-exo font-bold">
+                  <label className="text-lg  text-blue-500 font-exo font-bold">
                     Credit Hours
                   </label>
                   <div className="sm:pr-4">
@@ -674,7 +677,7 @@ export default function Page({ params }) {
                     </div>
                   </div>
                   <div className="my-4 sm:mb-0">
-                    <label className="text-lg font-exo font-bold">
+                    <label className="text-lg  text-blue-500 font-exo font-bold">
                       Skills Names
                     </label>
                     <div className="sm:pr-4">
@@ -741,7 +744,7 @@ export default function Page({ params }) {
               <>
                 <div className="flex flex-col">
                   <div className="flex justify-between max-md:flex-col">
-                    <h2 className="text-xl font-exo font-bold">
+                    <h2 className="text-xl text-blue-500 font-exo font-bold">
                       About the Course
                     </h2>
                   </div>
@@ -751,7 +754,7 @@ export default function Page({ params }) {
                 </div>
                 <div className="flex flex-col">
                   <div className="flex justify-between max-md:flex-col mt-8 mb-4">
-                    <h2 className="text-xl font-exo font-bold">
+                    <h2 className="text-xl text-blue-500 font-exo font-bold">
                       Skills You gain
                     </h2>
                   </div>
@@ -778,10 +781,12 @@ export default function Page({ params }) {
             {skill && (
               <>
                 <div className="my-4 sm:mb-0">
-                  <label htmlFor="skill">Create a skill</label>
+                  <label className=" text-blue-500" htmlFor="skill">
+                    Create a skill
+                  </label>
                   <div className="sm:pr-4">
                     <div className="relative w-full h-12 px-2 gap-4 flex items-center border-dark-400 rounded-md border mt-2 py-1.5">
-                      <label>Enter a new skill</label>
+                      <label className="">Enter a new skill</label>
                       <input
                         id="skill"
                         name="skill"
@@ -804,7 +809,10 @@ export default function Page({ params }) {
             )}
             {isAdmin && (
               <div className="w-full mt-4">
-                <label>Select Session</label>
+                {" "}
+                <label className="text-blue-500 font-semibold">
+                  Select Session
+                </label>
                 <select
                   value={selectedSession || ""}
                   onChange={handleChange}
@@ -815,10 +823,11 @@ export default function Page({ params }) {
                   </option>
                   {Array.isArray(sessions) && sessions.length > 0 ? (
                     sessions.map((session) => {
-                      // console.log("Mapping session:", session);
+                      console.log("Mapping session:", session);
+                      // Combine session_id and instructor_id in value
                       const optionValue = `${session?.session_name}|${session?.id}`;
                       return (
-                        <option key={session?.session_id} value={optionValue}>
+                        <option key={session?.id} value={optionValue}>
                           {session.session_name}
                         </option>
                       );
@@ -833,7 +842,10 @@ export default function Page({ params }) {
             )}
             {isInstructor && (
               <div className="w-full mt-4">
-                <label>Select Session</label>
+                {" "}
+                <label className="text-blue-500 font-semibold">
+                  Select Session
+                </label>
                 <select
                   value={selectedSession || ""}
                   onChange={handleChangeInstructor}
@@ -844,7 +856,7 @@ export default function Page({ params }) {
                   </option>
                   {Array.isArray(sessions) && sessions.length > 0 ? (
                     sessions.map((session) => {
-                      // console.log("Mapping session:", session);
+                      console.log("Mapping session:", session);
                       const optionValue = `${session.session_id}`;
                       return (
                         <option key={session.session_id} value={optionValue}>
@@ -863,8 +875,10 @@ export default function Page({ params }) {
               </div>
             )}
             <div className="flex flex-col gap-4">
-              <div className="flex justify-between items-center max-md:flex-col mt-4 mb-4">
-                <h2 className="text-xl font-exo font-bold">Modules</h2>
+              <div className="flex justify-between items-center max-md:flex-col mt-4">
+                <h2 className="text-xl font-exo text-blue-500 font-bold">
+                  Modules
+                </h2>
                 {!isStudent && (
                   <button
                     className=" flex justify-center items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl hover:bg-blue-700"
@@ -888,20 +902,48 @@ export default function Page({ params }) {
               </div>
 
               {isCreatingModule && (
-                <>
-                  <label className="">Module name</label>
+                <div>
+                  <div className="flex items-center justify-between max-md:flex-col">
+                    <label className="">Module name</label>
+                    <div className="flex items-center my-4">
+                      <span className="mr-4 text-md">Module Status</span>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={moduleStatus === 1}
+                          onChange={() =>
+                            setModuleStatus((prevStatus) =>
+                              prevStatus === 0 ? 1 : 0
+                            )
+                          }
+                          className="sr-only"
+                        />
+                        <div className="w-11 h-6 bg-blue-600 rounded-full"></div>
+                        <div
+                          className={`absolute w-4 h-4 bg-blue-300 rounded-full shadow-md transform transition-transform ${
+                            moduleStatus === 1
+                              ? "translate-x-5"
+                              : "translate-x-1"
+                          }`}
+                        ></div>
+                      </label>
+                      <span className="ml-4 text-md">
+                        {moduleStatus === 1 ? "Active" : "Inactive"}
+                      </span>
+                    </div>
+                  </div>
                   <input
-                    className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                    className="block w-full mb-4 outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
                     value={moduleName}
                     placeholder="Enter module name"
                     title="Enter module name"
                     onChange={(e) => setModuleName(e.target.value)}
                   />
-                  <label className=""> Description</label>
+                  <label className="my-4"> Description</label>
                   <input
                     placeholder="Enter module description"
                     title="Enter module description"
-                    className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                    className="block mt-4 w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
                     value={moduleDesc}
                     onChange={(e) => setModuleDesc(e.target.value)}
                   />
@@ -933,7 +975,7 @@ export default function Page({ params }) {
                       <FaCheck /> Create Module
                     </button>
                   </div>
-                </>
+                </div>
               )}
 
               {modules?.length > 0 ? (
@@ -946,6 +988,53 @@ export default function Page({ params }) {
                       <p className="text-dark-300 my-4"> Module {index + 1}</p>
                       {!isStudent && (
                         <div className="flex">
+                          {moduleId === module.id ? (
+                            <div className="flex items-center mx-4 mt-4">
+                              <span className="mr-4 text-md">
+                                Module Status
+                              </span>
+                              <label className="relative inline-flex items-center cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={moduleStatus === 1}
+                                  onChange={() =>
+                                    setModuleStatus((prevStatus) =>
+                                      prevStatus === 0 ? 1 : 0
+                                    )
+                                  }
+                                  className="sr-only"
+                                />
+                                <div className="w-11 h-6 bg-blue-600 rounded-full"></div>
+                                <div
+                                  className={`absolute w-4 h-4 bg-blue-300 rounded-full shadow-md transform transition-transform ${
+                                    moduleStatus === 1
+                                      ? "translate-x-5"
+                                      : "translate-x-1"
+                                  }`}
+                                ></div>
+                              </label>
+                              <span className="ml-4 text-md">
+                                {moduleStatus === 1 ? "Active" : "Inactive"}
+                              </span>
+                            </div>
+                          ) : (
+                            <p
+                              className={`flex justify-center px-4 mt-4 items-center gap-2 text-surface-100 rounded-lg mr-4 ${
+                                module?.status === 1
+                                  ? "bg-mix-300 w-[110px]"
+                                  : module?.status === 0
+                                  ? "bg-mix-200 w-[110px]"
+                                  : "bg-dark-700 w-110px]"
+                              }`}
+                            >
+                              {module.status === 0
+                                ? "Inactive"
+                                : module.status === 1
+                                ? "Active"
+                                : "-"}
+                            </p>
+                          )}
+
                           <button
                             className=" flex justify-center mt-4 items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-blue-700"
                             onClick={() => {
@@ -975,7 +1064,7 @@ export default function Page({ params }) {
                           >
                             <p className="flex justify-center items-center gap-2">
                               <FaTrash />
-                            </p>  
+                            </p>
                           </button>
                           {moduleId === module.id ? (
                             <>
@@ -1021,7 +1110,9 @@ export default function Page({ params }) {
                         }
                       />
                     ) : (
-                      <p className="font-bold my-2">{module.name}</p>
+                      <p className="font-bold text-blue-500 my-2">
+                        {module.name}
+                      </p>
                     )}
 
                     <p className="text-dark-400 my-2">

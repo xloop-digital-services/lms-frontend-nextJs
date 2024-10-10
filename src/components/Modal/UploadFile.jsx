@@ -133,7 +133,7 @@ const UploadContent = ({
                 </p>
               )}
               {error && (
-                <p className="text-[#ff4c4c] text-[13px] mt-2 border border-[#ff4c4c5f] p-1 px-4 rounded-lg">
+                <p className="text-mix-200 text-[13px] mt-2 border border-[#ff4c4c5f] p-1 px-4 rounded-lg">
                   {error}
                 </p>
               )}
