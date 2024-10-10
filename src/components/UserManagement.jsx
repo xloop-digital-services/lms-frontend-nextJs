@@ -13,6 +13,8 @@ import { CircularProgress } from "@mui/material";
 import useClickOutside from "@/providers/useClickOutside";
 import UserApprovalTable from "./UserApprovalTable";
 import { toast } from "react-toastify";
+import ApprovalUserModal from "./Modal/ApprovalUserModal";
+import UserModal from "./Modal/UserModal";
 
 const UserManagement = ({ heading, program, loadingProgram }) => {
   const { isSidebarOpen } = useSidebar();
@@ -49,6 +51,10 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   const [users, setUsers] = useState([]);
   const [message, setMessage] = useState("");
   const [count, setCount] = useState(0);
+
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [userID, setUserID] = useState("");
+  const [modal, setModal] = useState(false);
 
   const dropdownRef = useRef(null);
   const dropProgram = useRef(null);
@@ -200,7 +206,6 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   // console.log('courses Name', courses)
 
   const handleToggleSection = (section, id) => {
-   
     // Assign ProgramID or approvedProgramID based on heading
     if (heading === "Applicants") {
       setPorgramID(id);
@@ -254,6 +259,10 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
     setIsOpen(false);
+    setIsProgramSectionOpen(false);
+    setProgramSection(null);
+    setSkillSection(null);
+    setIsSkillSectionOpen(false);
   };
 
   const toggleStatusOpen = (e) => {
@@ -276,101 +285,248 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   const options = ["Student", "Instructor"];
 
   return (
-    <div
-      className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-32 font-inter ${
-        isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 pl-10 pr-4"
-      }`}
-      style={{
-        paddingBottom: "24px",
-        width: isSidebarOpen ? "81%" : "100%",
-        height: "100vh", // Set the height to full screen
-        overflow: "hidden", // Hide any overflow from the parent container
-      }}
-    >
+    <>
       <div
-        className="bg-surface-100 p-6 rounded-xl space-y-4"
+        className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-32 font-inter ${
+          isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 pl-10 pr-4"
+        }`}
         style={{
-          height: "100%", // Fill the remaining height
-          display: "flex",
-          flexDirection: "column",
+          paddingBottom: "24px",
+          width: isSidebarOpen ? "81%" : "100%",
+          height: "100vh", // Set the height to full screen
+          overflow: "hidden", // Hide any overflow from the parent container
         }}
       >
-        <div>
-          <p className="text-xl font-bold text-[#022567]">{heading}</p>
-        </div>
-        <div className="w-full flex items-center gap-4">
-          {/* <div className="flex grow">
+        <div
+          className="bg-surface-100 p-6 rounded-xl space-y-4"
+          style={{
+            height: "100%", // Fill the remaining height
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <div>
+            <p className="text-xl font-bold text-blue-500">{heading}</p>
+          </div>
+          <div className="w-full flex items-center gap-4">
+            {/* <div className="flex grow">
             <input
               type="text"
               placeholder="Search program by names"
               className="p-3 sm:text-base text-sm border border-[#92A7BE] rounded-lg outline-none w-full"
             />
           </div> */}
-          {/* <p><Se></Se></p> */}
-          <div className="w-full flex justify-end items-start">
-            <button
-              onClick={toggleOpen}
-              className="flex justify-between sm:text-base text-sm z-50 items-center w-full gap-1 md:w-[200px] text-[#92A7BE] hover:text-[#0e1721] px-4 py-3 text-left bg-white border  border-[#92A7BE] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
-            >
-              {selectedOption || options[0]}
-              <span className="">
-                <IoIosArrowDown />
-              </span>
-            </button>
-
-            {isOpen && (
-              <div
-                ref={dropdownRef}
-                className="absolute capitalize z-50 w-fit md:w-[200px] mt-14 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+            {/* <p><Se></Se></p> */}
+            <div className="w-full flex justify-end items-start">
+              <button
+                onClick={toggleOpen}
+                className="flex justify-between sm:text-base text-sm z-50 items-center w-full gap-1 md:w-[200px] text-[#92A7BE] hover:text-[#0e1721] px-4 py-3 text-left bg-white border  border-[#92A7BE] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
               >
-                {options.map((option, index) => (
+                {selectedOption || options[0]}
+                <span className="">
+                  <IoIosArrowDown />
+                </span>
+              </button>
+
+              {isOpen && (
+                <div
+                  ref={dropdownRef}
+                  className="absolute capitalize z-50 w-fit md:w-[200px] mt-14 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                >
+                  {options.map((option, index) => (
+                    <div
+                      key={index}
+                      onClick={() => handleOptionSelect(option)}
+                      className="p-2 cursor-pointer "
+                    >
+                      <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#0074EE] hover:font-semibold rounded-lg">
+                        {option}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+          <div
+            className="my-5 space-y-3 max-h-screen overflow-auto  scrollbar-webkit"
+            style={{
+              flexGrow: 1, // Allow this section to grow and take up remaining space
+            }}
+          >
+            {loadingProgram ? (
+              <div className="w-full h-full flex items-center justify-center">
+                <CircularProgress />
+              </div>
+            ) : selectedOption.toLowerCase() === "student" ? (
+              program && program.length > 0 ? (
+                // Display Program Logic
+                program.map((program) => (
                   <div
-                    key={index}
-                    onClick={() => handleOptionSelect(option)}
-                    className="p-2 cursor-pointer "
+                    className="border border-dark-300 w-full  px-4 rounded-lg cursor-pointer flex flex-col"
+                    key={program.id}
                   >
-                    <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#0074EE] hover:font-semibold rounded-lg">
-                      {option}
+                    <div className="flex nsm:flex-row flex-col space-y-2 justify-between items-center">
+                      <div
+                        className="flex gap-3 text-[17px] text-blue-500 py-4 font-semibold font-exo w-full"
+                        onClick={() =>
+                          handleToggleSection(program.name, program.id)
+                        }
+                      >
+                        {program.name}
+                        <div
+                          className="mt-1 text-[12px] text-blue-300 font-bold"
+                          title={`number of ${selectedStatus} applications`}
+                        >
+                          {heading === "Applicants" &&
+                          isProgramSectionOpen &&
+                          programSection === program.name ? (
+                            selectedStatus === "pending" ? (
+                              <p>( {pendingRequest} )</p>
+                            ) : selectedStatus === "approved" ? (
+                              <p className="tracking-wide flex gap-2">
+                                <span>( {approvedRequest} )</span>
+                                <span>
+                                  (verified: {verifiedRequest}, unverified:{" "}
+                                  {unverifiedRequest})
+                                </span>
+                              </p>
+                            ) : (
+                              <p>( {shortListRequest} )</p>
+                            )
+                          ) : (
+                            isProgramSectionOpen &&
+                            programSection === program.name && (
+                              <p>( {count} )</p>
+                            )
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        {heading === "Applicants" &&
+                          isProgramSectionOpen &&
+                          programSection === program.name && (
+                            <div className="z-20">
+                              <button
+                                onClick={toggleStatusOpen}
+                                className="flex justify-between z-30 items-center min-w-[200px] text-[#92A7BE] hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-[#92A7BE] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+                              >
+                                {/* {selectedStatus || status[0]} */}
+                                {selectedStatus
+                                  ? statusDisplayMap[selectedStatus]
+                                  : statusDisplayMap[status[0]]}
+                                <span>
+                                  <IoIosArrowDown />
+                                </span>
+                              </button>
+
+                              {statusOpen && (
+                                <div
+                                  ref={dropStatus}
+                                  className="absolute  z-40 min-w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                                >
+                                  {Object.entries(statusDisplayMap).length >
+                                  0 ? (
+                                    Object.entries(statusDisplayMap).map(
+                                      ([key, value], index) => (
+                                        <div
+                                          key={index}
+                                          onClick={() =>
+                                            handleStatusSelect(key)
+                                          }
+                                          className="p-2 cursor-pointer"
+                                        >
+                                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#0074EE] hover:font-semibold rounded-lg">
+                                            {value}{" "}
+                                          </div>
+                                        </div>
+                                      )
+                                    )
+                                  ) : (
+                                    <div>No status available</div>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                        <span className="">
+                          <IoIosArrowDown />
+                        </span>
+                      </div>
+                    </div>
+                    <div
+                      className={`transition-container ${
+                        isProgramSectionOpen && programSection === program.name
+                          ? "max-height-full"
+                          : "max-height-0"
+                      }`}
+                    >
+                      {isProgramSectionOpen &&
+                        programSection === program.name && (
+                          <div className="pb-4">
+                            {heading === "Applicants" ? (
+                              <DevelopmentTable
+                                loading={loading}
+                                selectedStatus={selectedStatus}
+                                selectedOption={selectedOption.toLowerCase()}
+                                userByProgramID={userByProgramID}
+                                message={message}
+                                setStatusUpdated={setStatusUpdated}
+                                statusUpdated={statusUpdated}
+                                setModal={setModal}
+                                setSelectedUser={setSelectedUser}
+                              />
+                            ) : (
+                              <UserApprovalTable
+                                loadingUsers={loadingUsers}
+                                selectedOption={selectedOption.toLowerCase()}
+                                applications={applications}
+                                locations={locations}
+                                userPrograms={userPrograms}
+                                userSkills={userSkills}
+                                users={users}
+                                message={message}
+                                count={count}
+                                approvedProgramID={approvedProgramID}
+                                setSelectedUser={setSelectedUser}
+                                setUserID={setUserID}
+                                setModal={setModal}
+                              />
+                            )}
+                          </div>
+                        )}
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-        <div
-          className="my-5 space-y-3 max-h-screen overflow-auto  scrollbar-webkit"
-          style={{
-            flexGrow: 1, // Allow this section to grow and take up remaining space
-          }}
-        >
-          {loadingProgram ? (
-            <div className="w-full h-full flex items-center justify-center">
-              <CircularProgress />
-            </div>
-          ) : selectedOption.toLowerCase() === "student" ? (
-            program && program.length > 0 ? (
-              // Display Program Logic
-              program.map((program) => (
+                ))
+              ) : (
+                <div className="text-dark-300 text-center">
+                  No programs found
+                </div>
+              )
+            ) : // Display Skills Logic
+            loadingSkills ? (
+              <div className="text-dark-300 text-center">Loading skills...</div>
+            ) : skills && skills.length > 0 ? (
+              skills.map((skill) => (
                 <div
-                  className="border border-dark-300 w-full  px-4 rounded-lg cursor-pointer flex flex-col"
-                  key={program.id}
+                  className="border border-dark-300 w-full px-4 rounded-lg cursor-pointer flex flex-col"
+                  key={skill.id}
                 >
                   <div className="flex nsm:flex-row flex-col space-y-2 justify-between items-center">
                     <div
-                      className="flex gap-3 text-[17px] text-[#022567] py-4 font-semibold font-exo w-full"
-                      onClick={() =>
-                        handleToggleSection(program.name, program.id)
-                      }
+                      className="flex gap-3 text-blue-500 text-[17px] p-4 font-semibold font-exo w-full"
+                      onClick={() => handleToggleSection(skill.name, skill.id)}
                     >
-                      {program.name}
+                      {skill.name}
                       <div
                         className="mt-1 text-[12px] text-blue-300 font-bold"
                         title={`number of ${selectedStatus} applications`}
                       >
                         {heading === "Applicants" &&
-                        isProgramSectionOpen &&
-                        programSection === program.name ? (
+                        isSkillSectionOpen &&
+                        skillSection === skill.name ? (
                           selectedStatus === "pending" ? (
                             <p>( {pendingRequest} )</p>
                           ) : selectedStatus === "approved" ? (
@@ -385,16 +541,16 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                             <p>( {shortListRequest} )</p>
                           )
                         ) : (
-                          isProgramSectionOpen &&
-                          programSection === program.name && <p>( {count} )</p>
+                          isSkillSectionOpen &&
+                          skillSection === skill.name && <p>( {count} )</p>
                         )}
                       </div>
                     </div>
 
                     <div className="flex items-center gap-2">
                       {heading === "Applicants" &&
-                        isProgramSectionOpen &&
-                        programSection === program.name && (
+                        isSkillSectionOpen &&
+                        skillSection === skill.name && (
                           <div className="z-20">
                             <button
                               onClick={toggleStatusOpen}
@@ -404,16 +560,13 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                               {selectedStatus
                                 ? statusDisplayMap[selectedStatus]
                                 : statusDisplayMap[status[0]]}
-                              <span>
+                              <span className="">
                                 <IoIosArrowDown />
                               </span>
                             </button>
 
                             {statusOpen && (
-                              <div
-                                ref={dropStatus}
-                                className="absolute  z-40 min-w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
-                              >
+                              <div className="absolute capitalize z-40 min-w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out">
                                 {Object.entries(statusDisplayMap).length > 0 ? (
                                   Object.entries(statusDisplayMap).map(
                                     ([key, value], index) => (
@@ -443,178 +596,90 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                   </div>
                   <div
                     className={`transition-container ${
-                      isProgramSectionOpen && programSection === program.name
+                      isSkillSectionOpen && skillSection === skill.name
                         ? "max-height-full"
                         : "max-height-0"
                     }`}
                   >
-                    {isProgramSectionOpen &&
-                      programSection === program.name && (
-                        <div className="pb-4">
-                          {heading === "Applicants" ? (
-                            <DevelopmentTable
-                              loading={loading}
-                              selectedStatus={selectedStatus}
-                              selectedOption={selectedOption.toLowerCase()}
-                              userByProgramID={userByProgramID}
-                              message={message}
-                              setStatusUpdated={setStatusUpdated}
-                              statusUpdated={statusUpdated}
-                            />
-                          ) : (
-                            <UserApprovalTable
-                              loadingUsers={loadingUsers}
-                              selectedOption={selectedOption.toLowerCase()}
-                              applications={applications}
-                              locations={locations}
-                              userPrograms={userPrograms}
-                              userSkills={userSkills}
-                              users={users}
-                              message={message}
-                              count={count}
-                              approvedProgramID={approvedProgramID}
-                            />
-                          )}
-                        </div>
-                      )}
+                    {isSkillSectionOpen && skillSection === skill.name && (
+                      <div className="pb-4">
+                        {heading === "Applicants" ? (
+                          <DevelopmentTable
+                            loading={loading}
+                            selectedStatus={selectedStatus}
+                            selectedOption={selectedOption.toLowerCase()}
+                            userByProgramID={userByProgramID}
+                            setStatusUpdated={setStatusUpdated}
+                            statusUpdated={statusUpdated}
+                          />
+                        ) : (
+                          <UserApprovalTable
+                            loadingUsers={loadingUsers}
+                            selectedOption={selectedOption.toLowerCase()}
+                            applications={applications}
+                            locations={locations}
+                            userPrograms={userPrograms}
+                            userSkills={userSkills}
+                            users={users}
+                            message={message}
+                            count={count}
+                            approvedProgramID={approvedProgramID}
+                            setSelectedUser={setSelectedUser}
+                            setUserID={setUserID}
+                            setModal={setModal}
+                          />
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               ))
             ) : (
-              <div className="text-dark-300 text-center">No programs found</div>
-            )
-          ) : // Display Skills Logic
-          loadingSkills ? (
-            <div className="text-dark-300 text-center">Loading skills...</div>
-          ) : skills && skills.length > 0 ? (
-            skills.map((skill) => (
-              <div
-                className="border border-dark-300 w-full px-4 rounded-lg cursor-pointer flex flex-col"
-                key={skill.id}
-              >
-                <div className="flex nsm:flex-row flex-col space-y-2 justify-between items-center">
-                  <div
-                    className="flex gap-3 text-[#022567] text-[17px] p-4 font-semibold font-exo w-full"
-                    onClick={() => handleToggleSection(skill.name, skill.id)}
-                  >
-                    {skill.name}
-                    <div
-                      className="mt-1 text-[12px] text-blue-300 font-bold"
-                      title={`number of ${selectedStatus} applications`}
-                    >
-                      {heading === "Applicants" &&
-                      isSkillSectionOpen &&
-                      skillSection === skill.name ? (
-                        selectedStatus === "pending" ? (
-                          <p>( {pendingRequest} )</p>
-                        ) : selectedStatus === "approved" ? (
-                          <p className="tracking-wide flex gap-2">
-                            <span>( {approvedRequest} )</span>
-                            <span>
-                              (verified: {verifiedRequest}, unverified:{" "}
-                              {unverifiedRequest})
-                            </span>
-                          </p>
-                        ) : (
-                          <p>( {shortListRequest} )</p>
-                        )
-                      ) : (
-                        isSkillSectionOpen &&
-                        skillSection === skill.name && <p>( {count} )</p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    {heading === "Applicants" &&
-                      isSkillSectionOpen &&
-                      skillSection === skill.name && (
-                        <div className="z-20">
-                          <button
-                            onClick={toggleStatusOpen}
-                            className="flex justify-between z-30 items-center min-w-[200px] text-[#92A7BE] hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-[#92A7BE] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
-                          >
-                            {/* {selectedStatus || status[0]} */}
-                            {selectedStatus
-                              ? statusDisplayMap[selectedStatus]
-                              : statusDisplayMap[status[0]]}
-                            <span className="">
-                              <IoIosArrowDown />
-                            </span>
-                          </button>
-
-                          {statusOpen && (
-                            <div className="absolute capitalize z-40 min-w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out">
-                              {Object.entries(statusDisplayMap).length > 0 ? (
-                                Object.entries(statusDisplayMap).map(
-                                  ([key, value], index) => (
-                                    <div
-                                      key={index}
-                                      onClick={() => handleStatusSelect(key)}
-                                      className="p-2 cursor-pointer"
-                                    >
-                                      <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#0074EE] hover:font-semibold rounded-lg">
-                                        {value}{" "}
-                                      </div>
-                                    </div>
-                                  )
-                                )
-                              ) : (
-                                <div>No status available</div>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                    <span className="">
-                      <IoIosArrowDown />
-                    </span>
-                  </div>
-                </div>
-                <div
-                  className={`transition-container ${
-                    isSkillSectionOpen && skillSection === skill.name
-                      ? "max-height-full"
-                      : "max-height-0"
-                  }`}
-                >
-                  {isSkillSectionOpen && skillSection === skill.name && (
-                    <div className="pb-4">
-                      {heading === "Applicants" ? (
-                        <DevelopmentTable
-                          loading={loading}
-                          selectedStatus={selectedStatus}
-                          selectedOption={selectedOption.toLowerCase()}
-                          userByProgramID={userByProgramID}
-                          setStatusUpdated={setStatusUpdated}
-                          statusUpdated={statusUpdated}
-                        />
-                      ) : (
-                        <UserApprovalTable
-                          loadingUsers={loadingUsers}
-                          selectedOption={selectedOption.toLowerCase()}
-                          applications={applications}
-                          locations={locations}
-                          userPrograms={userPrograms}
-                          userSkills={userSkills}
-                          users={users}
-                          message={message}
-                          count={count}
-                          approvedProgramID={approvedProgramID}
-                        />
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="text-dark-300 text-center">No skills found</div>
-          )}
+              <div className="text-dark-300 text-center">No skills found</div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+      <div>
+        {modal && selectedUser && (
+          <ApprovalUserModal
+            selectedOption={selectedOption.toLowerCase()}
+            setModal={setModal}
+            firstName={selectedUser.first_name}
+            lastName={selectedUser.last_name}
+            email={selectedUser.email}
+            resume={selectedUser.resume}
+            status={selectedUser.application_status}
+            id={userID}
+          />
+        )}
+      </div>
+      <div>
+        {modal && selectedUser && (
+          <UserModal
+            selectedOption={selectedOption}
+            setModal={setModal}
+            modal={modal}
+            firstName={selectedUser.first_name}
+            lastName={selectedUser.last_name}
+            dob={selectedUser.date_of_birth}
+            city={selectedUser.city || "-"}
+            email={selectedUser.email}
+            contact={selectedUser.contact || "-"}
+            status={selectedUser.application_status}
+            approvedStatus={selectedUser.account_status}
+            location={selectedUser.location}
+            program={selectedUser.program}
+            experience={selectedUser.years_of_experience}
+            resume={selectedUser.resume}
+            skill={selectedUser.skill}
+            id={selectedUser.id}
+            setStatusUpdated={setStatusUpdated}
+            statusUpdated={statusUpdated}
+          />
+        )}
+      </div>
+    </>
   );
 };
 

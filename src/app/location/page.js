@@ -87,7 +87,7 @@ export default function Page() {
         <div className="bg-surface-100 p-6 rounded-xl">
           <div className="w-full flex justify-between items-center gap-4">
             <div>
-              <p className="font-bold text-[#022567] text-xl">
+              <p className="font-bold text-blue-500 text-xl">
                 Locations Details
               </p>
             </div>

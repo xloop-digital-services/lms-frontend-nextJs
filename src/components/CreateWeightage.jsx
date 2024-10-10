@@ -74,10 +74,11 @@ export default function CreateWeightage({ courseId, onCreation, sessionId }) {
 
   return (
     <div>
-      <h2 className="text-lg my-4 font-exo text-[#022567] font-bold">
+      <h2 className="text-lg my-4 font-exo text-blue-500 font-bold">
         {" "}
         Weightages
       </h2>
+
       <div className="my-3">
         <label>Quiz Weightage</label>
         <input

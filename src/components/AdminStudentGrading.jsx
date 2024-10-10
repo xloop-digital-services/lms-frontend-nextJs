@@ -11,6 +11,7 @@ import {
 } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
 import { Try } from "@mui/icons-material";
+import { CircularProgress } from "@mui/material";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
@@ -21,6 +22,7 @@ const AdminStudentGrading = ({ courseId }) => {
   const [selectedAttendance, setSelectedAttendance] = useState({});
   const [loader, setLoader] = useState(false);
   const [instructorSessions, setInstructorSessions] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [adminSessions, setAdminSessions] = useState([]);
   const [id, setId] = useState();
   const group = userData?.Group;
@@ -35,36 +37,39 @@ const AdminStudentGrading = ({ courseId }) => {
   };
 
   async function fetchSessions() {
-    const response = await getInstructorSessionsbyCourseId(
-      userId,
-      group,
-      courseId
-    );
-    setLoader(true);
+    setLoading(true);
     try {
+      const response = await getInstructorSessionsbyCourseId(
+        userId,
+        group,
+        courseId
+      );
       if (response.status === 200) {
-        setInstructorSessions(response.data); // Store the sessions data
-        setLoader(false);
+        setInstructorSessions(response.data);
       } else {
         console.error("Failed to fetch sessions, status:", response.status);
       }
     } catch (error) {
       console.log("error", error);
+    } finally {
+      setLoading(false);
     }
   }
 
   async function fetchAttendanceAdmin() {
+    setLoading(true);
     try {
       const response = await getAttendanceBySessionId(selectedSessionId);
       if (response.status === 200) {
-        // Assuming response.data is the object returned by the API
-        console.log("attendence in students", response.data.data.students);
-        setAttendance(response.data.data.students); // Set attendance directly to the data array
+        // console.log("attendence in students", response.data.data.students);
+        setAttendance(response.data.data.students);
       } else {
         console.error("Failed to fetch attendance, status:", response.status);
       }
     } catch (error) {
       console.log("error", error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -112,8 +117,8 @@ const AdminStudentGrading = ({ courseId }) => {
   return (
     <div className="flex flex-col">
       <div>
-        {" "}
         <label className="text-blue-500 font-semibold">Select Session</label>
+
         <select
           value={selectedSessionId}
           onChange={handleChange}
@@ -127,7 +132,9 @@ const AdminStudentGrading = ({ courseId }) => {
           >
             Select a session
           </option>
-          {Array.isArray(instructorSessions.data) ? (
+
+          {Array.isArray(instructorSessions.data) &&
+          instructorSessions.data.length > 0 ? (
             instructorSessions.data.map((session) => (
               <option key={session.session_id} value={session.session_id}>
                 {session.location} - {session.course} - {session.no_of_student}{" "}
@@ -143,57 +150,68 @@ const AdminStudentGrading = ({ courseId }) => {
               </option>
             ))
           ) : (
-            <p className="text-center text-sm text-dark-300">
-              no session found
-            </p>
+            <option value="" disabled>
+              No session found
+            </option>
           )}
         </select>
       </div>
+
       <div className="-m-1.5 overflow-x-auto">
         <div className="p-1.5 min-w-full inline-block align-middle">
           <div className="border border-dark-300 rounded-lg divide-y divide-dark-200 dark:border-gray-700 dark:divide-gray-700">
             <div className="overflow-hidden rounded-lg">
-              <table className="min-w-full divide-y divide-dark-300 dark:divide-gray-700">
-                <thead className="bg-dark-100 text-[#022567] dark:bg-gray-700">
-                  <tr>
-                    <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]">
-                      Student ID
-                    </th>
-                    <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]">
-                      Student Name
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-dark-200 dark:divide-gray-700 overflow-y-scroll scrollbar-webkit">
-                  {attendance && attendance.length > 0 ? (
-                    attendance?.map((att, index) => {
-                      return (
-                        <tr key={index}>
-                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
-                            {att.registration_id}
-                          </td>
-                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 hover:text-blue-300">
-                            <Link
-                              href={`/students/course/${courseId}/student/${selectedSessionId}/${att.registration_id}/`}
-                            >
-                              {att.user}
-                            </Link>
-                          </td>
-                        </tr>
-                      );
-                    })
-                  ) : (
+              <div className="relative max-h-[54vh] overflow-y-auto scrollbar-webkit">
+                <table className="min-w-full divide-y divide-dark-300 dark:divide-gray-700">
+                  <thead className="bg-surface-100 text-blue-500 sticky top-0 z-10 shadow-sm shadow-dark-200">
                     <tr>
-                      <td
-                        colSpan="6"
-                        className="text-center text-sm text-dark-300 py-4"
-                      >
-                        No students found
-                      </td>
+                      <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]">
+                        Student ID
+                      </th>
+                      <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]">
+                        Student Name
+                      </th>
                     </tr>
-                  )}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-dark-200 dark:divide-gray-700 overflow-y-scroll scrollbar-webkit">
+                    {loading ? (
+                      <tr>
+                        <td colSpan="10" className="py-4 text-center">
+                          <div className="flex justify-center items-center w-full">
+                            <CircularProgress size={22} />
+                          </div>
+                        </td>
+                      </tr>
+                    ) : attendance && attendance.length > 0 ? (
+                      attendance?.map((att, index) => {
+                        return (
+                          <tr key={index}>
+                            <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                              {att.registration_id}
+                            </td>
+                            <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 hover:text-blue-300">
+                              <Link
+                                href={`/students/course/${courseId}/student/${selectedSessionId}/${att.registration_id}/`}
+                              >
+                                {att.user}
+                              </Link>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    ) : (
+                      <tr>
+                        <td
+                          colSpan="6"
+                          className="text-center text-sm text-dark-300 py-4"
+                        >
+                          No students found
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>

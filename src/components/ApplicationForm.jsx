@@ -371,7 +371,6 @@ export default function ApplicationForm() {
       !lastName ||
       !contactNumber ||
       !selectedCity ||
-      !birthDate ||
       (!experience && selectedRole !== "student") ||
       !locationId
     ) {
@@ -434,7 +433,7 @@ export default function ApplicationForm() {
           </div>
         )}
         <div>
-          <p className="text-center text-[#022567] font-exo text-2xl font-semibold py-2">
+          <p className="text-center text-blue-500 font-exo text-2xl font-semibold py-2">
             Registration Form
           </p>
         </div>

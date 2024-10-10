@@ -77,7 +77,7 @@ const QuizTable = () => {
                       15/07/2024
                     </td>
                     <td className="px-6 py-2 whitespace-nowrap text-sm text-surface-100 dark:text-gray-200 ">
-                      <p className="bg-[#18A07A] w-[90px] text-center px-4 py-2 text-[12px] rounded-lg">
+                      <p className="bg-mix-300 w-[90px] text-center px-4 py-2 text-[12px] rounded-lg">
                         Checked
                       </p>
                     </td>
@@ -109,7 +109,7 @@ const QuizTable = () => {
                       15/07/2024
                     </td>
                     <td className="px-6 py-2 whitespace-nowrap text-sm text-surface-100 dark:text-gray-200 ">
-                      <p className="bg-[#18A07A] w-[90px] text-center1 px-4 py-2 text-[12px] rounded-lg">
+                      <p className="bg-mix-300 w-[90px] text-center1 px-4 py-2 text-[12px] rounded-lg">
                         Checked
                       </p>
                     </td>
@@ -141,7 +141,7 @@ const QuizTable = () => {
                       15/07/2024
                     </td>
                     <td className="px-6 py-2 whitespace-nowrap text-sm text-surface-100 dark:text-gray-200 ">
-                      <p className="bg-[#18A07A] w-[90px] text-center px-4 py-2 text-[12px] rounded-lg">
+                      <p className="bg-mix-300 w-[90px] text-center px-4 py-2 text-[12px] rounded-lg">
                         Checked
                       </p>
                     </td>
@@ -173,7 +173,7 @@ const QuizTable = () => {
                       15/07/2024
                     </td>
                     <td className="px-6 py-2 whitespace-nowrap text-sm text-surface-100 dark:text-gray-200 ">
-                      <p className="bg-[#D84848] w-[90px] text-center px-4 py-2 text-[12px] rounded-lg">
+                      <p className="bg-mix-200 w-[90px] text-center px-4 py-2 text-[12px] rounded-lg">
                         Pending
                       </p>
                     </td>
@@ -205,7 +205,7 @@ const QuizTable = () => {
                       15/07/2024
                     </td>
                     <td className="px-6 py-2 whitespace-nowrap text-sm text-surface-100 dark:text-gray-200 ">
-                      <p className="bg-[#18A07A] w-[90px] text-center px-4 py-2 text-[12px] rounded-lg">
+                      <p className="bg-mix-300 w-[90px] text-center px-4 py-2 text-[12px] rounded-lg">
                         Checked
                       </p>
                     </td>
@@ -237,7 +237,7 @@ const QuizTable = () => {
                       15/07/2024
                     </td>
                     <td className="px-6 py-2 whitespace-nowrap text-sm text-surface-100 dark:text-gray-200 ">
-                      <p className="bg-[#18A07A] w-[90px] text-center px-4 py-2 text-[12px] rounded-lg">
+                      <p className="bg-mix-300 w-[90px] text-center px-4 py-2 text-[12px] rounded-lg">
                         Checked
                       </p>
                     </td>

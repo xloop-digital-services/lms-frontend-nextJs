@@ -274,7 +274,7 @@ export const GradingSection = ({
         onClick={() => handleToggleSection(title)}
       >
         <div className="flex flex-col">
-          <p className="text-[17px] font-semibold text-[#022567] font-exo">
+          <p className="text-[17px] font-semibold text-blue-500 font-exo">
             {title}
           </p>
           {selectedValue && (

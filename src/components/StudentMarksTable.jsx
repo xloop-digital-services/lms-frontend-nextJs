@@ -9,7 +9,7 @@ const StudentMarksTable = ({ field, assessments }) => {
             <div className="overflow-hidden rounded-lg">
               <div className="relative max-h-[55vh] overflow-y-auto scrollbar-webkit">
                 <table className="min-w-full divide-y divide-dark-300 dark:divide-gray-700">
-                  <thead className=" bg-[#ffff] text-[#022567] sticky top-0 z-10 shadow-sm shadow-dark-200">
+                  <thead className=" bg-surface-100 text-blue-500 sticky top-0 z-10 shadow-sm shadow-dark-200">
                     <tr>
                       <th
                         scope="col"
@@ -117,7 +117,10 @@ const StudentMarksTable = ({ field, assessments }) => {
                       })
                     ) : (
                       <tr>
-                        <td colSpan="10" className="text-center w-full py-4 text-dark-300">
+                        <td
+                          colSpan="10"
+                          className="text-center w-full py-4 text-dark-300"
+                        >
                           No data found
                         </td>
                       </tr>

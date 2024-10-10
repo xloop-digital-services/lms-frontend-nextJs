@@ -11,11 +11,12 @@ const UserApprovalTable = ({
   applications,
   locations,
   message,
+  setSelectedUser,
+  setUserID,
+  setModal,
 }) => {
-  const [modal, setModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [userID, setUserID] = useState("");
 
+ 
   const handleModal = (user, userApplication) => {
     setUserID(userApplication.id);
     setSelectedUser(user);
@@ -36,7 +37,7 @@ const UserApprovalTable = ({
               <div className="overflow-hidden">
                 <div className="relative max-h-[500px] overflow-y-auto scrollbar-webkit">
                   <table className="min-w-full divide-y divide-dark-200">
-                    <thead className="bg-[#ffff] text-[#022567]  sticky top-0 z-10 shadow-sm shadow-dark-200">
+                    <thead className="bg-surface-100 text-blue-500  sticky top-0 z-10 shadow-sm shadow-dark-200">
                       <tr>
                         <th
                           scope="col"
@@ -135,7 +136,7 @@ const UserApprovalTable = ({
                                   className={`${
                                     user?.application_status === "pending"
                                       ? "bg-[#DDF8EE] text-blue-300 border border-blue-300"
-                                      : "bg-[#18A07A]"
+                                      : "bg-mix-300"
                                   } w-[120px] text-center px-4 py-2 rounded-lg capitalize`}
                                 >
                                   {user?.application_status || "-"}
@@ -189,21 +190,7 @@ const UserApprovalTable = ({
           </div>
         </div>
       </div>
-      <div>
-        {modal && selectedUser && (
-          <ApprovalUserModal
-            selectedOption={selectedOption}
-            setModal={setModal}
-            modal={modal}
-            firstName={selectedUser.first_name}
-            lastName={selectedUser.last_name}
-            email={selectedUser.email}
-            resume={selectedUser.resume}
-            status={selectedUser.application_status}
-            id={userID}
-          />
-        )}
-      </div>
+      
     </>
   );
 };

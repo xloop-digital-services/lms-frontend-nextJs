@@ -139,7 +139,7 @@ const ApprovedTable = ({ selectedOption }) => {
                       </div>
                     </td>
                     <td>
-                      <p className="bg-[#D84848] text-[#fff] rounded-lg px-8 py-2 w-[100px]">
+                      <p className="bg-mix-200 text-[#fff] rounded-lg px-8 py-2 w-[100px]">
                         False
                       </p>
                     </td>
@@ -150,7 +150,7 @@ const ApprovedTable = ({ selectedOption }) => {
                       >
                         <IoMdCloseCircle
                           size={24}
-                          className="group-hover:text-[#D84848]"
+                          className="group-hover:text-mix-200"
                         />
                       </div>
                       <div
@@ -159,7 +159,7 @@ const ApprovedTable = ({ selectedOption }) => {
                       >
                         <FaCheckCircle
                           size={20}
-                          className="group-hover:text-[#18A07A]"
+                          className="group-hover:text-mix-300"
                         />
                       </div>
                     </td>
@@ -214,7 +214,7 @@ const ApprovedTable = ({ selectedOption }) => {
                       </div>
                     </td>
                     <td>
-                      <p className="bg-[#D84848] text-[#fff] rounded-lg px-8 py-2 w-[100px]">
+                      <p className="bg-mix-200 text-[#fff] rounded-lg px-8 py-2 w-[100px]">
                         False
                       </p>
                     </td>
@@ -225,7 +225,7 @@ const ApprovedTable = ({ selectedOption }) => {
                       >
                         <IoMdCloseCircle
                           size={24}
-                          className="group-hover:text-[#D84848]"
+                          className="group-hover:text-mix-200"
                         />
                       </div>
                       <div
@@ -234,7 +234,7 @@ const ApprovedTable = ({ selectedOption }) => {
                       >
                         <FaCheckCircle
                           size={20}
-                          className="group-hover:text-[#18A07A]"
+                          className="group-hover:text-mix-300"
                         />
                       </div>
                     </td>
@@ -246,8 +246,7 @@ const ApprovedTable = ({ selectedOption }) => {
                         <input
                           id="hs-table-pagination-checkbox-1"
                           type="checkbox"
-                          className="border-dark-200 rounded text-blue-600 focus:ring-blue-500 
-                          bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
+                          className="border-dark-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
                         />
                         <label
                           for="hs-table-pagination-checkbox-1"
@@ -290,7 +289,7 @@ const ApprovedTable = ({ selectedOption }) => {
                       </div>
                     </td>
                     <td>
-                      <p className="bg-[#D84848] text-[#fff] rounded-lg px-8 py-2 w-[100px]">
+                      <p className="bg-mix-200 text-[#fff] rounded-lg px-8 py-2 w-[100px]">
                         False
                       </p>
                     </td>
@@ -301,7 +300,7 @@ const ApprovedTable = ({ selectedOption }) => {
                       >
                         <IoMdCloseCircle
                           size={24}
-                          className="group-hover:text-[#D84848]"
+                          className="group-hover:text-mix-200"
                         />
                       </div>
                       <div
@@ -310,7 +309,7 @@ const ApprovedTable = ({ selectedOption }) => {
                       >
                         <FaCheckCircle
                           size={20}
-                          className="group-hover:text-[#18A07A]"
+                          className="group-hover:text-mix-300"
                         />
                       </div>
                     </td>

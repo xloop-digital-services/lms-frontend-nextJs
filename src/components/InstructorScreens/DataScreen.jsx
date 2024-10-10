@@ -39,7 +39,7 @@ const DataScreen = ({module}) => {
   return (
     <div>
       <div className='flex justify-between items-center'>
-        <p className='text-[18px] font-exo text-[#022567] font-semibold'>{selectedOption}</p>
+        <p className='text-[18px] font-exo text-blue-500 font-semibold'>{selectedOption}</p>
         <div className="group relative inline-block w-64" ref={dropdownRef}>
           <button
             onClick={toggleOpen}

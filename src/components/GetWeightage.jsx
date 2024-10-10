@@ -75,7 +75,7 @@ export default function GetWeightage({ weigh }) {
           <div className="border border-dark-300 rounded-lg divide-y divide-dark-200 dark:border-gray-700 dark:divide-gray-700">
             <div className="overflow-hidden rounded-lg">
               <table className="min-w-full divide-y divide-dark-300 dark:divide-gray-700">
-                <thead className="bg-[#fff] text-[#022567] shadow-sm shadow-dark-200">
+                <thead className="bg-surface-100 text-blue-500 shadow-sm shadow-dark-200">
                   <tr>
                     <th
                       scope="col"

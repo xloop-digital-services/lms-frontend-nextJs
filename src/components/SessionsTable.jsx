@@ -14,11 +14,15 @@ const SessionsTable = ({
   setLoading,
   updateSession,
   setUpdateSession,
+  setSelectedSession,
+  selectedSession,
+  setConfirmDelete,
+  confirmDelete
 }) => {
-  const [selectedSession, setSelectedSession] = useState(null);
+
   const [session, setSession] = useState(null);
   const [edit, setEdit] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState(false);
+
   const [updating, setUpdating] = useState(false);
   const [status, setStatus] = useState(null);
   const [editEndTime, setEditEndTime] = useState(null);
@@ -28,6 +32,8 @@ const SessionsTable = ({
   const [toggleWeek, setToggleWeek] = useState(false);
   const [selectedDays, setSelectedDays] = useState([]);
   const weekRef = useRef(null);
+  const [timeErrorMessage, setTimeErrorMessage] = useState("");
+
 
   useClickOutside(weekRef, () => setToggleWeek(false));
 
@@ -75,54 +81,56 @@ const SessionsTable = ({
     }
   };
 
+  const convertTimeToDate = (timeString) => {
+    const [hours, minutes] = timeString.split(":");
+    const date = new Date();
+    date.setHours(hours);
+    date.setMinutes(minutes);
+    date.setSeconds(0); // To avoid issues with slight second differences
+    return date;
+  };
+
   const handleStartTimeChange = (event) => {
-    // Get the value from the input field
-    const time = event.target.value; // 'HH:mm' format
+    const time = event.target.value;
+    setEditStartTime(time);
+    console.log("Start time:", time);
 
-    // Convert the time to a JavaScript Date object for comparison (if needed)
-    const [hours, minutes] = time.split(":");
-    const startTimeDate = new Date();
-    startTimeDate.setHours(hours);
-    startTimeDate.setMinutes(minutes);
-
-    // Update the state with the time string
-    setEditStartTime(time); // If you want to keep it in 'HH:mm' format
+    // Validate again when the start time changes, to reset any lingering errors
+    if (editEndTime && time) {
+      const startTimeDate = convertTimeToDate(time);
+      const endTimeDate = convertTimeToDate(editEndTime);
+      if (endTimeDate <= startTimeDate) {
+        setTimeErrorMessage("End time should be greater than start time");
+      } else {
+        setTimeErrorMessage(""); // Clear error if times are valid
+      }
+    }
   };
 
   const handleEndTimeChange = (event) => {
-    // Get the value from the input field
-    const time = event.target.value; // 'HH:mm' format
+    const time = event.target.value;
+    setEditEndTime(time);
+    console.log("End time:", time);
 
-    // Convert the time to a JavaScript Date object for comparison (if needed)
-    const [hours, minutes] = time.split(":");
-    const endTimeDate = new Date();
-    endTimeDate.setHours(hours);
-    endTimeDate.setMinutes(minutes);
+    if (editStartTime) {
+      const startTimeDate = convertTimeToDate(editStartTime);
+      const endTimeDate = convertTimeToDate(time);
 
-    // Update the state with the time string
-    setEditEndTime(time); // If you want to keep it in 'HH:mm' format
-
-    // Validate end time against start time
-    // if (startTime) {
-    //   const [startHours, startMinutes] = startTime.split(":");
-    //   const startTimeDate = new Date();
-    //   startTimeDate.setHours(startHours);
-    //   startTimeDate.setMinutes(startMinutes);
-
-    //   if (endTimeDate <= startTimeDate) {
-    //     setErrorMessage("End time should be greater than start time");
-    //   } else {
-    //     setErrorMessage("");
-    //   }
-    // } else {
-    //   setErrorMessage("");
-    // }
+      // Validate that end time is greater than start time
+      if (endTimeDate <= startTimeDate) {
+        setTimeErrorMessage("End time should be greater than start time");
+      } else {
+        setTimeErrorMessage(""); // Clear error when valid
+      }
+    } else {
+      setTimeErrorMessage(""); // Clear error if no start time
+    }
   };
 
   const handleUpdate = async () => {
     if (status === null || updating) return;
     if (editStartTime && editEndTime <= editStartTime) {
-      toast.error("End time should be greater than start time");
+      toast.error(timeErrorMessage);
     } else {
       setLoading(true);
       try {
@@ -157,21 +165,7 @@ const SessionsTable = ({
     setConfirmDelete(true);
   };
 
-  const handleDelete = async () => {
-    try {
-      setLoading(true);
-      const response = await DeleteSession(selectedSession);
-      console.log("deleting the session", response);
-      toast.success("Class schedule deleted successfully!");
-      setUpdateSession(!updateSession);
-      setConfirmDelete(false);
-      setLoading(false);
-    } catch (error) {
-      console.log("error while deleting the lcoation", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+ 
 
   return (
     <>
@@ -181,7 +175,7 @@ const SessionsTable = ({
             <div className="mt-4 border border-dark-300 rounded-lg divide-y divide-dark-200 dark:border-gray-700 dark:divide-gray-700">
               <div className="relative max-h-[75vh]  overflow-y-auto scrollbar-webkit">
                 <table className="min-w-full divide-y divide-dark-200 dark:divide-gray-700">
-                  <thead className="bg-[#ffff] text-[#022567] sticky top-0 z-10 shadow-sm shadow-dark-200">
+                  <thead className="bg-surface-100 text-blue-500 sticky top-0 z-10 shadow-sm shadow-dark-200">
                     <tr>
                       {/* <th
                       scope="col"
@@ -414,8 +408,8 @@ const SessionsTable = ({
                                       : "py-2"
                                   } ${
                                     session.status === 1
-                                      ? "bg-[#18A07A]"
-                                      : "bg-[#D84848]"
+                                      ? "bg-mix-300"
+                                      : "bg-mix-200"
                                   }  w-[100px] text-center text-[12px] rounded-lg`}
                                 >
                                   {!(edit && selectedSession === session.id) ? ( // Check if the current index is selected for editing
@@ -521,15 +515,7 @@ const SessionsTable = ({
           </div>
         </div>
       </div>
-      <div className="z-50 flex items-center justify-center bg-blue-400 bg-opacity-50">
-        {confirmDelete && (
-          <DeleteConfirmationPopup
-            setConfirmDelete={setConfirmDelete}
-            handleDelete={handleDelete}
-            field="session"
-          />
-        )}
-      </div>
+     
     </>
   );
 };

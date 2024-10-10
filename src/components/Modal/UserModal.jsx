@@ -152,8 +152,8 @@ const UserModal = ({
 
   useClickOutside(modalRef, () => setModal(false));
   return (
-    <div className="backDropOverlay min-h-screen flex  items-center cursor-default">
-      <div className="min-w-[75%]  z-[1000] mx-auto my-20 relative">
+    <div className="backDropOverlay h-screen flex justify-center items-center cursor-default">
+      <div className="w-[60%] z-[1000] mx-auto my-20 relative font-inter">
         {loading && (
           <div className="absolute inset-0 flex items-center justify-center bg-surface-100 bg-opacity-30 z-[1100]">
             <CircularProgress size={30} />
@@ -168,7 +168,7 @@ const UserModal = ({
                 lineHeight: "24.2px",
                 color: "#07224D",
               }}
-              className="text-start text-[#022567]  px-2 py-[10px]"
+              className="text-start text-blue-500  px-2 py-[10px]"
             >
               User Information
             </h1>
@@ -200,7 +200,7 @@ const UserModal = ({
                       : status === "short_listed"
                       ? " bg-[#B8BBBE]"
                       : approvedStatus === "verified"
-                      ? "bg-[#18A07A]"
+                      ? "bg-mix-300"
                       : "bg-mix-200  "
                   }  w-[120px] text-center px-4 py-2 rounded-lg capitalize`}
                 >
@@ -392,7 +392,7 @@ const UserModal = ({
                     </div>
                   </div>
                 </div>
-                <div className="group relative flex justify-center items-center text-[#D84848] text-sm font-bold">
+                <div className="group relative flex justify-center items-center text-mix-200 text-sm font-bold">
                   <div
                     className="shadow-md flex items-center group-hover:gap-2 p-3 rounded-full cursor-pointer duration-300"
                     onClick={() => {
@@ -410,7 +410,7 @@ const UserModal = ({
                   className={`group relative flex justify-center items-center ${
                     (enableApprovalButton || approvalByskill) &&
                     approvalByLocation
-                      ? "text-[#18A07A] cursor-pointer"
+                      ? "text-mix-300 cursor-pointer"
                       : "text-[#23e1ab] cursor-not-allowed"
                   } text-sm font-bold`}
                   disabled={

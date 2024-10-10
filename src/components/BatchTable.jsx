@@ -14,12 +14,16 @@ const BatchTable = ({
   setLoading,
   setUpdateBatch,
   updateBatch,
+  setConfirmDelete,
+  setSelectedBatch,
+  selectedBatch,
+  confirmDelete
 }) => {
   const [edit, setEdit] = useState(false);
-  const [selectedBatch, setSelectedBatch] = useState(null);
+ 
   const [batch, setbatch] = useState(null);
   const [status, setStatus] = useState(null);
-  const [confirmDelete, setConfirmDelete] = useState(false);
+ 
   const [updating, setUpdating] = useState(false);
   const [editYear, setEditYear] = useState(null);
   const [editEndDate, setEditEndDate] = useState(null);
@@ -91,19 +95,7 @@ const BatchTable = ({
     setConfirmDelete(true);
   };
 
-  const handleDelete = async () => {
-    try {
-      setLoading(true);
-      const response = await DeleteBatch(selectedBatch);
-      toast.success("Batch deleted successfully!");
-      console.log("deleting the batch", response);
-      setUpdateBatch(!updateBatch);
-      setConfirmDelete(false);
-      setLoading(false);
-    } catch (error) {
-      console.log("error while deleting the batch", error);
-    }
-  };
+  
 
   const handleEndDateChange = (event) => {
     setEditEndDate(event.target.value);
@@ -136,7 +128,7 @@ const BatchTable = ({
                   }
                 >
                   <table className=" min-w-full divide-y divide-dark-200 dark:divide-gray-700">
-                    <thead className="bg-[#ffff] text-[#022567] sticky top-0 z-10 shadow-sm shadow-dark-200">
+                    <thead className="bg-surface-100 text-blue-500 sticky top-0 z-10 shadow-sm shadow-dark-200">
                       <tr>
                         <th
                           scope="col"
@@ -322,8 +314,8 @@ const BatchTable = ({
                                       : "py-2"
                                   } ${
                                     batch.status === 1
-                                      ? "bg-[#18A07A]"
-                                      : "bg-[#D84848]"
+                                      ? "bg-mix-300"
+                                      : "bg-mix-200"
                                   }  w-[100px] text-center text-[12px] rounded-lg `}
                                 >
                                   {!(edit && selectedBatch === batch.batch) ? ( // Check if the current index is selected for editing
@@ -427,15 +419,7 @@ const BatchTable = ({
           </div>
         </div>
       </div>
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-        {confirmDelete && (
-          <DeleteConfirmationPopup
-            setConfirmDelete={setConfirmDelete}
-            handleDelete={handleDelete}
-            field="batch"
-          />
-        )}
-      </div>
+     
     </>
   );
 };
