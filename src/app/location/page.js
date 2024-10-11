@@ -4,7 +4,7 @@ import { useSidebar } from "@/providers/useSidebar";
 import LocationsTable from "@/components/LocationsTable";
 import { listAllLocations } from "@/api/route";
 import LocationModal from "@/components/Modal/LocationModal";
-import cityAreas from "../../../public/data/cityAreas.json";
+import cityAreas from "../../public/data/cityAreas.json";
 import useClickOutside from "@/providers/useClickOutside";
 import {
   IoIosArrowDown,
@@ -87,7 +87,7 @@ export default function Page() {
         <div className="bg-surface-100 p-6 rounded-xl">
           <div className="w-full flex justify-between items-center gap-4">
             <div>
-            <p className="font-bold font-exo text-blue-500 text-xl">
+              <p className="font-bold font-exo text-blue-500 text-xl">
                 Locations Details
               </p>
             </div>
@@ -96,7 +96,7 @@ export default function Page() {
                 <button
                   onClick={toggleCityOpen}
                   className={`${
-                    !isCitySelected ? " text-[#92A7BE]" : "text-[#424b55]"
+                    !isCitySelected ? " text-dark-500" : "text-[#424b55]"
                   } flex justify-between items-center md:w-[200px] w-[80%] hover:text-[#0e1721] p-4 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
                   {selectedCity}
@@ -137,7 +137,7 @@ export default function Page() {
                           onClick={() => handleCitySelect(city)}
                           className="p-2 cursor-pointer"
                         >
-                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#0074EE] hover:font-semibold rounded-lg">
+                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
                             {city}
                           </div>
                         </div>
@@ -148,7 +148,7 @@ export default function Page() {
               </div>
               <div>
                 <button
-                  className="text-[#fff] bg-[#0074EE] hover:bg-[#3272b6] p-4 md:px-8 rounded-lg hover:cursor-pointer"
+                  className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] p-4 md:px-8 rounded-lg hover:cursor-pointer"
                   onClick={handleLocationCreate}
                 >
                   Create a new location
@@ -189,7 +189,7 @@ export default function Page() {
           )}
         </div>
       </div>
-      <div >
+      <div>
         {openModal && (
           <LocationModal
             setOpenModal={setOpenModal}
