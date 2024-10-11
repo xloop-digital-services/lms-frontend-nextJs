@@ -262,14 +262,14 @@ const AdminMarksTable = ({
                                   Grade
                                 </button>
                               )}
-                              {assessment.remarks && (
+                              {/* {assessment.remarks && (
                                 <button
                                   title="Edit Grading"
-                                  className="ml-2 text-center flex items-center justify-center px-4 py-2 text-[12px] rounded-lg bg-blue-300 hover:bg-blue-700 text-surface-100"
+                                  className="ml-2 text-center flex items-center justify-center px-4 py-2 text-[12px] rounded-lg text-blue-300"
                                 >
                                   <FaEdit size={18} />
                                 </button>
-                              )}
+                              )} */}
                             </div>
                           </td>
                         </tr>
