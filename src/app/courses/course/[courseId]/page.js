@@ -824,7 +824,6 @@ export default function Page({ params }) {
                   {Array.isArray(sessions) && sessions.length > 0 ? (
                     sessions.map((session) => {
                       console.log("Mapping session:", session);
-                      // Combine session_id and instructor_id in value
                       const optionValue = `${session?.session_name}|${session?.id}`;
                       return (
                         <option key={session?.id} value={optionValue}>
