@@ -36,7 +36,7 @@ const BatchModal = ({
     { name: "Winter" },
     { name: "Spring" },
     { name: "Summer" },
-    { name: "Annual" },
+    // { name: "Annual" },
   ];
   const cityDown = useRef(null);
   const modalDown = useRef(null);
