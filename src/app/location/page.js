@@ -4,7 +4,7 @@ import { useSidebar } from "@/providers/useSidebar";
 import LocationsTable from "@/components/LocationsTable";
 import { listAllLocations } from "@/api/route";
 import LocationModal from "@/components/Modal/LocationModal";
-import cityAreas from "../../public/data/cityAreas.json";
+import cityAreas from "../../../public/data/cityAreas.json";
 import useClickOutside from "@/providers/useClickOutside";
 import {
   IoIosArrowDown,
