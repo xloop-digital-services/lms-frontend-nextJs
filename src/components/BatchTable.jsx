@@ -178,12 +178,12 @@ const BatchTable = ({
                         >
                           Status
                         </th>
-                        <th
+                        {/* <th
                           scope="col"
                           className="px-6 py-4 rounded-lg text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
                         >
                           Actions
-                        </th>
+                        </th> */}
                       </tr>
                     </thead>
                     {/* {updating && (
@@ -354,7 +354,7 @@ const BatchTable = ({
                                   )}
                                 </p>
                               </td>
-                              <td className="px-8 py-2 whitespace-nowrap text-blue-300 ">
+                              {/* <td className="px-8 py-2 whitespace-nowrap text-blue-300 ">
                                 <div className="flex gap-4">
                                   <div>
                                     {!(
@@ -398,7 +398,7 @@ const BatchTable = ({
                                     )}
                                   </div>
                                 </div>
-                              </td>
+                              </td> */}
                             </tr>
                           ))
                       ) : (

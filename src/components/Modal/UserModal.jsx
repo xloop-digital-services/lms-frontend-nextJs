@@ -168,7 +168,7 @@ const UserModal = ({
                 lineHeight: "24.2px",
                 color: "#07224D",
               }}
-              className="text-start text-blue-500  px-2 py-[10px]"
+              className="text-start text-blue-500 font-exo px-2 py-[10px]"
             >
               User Information
             </h1>
@@ -177,7 +177,7 @@ const UserModal = ({
             </button>
           </div>
           <div
-            className={`bg-surface-100 p-6 rounded-xl flex flex-col justify-start space-y-5 `}
+            className={`bg-surface-100 p-6 rounded-xl flex flex-col justify-start space-y-5 font-inter`}
           >
             {/* <div className=" flex justify-center items-center w-full">
               <Image src={image} className="w-[30%]" />
@@ -279,7 +279,7 @@ const UserModal = ({
                       ? status === "approved"
                         ? "Selected Program"
                         : "Areas of Interest"
-                      : "Skills set"}
+                      : "Skill Sets"}
                   </p>
                   <div className="space-y-2 ">
                     {selectedOption === "student" ? (
@@ -376,7 +376,7 @@ const UserModal = ({
                   <div
                     className={` ${
                       status === "short_listed" ? "hidden" : " flex"
-                    } group relative justify-center items-center text-[#0074EE] text-sm font-bold`}
+                    } group relative justify-center items-center text-blue-300 text-sm font-bold`}
                   >
                     <div
                       className={`shadow-md flex items-center group-hover:gap-2 p-3 rounded-full cursor-pointer duration-300`}

@@ -1,5 +1,6 @@
 {
   "routes": [
+    { "src": "/", "dest": "/auth/login" },
     { "src": "/_not-found", "dest": "/_not-found" },
     { "src": "/application", "dest": "/application" },
     { "src": "/application/submitted", "dest": "/application/submitted" },

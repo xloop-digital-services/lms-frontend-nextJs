@@ -313,17 +313,21 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
             <input
               type="text"
               placeholder="Search program by names"
-              className="p-3 sm:text-base text-sm border border-[#92A7BE] rounded-lg outline-none w-full"
+              className="p-3 sm:text-base text-sm border border-dark-500 rounded-lg outline-none w-full"
             />
           </div> */}
             {/* <p><Se></Se></p> */}
             <div className="w-full flex justify-end items-start">
               <button
                 onClick={toggleOpen}
-                className="flex justify-between sm:text-base text-sm z-50 items-center w-full gap-1 md:w-[200px] text-[#92A7BE] hover:text-[#0e1721] px-4 py-3 text-left bg-white border  border-[#92A7BE] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+                className="flex justify-between sm:text-base text-sm z-50 items-center w-full gap-1 md:w-[200px] text-dark-500 hover:text-[#0e1721] px-4 py-3 text-left bg-white border  border-dark-500 rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
               >
                 {selectedOption || options[0]}
-                <span className="">
+                <span
+                  className={`${
+                    isOpen ? "rotate-180 duration-300" : "duration-300"
+                  }`}
+                >
                   <IoIosArrowDown />
                 </span>
               </button>
@@ -339,7 +343,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                       onClick={() => handleOptionSelect(option)}
                       className="p-2 cursor-pointer "
                     >
-                      <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#0074EE] hover:font-semibold rounded-lg">
+                      <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
                         {option}
                       </div>
                     </div>
@@ -410,13 +414,19 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                             <div className="z-20">
                               <button
                                 onClick={toggleStatusOpen}
-                                className="flex justify-between z-30 items-center min-w-[200px] text-[#92A7BE] hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-[#92A7BE] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+                                className="flex justify-between z-30 items-center min-w-[200px] text-dark-500 hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-dark-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
                               >
                                 {/* {selectedStatus || status[0]} */}
                                 {selectedStatus
                                   ? statusDisplayMap[selectedStatus]
                                   : statusDisplayMap[status[0]]}
-                                <span>
+                                <span
+                                  className={`${
+                                    statusOpen
+                                      ? "rotate-180 duration-300"
+                                      : "duration-300"
+                                  }`}
+                                >
                                   <IoIosArrowDown />
                                 </span>
                               </button>
@@ -437,7 +447,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                                           }
                                           className="p-2 cursor-pointer"
                                         >
-                                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#0074EE] hover:font-semibold rounded-lg">
+                                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
                                             {value}{" "}
                                           </div>
                                         </div>
@@ -451,7 +461,14 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                             </div>
                           )}
 
-                        <span className="">
+                        <span
+                          className={`${
+                            isProgramSectionOpen &&
+                            programSection === program.name
+                              ? "rotate-180 duration-300"
+                              : "duration-300"
+                          }`}
+                        >
                           <IoIosArrowDown />
                         </span>
                       </div>
@@ -554,13 +571,19 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                           <div className="z-20">
                             <button
                               onClick={toggleStatusOpen}
-                              className="flex justify-between z-30 items-center min-w-[200px] text-[#92A7BE] hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-[#92A7BE] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+                              className="flex justify-between z-30 items-center min-w-[200px] text-dark-500 hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-dark-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
                             >
                               {/* {selectedStatus || status[0]} */}
                               {selectedStatus
                                 ? statusDisplayMap[selectedStatus]
                                 : statusDisplayMap[status[0]]}
-                              <span className="">
+                              <span
+                                className={`${
+                                  statusOpen
+                                    ? "rotate-180 duration-300"
+                                    : "duration-300"
+                                }`}
+                              >
                                 <IoIosArrowDown />
                               </span>
                             </button>
@@ -575,7 +598,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                                         onClick={() => handleStatusSelect(key)}
                                         className="p-2 cursor-pointer"
                                       >
-                                        <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#0074EE] hover:font-semibold rounded-lg">
+                                        <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
                                           {value}{" "}
                                         </div>
                                       </div>
@@ -589,7 +612,13 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                           </div>
                         )}
 
-                      <span className="">
+                      <span
+                        className={`${
+                          isSkillSectionOpen && skillSection === skill.name
+                            ? "rotate-180 duration-300"
+                            : "duration-300"
+                        }`}
+                      >
                         <IoIosArrowDown />
                       </span>
                     </div>
@@ -611,6 +640,8 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                             userByProgramID={userByProgramID}
                             setStatusUpdated={setStatusUpdated}
                             statusUpdated={statusUpdated}
+                            setModal={setModal}
+                            setSelectedUser={setSelectedUser}
                           />
                         ) : (
                           <UserApprovalTable
@@ -641,23 +672,24 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
         </div>
       </div>
       <div>
-        {modal && selectedUser && (
-          <ApprovalUserModal
-            selectedOption={selectedOption.toLowerCase()}
-            setModal={setModal}
-            firstName={selectedUser.first_name}
-            lastName={selectedUser.last_name}
-            email={selectedUser.email}
-            resume={selectedUser.resume}
-            status={selectedUser.application_status}
-            id={userID}
-          />
-        )}
-      </div>
-      <div>
-        {modal && selectedUser && (
+        {heading === "Verified Users" ? (
+          modal &&
+          selectedUser && (
+            <ApprovalUserModal
+              selectedOption={selectedOption.toLowerCase()}
+              setModal={setModal}
+              firstName={selectedUser.first_name}
+              lastName={selectedUser.last_name}
+              email={selectedUser.email}
+              resume={selectedUser.resume}
+              status={selectedUser.application_status}
+              id={userID}
+            />
+          )
+        ) : modal &&
+        selectedUser && (
           <UserModal
-            selectedOption={selectedOption}
+            selectedOption={selectedOption.toLowerCase()}
             setModal={setModal}
             modal={modal}
             firstName={selectedUser.first_name}

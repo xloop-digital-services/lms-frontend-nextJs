@@ -51,7 +51,7 @@ const LocationsTable = ({
         city: location.city,
         name: location.name,
         shortname: location.shortname,
-        status: status,
+        status: location.status,
       };
 
       const response = await UpdateLocation(selectedLocation, data);
@@ -183,53 +183,53 @@ const LocationsTable = ({
                             </td>
                             <td className="px-6 py-2 whitespace-nowrap flex w-full justify-start items-center text-sm text-surface-100">
                               <p
-                                className={`${
-                                  edit && selectedLocation === location.id
-                                    ? "py-0"
-                                    : "py-2"
-                                } ${
+                                className={`
+                                 
+                                ${
                                   location.status === 1
                                     ? "bg-mix-300"
                                     : "bg-mix-200"
-                                }  w-[100px] text-center text-[12px] rounded-lg`}
+                                }  w-[100px] text-center py-2 text-[12px] rounded-lg`}
                               >
-                                {!(edit && selectedLocation === location.id) ? ( // Check if the current index is selected for editing
-                                  (location.status === 1 && "Active") ||
-                                  (location.status === 0 && "Inactive")
-                                ) : (
-                                  <th
-                                    scope="col"
-                                    className=" text-center p-1 text-xs font-medium  text-gray-500 uppercase "
-                                  >
-                                    <select
-                                      className="bg-dark-300 bg-opacity-0 block p-2 w-full  border border-dark-200 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-[#1e785e] transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                                      defaultValue={
-                                        location.status === 1
-                                          ? "active"
-                                          : "inactive"
-                                      }
-                                      onChange={(e) =>
-                                        handleSetStatus(e.target.value)
-                                      } // Handle status change here
-                                    >
-                                      <option
-                                        value="active"
-                                        className="py-2 text-dark-900"
-                                      >
-                                        Active
-                                      </option>
-                                      <option
-                                        value="inactive"
-                                        className="py-2 text-dark-900"
-                                      >
-                                        Inactive
-                                      </option>
-                                    </select>
-                                  </th>
-                                )}
+                                {
+                                  // !(edit && selectedLocation === location.id) && // Check if the current index is selected for editing
+                                    ((location.status === 1 && "Active") ||
+                                      (location.status === 0 && "Inactive"))
+                                  // : (
+                                  //   <th
+                                  //     scope="col"
+                                  //     className=" text-center p-1 text-xs font-medium  text-gray-500 uppercase "
+                                  //   >
+                                  //     <select
+                                  //       className="bg-dark-300 bg-opacity-0 block p-2 w-full  border border-dark-200 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-[#1e785e] transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                                  //       defaultValue={
+                                  //         location.status === 1
+                                  //           ? "active"
+                                  //           : "inactive"
+                                  //       }
+                                  //       onChange={(e) =>
+                                  //         handleSetStatus(e.target.value)
+                                  //       } // Handle status change here
+                                  //     >
+                                  //       <option
+                                  //         value="active"
+                                  //         className="py-2 text-dark-900"
+                                  //       >
+                                  //         Active
+                                  //       </option>
+                                  //       <option
+                                  //         value="inactive"
+                                  //         className="py-2 text-dark-900"
+                                  //       >
+                                  //         Inactive
+                                  //       </option>
+                                  //     </select>
+                                  //   </th>
+                                  // )
+                                }
                               </p>
                             </td>
-                            <td className="px-8 py-2 whitespace-nowrap text-[#0074EE] ">
+                            <td className="px-8 py-2 whitespace-nowrap text-blue-300 ">
                               <div className="flex gap-4 justify-center items-center">
                                 <div>
                                   {!(

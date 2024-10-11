@@ -104,14 +104,14 @@ export default function Page() {
         <div className="bg-surface-100 p-6 rounded-xl">
           <div className="w-full mx-auto flex sm:flex-row flex-col sm:justify-between items-center gap-4 max-md:flex-col">
             <div>
-              <p className="font-bold text-blue-500 text-xl">Batch Details</p>
+              <p className="font-bold text-blue-500 text-xl font-exo">Batch Details</p>
             </div>
             <div className="flex gap-3 max-md:flex-col">
               <div>
                 <button
                   onClick={toggleCityOpen}
                   className={`${
-                    !isCitySelected ? " text-[#92A7BE]" : "text-[#424b55]"
+                    !isCitySelected ? " text-dark-500" : "text-[#424b55]"
                   } flex justify-between items-center  sm:w-[200px]   hover:text-[#0e1721] sm:p-4 px-2 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
                   {selectedCity}
@@ -157,7 +157,7 @@ export default function Page() {
               {/* <div>
               <button
                 onClick={toggleLocationOpen}
-                className="flex justify-between items-center md:w-[200px] text-[#92A7BE] group-hover:text-[#0e1721] px-4 py-4 text-sm text-left bg-surface-100 border  border-[#92A7BE] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+                className="flex justify-between items-center md:w-[200px] text-dark-500 group-hover:text-[#0e1721] px-4 py-4 text-sm text-left bg-surface-100 border  border-dark-500 rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
               >
                 {selectedLocation || location0ptions[0]}
                 <span className="">
@@ -173,7 +173,7 @@ export default function Page() {
                       onClick={() => handleLocationSelect(option)}
                       className="p-2 cursor-pointer "
                     >
-                      <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                      <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
                         {option}
                       </div>
                     </div>
@@ -184,7 +184,7 @@ export default function Page() {
               {/* <div>
               <button
                 onClick={toggleBatchOpen}
-                className="flex justify-between items-center md:w-[200px] text-[#92A7BE] group-hover:text-[#0e1721] px-4 py-4 text-sm text-left bg-surface-100 border  border-[#92A7BE] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+                className="flex justify-between items-center md:w-[200px] text-dark-500 group-hover:text-[#0e1721] px-4 py-4 text-sm text-left bg-surface-100 border  border-dark-500 rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
               >
                 {selectedBatch || batch0ptions[0]}
                 <span className="">
@@ -200,7 +200,7 @@ export default function Page() {
                       onClick={() => handleBatchSelect(option)}
                       className="p-2 cursor-pointer "
                     >
-                      <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                      <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
                         {option}
                       </div>
                     </div>

@@ -219,7 +219,7 @@ export default function Page() {
                 <button
                   onClick={toggleCityOpen}
                   className={`${
-                    !isCitySelected ? " text-[#92A7BE]" : "text-[#424b55]"
+                    !isCitySelected ? " text-dark-500" : "text-[#424b55]"
                   } flex justify-between items-center md:w-[200px] w-[80%] hover:text-[#0e1721] p-4 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
                   {selectedCity}
@@ -251,7 +251,7 @@ export default function Page() {
                         onClick={() => handleCitySelect(option)}
                         className="p-2 cursor-pointer"
                       >
-                        <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                        <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
                           {option.name}
                         </div>
                       </div>
@@ -265,7 +265,7 @@ export default function Page() {
                   <button
                     onClick={toggleLocationOpen}
                     className={`${
-                      !isLocationSelected ? " text-[#92A7BE]" : "text-[#424b55]"
+                      !isLocationSelected ? " text-dark-500" : "text-[#424b55]"
                     } flex justify-between items-center w-full  lg:w-[200px] gap-1 hover:text-[#0e1721] px-4 xlg:py-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                   >
                     {selectedLocation}
@@ -320,7 +320,7 @@ export default function Page() {
                 <button
                   onClick={toggleBatchOpen}
                   className={`${
-                    !isBatchSelected ? " text-[#92A7BE]" : "text-[#424b55]"
+                    !isBatchSelected ? " text-dark-500" : "text-[#424b55]"
                   } flex justify-between items-center w-full lg:w-[200px] gap-1 hover:text-[#0e1721] px-4 xlg:py-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                   >
                   {selectedBatch}
@@ -341,7 +341,7 @@ export default function Page() {
                           onClick={() => handleBatchSelect(option)}
                           className="p-2 cursor-pointer"
                         >
-                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
                             {option}
                           </div>
                         </div>
@@ -385,20 +385,21 @@ export default function Page() {
                 selectedSession={selectedSession}
                 confirmDelete={confirmDelete}
               />
-            ) : !isLocationSelected && sessions.length > 0 ? (
-              <SessionsTable
-                sessions={sessions}
-                loading={loading}
-                setLoading={setLoading}
-                setUpdateSession={setUpdateSession}
-                updateSession={updateSession}
-                setSelectedSession={setSelectedSession}
-                setConfirmDelete={setConfirmDelete}
-                selectedSession={selectedSession}
-                confirmDelete={confirmDelete}
-              />
             ) : (
-              <p>No class is scheduled in this location</p>
+              !isLocationSelected &&
+              sessions.length > 0 && (
+                <SessionsTable
+                  sessions={sessions}
+                  loading={loading}
+                  setLoading={setLoading}
+                  setUpdateSession={setUpdateSession}
+                  updateSession={updateSession}
+                  setSelectedSession={setSelectedSession}
+                  setConfirmDelete={setConfirmDelete}
+                  selectedSession={selectedSession}
+                  confirmDelete={confirmDelete}
+                />
+              )
             )}
           </div>
         </div>

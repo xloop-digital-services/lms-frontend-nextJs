@@ -26,7 +26,7 @@ import {
 import { useAuth } from "@/providers/AuthContext";
 
 function SideBar() {
-  const { isSidebarOpen, toggleSidebar   } = useSidebar();
+  const { isSidebarOpen, toggleSidebar } = useSidebar();
   const { logOutUser, userData } = useAuth();
   const isAdmin = userData?.Group === "admin";
   const isStudent = userData?.Group === "student";
@@ -126,7 +126,11 @@ function SideBar() {
                           User Management
                         </p>
                       </div>
-                      <button className="group-hover:cursor-pointer">
+                      <button
+                        className={`${
+                          isOpen ? "rotate-180 duration-300" : "duration-300"
+                        } group-hover:cursor-pointer`}
+                      >
                         <IoIosArrowDown size={22} />
                       </button>
                     </div>

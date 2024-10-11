@@ -17,9 +17,8 @@ const SessionsTable = ({
   setSelectedSession,
   selectedSession,
   setConfirmDelete,
-  confirmDelete
+  confirmDelete,
 }) => {
-
   const [session, setSession] = useState(null);
   const [edit, setEdit] = useState(false);
 
@@ -33,7 +32,7 @@ const SessionsTable = ({
   const [selectedDays, setSelectedDays] = useState([]);
   const weekRef = useRef(null);
   const [timeErrorMessage, setTimeErrorMessage] = useState("");
-
+  const [shouldOpenUpward, setShouldOpenUpward] = useState(false); // Determines dropdown direction
 
   useClickOutside(weekRef, () => setToggleWeek(false));
 
@@ -47,8 +46,18 @@ const SessionsTable = ({
     6: ["Sunday", "Sun"],
   };
 
-  const handleToggleWeekdays = () => {
-    setToggleWeek(true);
+  const handleToggleWeekdays = (e) => {
+    const dropdown = e.target.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+    const dropdownHeight = 220; // Approximate height of the dropdown
+
+    if (dropdown.bottom + dropdownHeight > windowHeight) {
+      setShouldOpenUpward(true); // Open upwards
+    } else {
+      setShouldOpenUpward(false); // Open downwards
+    }
+
+    setToggleWeek(!toggleWeek);
   };
 
   const handleDaySelect = (day) => {
@@ -143,7 +152,7 @@ const SessionsTable = ({
           end_date: session.end_date,
           start_time: editStartTime,
           end_time: editEndTime,
-          status: status,
+          status: session.status,
           days_of_week: selectedDays,
         };
 
@@ -165,17 +174,15 @@ const SessionsTable = ({
     setConfirmDelete(true);
   };
 
- 
-
   return (
     <>
       <div className="flex flex-col ">
         <div className="-m-1.5 overflow-x-auto">
           <div className="p-1.5 min-w-full inline-block align-middle">
-            <div className="mt-4 border border-dark-300 rounded-lg divide-y divide-dark-200 dark:border-gray-700 dark:divide-gray-700">
+            <div className="mt-4 border border-dark-300 rounded-lg divide-y divide-dark-200">
               <div className="relative max-h-[75vh]  overflow-y-auto scrollbar-webkit">
-                <table className="min-w-full divide-y divide-dark-200 dark:divide-gray-700">
-                  <thead className="bg-surface-100 text-blue-500 sticky top-0 z-10 shadow-sm shadow-dark-200">
+                <table className="min-w-full divide-y divide-dark-200 ">
+                  <thead className="bg-surface-100 text-blue-500 sticky top-0 z-50 shadow-sm shadow-dark-200">
                     <tr>
                       {/* <th
                       scope="col"
@@ -332,38 +339,54 @@ const SessionsTable = ({
                                   !(edit && selectedSession === session.id)
                                     ? "py-4 px-6"
                                     : "py-1 px-4"
-                                }  whitespace-nowrap text-sm max-w-[150px] `}
+                                }  whitespace-nowrap text-sm max-w-[170px]`}
                               >
                                 {!(edit && selectedSession === session.id) ? (
                                   session.days_of_week &&
                                   session.days_of_week.length > 0 ? (
-                                    session.days_of_week.map((day, index) => (
-                                      <span key={index}>
-                                        {WEEKDAYS[day][1]}{" "}
-                                        {/* Display the short name */}
-                                        {index <
-                                          session.days_of_week.length - 1 &&
-                                          ", "}{" "}
-                                        {/* Add comma separator except for the last item */}
-                                      </span>
-                                    ))
+                                    <div
+                                      title={session.days_of_week
+                                        .map((day) => WEEKDAYS[day][1])
+                                        .join(", ")}
+                                        className=" max-w-[170px] truncate"
+                                    >
+                                      {session.days_of_week.map(
+                                        (day, index) => (
+                                          <span
+                                            key={index}
+                                            
+                                          >
+                                            {WEEKDAYS[day][1]}
+                                            {index <
+                                              session.days_of_week.length - 1 &&
+                                              ", "}
+                                          </span>
+                                        )
+                                      )}
+                                    </div>
                                   ) : (
                                     "-"
                                   )
                                 ) : (
                                   <div className="space-y-2 text-[13px] w-full relative z-20">
                                     <button
-                                      onClick={handleToggleWeekdays}
-                                      className={`flex justify-between text-[#424b55] items-center min-w-[180px] hover:text-[#0e1721] px-2 py-2 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                                      onClick={(e) => handleToggleWeekdays(e)}
+                                      className={`flex justify-between text-[#424b55] items-center w-full hover:text-[#0e1721] px-2 py-2 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                                     >
-                                      <div className="flex  whitespace-nowrap">
+                                      <div className="flex whitespace-nowrap max-w-[150px] truncate">
                                         {selectedDays.length > 0
                                           ? selectedDays
                                               .map((day) => WEEKDAYS[day][1])
                                               .join(", ")
                                           : "Select days"}
                                       </div>
-                                      <span>
+                                      <span
+                                        className={
+                                          toggleWeek
+                                            ? "rotate-180 duration-300"
+                                            : "duration-300"
+                                        }
+                                      >
                                         <IoIosArrowDown />
                                       </span>
                                     </button>
@@ -371,7 +394,11 @@ const SessionsTable = ({
                                     {toggleWeek && (
                                       <div
                                         ref={weekRef}
-                                        className="absolute z-50 w-full max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                                        className={`absolute z-40 w-full max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out ${
+                                          shouldOpenUpward
+                                            ? "bottom-full"
+                                            : "top-full"
+                                        }`}
                                       >
                                         {Object.entries(WEEKDAYS).map(
                                           ([key, [fullName]]) => (
@@ -388,7 +415,7 @@ const SessionsTable = ({
                                                   : ""
                                               }`}
                                             >
-                                              <p className=" px-3 py-2">
+                                              <p className="px-3 py-2">
                                                 {fullName}
                                               </p>
                                             </div>
@@ -402,20 +429,17 @@ const SessionsTable = ({
 
                               <td className="px-6 py-2 whitespace-nowrap flex w-full justify-start items-center text-sm text-surface-100">
                                 <p
-                                  className={`${
-                                    edit && selectedSession === session.id
-                                      ? "py-0"
-                                      : "py-2"
-                                  } ${
-                                    session.status === 1
-                                      ? "bg-mix-300"
-                                      : "bg-mix-200"
-                                  }  w-[100px] text-center text-[12px] rounded-lg`}
+                                  className={`
+                                     ${
+                                       session.status === 1
+                                         ? "bg-mix-300"
+                                         : "bg-mix-200"
+                                     }  w-[100px] text-center py-2 text-[12px] rounded-lg`}
                                 >
-                                  {!(edit && selectedSession === session.id) ? ( // Check if the current index is selected for editing
-                                    (session.status === 1 && "Active") ||
-                                    (session.status === 0 && "Inactive")
-                                  ) : (
+                                  {/* {!(edit && selectedSession === session.id) ? ( // Check if the current index is selected for editing */}
+                                  {(session.status === 1 && "Active") ||
+                                    (session.status === 0 && "Inactive")}
+                                  {/* ) : (
                                     <th
                                       scope="col"
                                       className=" text-center p-1 text-xs font-medium  text-gray-500 uppercase "
@@ -445,10 +469,10 @@ const SessionsTable = ({
                                         </option>
                                       </select>
                                     </th>
-                                  )}
+                                  )} */}
                                 </p>
                               </td>
-                              <td className="px-8 py-2 whitespace-nowrap text-blue-300 ">
+                              <td className="px-6 py-2 whitespace-nowrap text-blue-300 ">
                                 <div className="flex gap-4">
                                   <div>
                                     {!(
@@ -463,7 +487,7 @@ const SessionsTable = ({
                                         title="update"
                                       />
                                     ) : (
-                                      <div className="flex gap-4">
+                                      <div className="flex gap-3">
                                         <IoCheckmark
                                           size={20}
                                           title="confirm update"
@@ -515,7 +539,6 @@ const SessionsTable = ({
           </div>
         </div>
       </div>
-     
     </>
   );
 };

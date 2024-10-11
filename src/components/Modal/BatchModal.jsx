@@ -29,7 +29,8 @@ const BatchModal = ({
   const [cityShortName, setCityShortName] = useState("");
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("Select category");
-  const [error, setError] = useState(""); 
+  const [isCategorySelected, setIsCategorySelected] = useState(false)
+  const [error, setError] = useState("");
   const categoryOptions = [
     { name: "Fall" },
     { name: "Winter" },
@@ -100,6 +101,7 @@ const BatchModal = ({
   const handleCategorySelect = (category) => {
     setSelectedCategory(category.name);
     setIsCategoryOpen(false);
+    setIsCategorySelected(true)
   };
 
   const handleStartDate = (event) => {
@@ -197,7 +199,7 @@ const BatchModal = ({
                 lineHeight: "24.2px",
                 color: "#022567",
               }}
-              className="text-start  px-2 xsm:py-[10px] pb-[5px]"
+              className="text-start  px-2 xsm:py-[10px] pb-[5px] font-exo"
             >
               Batch Creation
             </h1>
@@ -206,7 +208,7 @@ const BatchModal = ({
             </button>
           </div>
           <div
-            className={`bg-surface-100 xsm:p-6 px-3 py-4 rounded-xl xsm:space-y-5 space-y-2`}
+            className={`bg-surface-100 xsm:p-6 px-3 py-4 rounded-xl xsm:space-y-5 space-y-2 font-inter`}
           >
             <div className="flex  gap-3 mx-auto w-full justify-between">
               {/* <div className="space-y-2 text-[15px] w-full">
@@ -224,11 +226,15 @@ const BatchModal = ({
                 <button
                   onClick={toggleCityOpen}
                   className={`${
-                    !isCitySelected ? " text-[#92A7BE]" : "text-[#424b55]"
+                    !isCitySelected ? " text-dark-500" : "text-[#424b55]"
                   } flex justify-between items-center w-full  hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
                   {selectedCity}
-                  <span className="">
+                  <span
+                    className={`${
+                      isCityOpen ? "rotate-180 duration-300" : "duration-300"
+                    }`}
+                  >
                     <IoIosArrowDown />
                   </span>
                 </button>
@@ -315,13 +321,19 @@ const BatchModal = ({
                 <button
                   onClick={toggleCategoryOpen}
                   className={`${
-                    selectedCategory === "select category"
-                      ? " text-[#92A7BE]"
+                    !isCategorySelected
+                      ? " text-dark-500"
                       : "text-[#424b55]"
                   } flex justify-between items-center w-full hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
                   {selectedCategory}
-                  <span>
+                  <span
+                    className={`${
+                      isCategoryOpen
+                        ? "rotate-180 duration-300"
+                        : "duration-300"
+                    }`}
+                  >
                     <IoIosArrowDown />
                   </span>
                 </button>
