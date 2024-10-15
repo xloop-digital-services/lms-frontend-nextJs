@@ -18,6 +18,27 @@ import { CircularProgress } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { IoClose } from "react-icons/io5";
 
+export const handleFileUploadToS3 = async (file,category) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('category', category);
+
+
+  try {
+    const response = await fetch("/api/s3-upload", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+    console.log("data for s3", data);
+    const url = `${data.url}/${data.fileName}`;
+    return url;
+  } catch (error) {
+    console.log("uploading to s3 error", error);
+  }
+};
+
 export default function ApplicationForm() {
   const router = useRouter();
   const [selectedRole, setSelectedRole] = useState("");
@@ -351,6 +372,9 @@ export default function ApplicationForm() {
 
     setBirthDate(e.target.value);
   };
+
+  
+
   const handleApplicationCreation = async () => {
     setLoadingSubmit(true);
 
@@ -380,6 +404,9 @@ export default function ApplicationForm() {
     }
 
     try {
+      const s3Data = await handleFileUploadToS3(file, 'resumes');
+      console.log("S3 Data:", s3Data);
+
       const formData = new FormData();
       formData.append("email", email);
       formData.append("first_name", firstName);
@@ -402,7 +429,7 @@ export default function ApplicationForm() {
       }
       if (selectedRole !== "student") {
         formData.append("years_of_experience", parseInt(experience));
-        formData.append("resume", file);
+        formData.append("resume", s3Data);
         skillId.forEach((id) => {
           formData.append("required_skills", id);
         });
@@ -547,14 +574,10 @@ export default function ApplicationForm() {
                       : "text-[#424b55] py-2"
                   } flex justify-between items-center  w-full hover:text-[#0e1721] px-4 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
-                  {locationName.length > 0 ? (
-                    <div className="flex flex-wrap gap-2">
-                      {locationName.map((program, index) => (
-                        <>
-                          <span
-                            key={index}
-                            className="bg-[#d0e9f888] px-2 py-1 text-blue-300 rounded flex gap-1 items-center cursor-default"
-                          >
+                  {locationName.length > 0
+                    ? locationName.map((program, index) => (
+                        <div key={index} className="flex flex-wrap gap-2">
+                          <span className="bg-[#d0e9f888] px-2 py-1 text-blue-300 rounded flex gap-1 items-center cursor-default">
                             {program}
                             <span className="cursor-pointer hover:bg-[#0d192125]">
                               <IoClose
@@ -562,12 +585,9 @@ export default function ApplicationForm() {
                               />
                             </span>
                           </span>
-                        </>
-                      ))}
-                    </div>
-                  ) : (
-                    "Select your suitable locations"
-                  )}
+                        </div>
+                      ))
+                    : "Select your suitable locations"}
                   <span className="">
                     <IoIosArrowDown />
                   </span>
@@ -683,7 +703,9 @@ export default function ApplicationForm() {
               <div className=" relative space-y-2 text-[15px] w-full">
                 <p>
                   Programs
-                  <span className="text-[12px] text-dark-400">(maximum 3)</span>{" "}
+                  <span className="text-[12px] text-dark-400">
+                    (maximum 3)
+                  </span>{" "}
                 </p>
                 <button
                   onClick={toggleProgramOpen}

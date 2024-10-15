@@ -32,6 +32,7 @@ import { toast } from "react-toastify";
 import { Upload, UploadFile } from "@mui/icons-material";
 import UploadContent from "@/components/Modal/UploadFile";
 import DeleteConfirmationPopup from "@/components/Modal/DeleteConfirmationPopUp";
+import { handleFileUploadToS3 } from "@/components/ApplicationForm";
 
 export const downloadFile = async (filePath) => {
   console.log("ye raha", filePath);
@@ -299,11 +300,14 @@ export default function Page({ params }) {
         return;
       }
 
+      const s3Data = await handleFileUploadToS3(file, "Upload Modules");
+      console.log("S3 Data:", s3Data);
+
       const formData = new FormData();
       formData.append("name", moduleData.name);
       formData.append("description", moduleData.description);
       formData.append("course", moduleData.course);
-      formData.append("files", file);
+      formData.append("files", s3Data);
       formData.append("session", sessionId);
       formData.append("status", moduleStatus);
 
@@ -388,11 +392,14 @@ export default function Page({ params }) {
         }
       }
 
+      const s3Data = await handleFileUploadToS3(file, "Upload Modules");
+      console.log("S3 Data:", s3Data);
+
       const formData = new FormData();
       formData.append("name", moduleData.name);
       formData.append("description", moduleData.description);
       formData.append("course", moduleData.course);
-      formData.append("files", file);
+      formData.append("files", s3Data);
       formData.append("session", sessionId);
       formData.append("status", moduleStatus);
 
@@ -823,7 +830,8 @@ export default function Page({ params }) {
                   </option>
                   {Array.isArray(sessions) && sessions.length > 0 ? (
                     sessions.map((session) => {
-                      console.log("Mapping session:", session);
+                      // console.log("Mapping session:", session);
+                      // Combine session_id and instructor_id in value
                       const optionValue = `${session?.session_name}|${session?.id}`;
                       return (
                         <option key={session?.id} value={optionValue}>
@@ -855,7 +863,7 @@ export default function Page({ params }) {
                   </option>
                   {Array.isArray(sessions) && sessions.length > 0 ? (
                     sessions.map((session) => {
-                      console.log("Mapping session:", session);
+                      // console.log("Mapping session:", session);
                       const optionValue = `${session.session_id}`;
                       return (
                         <option key={session.session_id} value={optionValue}>

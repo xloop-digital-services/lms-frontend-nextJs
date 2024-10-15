@@ -1,5 +1,8 @@
 import { axiosInstance } from "@/config/config";
+
 const API = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+
 
 //signup api
 // export const SignUpUser = async (user) => {

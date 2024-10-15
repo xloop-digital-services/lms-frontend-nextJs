@@ -188,7 +188,7 @@ const StudentDataStructure = ({
                                   </>
                                 ) : (
                                   <>
-                                    {quiz.content === null ? (
+                                    {quiz.submitted_file === null ? (
                                       quiz.question || quiz.title
                                     ) : (
                                       <a
@@ -197,7 +197,7 @@ const StudentDataStructure = ({
                                         title="download"
                                         onClick={(e) => {
                                           e.preventDefault();
-                                          downloadFile(quiz.content);
+                                          downloadFile(quiz.submitted_file);
                                         }}
                                       >
                                         {quiz.question || quiz.title}

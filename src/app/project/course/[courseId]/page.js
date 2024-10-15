@@ -17,6 +17,7 @@ import { useAuth } from "@/providers/AuthContext";
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 import AdminDataStructure from "@/components/AdminDataStructure";
+import { handleFileUploadToS3 } from "@/components/ApplicationForm";
 
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
@@ -128,12 +129,16 @@ export default function Page({ params }) {
       setLoading(false);
       return;
     }
+
+    const s3Data = await handleFileUploadToS3(file, 'Upload Projects');
+    console.log("S3 Data:", s3Data);
+    
     const formData = new FormData();
     formData.append("course", courseId);
     formData.append("title", question);
     formData.append("description", description);
     if (file) {
-      formData.append("content", file);
+      formData.append("content", s3Data);
     }
     formData.append("due_date", dueDate);
     formData.append("no_of_resubmissions_allowed", resubmission);
@@ -320,7 +325,7 @@ export default function Page({ params }) {
                   </option>
                   {Array.isArray(sessions) && sessions.length > 0 ? (
                     sessions.map((session) => {
-                      console.log("Mapping session:", session);
+                      // console.log("Mapping session:", session);
                       // Combine session_id and instructor_id in value
                       const optionValue = `${session?.session_name}|${session?.id}`;
                       return (
@@ -355,7 +360,7 @@ export default function Page({ params }) {
                   </option>
                   {Array.isArray(sessions) && sessions.length > 0 ? (
                     sessions.map((session) => {
-                      console.log("Mapping session:", session);
+                      // console.log("Mapping session:", session);
                       const optionValue = `${session.session_id}`;
                       return (
                         <option key={session.session_id} value={optionValue}>

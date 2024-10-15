@@ -12,6 +12,7 @@ import {
 } from "@/api/route";
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
+import { handleFileUploadToS3 } from "../ApplicationForm";
 
 const ResubmissionModal = ({
   field,
@@ -83,12 +84,15 @@ const ResubmissionModal = ({
       return;
     }
 
-    const formData = new FormData();
-    formData.append(`submitted_file`, file);
-    formData.append("comments", comment);
-    formData.append(type, assignmentID);
-
     try {
+      const s3Data = await handleFileUploadToS3(file, type);
+      console.log("S3 Data:", s3Data);
+
+      const formData = new FormData();
+      formData.append(`submitted_file`, s3Data);
+      formData.append("comments", comment);
+      formData.append(type, assignmentID);
+
       const uploadFunctionMap = {
         quiz: resubmitQuiz,
         exam: resubmitExam,

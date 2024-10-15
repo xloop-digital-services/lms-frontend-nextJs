@@ -17,6 +17,7 @@ import { useAuth } from "@/providers/AuthContext";
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 import AdminDataStructure from "@/components/AdminDataStructure";
+import { handleFileUploadToS3 } from "@/components/ApplicationForm";
 
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
@@ -141,6 +142,8 @@ export default function Page({ params }) {
     }
   }
 
+
+
   const handleAssignmentCreation = async (event) => {
     event.preventDefault();
     setLoading(true);
@@ -150,12 +153,15 @@ export default function Page({ params }) {
       return;
     }
 
+    const s3Data = await handleFileUploadToS3(file, 'Upload Assignment');
+    console.log("S3 Data:", s3Data);
+
     const formData = new FormData();
     formData.append("course", courseId);
     formData.append("question", question);
     formData.append("description", description);
     if (file) {
-      formData.append("content", file);
+      formData.append("content", s3Data);
     }
     formData.append("due_date", dueDate);
     formData.append("no_of_resubmissions_allowed", resubmission);
