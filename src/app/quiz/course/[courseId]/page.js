@@ -146,7 +146,7 @@ export default function Page({ params }) {
       return;
     }
 
-    const s3Data = await handleFileUploadToS3(file, 'Upload Quiz');
+    const s3Data = await handleFileUploadToS3(file, "Upload Quiz");
     console.log("S3 Data:", s3Data);
 
     const formData = new FormData();
@@ -503,7 +503,8 @@ export default function Page({ params }) {
                       />
                       {currentAssignment && currentAssignment.content && (
                         <p className="text-sm text-gray-500 mt-2">
-                          Current file: {currentAssignment.content}
+                          Current file:{" "}
+                          {currentAssignment.content?.split("/").pop()}
                         </p>
                       )}
                     </div>

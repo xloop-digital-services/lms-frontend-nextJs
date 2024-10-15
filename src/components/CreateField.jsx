@@ -34,6 +34,8 @@ export default function CreateField({
   setChrLab,
   fetchAllSkills,
   create,
+  programAbb,
+  setProgramAbb,
 }) {
   const router = useRouter();
   const { isSidebarOpen } = useSidebar();
@@ -55,10 +57,12 @@ export default function CreateField({
       const storedProgramName = localStorage.getItem("programName");
       const storedShortDesc = localStorage.getItem("shortDesc");
       const storedAbout = localStorage.getItem("about");
+      const storedProgAbb = localStorage.getItem("programAbb");
 
       if (storedProgramName) setProgramName(storedProgramName);
       if (storedShortDesc) setShortDesc(storedShortDesc);
       if (storedAbout) setAbout(storedAbout);
+      if (storedProgAbb) setProgramAbb(storedProgAbb);
     }
   }, [title]);
 
@@ -89,6 +93,12 @@ export default function CreateField({
       localStorage.setItem("about", about);
     }
   }, [about, title]);
+
+  useEffect(() => {
+    if (title === "Program") {
+      localStorage.setItem("programAbb", programAbb);
+    }
+  }, [programAbb, title]);
 
   const handleAddModule = () => {
     setAddModule(!addModule);
@@ -182,26 +192,44 @@ export default function CreateField({
         }}
       >
         <div className="bg-surface-100 flex flex-col p-8 rounded-xl">
-        <h2 className="font-exo text-blue-500 text-xl font-bold">
+          <h2 className="font-exo text-blue-500 text-xl font-bold">
             Add a {title}
           </h2>
 
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col mt-4">
               <div className="my-4 sm:mb-0">
-                <label htmlFor="program-name">{title} Name</label>
-                <div className="sm:pr-4">
-                  <div className="relative flex items-center">
-                    <input
-                      id="program-name"
-                      value={programName}
-                      onChange={(e) => setProgramName(e.target.value)}
-                      name="program-name"
-                      type="text"
-                      placeholder="Enter the program name"
-                      className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
-                    />
+                <div className="sm:pr-4 flex w-full max-md:flex-col">
+                  <div className="w-full">
+                    <label htmlFor="program-name">{title} Name</label>
+                    <div className="relative flex items-center">
+                      <input
+                        id="program-name"
+                        value={programName}
+                        onChange={(e) => setProgramName(e.target.value)}
+                        name="program-name"
+                        type="text"
+                        placeholder="Enter the program name"
+                        className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                      />
+                    </div>
                   </div>
+                  {route === "program" && (
+                    <div className="ml-2 max-md:mt-4 max-md:ml-0">
+                      <label htmlFor="program-abb">{title} Abbreviation</label>
+                      <div className="relative flex items-center">
+                        <input
+                          id="program-abb"
+                          value={programAbb}
+                          onChange={(e) => setProgramAbb(e.target.value)}
+                          name="program-abb"
+                          type="text"
+                          placeholder="Enter program abbreviation"
+                          className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 

@@ -19,6 +19,7 @@ const CourseHead = ({
   title,
   program,
   haveStatus,
+  programAbb,
   // setFetch,
 }) => {
   const { userData } = useAuth();
@@ -87,7 +88,7 @@ const CourseHead = ({
             <div className="flex my-2 justify-center items-center ">
               {program === "program" ? (
                 <h2 className="text-blue-500 font-exo text-xl font-bold">
-                  {programData.name}
+                  {`${programData.name} ${programAbb ? `(${programAbb})` : ""}`}
                 </h2>
               ) : (
                 <h2 className="font-exo text-blue-500 text-xl font-bold">

@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { CircularProgress } from "@mui/material";
 import {
+  editAssignmentGrading,
+  editExamGrading,
+  editProjectGrading,
+  editQuizGrading,
   updateAssignmentGrading,
   updateExamGrading,
   updateProjectGrading,
@@ -20,6 +24,8 @@ const AdminMarksTable = ({
   const [loading, setLoading] = useState(true);
   const [editData, setEditData] = useState({});
   const [isEditing, setIsEditing] = useState(null);
+  const [isUpdatingId, setIsUpdatingId] = useState(null);
+  const [updatingGrade, setUpdatingGrade] = useState(false);
   const [gradedAssessments, setGradedAssessments] = useState({});
 
   useEffect(() => {
@@ -31,6 +37,8 @@ const AdminMarksTable = ({
 
   const handleEditClick = (id, assessment) => {
     setIsEditing(id);
+    setUpdatingGrade(true);
+    // console.log(id);
     setEditData({
       total_marks: assessment?.total_marks || 0,
       marks_obtain: assessment?.marks_obtain || 0,
@@ -88,6 +96,65 @@ const AdminMarksTable = ({
       if (response.status === 200 || response.status === 201) {
         toast.success("Graded successfully");
         setIsEditing(null);
+        setFetch(true);
+        setGradedAssessments((prev) => ({
+          ...prev,
+          [id]: true,
+        }));
+      } else {
+        toast.error("Error grading the student", response?.message);
+      }
+    } catch (error) {
+      console.error("Failed to grade", error);
+      toast.error("Failed to grade the assessment", error);
+    }
+  };
+
+  const handleEditGrading = (id) => {
+    setIsUpdatingId(id);
+    console.log(id);
+  };
+
+  const handleUpdateGrade = async (id, isUpdatingId) => {
+    if (editData.marks_obtain > editData.total_grade) {
+      toast.error("Obtained marks are greater than total marks.");
+      return;
+    }
+    try {
+      const data = {
+        total_grade: editData.total_marks,
+        grade: editData.marks_obtain,
+        feedback: editData.remarks,
+        // assignment: editData.assignment_id,
+        registration_id: editData.registration_id,
+        submission: id,
+        // submission_id: status === "Submitted" && id ? id : null,
+      };
+
+      if (title === "Quiz" && id) {
+        data.quiz_submissions = id;
+      } else if (title === "Assignment") {
+        data.submission = id || null;
+      } else if (title === "Exam" && id) {
+        data.exam_submission = id;
+      } else if (title === "Project" && id) {
+        data.project_submissions = id;
+      }
+
+      let response;
+      if (title === "Quiz") {
+        response = await editQuizGrading(isUpdatingId, data);
+      } else if (title === "Assignment") {
+        response = await editAssignmentGrading(isUpdatingId, data);
+      } else if (title === "Exam") {
+        response = await editExamGrading(isUpdatingId, data);
+      } else if (title === "Project") {
+        response = await editProjectGrading(isUpdatingId, data);
+      }
+
+      if (response.status === 200) {
+        toast.success("Grade updated successfully");
+        setUpdatingGrade(false);
         setFetch(true);
         setGradedAssessments((prev) => ({
           ...prev,
@@ -262,14 +329,18 @@ const AdminMarksTable = ({
                                   Grade
                                 </button>
                               )}
-                              {/* {assessment.remarks && (
-                                <button
-                                  title="Edit Grading"
-                                  className="ml-2 text-center flex items-center justify-center px-4 py-2 text-[12px] rounded-lg text-blue-300"
-                                >
-                                  <FaEdit size={18} />
-                                </button>
-                              )} */}
+                              {/* {assessment.remarks &&
+                                assessment.status === "Submitted" && (
+                                  <button
+                                    title="Edit Grading"
+                                    onClick={() =>
+                                      handleEditGrading(assessment.grading_id)
+                                    }
+                                    className="ml-2 text-center flex items-center justify-center px-4 py-2 text-[12px] rounded-lg text-blue-300"
+                                  >
+                                    <FaEdit size={18} />
+                                  </button>
+                                )} */}
                             </div>
                           </td>
                         </tr>

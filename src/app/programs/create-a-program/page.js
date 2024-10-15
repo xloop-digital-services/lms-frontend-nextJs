@@ -11,6 +11,7 @@ export default function Page() {
   const [programName, setProgramName] = useState("");
   const [coursesNames, setCoursesNames] = useState("");
   const [about, setAbout] = useState("");
+  const [programAbb, setProgramAbb] = useState("");
   const [shortDesc, setShortDesc] = useState("");
   const router = useRouter();
 
@@ -32,6 +33,7 @@ export default function Page() {
     event.preventDefault();
     const program = {
       name: programName,
+      program_abb: programAbb,
       short_description: shortDesc,
       about: about,
       courses: inputCourses,
@@ -45,6 +47,7 @@ export default function Page() {
         setCoursesNames([]);
         setProgramName("");
         setShortDesc("");
+        setProgramAbb("");
       } else {
         toast.error(response.data?.message);
       }
@@ -52,11 +55,12 @@ export default function Page() {
       toast.error(`Error creating program: ${error.message}`);
     }
     localStorage.removeItem("programName");
+    localStorage.removeItem("programAbb");
     localStorage.removeItem("shortDesc");
     localStorage.removeItem("about");
 
-    // Optionally, reset the state if needed
     setProgramName("");
+    setProgramAbb("");
     setShortDesc("");
     setAbout("");
   };
@@ -103,7 +107,8 @@ export default function Page() {
         setCreatingProgram={setCreatingProgram}
         courses={courses}
         removeCourse={removeCourse}
-        
+        programAbb={programAbb}
+        setProgramAbb={setProgramAbb}
       />
     </div>
   );

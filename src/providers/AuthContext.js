@@ -46,7 +46,7 @@ export function AuthProvider({ children }) {
     setLoading(true);
     try {
       const response = await axios.post(
-        `${API}/login/`,
+        `${API}/api/login/`,
         { email, password },
         { headers: { "Content-Type": "application/json" } }
       );
@@ -92,7 +92,7 @@ export function AuthProvider({ children }) {
         draggable: true,
         progress: undefined,
       });
-      setLoading(false); 
+      setLoading(false);
       if (error.message === "Network Error") {
         toast.error(error.message, "Check your internet connection");
       }

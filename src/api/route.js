@@ -7,7 +7,7 @@ const API = process.env.NEXT_PUBLIC_BACKEND_URL;
 //signup api
 // export const SignUpUser = async (user) => {
 //   try {
-//     const response = await axiosInstance.post(`/auth/create/`,user);
+//     const response = await axiosInstance.post(`/api/auth/create/`,user);
 //     return response;
 //   } catch (error) {
 //     throw error;
@@ -17,7 +17,7 @@ const API = process.env.NEXT_PUBLIC_BACKEND_URL;
 // //login api
 // export const LoginUser = async (user) => {
 //   try {
-//     const response = await axiosInstance.post(`/auth/login/`,user);
+//     const response = await axiosInstance.post(`/api/auth/login/`,user);
 //     return response;
 //   } catch (error) {
 //     throw error;
@@ -27,7 +27,7 @@ const API = process.env.NEXT_PUBLIC_BACKEND_URL;
 //get user sessions
 export const getUserSessions = async () => {
   try {
-    const response = await axiosInstance.get(`/user-details/`);
+    const response = await axiosInstance.get(`/api/user-details/`);
     return response;
   } catch (error) {
     throw error;
@@ -37,7 +37,7 @@ export const getUserSessions = async () => {
 //submit user application
 export const submitApplication = async (data) => {
   try {
-    const response = await axiosInstance.post("/applications/", data, {
+    const response = await axiosInstance.post(`/api/applications/`, data, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -51,7 +51,10 @@ export const submitApplication = async (data) => {
 //reset password
 export const resetPassword = async (email) => {
   try {
-    const response = await axiosInstance.post(`/reset-password-email/`, email);
+    const response = await axiosInstance.post(
+      `/api/reset-password-email/`,
+      email
+    );
     return response;
   } catch (error) {
     throw error;
@@ -61,7 +64,7 @@ export const resetPassword = async (email) => {
 export const setNewPassword = async (data, u_id, token) => {
   try {
     const response = await axiosInstance.post(
-      `/reset-password/${u_id}/${token}/`,
+      `/api/reset-password/${u_id}/${token}/`,
       data
     );
     return response;
@@ -73,7 +76,7 @@ export const setNewPassword = async (data, u_id, token) => {
 //get user profile api
 export const getUserProfile = async () => {
   try {
-    const response = await axiosInstance.get(`/user-profile/`);
+    const response = await axiosInstance.get(`/api/user-profile/`);
     return response;
   } catch (error) {
     throw error;
@@ -83,7 +86,10 @@ export const getUserProfile = async () => {
 //update profile
 export const updateUserProfile = async (user) => {
   try {
-    const response = await axiosInstance.patch(`/user-profile-update/`, user);
+    const response = await axiosInstance.patch(
+      `/api/user-profile-update/`,
+      user
+    );
     return response;
   } catch (error) {
     throw error;
@@ -92,7 +98,7 @@ export const updateUserProfile = async (user) => {
 
 export const changePassword = async (data) => {
   try {
-    const response = await axiosInstance.post(`/change-password/`, data);
+    const response = await axiosInstance.post(`/api/change-password/`, data);
     return response;
   } catch (error) {
     throw error;
@@ -102,7 +108,7 @@ export const changePassword = async (data) => {
 //get all courses
 export const getAllCourses = async () => {
   try {
-    const response = await axiosInstance.get(`/course/courses/`);
+    const response = await axiosInstance.get(`/api/course/courses/`);
     return response;
   } catch (error) {
     throw error;
@@ -112,7 +118,7 @@ export const getAllCourses = async () => {
 export const getCourseByProgId = async (progId) => {
   try {
     const response = await axiosInstance.get(
-      `/course/programs/${progId}/courses/`
+      `/api/course/programs/${progId}/courses/`
     );
     return response;
   } catch (error) {
@@ -124,7 +130,7 @@ export const getCourseByProgId = async (progId) => {
 export const getInstructorCourses = async (insId) => {
   try {
     const response = await axiosInstance.get(
-      `/instructor-courses/?instructor_id=${insId}`
+      `/api/instructor-courses/?instructor_id=${insId}`
     );
     return response;
   } catch (error) {
@@ -136,7 +142,7 @@ export const getInstructorCourses = async (insId) => {
 export const getProgramByRegId = async (regId) => {
   try {
     const response = await axiosInstance.get(
-      `course/programs/student/${regId}/`
+      `/api/course/programs/student/${regId}/`
     );
     return response;
   } catch (error) {
@@ -147,7 +153,7 @@ export const getProgramByRegId = async (regId) => {
 //get course by id
 export const getCourseById = async (id) => {
   try {
-    const response = await axiosInstance.get(`/course/courses/${id}/`);
+    const response = await axiosInstance.get(`/api/course/courses/${id}/`);
     return response;
   } catch (error) {
     throw error;
@@ -158,7 +164,7 @@ export const getCourseById = async (id) => {
 export const getModuleByCourseId = async (courseId, sessionId) => {
   try {
     const response = await axiosInstance.get(
-      `/course/courses/${courseId}/modules/session/${sessionId}/`
+      `/api/course/courses/${courseId}/modules/session/${sessionId}/`
     );
     return response;
   } catch (error) {
@@ -176,7 +182,7 @@ export const getAssignmentsByCourseId = async (
   try {
     const response = await axiosInstance.get(
       // `/course/assignments/course/${id}/`
-      `course/assignments/course/${courseId}/session/${sessionId}/`
+      `/api/course/assignments/course/${courseId}/session/${sessionId}/`
     );
     return response;
   } catch (error) {
@@ -188,7 +194,7 @@ export const getAssignmentsByCourseId = async (
 export const getPendingAssignments = async (progId, regId) => {
   try {
     const response = await axiosInstance.get(
-      `course/programs/${progId}/students/${regId}/pending-assignments/`
+      `/api/course/programs/${progId}/students/${regId}/pending-assignments/`
     );
     return response;
   } catch (error) {
@@ -200,7 +206,7 @@ export const getPendingAssignments = async (progId, regId) => {
 export const getQuizByCourseId = async (courseId, sessionId) => {
   try {
     const response = await axiosInstance.get(
-      `/course/quizzes/course/${courseId}/session/${sessionId}/`
+      `/api/course/quizzes/course/${courseId}/session/${sessionId}/`
     );
     return response;
   } catch (error) {
@@ -212,7 +218,7 @@ export const getQuizByCourseId = async (courseId, sessionId) => {
 export const getProjectByCourseId = async (courseId, sessionId) => {
   try {
     const response = await axiosInstance.get(
-      `/course/projects/course/${courseId}/session/${sessionId}/`
+      `/api/course/projects/course/${courseId}/session/${sessionId}/`
     );
     return response;
   } catch (error) {
@@ -224,7 +230,7 @@ export const getProjectByCourseId = async (courseId, sessionId) => {
 export const getExamByCourseId = async (courseId, sessionId) => {
   try {
     const response = await axiosInstance.get(
-      `/course/exams/course/${courseId}/session/${sessionId}/`
+      `/api/course/exams/course/${courseId}/session/${sessionId}/`
     );
     return response;
   } catch (error) {
@@ -236,7 +242,7 @@ export const getExamByCourseId = async (courseId, sessionId) => {
 export const getAssignmentProgress = async (courseId, sessionId, regId) => {
   try {
     const response = await axiosInstance.get(
-      `course/assignments/${courseId}/session/${sessionId}/student/${regId}/`
+      `/api/course/assignments/${courseId}/session/${sessionId}/student/${regId}/`
     );
     return response;
   } catch (error) {
@@ -248,7 +254,7 @@ export const getAssignmentProgress = async (courseId, sessionId, regId) => {
 export const getQuizProgress = async (courseId, sessionId, regId) => {
   try {
     const response = await axiosInstance.get(
-      `/course/quizzes/${courseId}/session/${sessionId}/student/${regId}/`
+      `/api/course/quizzes/${courseId}/session/${sessionId}/student/${regId}/`
     );
     return response;
   } catch (error) {
@@ -260,7 +266,7 @@ export const getQuizProgress = async (courseId, sessionId, regId) => {
 export const getProjectProgress = async (courseId, sessionId, regId) => {
   try {
     const response = await axiosInstance.get(
-      `/course/projects/${courseId}/session/${sessionId}/student/${regId}/`
+      `/api/course/projects/${courseId}/session/${sessionId}/student/${regId}/`
     );
     return response;
   } catch (error) {
@@ -272,7 +278,7 @@ export const getProjectProgress = async (courseId, sessionId, regId) => {
 export const getExamProgress = async (courseId, sessionId, regId) => {
   try {
     const response = await axiosInstance.get(
-      `/course/exams/${courseId}/session/${sessionId}/student/${regId}/`
+      `/api/course/exams/${courseId}/session/${sessionId}/student/${regId}/`
     );
     return response;
   } catch (error) {
@@ -284,7 +290,7 @@ export const getExamProgress = async (courseId, sessionId, regId) => {
 export const getOverallProgress = async (courseId, sessionId, regId) => {
   try {
     const response = await axiosInstance.get(
-      `/course/assignments/${courseId}/course/session/${sessionId}/${regId}/total_score/`
+      `/api/course/assignments/${courseId}/course/session/${sessionId}/${regId}/total_score/`
     );
     return response;
   } catch (error) {
@@ -296,7 +302,7 @@ export const getOverallProgress = async (courseId, sessionId, regId) => {
 export const getQuizGrading = async (courseId, quizId, sessionId) => {
   try {
     const response = await axiosInstance.get(
-      `/course/quizzes/${quizId}/courses/${courseId}/sessions/${sessionId}/students/`
+      `/api/course/quizzes/${quizId}/courses/${courseId}/sessions/${sessionId}/students/`
     );
     return response;
   } catch (error) {
@@ -307,7 +313,10 @@ export const getQuizGrading = async (courseId, quizId, sessionId) => {
 //update quizzes Grading (admin)
 export const updateQuizGrading = async (quizData) => {
   try {
-    const response = await axiosInstance.post(`course/quiz_grading/`, quizData);
+    const response = await axiosInstance.post(
+      `/api/course/quiz_grading/`,
+      quizData
+    );
     return response;
   } catch (error) {
     throw error;
@@ -318,7 +327,7 @@ export const updateQuizGrading = async (quizData) => {
 export const editQuizGrading = async (gradingId, quizData) => {
   try {
     const response = await axiosInstance.put(
-      `course/quiz_grading/${gradingId}`,
+      `/api/course/quiz_grading/${gradingId}`,
       quizData
     );
     return response;
@@ -331,7 +340,7 @@ export const editQuizGrading = async (gradingId, quizData) => {
 export const getAssignmentGrading = async (courseId, assignId, sessionId) => {
   try {
     const response = await axiosInstance.get(
-      `/course/assignments/${assignId}/courses/${courseId}/sessions/${sessionId}/students/`
+      `/api/course/assignments/${assignId}/courses/${courseId}/sessions/${sessionId}/students/`
     );
     return response;
   } catch (error) {
@@ -343,7 +352,7 @@ export const getAssignmentGrading = async (courseId, assignId, sessionId) => {
 export const updateAssignmentGrading = async (assignData) => {
   try {
     const response = await axiosInstance.post(
-      `course/assignments_grading/`,
+      `/api/course/assignments_grading/`,
       assignData
     );
     return response;
@@ -356,7 +365,7 @@ export const updateAssignmentGrading = async (assignData) => {
 export const editAssignmentGrading = async (gradingId, assignData) => {
   try {
     const response = await axiosInstance.put(
-      `course/assignments_grading/${gradingId}`,
+      `/api/course/assignments_grading/${gradingId}`,
       assignData
     );
     return response;
@@ -369,7 +378,7 @@ export const editAssignmentGrading = async (gradingId, assignData) => {
 export const getProjectGrading = async (courseId, projId, sessionId) => {
   try {
     const response = await axiosInstance.get(
-      `/course/projects/${projId}/courses/${courseId}/sessions/${sessionId}/students/`
+      `/api/course/projects/${projId}/courses/${courseId}/sessions/${sessionId}/students/`
     );
     return response;
   } catch (error) {
@@ -381,7 +390,7 @@ export const getProjectGrading = async (courseId, projId, sessionId) => {
 export const updateProjectGrading = async (projectData) => {
   try {
     const response = await axiosInstance.post(
-      `course/project_gradings/`,
+      `/api/course/project_gradings/`,
       projectData
     );
     return response;
@@ -394,7 +403,7 @@ export const updateProjectGrading = async (projectData) => {
 export const editProjectGrading = async (gradingId, projectData) => {
   try {
     const response = await axiosInstance.put(
-      `course/project_gradings/${gradingId}`,
+      `/api/course/project_gradings/${gradingId}`,
       projectData
     );
     return response;
@@ -406,7 +415,7 @@ export const editProjectGrading = async (gradingId, projectData) => {
 //post weightage for course(admin)
 export const assignWeightages = async (data) => {
   try {
-    const response = await axiosInstance.post(`course/weightages/ `, data);
+    const response = await axiosInstance.post(`/api/course/weightages/ `, data);
     return response;
   } catch (error) {
     throw error;
@@ -417,7 +426,7 @@ export const assignWeightages = async (data) => {
 export const updateWeightages = async (weightageId, data) => {
   try {
     const response = await axiosInstance.put(
-      `course/weightages/${weightageId}/`,
+      `/api/course/weightages/${weightageId}/`,
       data
     );
     return response;
@@ -430,7 +439,7 @@ export const updateWeightages = async (weightageId, data) => {
 export const getWeightages = async (courseId, sessionId) => {
   try {
     const response = await axiosInstance.get(
-      `course/course_weightages/${courseId}/session/${sessionId}/`
+      `/api/course/course_weightages/${courseId}/session/${sessionId}/`
     );
     return response;
   } catch (error) {
@@ -442,7 +451,7 @@ export const getWeightages = async (courseId, sessionId) => {
 export const getExamGrading = async (courseId, examId, sessionId) => {
   try {
     const response = await axiosInstance.get(
-      `/course/exams/${examId}/courses/${courseId}/sessions/${sessionId}/students/`
+      `/api/course/exams/${examId}/courses/${courseId}/sessions/${sessionId}/students/`
     );
     return response;
   } catch (error) {
@@ -454,7 +463,7 @@ export const getExamGrading = async (courseId, examId, sessionId) => {
 export const updateExamGrading = async (examData) => {
   try {
     const response = await axiosInstance.post(
-      `course/exam_gradings/`,
+      `/api/course/exam_gradings/`,
       examData
     );
     return response;
@@ -467,7 +476,7 @@ export const updateExamGrading = async (examData) => {
 export const editExamGrading = async (gradingId, examData) => {
   try {
     const response = await axiosInstance.put(
-      `course/exam_gradings/${gradingId}`,
+      `/api/course/exam_gradings/${gradingId}`,
       examData
     );
     return response;
@@ -492,7 +501,7 @@ export const editExamGrading = async (gradingId, examData) => {
 export const getStudentAttendance = async (courseId) => {
   try {
     const response = await axiosInstance.get(
-      `/attendance/student/${courseId}/`
+      `/api/attendance/student/${courseId}/`
     );
     return response;
   } catch (error) {
@@ -504,7 +513,7 @@ export const getStudentAttendance = async (courseId) => {
 export const getProgressForCourse = async (courseId) => {
   try {
     const response = await axiosInstance.get(
-      `course/course/${courseId}/course-progress/`
+      `/api/course/course/${courseId}/course-progress/`
     );
     return response;
   } catch (error) {
@@ -516,7 +525,7 @@ export const getProgressForCourse = async (courseId) => {
 export const getProgressForQuiz = async (courseId) => {
   try {
     const response = await axiosInstance.get(
-      `/course/courses/${courseId}/quiz-progress/`
+      `/api/course/courses/${courseId}/quiz-progress/`
     );
     return response;
   } catch (error) {
@@ -528,7 +537,7 @@ export const getProgressForQuiz = async (courseId) => {
 export const getProgressForAssignment = async (courseId) => {
   try {
     const response = await axiosInstance.get(
-      `course/courses/${courseId}/assignment-progress/`
+      `/api/course/courses/${courseId}/assignment-progress/`
     );
     return response;
   } catch (error) {
@@ -540,7 +549,7 @@ export const getProgressForAssignment = async (courseId) => {
 export const uploadAssignment = async (assignment) => {
   try {
     const response = await axiosInstance.post(
-      "/course/submissions/",
+      "/api/course/submissions/",
       assignment,
       {
         headers: {
@@ -558,7 +567,7 @@ export const uploadAssignment = async (assignment) => {
 export const resubmitAssignment = async (submissionId, assignment) => {
   try {
     const response = await axiosInstance.put(
-      `/course/submissions/${submissionId}/`,
+      `/api/course/submissions/${submissionId}/`,
       assignment,
       {
         headers: {
@@ -576,7 +585,7 @@ export const resubmitAssignment = async (submissionId, assignment) => {
 export const resubmitQuiz = async (submissionId, quiz) => {
   try {
     const response = await axiosInstance.put(
-      `/course/quiz_submissions/${submissionId}/`,
+      `/api/course/quiz_submissions/${submissionId}/`,
       quiz,
       {
         headers: {
@@ -594,7 +603,7 @@ export const resubmitQuiz = async (submissionId, quiz) => {
 export const resubmitProject = async (submissionId, project) => {
   try {
     const response = await axiosInstance.put(
-      `/course/project_submissions/${submissionId}`,
+      `/api/course/project_submissions/${submissionId}`,
       project,
       {
         headers: {
@@ -612,7 +621,7 @@ export const resubmitProject = async (submissionId, project) => {
 export const resubmitExam = async (submissionId, exam) => {
   try {
     const response = await axiosInstance.put(
-      `/course/exam_submissions/${submissionId}/`,
+      `/api/course/exam_submissions/${submissionId}/`,
       exam,
       {
         headers: {
@@ -630,7 +639,7 @@ export const resubmitExam = async (submissionId, exam) => {
 export const uploadQuiz = async (quiz) => {
   try {
     const response = await axiosInstance.post(
-      "/course/quiz_submissions/",
+      "/api/course/quiz_submissions/",
       quiz,
       {
         headers: {
@@ -648,7 +657,7 @@ export const uploadQuiz = async (quiz) => {
 export const uploadProject = async (project) => {
   try {
     const response = await axiosInstance.post(
-      "/course/project_submissions/",
+      "/api/course/project_submissions/",
       project,
       {
         headers: {
@@ -666,7 +675,7 @@ export const uploadProject = async (project) => {
 export const uploadExam = async (exam) => {
   try {
     const response = await axiosInstance.post(
-      "/course/exam_submissions/",
+      "/api/course/exam_submissions/",
       exam,
       {
         headers: {
@@ -697,7 +706,7 @@ export const getUserByStatus = async (
 ) => {
   try {
     const response = await axiosInstance.get(
-      `/applications-process/${programID}/?group_name=${selectedOption}&status=${selectedStatus}`
+      `/api/applications-process/${programID}/?group_name=${selectedOption}&status=${selectedStatus}`
     );
     return response;
   } catch (error) {
@@ -708,7 +717,7 @@ export const getUserByStatus = async (
 export const getUserDataByProgramIdnSkillId = async (id, selectedOption) => {
   try {
     const response = await axiosInstance.get(
-      `/user-process/${id}/?group_name=${selectedOption}`
+      `/api/user-process/${id}/?group_name=${selectedOption}`
     );
     return response;
   } catch (error) {
@@ -719,7 +728,7 @@ export const getUserDataByProgramIdnSkillId = async (id, selectedOption) => {
 export const getApplicationUserDetails = async (userId, selectedOption) => {
   try {
     const response = await axiosInstance.get(
-      `user-details/${userId}/?group_name=${selectedOption}`
+      `/api/user-details/${userId}/?group_name=${selectedOption}`
     );
     return response;
   } catch (error) {
@@ -730,7 +739,7 @@ export const getApplicationUserDetails = async (userId, selectedOption) => {
 export const userSelectionByAdmin = async (id, data) => {
   try {
     const response = await axiosInstance.patch(
-      `applications-process/?application_id=${id}`,
+      `/api/applications-process/?application_id=${id}`,
       data
     );
     return response;
@@ -741,7 +750,7 @@ export const userSelectionByAdmin = async (id, data) => {
 
 export const VerifyEmail = async (data) => {
   try {
-    const response = await axiosInstance.post("/verify-email/", data);
+    const response = await axiosInstance.post("/api/verify-email/", data);
     return response;
   } catch (error) {
     throw error;
@@ -752,7 +761,7 @@ export const VerifyEmail = async (data) => {
 //get all programs
 export const getAllPrograms = async () => {
   try {
-    const response = await axiosInstance.get(`/course/programs/`);
+    const response = await axiosInstance.get(`/api/course/programs/`);
     return response;
   } catch (error) {
     throw error;
@@ -761,7 +770,7 @@ export const getAllPrograms = async () => {
 
 export const listAllSessions = async () => {
   try {
-    const response = await axiosInstance.get("/session/");
+    const response = await axiosInstance.get("/api/session/");
     return response;
   } catch (error) {
     throw error;
@@ -770,7 +779,9 @@ export const listAllSessions = async () => {
 
 export const listSessionByCourseId = async (courseId) => {
   try {
-    const response = await axiosInstance.get(`/session/?course=${courseId}`);
+    const response = await axiosInstance.get(
+      `/api/session/?course=${courseId}`
+    );
     return response;
   } catch (error) {
     throw error;
@@ -779,7 +790,7 @@ export const listSessionByCourseId = async (courseId) => {
 
 export const listAllBatches = async () => {
   try {
-    const response = await axiosInstance.get("/batch/");
+    const response = await axiosInstance.get("/api/batch/");
     return response;
   } catch (error) {
     throw error;
@@ -788,7 +799,7 @@ export const listAllBatches = async () => {
 
 export const listAllLocations = async () => {
   try {
-    const response = await axiosInstance.get("/location/");
+    const response = await axiosInstance.get("/api/location/");
     return response;
   } catch (error) {
     throw error;
@@ -797,7 +808,7 @@ export const listAllLocations = async () => {
 
 export const createBatch = async (data) => {
   try {
-    const response = await axiosInstance.post("/batch/", data);
+    const response = await axiosInstance.post("/api/batch/", data);
     return response;
   } catch (error) {
     throw error;
@@ -806,7 +817,10 @@ export const createBatch = async (data) => {
 
 export const UpdateBatch = async (selectedBatch, data) => {
   try {
-    const response = await axiosInstance.put(`/batch/${selectedBatch}/`, data);
+    const response = await axiosInstance.put(
+      `/api/batch/${selectedBatch}/`,
+      data
+    );
     return response;
   } catch (error) {
     throw error;
@@ -815,7 +829,7 @@ export const UpdateBatch = async (selectedBatch, data) => {
 
 export const DeleteBatch = async (selectedBatch) => {
   try {
-    const response = await axiosInstance.delete(`/batch/${selectedBatch}/`);
+    const response = await axiosInstance.delete(`/api/batch/${selectedBatch}/`);
     return response;
   } catch (error) {
     throw error;
@@ -824,7 +838,7 @@ export const DeleteBatch = async (selectedBatch) => {
 
 export const createSession = async (data) => {
   try {
-    const response = await axiosInstance.post("/session/", data);
+    const response = await axiosInstance.post("/api/session/", data);
     return response;
   } catch (error) {
     throw error;
@@ -834,7 +848,7 @@ export const createSession = async (data) => {
 export const UpdateSession = async (selectedSession, data) => {
   try {
     const response = await axiosInstance.put(
-      `/session/${selectedSession}/`,
+      `/api/session/${selectedSession}/`,
       data
     );
     return response;
@@ -844,7 +858,7 @@ export const UpdateSession = async (selectedSession, data) => {
 };
 export const DeleteSession = async (id) => {
   try {
-    const response = await axiosInstance.delete(`/session/${id}/`);
+    const response = await axiosInstance.delete(`/api/session/${id}/`);
     return response;
   } catch (error) {
     throw error;
@@ -853,7 +867,7 @@ export const DeleteSession = async (id) => {
 
 export const createLocation = async (data) => {
   try {
-    const response = await axiosInstance.post("/location/", data);
+    const response = await axiosInstance.post("/api/location/", data);
     return response;
   } catch (error) {
     throw error;
@@ -862,7 +876,7 @@ export const createLocation = async (data) => {
 
 export const UpdateLocation = async (id, data) => {
   try {
-    const response = await axiosInstance.put(`/location/${id}/`, data);
+    const response = await axiosInstance.put(`/api/location/${id}/`, data);
     return response;
   } catch (error) {
     throw error;
@@ -870,7 +884,7 @@ export const UpdateLocation = async (id, data) => {
 };
 export const DeleteLocation = async (id) => {
   try {
-    const response = await axiosInstance.delete(`/location/${id}/`);
+    const response = await axiosInstance.delete(`/api/location/${id}/`);
     return response;
   } catch (error) {
     throw error;
@@ -880,7 +894,7 @@ export const DeleteLocation = async (id) => {
 export const filterByCity = async (cityname) => {
   try {
     const response = await axiosInstance.get(
-      `/filter-locations-by-city/?city=${cityname}/`
+      `/api/filter-locations-by-city/?city=${cityname}/`
     );
     return response;
   } catch (error) {
@@ -894,7 +908,7 @@ export const getApplicationsTotalNumber = async (
 ) => {
   try {
     const response = await axiosInstance.get(
-      `application-count/${filteration_id}/?group_name=${selectedUser}`
+      `/api/application-count/${filteration_id}/?group_name=${selectedUser}`
     );
     return response;
   } catch (error) {
@@ -904,7 +918,7 @@ export const getApplicationsTotalNumber = async (
 
 export const getCityStatistics = async () => {
   try {
-    const response = await axiosInstance.get("/city-stats/");
+    const response = await axiosInstance.get("/api/city-stats/");
     return response;
   } catch (error) {
     throw error;
@@ -913,7 +927,7 @@ export const getCityStatistics = async () => {
 
 export const totalUsersCount = async () => {
   try {
-    const response = await axiosInstance.get("/admin-portal-count/");
+    const response = await axiosInstance.get("/api/admin-portal-count/");
     return response;
   } catch (error) {
     throw error;
@@ -922,7 +936,7 @@ export const totalUsersCount = async () => {
 
 export const assignSessiontoStudent = async (data) => {
   try {
-    const response = await axiosInstance.post("/preferred-sessions/", data);
+    const response = await axiosInstance.post("/api/preferred-sessions/", data);
     return response;
   } catch (error) {
     throw error;
@@ -932,7 +946,7 @@ export const assignSessiontoStudent = async (data) => {
 export const getSuggestedSessionForStudent = async (programId, locationId) => {
   try {
     const response = await axiosInstance.get(
-      `preferred-sessions/?program_id=${programId}&location_id=${locationId}`
+      `/api/preferred-sessions/?program_id=${programId}&location_id=${locationId}`
     );
     return response;
   } catch (error) {
@@ -942,7 +956,7 @@ export const getSuggestedSessionForStudent = async (programId, locationId) => {
 
 export const assignSessionToInstructor = async (data) => {
   try {
-    const response = axiosInstance.post("/instructor-sessions/", data);
+    const response = axiosInstance.post("/api/instructor-sessions/", data);
     return response;
   } catch (error) {
     throw error;
@@ -952,7 +966,7 @@ export const assignSessionToInstructor = async (data) => {
 export const getSuggestedSessions = async (programID, locationId) => {
   try {
     const response = await axiosInstance.get(
-      `preferred-sessions/?${programID}&${locationId}`
+      `/api/preferred-sessions/?${programID}&${locationId}`
     );
   } catch (error) {
     throw error;
@@ -963,7 +977,7 @@ export const getSuggestedSessions = async (programID, locationId) => {
 export const getInstructorSessions = async (userId, group) => {
   try {
     const response = await axiosInstance.get(
-      `/user-sessions/${userId}/?group_name=${group}`
+      `/api/user-sessions/${userId}/?group_name=${group}`
     );
     return response;
   } catch (error) {
@@ -974,7 +988,7 @@ export const getInstructorSessions = async (userId, group) => {
 export const getInstructorPreferredSessions = async (userId) => {
   try {
     const response = await axiosInstance.get(
-      `/instructor-preferred-sessions/?instructor_id=${userId}`
+      `/api/instructor-preferred-sessions/?instructor_id=${userId}`
     );
     return response;
   } catch (error) {
@@ -989,7 +1003,7 @@ export const getInstructorSessionsbyCourseId = async (
 ) => {
   try {
     const response = await axiosInstance.get(
-      `/user-sessions/${userId}/?group_name=${group}&course_id=${courseID}`
+      `/api/user-sessions/${userId}/?group_name=${group}&course_id=${courseID}`
     );
     return response;
   } catch (error) {
@@ -1004,7 +1018,7 @@ export const DeleteAssignedSessions = async (
 ) => {
   try {
     const response = await axiosInstance.delete(
-      `/user-sessions/${userId}/?group_name=${selectedOption}&pk=${sessionId}`
+      `/api/user-sessions/${userId}/?group_name=${selectedOption}&pk=${sessionId}`
     );
     return response;
   } catch (error) {
@@ -1015,7 +1029,7 @@ export const DeleteAssignedSessions = async (
 //get all skills
 export const getAllSkills = async () => {
   try {
-    const response = await axiosInstance.get(`/techskills/`);
+    const response = await axiosInstance.get(`/api/techskills/`);
     return response;
   } catch (error) {
     throw error;
@@ -1025,7 +1039,7 @@ export const getAllSkills = async () => {
 //get all skills
 export const getAllSkillCourses = async () => {
   try {
-    const response = await axiosInstance.get(`/course/skills/`);
+    const response = await axiosInstance.get(`/api/course/skills/`);
     return response;
   } catch (error) {
     throw error;
@@ -1035,7 +1049,7 @@ export const getAllSkillCourses = async () => {
 //get program by id
 export const getProgramById = async (progId) => {
   try {
-    const response = await axiosInstance.get(`/course/programs/${progId}/`);
+    const response = await axiosInstance.get(`/api/course/programs/${progId}/`);
     return response;
   } catch (error) {
     throw error;
@@ -1045,7 +1059,7 @@ export const getProgramById = async (progId) => {
 //create a program
 export const createProgram = async (program) => {
   try {
-    const response = await axiosInstance.post(`/course/programs/`, program);
+    const response = await axiosInstance.post(`/api/course/programs/`, program);
     return response;
   } catch (error) {
     throw error;
@@ -1056,7 +1070,7 @@ export const createProgram = async (program) => {
 export const updateProgram = async (program, programId) => {
   try {
     const response = await axiosInstance.put(
-      `/course/programs/${programId}/`,
+      `/api/course/programs/${programId}/`,
       program
     );
     return response;
@@ -1068,7 +1082,7 @@ export const updateProgram = async (program, programId) => {
 //create a course
 export const createCourse = async (course) => {
   try {
-    const response = await axiosInstance.post(`/course/courses/`, course);
+    const response = await axiosInstance.post(`/api/course/courses/`, course);
     return response;
   } catch (error) {
     throw error;
@@ -1078,7 +1092,7 @@ export const createCourse = async (course) => {
 //create a module
 export const createModule = async (module) => {
   try {
-    const response = await axiosInstance.post(`/course/modules/`, module, {
+    const response = await axiosInstance.post(`/api/course/modules/`, module, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -1092,7 +1106,7 @@ export const createModule = async (module) => {
 //create a skill
 export const createSkill = async (skill) => {
   try {
-    const response = await axiosInstance.post(`/course/skills/`, skill);
+    const response = await axiosInstance.post(`/api/course/skills/`, skill);
     return response;
   } catch (error) {
     throw error;
@@ -1103,7 +1117,7 @@ export const createSkill = async (skill) => {
 export const updateCourse = async (course, courseId) => {
   try {
     const response = await axiosInstance.put(
-      `/course/courses/${courseId}/`,
+      `/api/course/courses/${courseId}/`,
       course
       // {
       //   headers: {
@@ -1121,7 +1135,7 @@ export const updateCourse = async (course, courseId) => {
 export const deleteCourse = async (course, courseId) => {
   try {
     const response = await axiosInstance.patch(
-      `/course/courses/${courseId}/`,
+      `/api/course/courses/${courseId}/`,
       course
       // {
       //   headers: {
@@ -1139,7 +1153,7 @@ export const deleteCourse = async (course, courseId) => {
 export const updateModule = async (module, moduleId) => {
   try {
     const response = await axiosInstance.put(
-      `/course/modules/${moduleId}/`,
+      `/api/course/modules/${moduleId}/`,
       module,
       {
         headers: {
@@ -1157,7 +1171,7 @@ export const updateModule = async (module, moduleId) => {
 export const deleteModule = async (module, moduleId) => {
   try {
     const response = await axiosInstance.patch(
-      `/course/modules/${moduleId}/`,
+      `/api/course/modules/${moduleId}/`,
       module,
       {
         headers: {
@@ -1175,7 +1189,7 @@ export const deleteModule = async (module, moduleId) => {
 export const createAssignment = async (assignment) => {
   try {
     const response = await axiosInstance.post(
-      `/course/assignments/`,
+      `/api/course/assignments/`,
       assignment,
       {
         headers: {
@@ -1193,7 +1207,7 @@ export const createAssignment = async (assignment) => {
 export const updateAssignment = async (assignmentData, assignmentId) => {
   try {
     const response = await axiosInstance.put(
-      `/course/assignments/${assignmentId}/`,
+      `/api/course/assignments/${assignmentId}/`,
       assignmentData,
       {
         headers: {
@@ -1211,7 +1225,7 @@ export const updateAssignment = async (assignmentData, assignmentId) => {
 export const deleteAssignment = async (assignmentData, assignmentId) => {
   try {
     const response = await axiosInstance.patch(
-      `/course/assignments/${assignmentId}/`,
+      `/api/course/assignments/${assignmentId}/`,
       assignmentData
     );
     return response;
@@ -1223,7 +1237,7 @@ export const deleteAssignment = async (assignmentData, assignmentId) => {
 //create a quiz
 export const createQuiz = async (quiz) => {
   try {
-    const response = await axiosInstance.post(`/course/quizzes/`, quiz, {
+    const response = await axiosInstance.post(`/api/course/quizzes/`, quiz, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -1238,7 +1252,7 @@ export const createQuiz = async (quiz) => {
 export const updateQuiz = async (quizData, quizId) => {
   try {
     const response = await axiosInstance.put(
-      `/course/quizzes/${quizId}/`,
+      `/api/course/quizzes/${quizId}/`,
       quizData,
       {
         headers: {
@@ -1255,7 +1269,7 @@ export const updateQuiz = async (quizData, quizId) => {
 export const deleteQuiz = async (quizData, quizId) => {
   try {
     const response = await axiosInstance.patch(
-      `/course/quizzes/${quizId}/`,
+      `/api/course/quizzes/${quizId}/`,
       quizData
     );
     return response;
@@ -1266,11 +1280,15 @@ export const deleteQuiz = async (quizData, quizId) => {
 //create a project
 export const createProject = async (project) => {
   try {
-    const response = await axiosInstance.post(`/course/projects/`, project, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const response = await axiosInstance.post(
+      `/api/course/projects/`,
+      project,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
     return response;
   } catch (error) {
     throw error;
@@ -1281,7 +1299,7 @@ export const createProject = async (project) => {
 export const updateProject = async (projectData, projectId) => {
   try {
     const response = await axiosInstance.put(
-      `/course/projects/${projectId}/`,
+      `/api/course/projects/${projectId}/`,
       projectData,
       {
         headers: {
@@ -1299,7 +1317,7 @@ export const updateProject = async (projectData, projectId) => {
 export const deleteProject = async (projectData, projectId) => {
   try {
     const response = await axiosInstance.patch(
-      `/course/projects/${projectId}/`,
+      `/api/course/projects/${projectId}/`,
       projectData
     );
     return response;
@@ -1311,7 +1329,7 @@ export const deleteProject = async (projectData, projectId) => {
 //create an exam
 export const createExam = async (exam) => {
   try {
-    const response = await axiosInstance.post(`/course/exams/`, exam, {
+    const response = await axiosInstance.post(`/api/course/exams/`, exam, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -1326,7 +1344,7 @@ export const createExam = async (exam) => {
 export const updateExam = async (examData, examId) => {
   try {
     const response = await axiosInstance.put(
-      `/course/exams/${examId}/`,
+      `/api/course/exams/${examId}/`,
       examData,
       {
         headers: {
@@ -1343,7 +1361,7 @@ export const updateExam = async (examData, examId) => {
 export const deleteExam = async (examData, examId) => {
   try {
     const response = await axiosInstance.patch(
-      `/course/exams/${examId}/`,
+      `/api/course/exams/${examId}/`,
       examData
     );
   } catch (error) {
@@ -1355,7 +1373,7 @@ export const deleteExam = async (examData, examId) => {
 export const getAttendanceByCourseId = async (courseId) => {
   try {
     const response = await axiosInstance.get(
-      `/attendance/?course_id=${courseId}`
+      `/api/attendance/?course_id=${courseId}`
     );
     return response;
   } catch (error) {
@@ -1367,7 +1385,7 @@ export const getAttendanceByCourseId = async (courseId) => {
 export const getAttendanceByCourseIdDate = async (courseId, date) => {
   try {
     const response = await axiosInstance.get(
-      `/attendance/?date=${date}&course_id=${courseId}`
+      `/api/attendance/?date=${date}&course_id=${courseId}`
     );
 
     return response;
@@ -1380,7 +1398,7 @@ export const getAttendanceByCourseIdDate = async (courseId, date) => {
 export const getStudentsByCourseId = async (courseId) => {
   try {
     const response = await axiosInstance.get(
-      `/course-students/?course_id=${courseId}`
+      `/api/course-students/?course_id=${courseId}`
     );
     return response;
   } catch (error) {
@@ -1392,7 +1410,7 @@ export const getStudentsByCourseId = async (courseId) => {
 export const getAttendanceBySessionId = async (sessionId) => {
   try {
     const response = await axiosInstance.get(
-      `/sessions/${sessionId}/students/`
+      `/api/sessions/${sessionId}/students/`
     );
     return response;
   } catch (error) {
@@ -1406,7 +1424,7 @@ export const getAttendanceBySessionIdnCourseId = async (
 ) => {
   try {
     const response = await axiosInstance.get(
-      `/attendance/instructor/${sessionId}/${courseId}/?date=${date}`
+      `/api/attendance/instructor/${sessionId}/${courseId}/?date=${date}`
     );
     return response;
   } catch (error) {
@@ -1421,7 +1439,7 @@ export const postAttendanceBySessionId = async (
 ) => {
   try {
     const response = await axiosInstance.post(
-      `/attendance/instructor/${sessionId}/${courseId}/`,
+      `/api/attendance/instructor/${sessionId}/${courseId}/`,
       attendanceArray
     );
     return response;
@@ -1434,7 +1452,7 @@ export const postAttendanceBySessionId = async (
 export const markAttendanceByCourseId = async (courseId, attendance) => {
   try {
     const response = await axiosInstance.post(
-      `/attendance/?course_id=${courseId}`,
+      `/api/attendance/?course_id=${courseId}`,
       attendance
     );
     return response;
@@ -1445,7 +1463,9 @@ export const markAttendanceByCourseId = async (courseId, attendance) => {
 
 export const getStudentAttendanceForAdmin = async (sessionId) => {
   try {
-    const response = await axiosInstance.get(`admin/attendance/${sessionId}/`);
+    const response = await axiosInstance.get(
+      `/api/admin/attendance/${sessionId}/`
+    );
     return response;
   } catch (error) {
     throw error;
@@ -1455,7 +1475,9 @@ export const getStudentAttendanceForAdmin = async (sessionId) => {
 //get calendar (sessions)
 export const getCalendarSessions = async (userId) => {
   try {
-    const response = await axiosInstance.get(`/sessions/calendar/${userId}/`);
+    const response = await axiosInstance.get(
+      `/api/sessions/calendar/${userId}/`
+    );
     return response;
   } catch (error) {
     throw error;
@@ -1466,7 +1488,7 @@ export const getCalendarSessions = async (userId) => {
 // export const getData = async () => {
 //   try {
 //     const response = await axiosInstance.get(
-//       `/user-process/1/?group_name=student`
+//       `/api/user-process/1/?group_name=student`
 //     );
 //     return response;
 //   } catch (error) {
@@ -1477,7 +1499,9 @@ export const getCalendarSessions = async (userId) => {
 //get calendar sessions
 export const getCalendarData = async (userId) => {
   try {
-    const response = await axiosInstance.get(`sessions/calendar/${userId}/`);
+    const response = await axiosInstance.get(
+      `/api/sessions/calendar/${userId}/`
+    );
     return response;
   } catch (error) {
     throw error;
@@ -1487,7 +1511,9 @@ export const getCalendarData = async (userId) => {
 //get session and instructor api
 export const getSessionInstructor = async (courseId) => {
   try {
-    const response = await axiosInstance.get(`instructors/course/${courseId}/`);
+    const response = await axiosInstance.get(
+      `/api/instructors/course/${courseId}/`
+    );
     return response;
   } catch (error) {
     throw error;

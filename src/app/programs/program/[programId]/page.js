@@ -175,18 +175,17 @@ export default function Page({ params }) {
               title="Edit program"
               setIsEditing={setIsEditing}
               isEditing={isEditing}
+              programAbb={programData.program_abb}
             />
 
             {isEditing ? (
-              <div className="flex flex-col">
+              <div className="flex flex-col ">
                 <div>
                   <div className="flex justify-between my-2">
-                    <label className="text-lg font-exo font-bold">
-                      Program Name
-                    </label>
-
                     <div className="flex items-center">
-                      <span className="mr-4 text-md">Program Status</span>
+                      <span className="mr-4 text-md text-blue-500">
+                        Program Status
+                      </span>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
                           type="checkbox"
@@ -213,14 +212,38 @@ export default function Page({ params }) {
                     </div>
                   </div>
                 </div>
-                <input
-                  className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
-                  value={programData.name}
-                  onChange={(e) =>
-                    setProgramData({ ...programData, name: e.target.value })
-                  }
-                />
-                <label className="text-lg font-bold">Short Description</label>
+                <div className="flex max-md:flex-col w-full my-2">
+                  <div className="flex-col w-full">
+                    <label className="text-lg text-blue-500 font-exo font-bold">
+                      Program Name
+                    </label>
+                    <input
+                      className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                      value={programData.name}
+                      onChange={(e) =>
+                        setProgramData({ ...programData, name: e.target.value })
+                      }
+                    />
+                  </div>
+                  <div className="flex-col max-md:mt-4">
+                    <label className="text-lg ml-2 text-blue-500 max-md:ml-0 font-exo font-bold">
+                      Program Abbreviation
+                    </label>
+                    <input
+                      className="block ml-2 max-md:ml-0  max-md:w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                      value={programData.program_abb}
+                      onChange={(e) =>
+                        setProgramData({
+                          ...programData,
+                          program_abb: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+                <label className="text-lg text-blue-500 font-bold">
+                  Short Description
+                </label>
                 <input
                   className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
                   value={programData.short_description}
@@ -231,7 +254,7 @@ export default function Page({ params }) {
                     })
                   }
                 />
-                <label className=" font-exo text-lg font-bold mt-4">
+                <label className=" font-exo text-blue-500 text-lg font-bold mt-4">
                   About the Program
                 </label>
                 <textarea
@@ -242,7 +265,9 @@ export default function Page({ params }) {
                     setProgramData({ ...programData, about: e.target.value })
                   }
                 />
-
+                <label className=" font-exo text-blue-500 text-lg font-bold mt-4">
+                  Selected courses
+                </label>
                 <div className="relative flex flex-wrap items-center gap-2 bg-white outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 shadow-sm ring-1 ring-inset focus:ring-inset p-2 sm:text-sm sm:leading-6">
                   {courseData?.map((course) => {
                     if (displayedCourses.has(course.id)) return null;
@@ -306,7 +331,9 @@ export default function Page({ params }) {
             ) : (
               <div className="flex flex-col">
                 <div className="flex justify-between max-md:flex-col">
-                  <h2 className="text-xl font-bold">About the Program</h2>
+                  <h2 className="text-xl text-blue-500 font-exo font-bold">
+                    About the Program
+                  </h2>
                 </div>
                 <p className="mt-2 mb-2 text-dark-500 text-justify">
                   {programData.about}
@@ -316,7 +343,7 @@ export default function Page({ params }) {
 
             <div className="flex flex-col gap-4">
               <div className="flex justify-between max-md:flex-col mt-8 ">
-                <h2 className="text-xl font-bold">
+                <h2 className="text-xl text-blue-500 font-exo font-bold">
                   Courses of {programData.name}
                 </h2>
               </div>
