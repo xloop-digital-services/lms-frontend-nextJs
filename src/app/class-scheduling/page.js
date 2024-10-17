@@ -368,7 +368,7 @@ export default function Page() {
           </div>
 
           {/* Sessions Table */}
-          <div>
+          {/* <div>
             {loading ? (
               <div className="flex justify-center items-center w-full p-4">
                 <CircularProgress size={20} />
@@ -401,7 +401,7 @@ export default function Page() {
                 />
               )
             )}
-          </div>
+          </div> */}
         </div>
 
         {/* Session Creation Modal */}

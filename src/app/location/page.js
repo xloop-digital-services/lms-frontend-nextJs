@@ -77,15 +77,15 @@ export default function Page() {
   return (
     <>
       <div
-        className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-32 font-inter ${
-          isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 pl-10 pr-4"
+        className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-22 font-inter pb-4 ${
+          isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 px-4"
         }`}
         style={{
           width: isSidebarOpen ? "81%" : "100%",
         }}
       >
         <div className="bg-surface-100 p-6 rounded-xl">
-          <div className="w-full flex justify-between items-center gap-4">
+          <div className="w-full mx-auto flex xsm:flex-row flex-col justify-between items-center gap-4 max-md:flex-col">
             <div>
               <p className="font-bold font-exo text-blue-500 text-xl">
                 Locations Details
@@ -97,7 +97,7 @@ export default function Page() {
                   onClick={toggleCityOpen}
                   className={`${
                     !isCitySelected ? " text-dark-500" : "text-[#424b55]"
-                  } flex justify-between items-center md:w-[200px] w-[80%] hover:text-[#0e1721] p-4 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                  } flex justify-between items-center md:w-[200px] sm:w-[150px] w-full  gap-2 hover:text-[#0e1721] sm:p-4 px-2 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
                   {selectedCity}
                   {isCitySelected && (
@@ -120,7 +120,7 @@ export default function Page() {
                 {isCityOpen && (
                   <div
                     ref={cityDown}
-                    className={`absolute z-20 sm:w-[200px] mt-1 max-h-[250px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out`}
+                    className={`absolute z-20 w-full mt-1 max-h-[250px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out`}
                     // style={{
                     //   height:
                     //     locations.length * 40 < 300
@@ -137,7 +137,7 @@ export default function Page() {
                           onClick={() => handleCitySelect(city)}
                           className="p-2 cursor-pointer"
                         >
-                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
+                          <div className="sm:px-4 px-1 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
                             {city}
                           </div>
                         </div>
@@ -151,7 +151,8 @@ export default function Page() {
                   className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] p-4 md:px-8 rounded-lg hover:cursor-pointer"
                   onClick={handleLocationCreate}
                 >
-                  Create a new location
+                  Create<span className="sm:flex hidden px-1">a new </span>{" "}
+                  location
                 </button>
               </div>
             </div>
