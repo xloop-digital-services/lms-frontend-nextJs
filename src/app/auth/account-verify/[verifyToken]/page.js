@@ -19,7 +19,7 @@ export default function Page({ params }) {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
-  console.log("token", verifyToken);
+  // console.log("token", verifyToken);
 
   const handlePassword = async (event) => {
     event.preventDefault(); // Prevent the default form submission behavior

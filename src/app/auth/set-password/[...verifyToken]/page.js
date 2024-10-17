@@ -18,7 +18,7 @@ export default function Page({ params }) {
   const router = useRouter();
   const u_id = params.verifyToken[0];
   const token = params.verifyToken[1];
-  console.log("token", u_id, "/", token);
+  // console.log("token", u_id, "/", token);
 
   const handlePassword = async (event) => {
     event.preventDefault();
@@ -32,7 +32,7 @@ export default function Page({ params }) {
       password: newPassword,
       password2: confirmPassword,
     };
-    console.log("form", data);
+    // console.log("form", data);
 
     try {
       const response = await setNewPassword(data, u_id, token);
