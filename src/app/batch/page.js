@@ -102,17 +102,17 @@ export default function Page() {
         }}
       >
         <div className="bg-surface-100 p-6 rounded-xl">
-          <div className="w-full mx-auto flex sm:flex-row flex-col sm:justify-between items-center gap-4 max-md:flex-col">
+          <div className="w-full mx-auto flex xsm:flex-row flex-col justify-between items-center gap-4 max-md:flex-col">
             <div>
               <p className="font-bold text-blue-500 text-xl font-exo">Batch Details</p>
             </div>
-            <div className="flex gap-3 max-md:flex-col">
-              <div>
+            <div className="flex gap-3 ">
+              <div className="relative">
                 <button
                   onClick={toggleCityOpen}
                   className={`${
                     !isCitySelected ? " text-dark-500" : "text-[#424b55]"
-                  } flex justify-between items-center  sm:w-[200px]   hover:text-[#0e1721] sm:p-4 px-2 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                  } flex justify-between items-center  md:w-[200px] sm:w-[150px] w-full  hover:text-[#0e1721] sm:p-4 px-2 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
                   {selectedCity}
                   {isCitySelected && (
@@ -128,7 +128,7 @@ export default function Page() {
                 {isCityOpen && (
                   <div
                     ref={mousedown}
-                    className={`absolute z-20 sm:w-[200px] mt-1 max-h-[250px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out`}
+                    className={`absolute z-20 w-full mt-1 max-h-[250px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out`}
                     // style={{
                     //   height:
                     //     batches.length * 40 < 300
@@ -145,7 +145,7 @@ export default function Page() {
                           onClick={() => handleCitySelect(city)}
                           className="p-2 cursor-pointer"
                         >
-                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
+                          <div className=" sm:px-4 px-1 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
                             {city}
                           </div>
                         </div>
@@ -210,7 +210,7 @@ export default function Page() {
             </div> */}
               <div>
                 <button
-                  className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] sm:flex text-sm sm:p-4 px-3 py-3 md:px-8 rounded-lg hover:cursor-pointer"
+                  className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] sm:flex text-sm sm:p-4 px-3 py-3 md:px-6 rounded-lg hover:cursor-pointer"
                   onClick={handleBatchCreate}
                 >
                   Create <span className="sm:flex hidden px-1">a new </span>{" "}

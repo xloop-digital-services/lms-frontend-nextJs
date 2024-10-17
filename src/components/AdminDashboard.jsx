@@ -335,8 +335,8 @@ const AdminDashboard = () => {
   return (
     <>
       <div
-        className={`flex-1 transition-transform pt-[100px] space-y-4 max-md:pt-32 font-inter ${
-          isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 pl-10 pr-4"
+        className={`flex-1 transition-transform pt-[100px] space-y-4 max-md:pt-22 font-inter ${
+          isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 xlg:pl-10 pl-4 pr-4"
         }`}
         style={{
           // paddingBottom: "20px",
@@ -430,7 +430,7 @@ const AdminDashboard = () => {
               </div>
             </div>
             <div className="bg-surface-100 min-w-[32%] p-4 rounded-xl  h-[450px]">
-              <div className="flex w-full xmd:flex-col justify-between xmd:items-start items-center">
+              <div className="flex w-full xmd:flex-col ssm:flex-row flex-col justify-between xmd:items-start items-center">
                 <div className="font-bold font-exo text-blue-500 text-lg">
                   Applications Status Overview
                 </div>
@@ -440,7 +440,7 @@ const AdminDashboard = () => {
                       onClick={toggleUsers}
                       className={`${
                         !isUserSelected ? "text-dark-500" : "text-[#424b55]"
-                      } flex justify-between mt-1 items-center xl:max-w-[200px] md:max-w-[170px] w-[240px]  gap-1 hover:text-[#0e1721] px-4 xlg:py-3  py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                      } flex justify-between mt-1 items-center xl:max-w-[200px] md:max-w-[150px] ssm:w-[150px] w-full  gap-1 hover:text-[#0e1721] xlg:px-4 px-2 xlg:py-3  py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                     >
                       {selectedUser || userOptions[0]}
                       <span
@@ -457,7 +457,7 @@ const AdminDashboard = () => {
                     {isUserOpen && (
                       <div
                         ref={userDown}
-                        className="absolute capitalize z-50 xl:max-w-[200px] md:max-w-[170px] w-[240px]  mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                        className="absolute capitalize z-50 xl:max-w-[200px]  md:max-w-[150px] ssm:w-[150px] w-full  mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                       >
                         {userOptions.map((option, index) => (
                           <div
@@ -481,7 +481,7 @@ const AdminDashboard = () => {
                           !isProgramSelected
                             ? "text-dark-500"
                             : "text-[#424b55]"
-                        } flex justify-between items-center w-full px-4 xlg:py-3  py-2 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                        } flex justify-between items-center w-full xlg:px-4 px-2  xlg:py-3  py-2 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                         style={{
                           // maxWidth: "220px", // Set the maximum width of the button
                           whiteSpace: "nowrap",
@@ -489,7 +489,7 @@ const AdminDashboard = () => {
                           textOverflow: "ellipsis",
                         }}
                       >
-                        <span className="xl:max-w-[190px] xmd:max-w-[100px] w-[200px] truncate">
+                        <span className=" xl:max-w-[190px] xlg:max-w-[120px] xmd:max-w-[60px] w-full truncate">
                           {selectedProgram}
                         </span>
                         <span
@@ -614,7 +614,7 @@ const AdminDashboard = () => {
               </div>
             </div>
           </div>
-          <div className="bg-[rgb(255,255,255)] rounded-xl p-5 pb-0 xmd:max-h-[260px] h-[240px] ">
+          <div className="bg-[rgb(255,255,255)] rounded-xl p-5 pb-0 xmd:max-h-[260px] h-full mb-4">
             <div className="flex nsm:items-center nsm:flex-row flex-col ">
               <h1 className="font-bold font-exo  text-blue-500 text-lg sm:w-[200px] w-[180px]  xlg:w-full">
                 <Link href="/batch" className="w-fit">
@@ -622,7 +622,7 @@ const AdminDashboard = () => {
                 </Link>
               </h1>
               <div className="w-full flex items-center justify-end gap-4 ">
-                <div className="flex w-[50%]">
+                <div className="flex nsm:w-[50%] w-full nsm:mt-0 mt-1">
                   {" "}
                   {/* Ensure the container is growable */}
                   <input
@@ -674,7 +674,7 @@ const AdminDashboard = () => {
               </div>
             </div>
 
-            <div className="xmd:max-h-[160px] max-h-[355px] mt-3 overflow-y-auto overflow-x-hidden scrollbar-webkit">
+            <div className="xmd:max-h-[160px] max-h-[300px] mt-3 overflow-y-auto overflow-x-hidden scrollbar-webkit">
               {loadingBatch ? (
                 <div className="flex justify-center items-center w-full h-full p-5">
                   <CircularProgress size={20} />
