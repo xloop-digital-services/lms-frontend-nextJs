@@ -307,7 +307,14 @@ export default function Page({ params }) {
       formData.append("name", moduleData.name);
       formData.append("description", moduleData.description);
       formData.append("course", moduleData.course);
+<<<<<<< Updated upstream
       formData.append("files", s3Data);
+=======
+      formData.append(
+        "files",
+        `https://lms-xd-bucket.s3.ap-south-1.amazonaws.com/assets/${file}`
+      );
+>>>>>>> Stashed changes
       formData.append("session", sessionId);
       formData.append("status", moduleStatus);
 
