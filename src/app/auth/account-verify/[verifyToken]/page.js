@@ -30,11 +30,11 @@ export default function Page({ params }) {
       password: newPassword,
       password2: confirmPassword,
     };
-    console.log("form", data);
+    // console.log("form", data);
 
     try {
       const response = await VerifyEmail(data);
-      console.log("res", response);
+      // console.log("res", response);
       if (response.status === 200) {
         toast.success("Password Set Successfully", {
           position: "top-right",
@@ -64,7 +64,7 @@ export default function Page({ params }) {
         setloading(false);
       }
     } catch (error) {
-      console.error("Error during login:", error.response.data.message);
+      // console.error("Error during login:", error.response.data.message);
       if (error.response.data.password) {
         toast.error(error.response.data.password[0], {
           position: "top-right",
@@ -86,7 +86,18 @@ export default function Page({ params }) {
           draggable: true,
           progress: undefined,
         });
-      }      
+      }     
+      if(error.response.data.status_code === 400){
+        toast.error(error.response.data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      } 
     } finally {
       setloading(false);
     }

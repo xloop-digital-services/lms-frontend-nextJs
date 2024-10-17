@@ -252,7 +252,7 @@ const UserModal = ({
                             Resume
                           </td>
                           <td className="text-center py-2 px-4">
-                            {resume ? (
+                            {resume && resume !== 'undefined/undefined' ? (
                               <button
                                 onClick={() => downloadFile(resume)}
                                 // href={resume}
