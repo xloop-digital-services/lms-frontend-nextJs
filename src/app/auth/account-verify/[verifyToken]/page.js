@@ -65,17 +65,29 @@ export default function Page({ params }) {
       }
     } catch (error) {
       console.error("Error during login:", error.response.data.message);
-      toast.error(error.response.data.message, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      setConfirmPassword("");
-      setPassword("");
+      if (error.response.data.password) {
+        toast.error(error.response.data.password[0], {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      } 
+      if(error.response.data.error){
+        toast.error(error.response.data.error[0], {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }      
+    } finally {
       setloading(false);
     }
   };
