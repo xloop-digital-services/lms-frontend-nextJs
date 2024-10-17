@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 // import logo from "../../../../public/assets/img/xCelerate-Logo.png";
-import logo from "../../../../../public/assets/img/xCelerate-Logo.png"
+import logo from "../../../../../public/assets/img/xCelerate-Logo.png";
 import Image from "next/image";
 import { useState } from "react";
 import { VerifyEmail } from "@/api/route";
@@ -75,8 +75,8 @@ export default function Page({ params }) {
           draggable: true,
           progress: undefined,
         });
-      } 
-      if(error.response.data.error){
+      }
+      if (error.response.data.error) {
         toast.error(error.response.data.error[0], {
           position: "top-right",
           autoClose: 5000,
@@ -86,8 +86,8 @@ export default function Page({ params }) {
           draggable: true,
           progress: undefined,
         });
-      }     
-      if(error.response.data.status_code === 400){
+      }
+      if (error.response.data.status_code === 400) {
         toast.error(error.response.data.message, {
           position: "top-right",
           autoClose: 5000,
@@ -97,7 +97,18 @@ export default function Page({ params }) {
           draggable: true,
           progress: undefined,
         });
-      } 
+      }
+      if (error.response.data.code === "token_not_valid") {
+        toast.error(error.response.data.messages.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
     } finally {
       setloading(false);
     }
