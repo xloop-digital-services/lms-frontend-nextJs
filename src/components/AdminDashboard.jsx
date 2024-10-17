@@ -18,6 +18,7 @@ import {
 import { CircularProgress } from "@mui/material";
 import Link from "next/link";
 import DeleteConfirmationPopup from "./Modal/DeleteConfirmationPopUp";
+import { FaMagnifyingGlass } from "react-icons/fa6";
 
 const AdminDashboard = () => {
   const { isSidebarOpen } = useSidebar();
@@ -201,8 +202,6 @@ const AdminDashboard = () => {
     }
   };
 
-
-
   const toggleProgramOpen = () => {
     setIsProgramOpen((prev) => !prev);
   };
@@ -239,7 +238,7 @@ const AdminDashboard = () => {
   // Set the initial selectedUser to "Student"
   useEffect(() => {
     setSelectedUser("Student");
-    setIsUserSelected(true)
+    setIsUserSelected(true);
   }, []);
 
   useEffect(() => {
@@ -336,7 +335,9 @@ const AdminDashboard = () => {
     <>
       <div
         className={`flex-1 transition-transform pt-[100px] space-y-4 max-md:pt-22 font-inter ${
-          isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 xlg:pl-10 pl-4 pr-4"
+          isSidebarOpen
+            ? "translate-x-64 ml-20 "
+            : "translate-x-0 xlg:pl-10 pl-4 pr-4"
         }`}
         style={{
           // paddingBottom: "20px",
@@ -622,16 +623,21 @@ const AdminDashboard = () => {
                 </Link>
               </h1>
               <div className="w-full flex items-center justify-end gap-4 ">
-                <div className="flex nsm:w-[50%] w-full nsm:mt-0 mt-1">
+                <div className=" relative flex nsm:w-[50%] w-full nsm:mt-0 mt-1">
                   {" "}
                   {/* Ensure the container is growable */}
-                  <input
-                    type="text"
-                    placeholder="Search batch by names"
-                    className="px-3 py-2 text-sm border border-dark-500 rounded-lg outline-none w-full" // w-full ensures full width
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-dark-300">
+                    <FaMagnifyingGlass size={18} />
+                  </span>
+                  <div className="border py-2 border-dark-500 rounded-lg w-full">
+                    <input
+                      type="text"
+                      placeholder="Search by names"
+                      className="pl-9 px-3  text-sm  outline-none w-full" // w-full ensures full width
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
                 </div>
                 {/* <div>
                   <button
