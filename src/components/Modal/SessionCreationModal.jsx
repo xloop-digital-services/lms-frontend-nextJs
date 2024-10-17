@@ -97,12 +97,9 @@ const SessionCreationModal = ({
           setOpenModal(false);
           setUpdateSession(!updateSession);
         } catch (error) {
-          console.log(
-            "error while session creation",
-            error.response
-          );
-          if(error.response.status === 400){
-            toast.error(error.response.data.error[0])
+          console.log("error while session creation", error.response);
+          if (error.response.status === 400) {
+            toast.error(error.response.data.error[0]);
           }
           // toast.error("error in class scheduling");
           setLoadingCreation(false);
@@ -598,7 +595,6 @@ const SessionCreationModal = ({
                     )
                   )}
 
-                  {/* Checkbox to select all weekdays except Sunday */}
                   {/* <label
                     className={`flex items-center ${
                       selectedDays.length === Object.keys(WEEKDAYS).length - 1
