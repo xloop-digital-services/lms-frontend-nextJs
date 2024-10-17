@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 // import logo from "../../../../public/assets/img/xCelerate-Logo.png";
-import logo from "../../../../../public/assets/img/xCelerate-Logo.png"
+import logo from "../../../../../public/assets/img/xCelerate-Logo.png";
 import Image from "next/image";
 import { useState } from "react";
 import { VerifyEmail } from "@/api/route";
@@ -19,7 +19,7 @@ export default function Page({ params }) {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
-  console.log("token", verifyToken);
+  // console.log("token", verifyToken);
 
   const handlePassword = async (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
@@ -30,7 +30,7 @@ export default function Page({ params }) {
       password: newPassword,
       password2: confirmPassword,
     };
-    console.log("form", data);
+    // console.log("form", data);
 
     try {
       const response = await VerifyEmail(data);
@@ -64,18 +64,30 @@ export default function Page({ params }) {
         setloading(false);
       }
     } catch (error) {
-      console.error("Error during login:", error.response.data.message);
-      toast.error(error.response.data.message, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      setConfirmPassword("");
-      setPassword("");
+      console.error("Error during login:", error.response.data.password);
+      if (error.response.data.password) {
+        toast.error(error.response.data.password[0], {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      } 
+      if(error.response.data.error){
+        toast.error(error.response.data.error[0], {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }      
+    } finally {
       setloading(false);
     }
   };

@@ -85,7 +85,7 @@ export default function Page() {
         }}
       >
         <div className="bg-surface-100 p-6 rounded-xl">
-          <div className="w-full mx-auto flex xsm:flex-row flex-col justify-between items-center gap-4 max-md:flex-col">
+          <div className="w-full mx-auto flex lsm:flex-row flex-col justify-between items-center gap-4 max-md:flex-col">
             <div>
               <p className="font-bold font-exo text-blue-500 text-xl">
                 Locations Details
@@ -148,7 +148,7 @@ export default function Page() {
               </div>
               <div>
                 <button
-                  className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] p-4 md:px-8 rounded-lg hover:cursor-pointer"
+                   className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] sm:flex text-sm sm:p-4 px-3 py-3 md:px-6 rounded-lg hover:cursor-pointer"
                   onClick={handleLocationCreate}
                 >
                   Create<span className="sm:flex hidden px-1">a new </span>{" "}

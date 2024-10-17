@@ -401,7 +401,7 @@ const ApprovalUserModal = ({
                   Resume
                 </p>
                 <div className="px-4">
-                  {resume ? (
+                  {resume  ? (
                     <p className="max-w-[140px] truncate pt-[2px] text-[#43434a] text-sm">
                       <button
                         onClick={() => downloadFile(resume)}

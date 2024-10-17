@@ -6,6 +6,7 @@ import {
   getAllSkillCourses,
   getAllSkills,
 } from "@/api/route";
+import { handleFileUploadToS3 } from "@/components/ApplicationForm";
 import CreateField from "@/components/CreateField";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -22,6 +23,7 @@ export default function Page() {
   const [chrLab, setChrLab] = useState("");
   const router = useRouter();
   const [inputCourses, setInputCourses] = useState([]);
+  const [file, setFile] = useState(null);
 
   async function fetchAllSkills() {
     try {
@@ -38,6 +40,8 @@ export default function Page() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const s3Data = await handleFileUploadToS3(file, "Upload Course Thumbnails");
+    console.log("S3 Data:", s3Data);
     const courseData = {
       name: programName,
       short_description: shortDesc,
@@ -45,6 +49,7 @@ export default function Page() {
       skills: inputCourses,
       theory_credit_hours: chr || 0,
       lab_credit_hours: chrLab || 0,
+      picture: s3Data,
     };
     try {
       const response = await createCourse(courseData);
@@ -112,6 +117,8 @@ export default function Page() {
         setChrLab={setChrLab}
         removeCourse={removeCourse}
         fetchAllSkills={fetchAllSkills}
+        file={file}
+        setFile={setFile}
       />
     </div>
   );

@@ -18,7 +18,7 @@ export default function Page({ params }) {
   const router = useRouter();
   const u_id = params.verifyToken[0];
   const token = params.verifyToken[1];
-  console.log("token", u_id, "/", token);
+  // console.log("token", u_id, "/", token)
 
   const handlePassword = async (event) => {
     event.preventDefault();
@@ -32,7 +32,7 @@ export default function Page({ params }) {
       password: newPassword,
       password2: confirmPassword,
     };
-    console.log("form", data);
+    // console.log("form", data);
 
     try {
       const response = await setNewPassword(data, u_id, token);
@@ -67,17 +67,29 @@ export default function Page({ params }) {
       }
     } catch (error) {
       console.error("Error during login:", error);
-      toast.error("An error occurred.", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      setConfirmPassword("");
-      setPassword("");
+      if (error.response.data.password) {
+        toast.error(error.response.data.password[0], {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      } 
+      if(error.response.data.error){
+        toast.error(error.response.data.error[0], {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }      
+    } finally {
       setloading(false);
     }
   };
