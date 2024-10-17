@@ -41,6 +41,16 @@ const SessionCreationModal = ({
   const [isCourseSelected, setIsCourseSelected] = useState(false);
   const [loadingCourses, setLoadingCourses] = useState(false);
   const [selectedDays, setSelectedDays] = useState([]);
+  const [timeData, setTimeData] = useState({
+    // Initialize with each day having default start and end time
+    0: { startTime: "", endTime: "" },
+    1: { startTime: "", endTime: "" },
+    2: { startTime: "", endTime: "" },
+    3: { startTime: "", endTime: "" },
+    4: { startTime: "", endTime: "" },
+    5: { startTime: "", endTime: "" },
+    6: { startTime: "", endTime: "" },
+  });
   const [startDate, setstartDate] = useState(null);
   const [endDate, setendDate] = useState(null);
   const [error, setError] = useState(""); // To track error messages
@@ -62,32 +72,43 @@ const SessionCreationModal = ({
       setLoadingCreation(false); // Set loading to false
       return; // Stop further execution
     }
+    
+    if (selectedDays.length > 0) {
+      // Check for time null condition
+      const hasNullTime = selectedDays.some((day) => {
+        const time = timeData[day];
+        return !time || !time.startTime || !time.endTime; // Check if timeData is null or start/end times are null
+      });
+
+      if (hasNullTime) {
+        toast.error("Please select time for all selected days."); // Display error toast
+        setLoadingCreation(false);
+        return; // Stop further execution
+      }
+    }
 
     if (!timeErrorMessage && !dateErrorMessage) {
       if (
         selectedLocation &&
-        selectedBatch &&
-        // selectedBatch &&
         startDate &&
         endDate &&
         selectedCourseName &&
         capacity &&
-        startTime &&
-        endTime &&
         selectedDays.length > 0
       ) {
         try {
           // Format time to "hh:mm:ss" or "hh:mm:ss.uuuuuu" (24-hour format) before sending to backend
           const data = {
-            batch: selectedBatch,
             location: selectedLocationId,
             no_of_students: capacity,
             start_date: startDate,
             end_date: endDate,
-            start_time: startTime,
-            end_time: endTime,
             course_id: selectedCourseId,
-            days_of_week: selectedDays,
+            schedules: selectedDays.map((day) => ({
+              day_of_week: WEEKDAYS[day][0], // Full name of the day
+              start_time: timeData[day].startTime, // Fetch start time for the day
+              end_time: timeData[day].endTime, // Fetch end time for the day
+            })),
           };
 
           const response = await createSession(data);
@@ -97,12 +118,9 @@ const SessionCreationModal = ({
           setOpenModal(false);
           setUpdateSession(!updateSession);
         } catch (error) {
-          console.log(
-            "error while session creation",
-            error.response
-          );
-          if(error.response.status === 400){
-            toast.error(error.response.data.error[0])
+          console.log("error while session creation", error.response);
+          if (error.response.status === 400) {
+            toast.error(error.response.data.error[0]);
           }
           // toast.error("error in class scheduling");
           setLoadingCreation(false);
@@ -273,16 +291,47 @@ const SessionCreationModal = ({
     6: ["Sunday", "Sun"],
   };
 
-  const handleCheckboxChange = (event) => {
-    const { value, checked } = event.target;
-    const dayValue = parseInt(value, 10); // Convert the value to an integer
+  const handleCheckboxChange = (e) => {
+    const day = parseInt(e.target.value, 10);
+    if (selectedDays.includes(day)) {
+      setSelectedDays(selectedDays.filter((d) => d !== day));
+    } else {
+      setSelectedDays([...selectedDays, day]);
+    }
+  };
 
-    setSelectedDays((prev) => {
-      if (checked) {
-        return [...prev, dayValue]; // Add day if checked
-      } else {
-        return prev.filter((day) => day !== dayValue); // Remove day if unchecked
+  const handleTimeChange = (day, timeType, value) => {
+    // Update the timeData for the specific day and time type (start or end)
+    setTimeData((prev) => {
+      const updatedDay = {
+        ...prev[day],
+        [timeType]: value,
+      };
+
+      const startTime = updatedDay.startTime || ""; // Default to an empty string if not set
+      const endTime = updatedDay.endTime || "";
+
+      console.log("start time", startTime);
+      console.log("end time", endTime);
+
+      // Validate the times for this specific day
+      let timeErrorMessage = "";
+      if (startTime && endTime) {
+        const startTimeDate = convertTimeToDate(startTime);
+        const endTimeDate = convertTimeToDate(endTime);
+        if (endTimeDate <= startTimeDate) {
+          timeErrorMessage = "End time should be greater than start time";
+        }
       }
+
+      // Update the timeData with the new time and possible error message
+      return {
+        ...prev,
+        [day]: {
+          ...updatedDay,
+          errorMessage: timeErrorMessage, // Store the error message for this day
+        },
+      };
     });
   };
 
@@ -303,7 +352,7 @@ const SessionCreationModal = ({
 
   return (
     <div className="backDropOverlay h-screen flex justify-center items-center">
-      <div className=" w-[550px] z-[1000] mx-auto my-20 overflow-auto scrollbar-webkit">
+      <div className=" w-[600px] z-[1000] mx-auto my-20 overflow-auto scrollbar-webkit">
         {loadingCreation && (
           <div className="absolute inset-0 w-full p-2 flex items-center justify-center bg-surface-100 bg-opacity-30 z-[1100]">
             <CircularProgress size={30} />
@@ -379,7 +428,7 @@ const SessionCreationModal = ({
                   </div>
                 )}
               </div> */}
-              <div className="space-y-2 text-[15px] w-full">
+              <div className="relative space-y-2 text-[15px] w-full">
                 <p>Course</p>
                 <button
                   onClick={toggleCourseOpen}
@@ -406,7 +455,7 @@ const SessionCreationModal = ({
                 {isCourseOpen && (
                   <div
                     ref={mouseClick}
-                    className="absolute z-10 w-[450px] mt-1 bg-surface-100 max-h-[200px] overflow-auto scrollbar-webkit border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
+                    className="absolute z-10 w-full mt-1 bg-surface-100 max-h-[200px] overflow-auto scrollbar-webkit border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
                   >
                     {loadingCourses && courseNames.length === 0 ? (
                       <div className="w-full flex items-center justify-center p-1">
@@ -417,7 +466,7 @@ const SessionCreationModal = ({
                         <div
                           key={name}
                           onClick={() => handleCourseSelect(name)}
-                          className="p-2 cursor-pointer"
+                          className="py-1 px-2  cursor-pointer"
                         >
                           <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
                             {name.name}
@@ -536,8 +585,8 @@ const SessionCreationModal = ({
                 )}
               </div>
             </div>
-            <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
-              {/* Start Time Input */}
+            {/* <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
+          
               <div className="space-y-2 text-[15px] w-full">
                 <p>Start Time</p>
                 <div className="relative">
@@ -551,7 +600,7 @@ const SessionCreationModal = ({
                 </div>
               </div>
 
-              {/* End Time Input */}
+       
               <div className="space-y-2 text-[15px] w-full">
                 <p>End Time</p>
                 <div className="relative">
@@ -569,23 +618,28 @@ const SessionCreationModal = ({
                   </p>
                 )}
               </div>
-            </div>
-
-            <div className="flex flex-col gap-3 mx-auto  w-full">
+            </div> */}
+            <div className="flex flex-col gap-3 mx-auto mt-1 w-full">
               <div className="space-y-2 text-[15px] w-full">
-                <p>Week Days</p>
-                <div className="flex flex-wrap gap-3">
+                <div className="flex justify-between w-[85%]">
+                  <p>Week Days</p>
+                  <div className="flex gap-[75px]">
+                    <p>Start Time</p>
+                    <p>End Time</p>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-3">
                   {/* Individual checkboxes for each day */}
-                  {Object.entries(WEEKDAYS).map(
-                    ([key, [fullName, shortName]]) => (
-                      <label
-                        key={key}
-                        className={`flex items-center ${
-                          selectedDays.includes(parseInt(key, 10))
-                            ? "text-[#424b55]"
-                            : "text-[#92A7BE]"
-                        }`}
-                      >
+                  {Object.entries(WEEKDAYS).map(([key, [fullName]]) => (
+                    <div
+                      key={key}
+                      className={`flex items-start justify-between gap-2 ${
+                        selectedDays.includes(parseInt(key, 10))
+                          ? "text-[#424b55]"
+                          : "text-[#92A7BE]"
+                      }`}
+                    >
+                      <label className="flex w-[70%] mt-3">
                         <input
                           type="checkbox"
                           value={key}
@@ -593,37 +647,70 @@ const SessionCreationModal = ({
                           checked={selectedDays.includes(parseInt(key, 10))}
                           className="mr-2"
                         />
-                        {fullName} ({shortName})
+                        {fullName}
                       </label>
-                    )
-                  )}
+                      <div className="flex flex-col items-center w-full">
+                        <div className="flex xsm:flex-row flex-col gap-2 mx-auto w-full justify-between">
+                          {/* Start Time Input */}
+                          <div className="space-y-2 text-[15px] w-full">
+                            <div className="relative">
+                              <input
+                                type="time"
+                                value={timeData[key]?.startTime || ""}
+                                onChange={(e) =>
+                                  handleTimeChange(
+                                    key,
+                                    "startTime",
+                                    e.target.value
+                                  )
+                                }
+                                className="border border-dark-300 text-[#424b55] outline-none p-2 rounded-lg w-full"
+                                placeholder="Select start time"
+                                disabled={
+                                  !selectedDays.includes(parseInt(key, 10))
+                                }
+                              />
+                            </div>
+                          </div>
 
-                  {/* Checkbox to select all weekdays except Sunday */}
-                  {/* <label
-                    className={`flex items-center ${
-                      selectedDays.length === Object.keys(WEEKDAYS).length - 1
-                        ? "text-[#424b55]"
-                        : "text-[#92A7BE]"
-                    }`}
-                  >
-                    <input
-                      type="checkbox"
-                      onChange={handleSelectAllWeekdays}
-                      checked={
-                        selectedDays.length === Object.keys(WEEKDAYS).length - 1
-                      } // Check if all weekdays except Sunday are selected
-                      className="mr-2"
-                    />
-                    Select All Weekdays (Mon-Sat)
-                  </label> */}
+                          {/* End Time Input */}
+                          <div className="space-y-2 text-[15px] w-full">
+                            <div className="relative">
+                              <input
+                                type="time"
+                                value={timeData[key]?.endTime || ""}
+                                onChange={(e) =>
+                                  handleTimeChange(
+                                    key,
+                                    "endTime",
+                                    e.target.value
+                                  )
+                                }
+                                className="border border-dark-300 text-[#424b55] outline-none p-2 rounded-lg w-full"
+                                placeholder="Select end time"
+                                disabled={
+                                  !selectedDays.includes(parseInt(key, 10))
+                                }
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        {/* Error Message */}
+                        {timeData[key]?.errorMessage && (
+                          <p className="text-mix-200 text-[12px] mt-2">
+                            {timeData[key]?.errorMessage}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-
               <div className="flex items-center justify-center w-full mt-2">
                 <button
                   type="submit"
                   onClick={handleSessionCreation}
-                  className="w-fit flex justify-center py-3 px-12 text-sm font-medium rounded-lg text-dark-100 bg-blue-300 hover:bg-[#3272b6] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
+                  className="w-fit flex justify-center py-3 px-12 text-sm font-medium rounded-lg text-dark-100 bg-blue-300 hover:bg-[#3272b6] focus:outline-none"
                 >
                   Schedule
                 </button>

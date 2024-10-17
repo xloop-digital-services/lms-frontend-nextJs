@@ -75,7 +75,7 @@ export default function Page() {
     setLoading(true);
     try {
       const response = await listAllSessions();
-      // console.log("session fetching", response?.data);
+      console.log("session fetching", response?.data);
       setSessions(response?.data.data);
     } catch (error) {
       console.log(
