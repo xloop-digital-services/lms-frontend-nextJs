@@ -89,7 +89,7 @@ export default function Page({ params }) {
               id={courseId}
               // rating="Top Instructor"
               // instructorName="Maaz"
-              haveStatus={true}
+             haveStatus={isStudent ? true : false}
               program="course"
             />
             <AdminStudentGrading courseId={courseId} />
