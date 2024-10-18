@@ -18,11 +18,10 @@ import { CircularProgress } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { IoClose } from "react-icons/io5";
 
-export const handleFileUploadToS3 = async (file,category) => {
+export const handleFileUploadToS3 = async (file, category) => {
   const formData = new FormData();
-  formData.append('file', file);
-  formData.append('category', category);
-
+  formData.append("file", file);
+  formData.append("category", category);
 
   try {
     const response = await fetch("/api/s3-upload", {
@@ -82,7 +81,7 @@ export default function ApplicationForm() {
     const name = e.target.value;
 
     // Regular expression to allow only alphabets (a-z, A-Z)
-    const alphabetPattern = /^[a-zA-Z]*$/;
+    const alphabetPattern = /^[a-zA-Z\s]*$/;
 
     // Check if the name contains only alphabets
     if (!alphabetPattern.test(name)) {
@@ -97,7 +96,7 @@ export default function ApplicationForm() {
     const name = e.target.value;
 
     // Regular expression to allow only alphabets (a-z, A-Z)
-    const alphabetPattern = /^[a-zA-Z]*$/;
+    const alphabetPattern = /^[a-zA-Z\s]*$/;
 
     // Check if the name contains only alphabets
     if (!alphabetPattern.test(name)) {
@@ -317,6 +316,9 @@ export default function ApplicationForm() {
         setAllSkills(response.data);
       } catch (error) {
         console.log("skills error", error);
+        if (error.response.status === 401) {
+          toast.error(error.response.data.detail);
+        }
       }
     };
 
@@ -373,8 +375,6 @@ export default function ApplicationForm() {
     setBirthDate(e.target.value);
   };
 
-  
-
   const handleApplicationCreation = async () => {
     setLoadingSubmit(true);
 
@@ -404,7 +404,7 @@ export default function ApplicationForm() {
     }
 
     try {
-      const s3Data = await handleFileUploadToS3(file, 'resumes');
+      const s3Data = await handleFileUploadToS3(file, "resumes");
       console.log("S3 Data:", s3Data);
 
       const formData = new FormData();
@@ -484,7 +484,7 @@ export default function ApplicationForm() {
                 placeholder="Enter your first name"
                 value={firstName}
                 onChange={handleFirstName}
-                pattern="[a-zA-Z]"
+                pattern="[a-zA-Z\s]*"
                 title="Please enter your correct name"
               />
             </div>
@@ -496,7 +496,7 @@ export default function ApplicationForm() {
                 placeholder="Enter your last name"
                 value={lastName}
                 onChange={handleLastName}
-                pattern="[a-zA-Z]"
+                pattern="[a-zA-Z\s]*"
                 title="Please enter your correct name"
               />
             </div>

@@ -317,7 +317,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
             />
           </div> */}
             {/* <p><Se></Se></p> */}
-            <div className="w-full flex justify-end items-start">
+            <div className="relative w-full flex justify-end items-start">
               <button
                 onClick={toggleOpen}
                 className="flex justify-between sm:text-base text-sm z-50 items-center w-full gap-1 md:w-[200px] text-dark-500 hover:text-[#0e1721] px-4 py-3 text-left bg-white border  border-dark-500 rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
@@ -335,7 +335,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
               {isOpen && (
                 <div
                   ref={dropdownRef}
-                  className="absolute capitalize z-50 w-fit md:w-[200px] mt-14 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                  className="absolute capitalize z-50 w-full mt-14 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                 >
                   {options.map((option, index) => (
                     <div
