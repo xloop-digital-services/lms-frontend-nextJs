@@ -82,7 +82,7 @@ export default function ApplicationForm() {
     const name = e.target.value;
 
     // Regular expression to allow only alphabets (a-z, A-Z)
-    const alphabetPattern = /^[a-zA-Z]*$/;
+    const alphabetPattern = /^[a-zA-Z\s]*$/;
 
     // Check if the name contains only alphabets
     if (!alphabetPattern.test(name)) {
@@ -97,7 +97,7 @@ export default function ApplicationForm() {
     const name = e.target.value;
 
     // Regular expression to allow only alphabets (a-z, A-Z)
-    const alphabetPattern = /^[a-zA-Z]*$/;
+    const alphabetPattern = /^[a-zA-Z\s]*$/;
 
     // Check if the name contains only alphabets
     if (!alphabetPattern.test(name)) {
@@ -484,7 +484,7 @@ export default function ApplicationForm() {
                 placeholder="Enter your first name"
                 value={firstName}
                 onChange={handleFirstName}
-                pattern="[a-zA-Z]"
+                pattern="[a-zA-Z\s]*"
                 title="Please enter your correct name"
               />
             </div>
@@ -496,7 +496,7 @@ export default function ApplicationForm() {
                 placeholder="Enter your last name"
                 value={lastName}
                 onChange={handleLastName}
-                pattern="[a-zA-Z]"
+                pattern="[a-zA-Z\s]*"
                 title="Please enter your correct name"
               />
             </div>
