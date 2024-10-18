@@ -317,39 +317,41 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
             />
           </div> */}
             {/* <p><Se></Se></p> */}
-            <div className="relative w-full flex justify-end items-start">
-              <button
-                onClick={toggleOpen}
-                className="flex justify-between sm:text-base text-sm z-50 items-center w-full gap-1 md:w-[200px] text-dark-500 hover:text-[#0e1721] px-4 py-3 text-left bg-white border  border-dark-500 rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
-              >
-                {selectedOption || options[0]}
-                <span
-                  className={`${
-                    isOpen ? "rotate-180 duration-300" : "duration-300"
-                  }`}
+            <div className="flex justify-end items-end w-full">
+              <div className="relative  ">
+                <button
+                  onClick={toggleOpen}
+                  className="flex justify-between sm:text-base text-sm z-50 items-center xsm:w-[200px] w-full gap-1 md:w-[200px] text-dark-500 hover:text-[#0e1721] px-4 py-3 text-left bg-white border  border-dark-500 rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
                 >
-                  <IoIosArrowDown />
-                </span>
-              </button>
+                  {selectedOption || options[0]}
+                  <span
+                    className={`${
+                      isOpen ? "rotate-180 duration-300" : "duration-300"
+                    }`}
+                  >
+                    <IoIosArrowDown />
+                  </span>
+                </button>
 
-              {isOpen && (
-                <div
-                  ref={dropdownRef}
-                  className="absolute capitalize z-50 w-full mt-14 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
-                >
-                  {options.map((option, index) => (
-                    <div
-                      key={index}
-                      onClick={() => handleOptionSelect(option)}
-                      className="p-2 cursor-pointer "
-                    >
-                      <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
-                        {option}
+                {isOpen && (
+                  <div
+                    ref={dropdownRef}
+                    className="absolute capitalize z-50 w-full mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                  >
+                    {options.map((option, index) => (
+                      <div
+                        key={index}
+                        onClick={() => handleOptionSelect(option)}
+                        className="p-2 cursor-pointer "
+                      >
+                        <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
+                          {option}
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
           <div
@@ -672,44 +674,44 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
         </div>
       </div>
       <div>
-        {heading === "Verified Users" ? (
-          modal &&
-          selectedUser && (
-            <ApprovalUserModal
-              selectedOption={selectedOption.toLowerCase()}
-              setModal={setModal}
-              firstName={selectedUser.first_name}
-              lastName={selectedUser.last_name}
-              email={selectedUser.email}
-              resume={selectedUser.resume}
-              status={selectedUser.application_status}
-              id={userID}
-            />
-          )
-        ) : modal &&
-        selectedUser && (
-          <UserModal
-            selectedOption={selectedOption.toLowerCase()}
-            setModal={setModal}
-            modal={modal}
-            firstName={selectedUser.first_name}
-            lastName={selectedUser.last_name}
-            dob={selectedUser.date_of_birth}
-            city={selectedUser.city || "-"}
-            email={selectedUser.email}
-            contact={selectedUser.contact || "-"}
-            status={selectedUser.application_status}
-            approvedStatus={selectedUser.account_status}
-            location={selectedUser.location}
-            program={selectedUser.program}
-            experience={selectedUser.years_of_experience}
-            resume={selectedUser.resume}
-            skill={selectedUser.skill}
-            id={selectedUser.id}
-            setStatusUpdated={setStatusUpdated}
-            statusUpdated={statusUpdated}
-          />
-        )}
+        {heading === "Verified Users"
+          ? modal &&
+            selectedUser && (
+              <ApprovalUserModal
+                selectedOption={selectedOption.toLowerCase()}
+                setModal={setModal}
+                firstName={selectedUser.first_name}
+                lastName={selectedUser.last_name}
+                email={selectedUser.email}
+                resume={selectedUser.resume}
+                status={selectedUser.application_status}
+                id={userID}
+              />
+            )
+          : modal &&
+            selectedUser && (
+              <UserModal
+                selectedOption={selectedOption.toLowerCase()}
+                setModal={setModal}
+                modal={modal}
+                firstName={selectedUser.first_name}
+                lastName={selectedUser.last_name}
+                dob={selectedUser.date_of_birth}
+                city={selectedUser.city || "-"}
+                email={selectedUser.email}
+                contact={selectedUser.contact || "-"}
+                status={selectedUser.application_status}
+                approvedStatus={selectedUser.account_status}
+                location={selectedUser.location}
+                program={selectedUser.program}
+                experience={selectedUser.years_of_experience}
+                resume={selectedUser.resume}
+                skill={selectedUser.skill}
+                id={selectedUser.id}
+                setStatusUpdated={setStatusUpdated}
+                statusUpdated={statusUpdated}
+              />
+            )}
       </div>
     </>
   );

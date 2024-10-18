@@ -92,7 +92,7 @@ export default function Page() {
                       id="email"
                       name="email"
                       placeholder="email address"
-                      value={email}
+                      value={email.trim()}
                       onChange={(e) => setEmail(e.target.value)}
                       className="py-3 px-4 block w-full outline-none border border-dark-200 rounded-md text-sm focus:border-blue-300 focus:ring-blue-300 shadow-sm"
                       required
