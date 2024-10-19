@@ -56,7 +56,7 @@ export default function Page() {
                   placeholder="Enter your email"
                   type="email"
                   required
-                  value={email}
+                  value={email.trim()}
                   onChange={(e) => setEmail(e.target.value)}
                   className="appearance-none block w-full p-3 border border-dark-300 rounded-lg placeholder-dark-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                 />
@@ -87,7 +87,7 @@ export default function Page() {
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
                   required
-                  value={password}
+                  value={password.trim()}
                   onChange={(e) => setPassword(e.target.value)}
                   className="appearance-none block w-full p-3 border border-dark-300 rounded-lg placeholder-dark-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                 />

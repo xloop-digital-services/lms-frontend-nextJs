@@ -18,11 +18,10 @@ import { CircularProgress } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { IoClose } from "react-icons/io5";
 
-export const handleFileUploadToS3 = async (file,category) => {
+export const handleFileUploadToS3 = async (file, category) => {
   const formData = new FormData();
-  formData.append('file', file);
-  formData.append('category', category);
-
+  formData.append("file", file);
+  formData.append("category", category);
 
   try {
     const response = await fetch("/api/s3-upload", {
@@ -82,13 +81,16 @@ export default function ApplicationForm() {
     const name = e.target.value;
 
     // Regular expression to allow only alphabets (a-z, A-Z)
-    const alphabetPattern = /^[a-zA-Z]*$/;
+    const alphabetPattern = /^[a-zA-Z\s]*$/;
 
-    // Check if the name contains only alphabets
-    if (!alphabetPattern.test(name)) {
+    // Trim leading and trailing spaces
+    setFirstName(name); // Set the trimmed name
+    const trimmedName = name.trim();
+
+    // Check if the trimmed name contains only alphabets
+    if (!alphabetPattern.test(trimmedName)) {
       setNameError("Name can only contain alphabets.");
     } else {
-      setFirstName(name);
       setNameError(""); // Clear the error if the input is valid
     }
   };
@@ -97,16 +99,22 @@ export default function ApplicationForm() {
     const name = e.target.value;
 
     // Regular expression to allow only alphabets (a-z, A-Z)
-    const alphabetPattern = /^[a-zA-Z]*$/;
+    const alphabetPattern = /^[a-zA-Z\s]*$/;
 
-    // Check if the name contains only alphabets
-    if (!alphabetPattern.test(name)) {
+    // Trim leading and trailing spaces
+    setLastName(name); // Set the trimmed name
+    const trimmedName = name.trim();
+    // console.log(trimmedName,'name')
+
+    // Check if the trimmed name contains only alphabets
+    if (!alphabetPattern.test(trimmedName)) {
       setNameError("Name can only contain alphabets.");
     } else {
-      setLastName(name);
       setNameError(""); // Clear the error if the input is valid
     }
   };
+
+  // console.log( firstName.trim(), lastName.trim())
 
   const formatContactInput = (value, caretPos) => {
     const numericValue = value.replace(/[^0-9]/g, ""); // Remove non-numeric characters
@@ -317,6 +325,9 @@ export default function ApplicationForm() {
         setAllSkills(response.data);
       } catch (error) {
         console.log("skills error", error);
+        if (error.response.status === 401) {
+          toast.error(error.response.data.detail);
+        }
       }
     };
 
@@ -373,8 +384,6 @@ export default function ApplicationForm() {
     setBirthDate(e.target.value);
   };
 
-  
-
   const handleApplicationCreation = async () => {
     setLoadingSubmit(true);
 
@@ -404,13 +413,16 @@ export default function ApplicationForm() {
     }
 
     try {
-      const s3Data = await handleFileUploadToS3(file, 'resumes');
-      console.log("S3 Data:", s3Data);
+      let s3Data = null;
+      if (file !== null) {
+        s3Data = await handleFileUploadToS3(file, "resumes");
+        console.log("S3 Data:", s3Data);
+      }
 
       const formData = new FormData();
       formData.append("email", email);
-      formData.append("first_name", firstName);
-      formData.append("last_name", lastName);
+      formData.append("first_name", firstName.trim());
+      formData.append("last_name", lastName.trim());
       formData.append("contact", contactNumber);
       formData.append("city", selectedCity);
       formData.append("city_abb", cityShortName);
@@ -472,7 +484,7 @@ export default function ApplicationForm() {
                 type="email"
                 className="border border-dark-300 outline-none p-3 rounded-lg w-full "
                 placeholder="Enter your email address"
-                value={email}
+                value={email.trim()}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
@@ -484,7 +496,7 @@ export default function ApplicationForm() {
                 placeholder="Enter your first name"
                 value={firstName}
                 onChange={handleFirstName}
-                pattern="[a-zA-Z]"
+                pattern="[a-zA-Z\s]*"
                 title="Please enter your correct name"
               />
             </div>
@@ -496,7 +508,7 @@ export default function ApplicationForm() {
                 placeholder="Enter your last name"
                 value={lastName}
                 onChange={handleLastName}
-                pattern="[a-zA-Z]"
+                pattern="[a-zA-Z\s]*"
                 title="Please enter your correct name"
               />
             </div>

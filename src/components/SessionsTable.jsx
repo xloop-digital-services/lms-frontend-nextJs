@@ -182,7 +182,7 @@ const SessionsTable = ({
             <div className="mt-4 border border-dark-300 rounded-lg divide-y divide-dark-200">
               <div className="relative max-h-[75vh]  overflow-y-auto scrollbar-webkit">
                 <table className="min-w-full divide-y divide-dark-200 ">
-                  <thead className="bg-surface-100 text-blue-500 sticky top-0 z-50 shadow-sm shadow-dark-200">
+                  <thead className="bg-surface-100 text-blue-500 sticky top-0 z-40 shadow-sm shadow-dark-200">
                     <tr>
                       {/* <th
                       scope="col"
@@ -394,7 +394,7 @@ const SessionsTable = ({
                                     {toggleWeek && (
                                       <div
                                         ref={weekRef}
-                                        className={`absolute z-40 w-full max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out ${
+                                        className={`absolute z-30 w-full max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out ${
                                           shouldOpenUpward
                                             ? "bottom-full"
                                             : "top-full"

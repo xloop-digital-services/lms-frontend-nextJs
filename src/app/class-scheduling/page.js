@@ -17,6 +17,7 @@ import {
 import useClickOutside from "@/providers/useClickOutside";
 import { CircularProgress } from "@mui/material";
 import DeleteConfirmationPopup from "@/components/Modal/DeleteConfirmationPopUp";
+import { toast } from "react-toastify";
 
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
@@ -78,10 +79,10 @@ export default function Page() {
       console.log("session fetching", response?.data);
       setSessions(response?.data.data);
     } catch (error) {
-      console.log(
-        "error while fetching the class schedules",
-        error.response.data.message
-      );
+      // console.log(
+      //   "error while fetching the class schedules",
+      //   error.response.data.message
+      // );
       if (error.message === "Network Error") {
         toast.error(error.message, "Check your internet connection");
       } else {
@@ -198,22 +199,22 @@ export default function Page() {
   return (
     <>
       <div
-        className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-32 font-inter ${
+        className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-22 font-inter ${
           isSidebarOpen
             ? "translate-x-64 ml-20 "
-            : "translate-x-0 xxlg:px-8 px-3"
+            : "translate-x-0 sm:pl-5 px-4 sm:pr-5"
         }`}
         style={{ width: isSidebarOpen ? "81%" : "100%" }}
       >
         <div className="bg-surface-100 p-6 rounded-xl">
-          <div className="w-full flex xlg:flex-row flex-col justify-between items-center gap-4">
+          <div className="w-full mx-auto flex smm:flex-row flex-col justify-between items-center gap-4 max-md:flex-col">
             <div>
               <p className="font-bold text-xl text-blue-500 font-exo">
                 Class Details
               </p>
             </div>
-            <div className="flex gap-3 sm:flex-row flex-col text-base lg:text-sm">
-              <div className="flex gap-3 ">
+            <div className="flex gap-3">
+              <div className=" ">
                 {/* City Dropdown */}
                 {/* <div>
                 <button
@@ -261,12 +262,12 @@ export default function Page() {
               </div> */}
 
                 {/* Location Dropdown  */}
-                <div>
+                <div className="relative">
                   <button
                     onClick={toggleLocationOpen}
                     className={`${
                       !isLocationSelected ? " text-dark-500" : "text-[#424b55]"
-                    } flex justify-between items-center w-full  lg:w-[200px] gap-1 hover:text-[#0e1721] px-4 xlg:py-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                    } flex justify-between items-center md:w-[200px] sm:w-[150px] w-full  gap-2 hover:text-[#0e1721] sm:p-4 px-2 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                   >
                     {selectedLocation}
                     {isLocationSelected && (
@@ -277,14 +278,20 @@ export default function Page() {
                         <IoIosCloseCircleOutline size={20} />
                       </span>
                     )}
-                    <span className="">
+                    <span
+                      className={
+                        isLocationOpen
+                          ? "rotate-180 duration-300"
+                          : "duration-300"
+                      }
+                    >
                       <IoIosArrowDown />
                     </span>
                   </button>
                   {isLocationOpen && (
                     <div
                       ref={dropdownRef}
-                      className="absolute z-20 w-[200px] max-h-[250px] overflow-auto scrollbar-webkit mt-1 bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                      className="absolute z-20 w-full max-h-[250px] overflow-auto scrollbar-webkit mt-1 bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                     >
                       {sessions && sessions.length > 0 ? (
                         // Filter duplicates based on both name and city
@@ -301,7 +308,7 @@ export default function Page() {
                             onClick={() => handleLocationSelect(option)}
                             className="p-2 cursor-pointer"
                           >
-                            <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
+                            <div className="sm:px-4 px-1 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
                               {option.location_name}
                             </div>
                           </div>
@@ -358,10 +365,11 @@ export default function Page() {
               {/* Create Session Button */}
               <div>
                 <button
-                  className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] md:w-[200px] px-4 xlg:py-4 py-3 w-full rounded-lg"
+                  className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] sm:flex text-sm sm:p-4 px-3 py-3 md:px-6 rounded-lg hover:cursor-pointer"
                   onClick={handleOpenSessionModal}
                 >
-                  Schedule a new class
+                  Schedule<span className="sm:flex hidden px-1">a new </span>{" "}
+                  class
                 </button>
               </div>
             </div>

@@ -78,7 +78,9 @@ export default function Page() {
     <>
       <div
         className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-22 font-inter pb-4 ${
-          isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 px-4"
+          isSidebarOpen
+            ? "translate-x-64 ml-20 "
+            : "translate-x-0 sm:pl-5 px-4 sm:pr-5"
         }`}
         style={{
           width: isSidebarOpen ? "81%" : "100%",
@@ -109,7 +111,7 @@ export default function Page() {
                     </span>
                   )}
                   <span
-                    className={`ml-auto ${
+                    className={` ${
                       isCityOpen ? "rotate-180 duration-300" : "duration-300"
                     }`}
                   >
@@ -148,7 +150,7 @@ export default function Page() {
               </div>
               <div>
                 <button
-                  className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] p-4 md:px-8 rounded-lg hover:cursor-pointer"
+                  className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] sm:flex text-sm sm:p-4 px-3 py-3 md:px-6 rounded-lg hover:cursor-pointer"
                   onClick={handleLocationCreate}
                 >
                   Create<span className="sm:flex hidden px-1">a new </span>{" "}
