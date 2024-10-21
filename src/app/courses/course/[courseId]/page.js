@@ -510,17 +510,15 @@ export default function Page({ params }) {
   }, [sessionId]);
 
   useEffect(() => {
-    // fetchAllSkills();
-    // fetchSkillbyId();
     {
       isStudent && fetchCourseProgress();
     }
-    fetchAllSkills();
-  }, [courseId]);
+  }, [courseId, isStudent]);
 
   useEffect(() => {
     if (!courseId) return;
     fetchCoursesById();
+    fetchAllSkills();
   }, [courseId]);
 
   const handleChange = (e) => {
@@ -1062,21 +1060,34 @@ export default function Page({ params }) {
                               <span className="mr-4 text-md">
                                 Module Status
                               </span>
-                              <label className="relative inline-flex items-center cursor-pointer">
+                              <label
+                                className={`relative inline-flex items-center ${
+                                  module.status === 1
+                                    ? "cursor-not-allowed"
+                                    : "cursor-pointer"
+                                }`}
+                              >
                                 <input
                                   type="checkbox"
                                   checked={module.status === 1}
+                                  disabled={module.status === 1}
                                   onChange={() =>
                                     handleModuleStatus(module.id, module.status)
                                   }
                                   className="sr-only"
                                 />
-                                <div className="w-11 h-6 bg-blue-600 rounded-full"></div>
                                 <div
-                                  className={`absolute w-4 h-4 bg-blue-300 rounded-full shadow-md transform transition-transform ${
+                                  className={`w-11 h-6 rounded-full ${
                                     module.status === 1
-                                      ? "translate-x-5"
-                                      : "translate-x-1"
+                                      ? "bg-dark-100"
+                                      : "bg-blue-600"
+                                  }`}
+                                ></div>
+                                <div
+                                  className={`absolute w-4 h-4 rounded-full shadow-md transform transition-transform ${
+                                    module.status === 1
+                                      ? "translate-x-5 bg-dark-200"
+                                      : "translate-x-1 bg-blue-300"
                                   }`}
                                 ></div>
                               </label>
@@ -1085,6 +1096,7 @@ export default function Page({ params }) {
                               </span>
                             </div>
                           )}
+
                           <button
                             className=" flex justify-center mt-4 items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-blue-700"
                             onClick={() => {

@@ -182,7 +182,11 @@ const CourseHead = ({
         </div>
       )}
 
-      {progress ? <Progress progress={progress} /> : null}
+      {progress ? (
+        <>
+          <Progress progress={progress} />
+        </>
+      ) : null}
 
       {haveStatus ? <StatusSummary /> : null}
       {/* </div>

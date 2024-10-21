@@ -2,8 +2,6 @@ import { axiosInstance } from "@/config/config";
 
 const API = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-
-
 //signup api
 // export const SignUpUser = async (user) => {
 //   try {
@@ -1185,7 +1183,6 @@ export const deleteModule = async (module, moduleId) => {
   }
 };
 
-
 //create an assignment
 export const createAssignment = async (assignment) => {
   try {
@@ -1365,6 +1362,7 @@ export const deleteExam = async (examData, examId) => {
       `/api/course/exams/${examId}/`,
       examData
     );
+    return response;
   } catch (error) {
     throw error;
   }

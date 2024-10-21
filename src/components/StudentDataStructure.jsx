@@ -8,6 +8,7 @@ import { downloadFile } from "@/app/courses/course/[courseId]/page";
 import { useAuth } from "@/providers/AuthContext";
 import { formatDateTime } from "./AdminDataStructure";
 import ResubmissionModal from "./Modal/ResubmissionModal";
+import { FaFile } from "react-icons/fa6";
 
 const StudentDataStructure = ({
   quizzes,
@@ -188,16 +189,16 @@ const StudentDataStructure = ({
                                   </>
                                 ) : (
                                   <>
-                                    {quiz.submitted_file === null ? (
+                                    {quiz.content === null ? (
                                       quiz.question || quiz.title
                                     ) : (
                                       <a
                                         href="#"
                                         className="cursor-pointer flex justify-center items-center text-black hover:text-[#2563eb] hover:underline"
-                                        title="download"
+                                        title="Download Assessment file"
                                         onClick={(e) => {
                                           e.preventDefault();
-                                          downloadFile(quiz.submitted_file);
+                                          downloadFile(quiz.content);
                                         }}
                                       >
                                         {quiz.question || quiz.title}
@@ -312,7 +313,7 @@ const StudentDataStructure = ({
                                     rel="noopener noreferrer"
                                   >
                                     <MdRemoveRedEye
-                                      title="pdf view"
+                                      title="Download submitted file"
                                       className="cursor-pointer"
                                       size={23}
                                     />
@@ -324,7 +325,7 @@ const StudentDataStructure = ({
                                         className={`
                                       "cursor-pointer hover:opacity-80"
                                     `}
-                                        title="upload"
+                                        title="Upload"
                                       />
 
                                       <FaCheck
@@ -404,10 +405,13 @@ const StudentDataStructure = ({
                                           quiz?.remaining_resubmissions === 0
                                         } ?  ? "cursor-pointer hover:opacity-80 "
                                             : "text-gray-300 "`}
-                                        title="upload"
+                                        title="Upload"
                                       />
                                     </div>
                                   )}
+                                  {/* <button onClick={()=>}>
+                                    <FaFile />
+                                  </button> */}
                                 </div>
                               </td>
                             </tr>

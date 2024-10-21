@@ -40,6 +40,7 @@ const AdminDataStructure = ({
   setQuizzes,
   setUpdateStatus,
   onDelete,
+  onStatusUpdate,
 }) => {
   const [uploadFile, setUploadFile] = useState(false);
   const [editId, setEditId] = useState(null);
@@ -281,21 +282,42 @@ const AdminDataStructure = ({
                             scope="col"
                             className="relative px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]"
                           >
-                            <p
-                              className={`w-[110px] text-center px-4 py-2 text-[12px] rounded-lg ${
-                                quiz.status === 0
-                                  ? "bg-mix-200 text-surface-100"
-                                  : quiz.status === 1
-                                  ? "bg-mix-300 text-surface-100"
-                                  : "bg-gray-200 text-gray-600"
+                            <label
+                              className={`flex items-center justify-center ${
+                                quiz.status === 1
+                                  ? "cursor-not-allowed"
+                                  : "cursor-pointer"
                               }`}
                             >
-                              {quiz.status === 0
-                                ? "Inactive"
-                                : quiz.status === 1
-                                ? "Active"
-                                : "-"}
-                            </p>
+                              <input
+                                type="checkbox"
+                                checked={quiz.status === 1}
+                                disabled={quiz.status === 1}
+                                onChange={async () => {
+                                  const newStatus = quiz.status === 0 ? 1 : 0;
+                                  await onStatusUpdate(quiz.id, newStatus);
+                                }}
+                                className="sr-only"
+                              />
+                              <div
+                                className={`relative w-11 h-6 rounded-full ${
+                                  quiz.status === 1
+                                    ? "bg-dark-100"
+                                    : "bg-blue-600"
+                                }`}
+                              >
+                                <div
+                                  className={`absolute top-1 left-1 w-4 h-4 rounded-full shadow-md transform transition-transform ${
+                                    quiz.status === 1
+                                      ? "translate-x-5 bg-dark-200"
+                                      : "translate-x-0 bg-blue-300"
+                                  }`}
+                                ></div>
+                              </div>
+                              <span className="ml-2 text-md">
+                                {quiz.status === 1 ? "Active" : "Inactive"}
+                              </span>
+                            </label>
                           </th>
                           <td className="px-12 py-3 whitespace-nowrap text-blue-300  ">
                             <div className="flex items-center justify-center gap-4">
