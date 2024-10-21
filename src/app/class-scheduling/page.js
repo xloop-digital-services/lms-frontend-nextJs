@@ -17,6 +17,7 @@ import {
 import useClickOutside from "@/providers/useClickOutside";
 import { CircularProgress } from "@mui/material";
 import DeleteConfirmationPopup from "@/components/Modal/DeleteConfirmationPopUp";
+import { toast } from "react-toastify";
 
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
