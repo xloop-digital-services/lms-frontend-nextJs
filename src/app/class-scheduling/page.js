@@ -297,7 +297,7 @@ export default function Page() {
                   {isLocationOpen && (
                     <div
                       ref={dropdownRef}
-                      className="absolute z-20 w-full max-h-[250px] overflow-auto scrollbar-webkit mt-1 bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                      className="absolute z-50 w-full max-h-[250px] overflow-auto scrollbar-webkit mt-1 bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                     >
                       {sessions && sessions.length > 0 ? (
                         // Filter duplicates based on both name and city
