@@ -9,6 +9,7 @@ import { useAuth } from "@/providers/AuthContext";
 import { formatDateTime } from "./AdminDataStructure";
 import ResubmissionModal from "./Modal/ResubmissionModal";
 import { FaFile } from "react-icons/fa6";
+import AssessmentDescModal from "./Modal/AssessmentDescModal";
 
 const StudentDataStructure = ({
   quizzes,
@@ -27,8 +28,21 @@ const StudentDataStructure = ({
   const [edit, setEdit] = useState(false);
   const [iD, setId] = useState("");
   const [resubmissionId, setResubmissionId] = useState("");
+  const [selectedQuiz, setSelectedQuiz] = useState(null);
+  const [description, setDescription] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { userData } = useAuth();
   const isAdmin = userData?.Group === "admin";
+
+  const handleOpenModal = (quiz) => {
+    setSelectedQuiz(quiz);
+    setDescription(true);
+  };
+
+  const handleCloseModal = () => {
+    setDescription(false);
+    setSelectedQuiz(null);
+  };
 
   const handleFileUpload = (id) => {
     setId(id);
@@ -409,9 +423,12 @@ const StudentDataStructure = ({
                                       />
                                     </div>
                                   )}
-                                  {/* <button onClick={()=>}>
+                                  <button
+                                    title="View description"
+                                    onClick={() => handleOpenModal(quiz)}
+                                  >
                                     <FaFile />
-                                  </button> */}
+                                  </button>
                                 </div>
                               </td>
                             </tr>
@@ -435,7 +452,13 @@ const StudentDataStructure = ({
           </div>
         </div>
       </div>
-
+      <AssessmentDescModal
+        isOpen={description}
+        quiz={selectedQuiz}
+        onClose={handleCloseModal}
+        loading={loading}
+        field={field}
+      />
       {uploadFile && (
         <UplaodingFile
           field={field}
