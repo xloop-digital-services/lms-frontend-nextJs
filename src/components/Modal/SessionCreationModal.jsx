@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
-import { createSession, getAllCourses } from "@/api/route";
+import { createSession, getAllCourses, UpdateSession } from "@/api/route";
 import { CircularProgress } from "@mui/material";
 import DatePicker from "react-datepicker";
 import { FaClock } from "react-icons/fa";
@@ -17,6 +17,10 @@ const SessionCreationModal = ({
   loadingBatch,
   setUpdateSession,
   updateSession,
+  setEdit,
+  edit,
+  session,
+  selectedSession,
 }) => {
   const [selectedLocation, setSelectedLocation] = useState("select Location");
   const [selectedLocationId, setSelectedLocationId] = useState(null);
@@ -57,13 +61,112 @@ const SessionCreationModal = ({
   const mouseClick = useRef(null);
   const modalClose = useRef(null);
 
+  const WEEKDAYS = {
+    0: ["Monday", "Mon"],
+    1: ["Tuesday", "Tue"],
+    2: ["Wednesday", "Wed"],
+    3: ["Thursday", "Thu"],
+    4: ["Friday", "Fri"],
+    5: ["Saturday", "Sat"],
+    6: ["Sunday", "Sun"],
+  };
+
+  // console.log(session, "session for update");
+
   useClickOutside(mouseClick, () => {
     setIsLocationOpen(false);
     setIsBatchOpen(false);
     setIsCourseOpen(false);
   });
 
-  useClickOutside(modalClose, () => setOpenModal(false));
+  useClickOutside(modalClose, () => {
+    setOpenModal(false);
+    setEdit(false);
+  });
+
+  useEffect(() => {
+    if (session && edit) {
+      setSelectedCourseName(session.course.name);
+      setSelectedCourseId(session.course.id);
+      setSelectedLocation(session.location_name);
+      setSelectedLocationId(session.location);
+      setCapacity(session.no_of_students);
+      setstartDate(session.start_date);
+      setendDate(session.end_date);
+      setIsLocationSelected(true);
+
+      const daysArray = session.schedules.map((schedule) => {
+        const dayIndex = Object.keys(WEEKDAYS).find(
+          (key) => WEEKDAYS[key][0] === schedule.day_of_week
+        );
+        return parseInt(dayIndex);
+      });
+      setSelectedDays(daysArray); // Set the selected days in state
+
+      // Populate timeData based on schedules
+      const updatedTimeData = { ...timeData };
+      session.schedules.forEach((schedule) => {
+        const dayIndex = Object.keys(WEEKDAYS).find(
+          (key) => WEEKDAYS[key][0] === schedule.day_of_week
+        );
+        if (dayIndex) {
+          updatedTimeData[dayIndex] = {
+            startTime: schedule.start_time,
+            endTime: schedule.end_time,
+          };
+        }
+      });
+      setTimeData(updatedTimeData); // Set the time data in state
+    }
+  }, [session, edit]);
+
+  const handleUpdate = async () => {
+    if (selectedDays.length > 0) {
+      // Check for time null condition
+      const hasNullTime = selectedDays.some((day) => {
+        const time = timeData[day];
+        return !time || !time.startTime || !time.endTime; // Check if timeData is null or start/end times are null
+      });
+
+      if (hasNullTime) {
+        toast.error("Please select time for all selected days."); // Display error toast
+        setLoadingCreation(false);
+        return; // Stop further execution
+      }
+    }
+
+    if (timeErrorMessage) {
+      toast.error(timeErrorMessage);
+    } else if (dateErrorMessage) {
+      toast.error(dateErrorMessage);
+    } else {
+      setLoadingCreation(true);
+      try {
+        const data = {
+          location: selectedLocationId,
+          no_of_students: capacity,
+          start_date: startDate,
+          end_date: endDate,
+          course_id: selectedCourseId,
+          schedules: selectedDays.map((day) => ({
+            day_of_week: WEEKDAYS[day][0], // Full name of the day
+            start_time: timeData[day].startTime, // Fetch start time for the day
+            end_time: timeData[day].endTime,
+          })),
+        };
+
+        const response = await UpdateSession(selectedSession, data);
+        console.log("session updated", response);
+        setEdit(false);
+        toast.success("Class schedule updated successfully");
+        setUpdateSession(!updateSession);
+      } catch (error) {
+        console.log("error while updating status", error);
+      } finally {
+        setLoadingCreation(false); // Set updating to false after the update is complete
+      }
+    }
+  };
 
   const handleSessionCreation = async () => {
     setLoadingCreation(true);
@@ -72,7 +175,7 @@ const SessionCreationModal = ({
       setLoadingCreation(false); // Set loading to false
       return; // Stop further execution
     }
-    
+
     if (selectedDays.length > 0) {
       // Check for time null condition
       const hasNullTime = selectedDays.some((day) => {
@@ -281,16 +384,6 @@ const SessionCreationModal = ({
     setIsCourseOpen(false);
   };
 
-  const WEEKDAYS = {
-    0: ["Monday", "Mon"],
-    1: ["Tuesday", "Tue"],
-    2: ["Wednesday", "Wed"],
-    3: ["Thursday", "Thu"],
-    4: ["Friday", "Fri"],
-    5: ["Saturday", "Sat"],
-    6: ["Sunday", "Sun"],
-  };
-
   const handleCheckboxChange = (e) => {
     const day = parseInt(e.target.value, 10);
     if (selectedDays.includes(day)) {
@@ -335,7 +428,6 @@ const SessionCreationModal = ({
     });
   };
 
-
   return (
     <div className="backDropOverlay h-screen flex justify-center items-center">
       <div className=" w-[600px] z-[1000] mx-auto my-20 overflow-auto scrollbar-webkit">
@@ -361,7 +453,13 @@ const SessionCreationModal = ({
             >
               Scheduling a class
             </h1>
-            <button className="px-2" onClick={() => setOpenModal(false)}>
+            <button
+              className="px-2"
+              onClick={() => {
+                setOpenModal(false);
+                setEdit(false);
+              }}
+            >
               <IoClose size={21} />
             </button>
           </div>
@@ -419,7 +517,9 @@ const SessionCreationModal = ({
                 <button
                   onClick={toggleCourseOpen}
                   className={`${
-                    !isCourseSelected ? "text-[#92A7BE]" : "text-[#424b55]"
+                    !isCourseSelected || !edit
+                      ? "text-[#92A7BE]"
+                      : "text-[#424b55]"
                   } flex justify-between items-center w-full truncate px-4 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                   style={{
                     // maxWidth: "220px", // Set the maximum width of the button
@@ -427,6 +527,7 @@ const SessionCreationModal = ({
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                   }}
+                  disabled={edit}
                 >
                   {selectedCourseName ? selectedCourseName : "Select a course"}
                   <span
@@ -448,7 +549,7 @@ const SessionCreationModal = ({
                         <CircularProgress size={15} />
                       </div>
                     ) : courseNames && courseNames.length > 0 ? (
-                      courseNames.map((name,index) => (
+                      courseNames.map((name, index) => (
                         <div
                           key={index}
                           onClick={() => handleCourseSelect(name)}
@@ -661,10 +762,10 @@ const SessionCreationModal = ({
               <div className="flex items-center justify-center w-full mt-2">
                 <button
                   type="submit"
-                  onClick={handleSessionCreation}
+                  onClick={!edit ? handleSessionCreation : handleUpdate}
                   className="w-fit flex justify-center py-3 px-12 text-sm font-medium rounded-lg text-dark-100 bg-blue-300 hover:bg-[#3272b6] focus:outline-none"
                 >
-                  Schedule
+                  {!edit ? `Schedule` : "Update"}
                 </button>
               </div>
             </div>

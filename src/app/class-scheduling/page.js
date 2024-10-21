@@ -45,6 +45,8 @@ export default function Page() {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [selectedSession, setSelectedSession] = useState(null);
   const [openInfoModal, setOpenInfoModal] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [session, setSession] = useState(null);
   const dropdownRef = useRef(null);
 
   // Update states based on screen size
@@ -182,38 +184,7 @@ export default function Page() {
 
   const handleOpenSessionModal = () => setOpenModal(true);
 
-  const handleUpdate = async () => {
-    if (status === null || updating) return;
-    if (editStartTime && editEndTime <= editStartTime) {
-      toast.error(timeErrorMessage);
-    } else {
-      setLoading(true);
-      try {
-        const data = {
-          batch: session.batch,
-          course: session.course.id,
-          location: session.location,
-          no_of_students: editCapacity,
-          start_date: session.start_date,
-          end_date: session.end_date,
-          start_time: editStartTime,
-          end_time: editEndTime,
-          status: session.status,
-          days_of_week: selectedDays,
-        };
-
-        const response = await UpdateSession(selectedSession, data);
-        console.log("session updated", response);
-        setEdit(false);
-        toast.success("Class schedule updated successfully");
-        setUpdateSession(!updateSession);
-      } catch (error) {
-        console.log("error while updating status", error);
-      } finally {
-        setUpdating(false); // Set updating to false after the update is complete
-      }
-    }
-  };
+  
 
   const handleDelete = async () => {
     try {
@@ -428,6 +399,10 @@ export default function Page() {
                 selectedSession={selectedSession}
                 confirmDelete={confirmDelete}
                 setOpenModal={setOpenInfoModal}
+                setEdit={setEdit}
+                edit={edit}
+                session={session}
+                setSession={setSession}
               />
             ) : (
               !isLocationSelected &&
@@ -443,6 +418,10 @@ export default function Page() {
                   selectedSession={selectedSession}
                   confirmDelete={confirmDelete}
                   setOpenModal={setOpenInfoModal}
+                  setEdit={setEdit}
+                  edit={edit}
+                  session={session}
+                  setSession={setSession}
                 />
               )
             )}
@@ -452,7 +431,7 @@ export default function Page() {
         {/* Session Creation Modal */}
       </div>
       <div>
-        {openModal && (
+        {(openModal || edit) && (
           <SessionCreationModal
             setOpenModal={setOpenModal}
             LocationOptions={LocationOptions}
@@ -461,6 +440,10 @@ export default function Page() {
             setUpdateSession={setUpdateSession}
             updateSession={updateSession}
             loadingBatch={loadingBatch}
+            setEdit={setEdit}
+            edit={edit}
+            session={session}
+            selectedSession={selectedSession}
           />
         )}
       </div>
@@ -475,9 +458,9 @@ export default function Page() {
       </div>
       <div>
         {openInfoModal && (
-          <SessionInfoModal 
-          selectedSession={selectedSession}
-          setOpenModal={setOpenInfoModal}
+          <SessionInfoModal
+            selectedSession={selectedSession}
+            setOpenModal={setOpenInfoModal}
           />
         )}
       </div>

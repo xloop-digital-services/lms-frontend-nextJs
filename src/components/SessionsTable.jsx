@@ -19,10 +19,11 @@ const SessionsTable = ({
   setConfirmDelete,
   confirmDelete,
   setOpenModal,
+  setEdit,
+  edit,
+  session,
+  setSession,
 }) => {
-  const [session, setSession] = useState(null);
-  const [edit, setEdit] = useState(false);
-
   const [updating, setUpdating] = useState(false);
   const [status, setStatus] = useState(null);
   const [editEndTime, setEditEndTime] = useState(null);
@@ -71,14 +72,9 @@ const SessionsTable = ({
   };
 
   const handleUpdateStatus = (session) => {
-    setSelectedSession(session);
-    setEditCapacity(session.no_of_students);
-    setEditEndTime(session.end_time);
-    setEditStartTime(session.start_time);
-    setStatus(session.status);
-    setSelectedDays(session.schedules);
+    setEdit(true);
+    setSelectedSession(session.id);
     setSession(session);
-    setEdit(!edit);
   };
 
   const handleSetStatus = (status) => {
@@ -336,47 +332,24 @@ const SessionsTable = ({
                                     />
                                   </div>
                                   <div>
-                                    {!(
-                                      edit && selectedSession === session.id
-                                    ) ? (
-                                      <FaEdit
-                                        size={20}
-                                        className="cursor-pointer hover:opacity-30"
-                                        onClick={() =>
-                                          handleUpdateStatus(session)
-                                        }
-                                        title="update"
-                                      />
-                                    ) : (
-                                      <div className="flex gap-3">
-                                        <IoCheckmark
-                                          size={20}
-                                          title="confirm update"
-                                          onClick={handleUpdate}
-                                          className="cursor-pointer hover:border-2 border-mix-300 hover:text-mix-300 font-bold rounded-full"
-                                        />
-                                        <IoClose
-                                          size={19}
-                                          title="cancel"
-                                          onClick={(e) => setEdit(false)}
-                                          className="cursor-pointer hover:border-2 border-mix-200 hover:text-mix-200 font-bold rounded-full"
-                                        />
-                                      </div>
-                                    )}
+                                    <FaEdit
+                                      size={20}
+                                      className="cursor-pointer hover:opacity-30"
+                                      onClick={() =>
+                                        handleUpdateStatus(session)
+                                      }
+                                      title="update"
+                                    />
                                   </div>
                                   <div>
-                                    {!(
-                                      edit && selectedSession === session.id
-                                    ) && (
-                                      <FaTrash
-                                        size={20}
-                                        className="cursor-pointer hover:opacity-30"
-                                        onClick={() =>
-                                          handleDeleteSession(session)
-                                        }
-                                        title="delete"
-                                      />
-                                    )}
+                                    <FaTrash
+                                      size={20}
+                                      className="cursor-pointer hover:opacity-30"
+                                      onClick={() =>
+                                        handleDeleteSession(session)
+                                      }
+                                      title="delete"
+                                    />
                                   </div>
                                 </div>
                               </td>
