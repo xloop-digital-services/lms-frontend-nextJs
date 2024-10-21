@@ -18,6 +18,7 @@ import useClickOutside from "@/providers/useClickOutside";
 import { CircularProgress } from "@mui/material";
 import DeleteConfirmationPopup from "@/components/Modal/DeleteConfirmationPopUp";
 import { toast } from "react-toastify";
+import SessionInfoModal from "@/components/Modal/SessionInfoModal";
 
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
@@ -43,6 +44,7 @@ export default function Page() {
   const [filterLocation, setfilterLocation] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [selectedSession, setSelectedSession] = useState(null);
+  const [openInfoModal, setOpenInfoModal] = useState(false);
   const dropdownRef = useRef(null);
 
   // Update states based on screen size
@@ -180,6 +182,39 @@ export default function Page() {
 
   const handleOpenSessionModal = () => setOpenModal(true);
 
+  const handleUpdate = async () => {
+    if (status === null || updating) return;
+    if (editStartTime && editEndTime <= editStartTime) {
+      toast.error(timeErrorMessage);
+    } else {
+      setLoading(true);
+      try {
+        const data = {
+          batch: session.batch,
+          course: session.course.id,
+          location: session.location,
+          no_of_students: editCapacity,
+          start_date: session.start_date,
+          end_date: session.end_date,
+          start_time: editStartTime,
+          end_time: editEndTime,
+          status: session.status,
+          days_of_week: selectedDays,
+        };
+
+        const response = await UpdateSession(selectedSession, data);
+        console.log("session updated", response);
+        setEdit(false);
+        toast.success("Class schedule updated successfully");
+        setUpdateSession(!updateSession);
+      } catch (error) {
+        console.log("error while updating status", error);
+      } finally {
+        setUpdating(false); // Set updating to false after the update is complete
+      }
+    }
+  };
+
   const handleDelete = async () => {
     try {
       setLoading(true);
@@ -267,7 +302,7 @@ export default function Page() {
                     onClick={toggleLocationOpen}
                     className={`${
                       !isLocationSelected ? " text-dark-500" : "text-[#424b55]"
-                    } flex justify-between items-center md:w-[200px] sm:w-[150px] w-full  gap-2 hover:text-[#0e1721] sm:p-4 px-2 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                    } flex justify-between items-center md:w-[200px]  w-full  gap-2 hover:text-[#0e1721] sm:p-4 px-2 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                   >
                     {selectedLocation}
                     {isLocationSelected && (
@@ -376,7 +411,7 @@ export default function Page() {
           </div>
 
           {/* Sessions Table */}
-          {/* <div>
+          <div>
             {loading ? (
               <div className="flex justify-center items-center w-full p-4">
                 <CircularProgress size={20} />
@@ -392,6 +427,7 @@ export default function Page() {
                 setConfirmDelete={setConfirmDelete}
                 selectedSession={selectedSession}
                 confirmDelete={confirmDelete}
+                setOpenModal={setOpenInfoModal}
               />
             ) : (
               !isLocationSelected &&
@@ -406,10 +442,11 @@ export default function Page() {
                   setConfirmDelete={setConfirmDelete}
                   selectedSession={selectedSession}
                   confirmDelete={confirmDelete}
+                  setOpenModal={setOpenInfoModal}
                 />
               )
             )}
-          </div> */}
+          </div>
         </div>
 
         {/* Session Creation Modal */}
@@ -433,6 +470,14 @@ export default function Page() {
             setConfirmDelete={setConfirmDelete}
             handleDelete={handleDelete}
             field="session"
+          />
+        )}
+      </div>
+      <div>
+        {openInfoModal && (
+          <SessionInfoModal 
+          selectedSession={selectedSession}
+          setOpenModal={setOpenInfoModal}
           />
         )}
       </div>

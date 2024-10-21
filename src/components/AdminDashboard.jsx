@@ -615,7 +615,7 @@ const AdminDashboard = () => {
               </div>
             </div>
           </div>
-          <div className="bg-[rgb(255,255,255)] rounded-xl p-5 pb-0 xmd:max-h-[260px] h-full mb-4">
+          <div className="bg-[rgb(255,255,255)] rounded-xl p-5 pb-0 xmd:max-h-[260px] h-full xsm:mb-0 mb-4">
             <div className="flex nsm:items-center nsm:flex-row flex-col ">
               <h1 className="font-bold font-exo  text-blue-500 text-lg sm:w-[200px] w-[180px]  xlg:w-full">
                 <Link href="/batch" className="w-fit">

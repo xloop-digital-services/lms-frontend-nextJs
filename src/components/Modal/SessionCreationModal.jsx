@@ -25,7 +25,7 @@ const SessionCreationModal = ({
   const [isBatchOpen, setIsBatchOpen] = useState(false);
   const [isBatchSelected, setIsBatchSelected] = useState(false);
   const [isLocationSelected, setIsLocationSelected] = useState(false);
-  const [capacity, setCapacity] = useState();
+  const [capacity, setCapacity] = useState(null);
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
   const [timeErrorMessage, setTimeErrorMessage] = useState("");
@@ -151,7 +151,7 @@ const SessionCreationModal = ({
       setLoadingCourses(true);
       try {
         const response = await getAllCourses();
-        console.log("courses", response?.data?.data);
+        // console.log("courses", response?.data?.data);
 
         // Create an array of course names
         const namesArray = response?.data?.data.map((course) => course.name);
@@ -215,7 +215,7 @@ const SessionCreationModal = ({
   const handleStartTimeChange = (event) => {
     const time = event.target.value;
     setStartTime(time);
-    console.log("Start time:", time);
+    // console.log("Start time:", time);
 
     // Validate again when the start time changes, to reset any lingering errors
     if (endTime && time) {
@@ -232,7 +232,7 @@ const SessionCreationModal = ({
   const handleEndTimeChange = (event) => {
     const time = event.target.value;
     setEndTime(time);
-    console.log("End time:", time);
+    // console.log("End time:", time);
 
     if (startTime) {
       const startTimeDate = convertTimeToDate(startTime);
@@ -311,8 +311,8 @@ const SessionCreationModal = ({
       const startTime = updatedDay.startTime || ""; // Default to an empty string if not set
       const endTime = updatedDay.endTime || "";
 
-      console.log("start time", startTime);
-      console.log("end time", endTime);
+      // console.log("start time", startTime);
+      // console.log("end time", endTime);
 
       // Validate the times for this specific day
       let timeErrorMessage = "";
@@ -335,20 +335,6 @@ const SessionCreationModal = ({
     });
   };
 
-  const handleSelectAllWeekdays = (e) => {
-    const { checked } = e.target;
-
-    if (checked) {
-      // Select all weekdays except Sunday (key "6")
-      const weekdaysExceptSunday = Object.keys(WEEKDAYS).filter(
-        (key) => key !== "6"
-      );
-      setSelectedDays(weekdaysExceptSunday);
-    } else {
-      // Uncheck all weekdays except Sunday
-      setSelectedDays([]);
-    }
-  };
 
   return (
     <div className="backDropOverlay h-screen flex justify-center items-center">
@@ -462,9 +448,9 @@ const SessionCreationModal = ({
                         <CircularProgress size={15} />
                       </div>
                     ) : courseNames && courseNames.length > 0 ? (
-                      courseNames.map((name) => (
+                      courseNames.map((name,index) => (
                         <div
-                          key={name}
+                          key={index}
                           onClick={() => handleCourseSelect(name)}
                           className="py-1 px-2  cursor-pointer"
                         >
@@ -585,40 +571,6 @@ const SessionCreationModal = ({
                 )}
               </div>
             </div>
-            {/* <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
-          
-              <div className="space-y-2 text-[15px] w-full">
-                <p>Start Time</p>
-                <div className="relative">
-                  <input
-                    type="time"
-                    value={startTime}
-                    onChange={handleStartTimeChange}
-                    className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
-                    placeholder="Select start time"
-                  />
-                </div>
-              </div>
-
-       
-              <div className="space-y-2 text-[15px] w-full">
-                <p>End Time</p>
-                <div className="relative">
-                  <input
-                    type="time"
-                    value={endTime}
-                    onChange={handleEndTimeChange}
-                    className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
-                    placeholder="Select end time"
-                  />
-                </div>
-                {timeErrorMessage && (
-                  <p className="text-mix-200 text-[12px] mt-2">
-                    {timeErrorMessage}
-                  </p>
-                )}
-              </div>
-            </div> */}
             <div className="flex flex-col gap-3 mx-auto mt-1 w-full">
               <div className="space-y-2 text-[15px] w-full">
                 <div className="flex justify-between w-[85%]">
