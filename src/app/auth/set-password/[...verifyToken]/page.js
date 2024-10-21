@@ -18,7 +18,7 @@ export default function Page({ params }) {
   const router = useRouter();
   const u_id = params.verifyToken[0];
   const token = params.verifyToken[1];
-  // console.log("token", u_id, "/", token)
+  // console.log("token", u_id, "/", token);
 
   const handlePassword = async (event) => {
     event.preventDefault();
@@ -77,8 +77,8 @@ export default function Page({ params }) {
           draggable: true,
           progress: undefined,
         });
-      }
-      if (error.response.data.error) {
+      } 
+      if(error.response.data.error){
         toast.error(error.response.data.error[0], {
           position: "top-right",
           autoClose: 5000,
@@ -88,18 +88,7 @@ export default function Page({ params }) {
           draggable: true,
           progress: undefined,
         });
-      }
-      if (error.response.data.status_code === 400) {
-        toast.error(error.response.data.message, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      }
+      }      
     } finally {
       setloading(false);
     }
@@ -153,7 +142,7 @@ export default function Page({ params }) {
                       id="new-password"
                       name="new-password"
                       placeholder="Enter new password"
-                      value={newPassword.trim()}
+                      value={newPassword}
                       onChange={(e) => setPassword(e.target.value)}
                       className="py-3 px-4 block w-full outline-none border border-dark-200 rounded-md text-sm focus:border-blue-300 focus:ring-blue-300 shadow-sm"
                       required
@@ -184,7 +173,7 @@ export default function Page({ params }) {
                       id="confirm-password"
                       name="confirm-password"
                       placeholder="Confirm by password"
-                      value={confirmPassword.trim()}
+                      value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       className="py-3 px-4 block w-full outline-none border border-dark-200 rounded-md text-sm focus:border-blue-300 focus:ring-blue-300 shadow-sm"
                       required

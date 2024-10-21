@@ -64,7 +64,7 @@ export default function Page({ params }) {
         setloading(false);
       }
     } catch (error) {
-      console.error("Error during login:", error.response.data.password);
+      // console.error("Error during login:", error.response.data.message);
       if (error.response.data.password) {
         toast.error(error.response.data.password[0], {
           position: "top-right",
@@ -89,6 +89,17 @@ export default function Page({ params }) {
       }
       if (error.response.data.status_code === 400) {
         toast.error(error.response.data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+      if (error.response.data.code === "token_not_valid") {
+        toast.error(error.response.data.messages.message, {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -147,7 +158,7 @@ export default function Page({ params }) {
                       id="new-password"
                       name="new-password"
                       placeholder="Enter new password"
-                      value={newPassword.trim()}
+                      value={newPassword}
                       onChange={(e) => setPassword(e.target.value)}
                       className="py-3 px-4 block w-full outline-none border border-dark-200 rounded-md text-sm focus:border-blue-300 focus:ring-blue-300 shadow-sm"
                       required
@@ -175,7 +186,7 @@ export default function Page({ params }) {
                       id="confirm-password"
                       name="confirm-password"
                       placeholder="Confirm by password"
-                      value={confirmPassword.trim()}
+                      value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       className="py-3 px-4 block w-full outline-none border border-dark-200 rounded-md text-sm focus:border-blue-300 focus:ring-blue-300 shadow-sm"
                       required
