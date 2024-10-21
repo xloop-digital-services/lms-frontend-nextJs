@@ -11,7 +11,9 @@ module.exports = {
         xlg: "1090px",
         xmd: "900px",
         xxlg: "845px",
+        ssm: "680px",
         nsm: "560px",
+        lsm: '505px',
         xsm: "450px",
         // Define custom breakpoint `xsm` with min-width of 450px
       },

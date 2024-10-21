@@ -231,7 +231,43 @@ export default function Page({ params }) {
       console.error(error);
     }
   };
+  const handleAssignmentStatus = async (id, newStatus) => {
+    const assignmentToUpdate = assignments.find(
+      (assignment) => assignment.id === id
+    );
 
+    if (!assignmentToUpdate) {
+      toast.error("Project not found");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("status", newStatus);
+
+    try {
+      const response = await deleteProject(formData, assignmentToUpdate.id);
+      // console.log(response);
+      // console.log("Response status:", response.status);
+      // console.log("Response data:", response.data);
+
+      if (response.status === 200) {
+        toast.success("Project status updated successfully!");
+        // fetchAssignments();
+        setAssignments((prevAssignments) =>
+          prevAssignments.map((assignment) =>
+            assignment.id === id
+              ? { ...assignment, status: newStatus }
+              : assignment
+          )
+        );
+      } else {
+        toast.error("Error updating project status");
+      }
+    } catch (error) {
+      toast.error("Error updating project status");
+      console.error(error);
+    }
+  };
   async function fetchSessions() {
     const response = await listSessionByCourseId(courseId);
     setLoading(true);
@@ -381,36 +417,37 @@ export default function Page({ params }) {
             {isCreatingQuiz && (
               <>
                 <div className="flex justify-between max-md:flex-col">
-                  <h2 className="text-lg font-bold my-4">
+                  <h2 className="text-lg font-exo text-blue-500 font-bold my-4">
                     {currentAssignment ? "Update Project" : "Create Project"}
                   </h2>
-
-                  <div className="flex items-center my-4">
-                    <span className="mr-4 text-md">Project Status</span>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={assignmentStatus === 1}
-                        onChange={() =>
-                          setAssignmentStatus((prevStatus) =>
-                            prevStatus === 0 ? 1 : 0
-                          )
-                        }
-                        className="sr-only"
-                      />
-                      <div className="w-11 h-6 bg-blue-600 rounded-full"></div>
-                      <div
-                        className={`absolute w-4 h-4 bg-blue-300 rounded-full shadow-md transform transition-transform ${
-                          assignmentStatus === 1
-                            ? "translate-x-5"
-                            : "translate-x-1"
-                        }`}
-                      ></div>
-                    </label>
-                    <span className="ml-4 text-md">
-                      {assignmentStatus === 1 ? "Active" : "Inactive"}
-                    </span>
-                  </div>
+                  {!currentAssignment && (
+                    <div className="flex items-center my-4">
+                      <span className="mr-4 text-md">Project Status</span>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={assignmentStatus === 1}
+                          onChange={() =>
+                            setAssignmentStatus((prevStatus) =>
+                              prevStatus === 0 ? 1 : 0
+                            )
+                          }
+                          className="sr-only"
+                        />
+                        <div className="w-11 h-6 bg-blue-600 rounded-full"></div>
+                        <div
+                          className={`absolute w-4 h-4 bg-blue-300 rounded-full shadow-md transform transition-transform ${
+                            assignmentStatus === 1
+                              ? "translate-x-5"
+                              : "translate-x-1"
+                          }`}
+                        ></div>
+                      </label>
+                      <span className="ml-4 text-md">
+                        {assignmentStatus === 1 ? "Active" : "Inactive"}
+                      </span>
+                    </div>
+                  )}
                 </div>
                 <form onSubmit={handleAssignmentCreation}>
                   <div className="my-2">
@@ -538,6 +575,7 @@ export default function Page({ params }) {
                   setUpdateStatus={setUpdateStatus}
                   handleUpdateAssignment={handleUpdateAssignment}
                   onDelete={handleDeleteAssignment}
+                  onStatusUpdate={handleAssignmentStatus}
                 />
               )}
             </div>

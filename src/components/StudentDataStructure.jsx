@@ -8,6 +8,8 @@ import { downloadFile } from "@/app/courses/course/[courseId]/page";
 import { useAuth } from "@/providers/AuthContext";
 import { formatDateTime } from "./AdminDataStructure";
 import ResubmissionModal from "./Modal/ResubmissionModal";
+import { FaFile } from "react-icons/fa6";
+import AssessmentDescModal from "./Modal/AssessmentDescModal";
 
 const StudentDataStructure = ({
   quizzes,
@@ -26,8 +28,21 @@ const StudentDataStructure = ({
   const [edit, setEdit] = useState(false);
   const [iD, setId] = useState("");
   const [resubmissionId, setResubmissionId] = useState("");
+  const [selectedQuiz, setSelectedQuiz] = useState(null);
+  const [description, setDescription] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { userData } = useAuth();
   const isAdmin = userData?.Group === "admin";
+
+  const handleOpenModal = (quiz) => {
+    setSelectedQuiz(quiz);
+    setDescription(true);
+  };
+
+  const handleCloseModal = () => {
+    setDescription(false);
+    setSelectedQuiz(null);
+  };
 
   const handleFileUpload = (id) => {
     setId(id);
@@ -188,16 +203,16 @@ const StudentDataStructure = ({
                                   </>
                                 ) : (
                                   <>
-                                    {quiz.submitted_file === null ? (
+                                    {quiz.content === null ? (
                                       quiz.question || quiz.title
                                     ) : (
                                       <a
                                         href="#"
                                         className="cursor-pointer flex justify-center items-center text-black hover:text-[#2563eb] hover:underline"
-                                        title="download"
+                                        title="Download Assessment file"
                                         onClick={(e) => {
                                           e.preventDefault();
-                                          downloadFile(quiz.submitted_file);
+                                          downloadFile(quiz.content);
                                         }}
                                       >
                                         {quiz.question || quiz.title}
@@ -312,7 +327,7 @@ const StudentDataStructure = ({
                                     rel="noopener noreferrer"
                                   >
                                     <MdRemoveRedEye
-                                      title="pdf view"
+                                      title="Download submitted file"
                                       className="cursor-pointer"
                                       size={23}
                                     />
@@ -324,7 +339,7 @@ const StudentDataStructure = ({
                                         className={`
                                       "cursor-pointer hover:opacity-80"
                                     `}
-                                        title="upload"
+                                        title="Upload"
                                       />
 
                                       <FaCheck
@@ -404,10 +419,16 @@ const StudentDataStructure = ({
                                           quiz?.remaining_resubmissions === 0
                                         } ?  ? "cursor-pointer hover:opacity-80 "
                                             : "text-gray-300 "`}
-                                        title="upload"
+                                        title="Upload"
                                       />
                                     </div>
                                   )}
+                                  <button
+                                    title="View description"
+                                    onClick={() => handleOpenModal(quiz)}
+                                  >
+                                    <FaFile />
+                                  </button>
                                 </div>
                               </td>
                             </tr>
@@ -431,7 +452,13 @@ const StudentDataStructure = ({
           </div>
         </div>
       </div>
-
+      <AssessmentDescModal
+        isOpen={description}
+        quiz={selectedQuiz}
+        onClose={handleCloseModal}
+        loading={loading}
+        field={field}
+      />
       {uploadFile && (
         <UplaodingFile
           field={field}

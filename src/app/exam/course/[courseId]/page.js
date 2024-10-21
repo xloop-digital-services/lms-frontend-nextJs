@@ -133,9 +133,9 @@ export default function Page({ params }) {
       return;
     }
 
-    const s3Data = await handleFileUploadToS3(file, 'Upload Exams');
+    const s3Data = await handleFileUploadToS3(file, "Upload Exams");
     console.log("S3 Data:", s3Data);
-    
+
     const formData = new FormData();
     formData.append("course", courseId);
     formData.append("title", question);
@@ -231,6 +231,54 @@ export default function Page({ params }) {
       console.log("error", error);
     }
   }
+  const handleAssignmentStatus = async (id, newStatus) => {
+    const assignmentToUpdate = assignments.find(
+      (assignment) => assignment.id === id
+    );
+
+    if (!assignmentToUpdate) {
+      toast.error("Exam not found");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("status", newStatus);
+
+    try {
+      const response = await deleteExam(formData, assignmentToUpdate.id);
+
+      // Check response.status_code instead of response.status
+      console.log("Response from deleteExam:", response);
+
+      if (response?.status === 200) {
+        toast.success(response.message || "Exam status updated successfully!");
+        setAssignments((prevAssignments) =>
+          prevAssignments.map((assignment) =>
+            assignment.id === id
+              ? { ...assignment, status: newStatus }
+              : assignment
+          )
+        );
+      } else {
+        toast.error(
+          `Error updating exam status: ${response?.message || "Unknown error"}`
+        );
+      }
+    } catch (error) {
+      if (error.response) {
+        toast.error(
+          `Error updating exam status: ${
+            error.response.data.message || "Unknown error"
+          }`
+        );
+        console.error("Error response:", error.response);
+      } else {
+        toast.error("Error updating exam status");
+        console.error("Error:", error);
+      }
+    }
+  };
+
   const handleDeleteAssignment = async (id) => {
     const assignmentToDelete = assignments.find(
       (assignment) => assignment.id === id
@@ -247,15 +295,26 @@ export default function Page({ params }) {
     try {
       const response = await deleteExam(formData, assignmentToDelete.id);
 
-      if (response.status === 200) {
+      if (response?.status === 200) {
         toast.success("Exam deleted successfully!");
         fetchAssignments();
       } else {
-        toast.error("Error deleting exam", response?.message);
+        toast.error(
+          `Error deleting exam: ${response.message || "Unknown error"}`
+        );
       }
     } catch (error) {
-      toast.error("Error deleting exam", error);
-      console.error(error);
+      if (error.response) {
+        toast.error(
+          `Error deleting exam: ${
+            error.response.data.message || "Unknown error"
+          }`
+        );
+        console.error("Error response:", error.response);
+      } else {
+        toast.error("Error deleting exam");
+        console.error("Error:", error);
+      }
     }
   };
 
@@ -404,7 +463,7 @@ export default function Page({ params }) {
                 </select>
               </div>
             )}
-            <h2 className="text-xl font-exo font-bold mb-4">
+            <h2 className="text-xl font-exo text-blue-500 font-bold mb-4">
               Exam instructions
             </h2>
             <ul className="text-dark-400 list-decimal">
@@ -454,36 +513,37 @@ export default function Page({ params }) {
             {isCreatingQuiz && (
               <>
                 <div className="flex justify-between max-md:flex-col">
-                  <h2 className="text-lg font-bold my-4">
+                  <h2 className="text-lg font-exo text-blue-500 font-bold my-4">
                     {currentAssignment ? "Update Exam" : "Create Exam"}
                   </h2>
-
-                  <div className="flex items-center my-4">
-                    <span className="mr-4 text-md">Exam Status</span>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={assignmentStatus === 1}
-                        onChange={() =>
-                          setAssignmentStatus((prevStatus) =>
-                            prevStatus === 0 ? 1 : 0
-                          )
-                        }
-                        className="sr-only"
-                      />
-                      <div className="w-11 h-6 bg-blue-600 rounded-full"></div>
-                      <div
-                        className={`absolute w-4 h-4 bg-blue-300 rounded-full shadow-md transform transition-transform ${
-                          assignmentStatus === 1
-                            ? "translate-x-5"
-                            : "translate-x-1"
-                        }`}
-                      ></div>
-                    </label>
-                    <span className="ml-4 text-md">
-                      {assignmentStatus === 1 ? "Active" : "Inactive"}
-                    </span>
-                  </div>
+                  {!currentAssignment && (
+                    <div className="flex items-center my-4">
+                      <span className="mr-4 text-md">Exam Status</span>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={assignmentStatus === 1}
+                          onChange={() =>
+                            setAssignmentStatus((prevStatus) =>
+                              prevStatus === 0 ? 1 : 0
+                            )
+                          }
+                          className="sr-only"
+                        />
+                        <div className="w-11 h-6 bg-blue-600 rounded-full"></div>
+                        <div
+                          className={`absolute w-4 h-4 bg-blue-300 rounded-full shadow-md transform transition-transform ${
+                            assignmentStatus === 1
+                              ? "translate-x-5"
+                              : "translate-x-1"
+                          }`}
+                        ></div>
+                      </label>
+                      <span className="ml-4 text-md">
+                        {assignmentStatus === 1 ? "Active" : "Inactive"}
+                      </span>
+                    </div>
+                  )}
                 </div>
                 <form onSubmit={handleAssignmentCreation}>
                   <div className="my-2">
@@ -523,7 +583,7 @@ export default function Page({ params }) {
                         className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
                         onChange={(e) => setFile(e.target.files[0])}
                       />
-                       {currentAssignment && currentAssignment.content && (
+                      {currentAssignment && currentAssignment.content && (
                         <p className="text-sm text-gray-500 mt-2">
                           Current file:{" "}
                           {currentAssignment.content?.split("/").pop()}
@@ -613,6 +673,7 @@ export default function Page({ params }) {
                   setUpdateStatus={setUpdateStatus}
                   handleUpdateAssignment={handleUpdateAssignment}
                   onDelete={handleDeleteAssignment}
+                  onStatusUpdate={handleAssignmentStatus}
                 />
               )}
             </div>

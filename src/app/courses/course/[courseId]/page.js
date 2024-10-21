@@ -54,7 +54,9 @@ export default function Page({ params }) {
   const [courseData, setCourseData] = useState([]);
   const [modules, setModules] = useState([]);
   const [downloadStatus, setDownloadStatus] = useState("");
-  const [loader, setLoader] = useState(true);
+  const [loader, setLoader] = useState(false);
+  const [loaderModule, setLoaderModule] = useState(false);
+
   const [courseProgress, setCourseProgress] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingModule, setIsEditingModule] = useState(false);
@@ -273,14 +275,12 @@ export default function Page({ params }) {
   }
 
   // console.log(file);
-
   const handleCreateModule = async (event) => {
     event.preventDefault();
-    setLoader(true);
-
+    setLoaderModule(true);
     if (!selectedSession) {
       toast.error("No session selected");
-      setLoader(false);
+      setLoaderModule(false);
       return;
     }
 
@@ -288,51 +288,63 @@ export default function Page({ params }) {
       name: moduleName,
       description: moduleDesc,
       course: courseId,
-      files: file,
       session: sessionId,
       status: moduleStatus,
     };
 
     try {
       if (!sessionId) {
-        toast.error("Select a session to create the assignment.");
-        setLoader(false);
+        toast.error("Select a session to create the module.");
+        setLoaderModule(false);
         return;
       }
-
-      const s3Data = await handleFileUploadToS3(file, "Upload Modules");
-      console.log("S3 Data:", s3Data);
-
+      if (!file) {
+        toast.error("Add a file to create the module.");
+        setLoaderModule(false);
+        return;
+      }
       const formData = new FormData();
       formData.append("name", moduleData.name);
       formData.append("description", moduleData.description);
       formData.append("course", moduleData.course);
-      formData.append("files", s3Data);
       formData.append("session", sessionId);
       formData.append("status", moduleStatus);
 
-      const response = await createModule(moduleData);
+      if (file) {
+        const s3Data = await handleFileUploadToS3(file, "Upload Modules");
+        if (s3Data) {
+          formData.append("files", s3Data);
+        }
+      }
+      const response = await createModule(formData);
 
       if (response.status === 201) {
         toast.success("Module created successfully!");
         setModuleName("");
         setModuleDesc("");
-        fetchModules();
-        setFileUploaded("");
+        setFile(null);
+        setFileUploaded(null);
         setCreatingModule(false);
+        fetchModules();
       } else {
-        toast.error(response.data?.message);
+        toast.error(response.data?.message || "Failed to create module.");
       }
     } catch (error) {
-      toast.error(`Error creating course: ${error.message}`);
+      toast.error(`Error creating module: ${error.message}`);
     } finally {
-      setLoader(false); // Ensure loader is disabled after the process
+      setLoaderModule(false);
     }
   };
+
   const handleModuleID = (id) => {
     setModuleId(id);
   };
 
+  const resetFields = () => {
+    setModuleName("");
+    setModuleDesc("");
+    setFileUploaded(null);
+  };
   const handleFileUpload = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
@@ -361,8 +373,8 @@ export default function Page({ params }) {
       toast.error("Error updating course:", error);
     }
   }
-
   async function handleSaveModule() {
+    setLoaderModule(true);
     try {
       const currentModule = modules.find((m) => m.id === moduleId);
       let moduleData = {
@@ -393,15 +405,15 @@ export default function Page({ params }) {
       }
 
       const s3Data = await handleFileUploadToS3(file, "Upload Modules");
-      console.log("S3 Data:", s3Data);
 
       const formData = new FormData();
       formData.append("name", moduleData.name);
       formData.append("description", moduleData.description);
       formData.append("course", moduleData.course);
-      formData.append("files", s3Data);
+      if (file) {
+        formData.append("files", s3Data);
+      }
       formData.append("session", sessionId);
-      formData.append("status", moduleStatus);
 
       const response = await updateModule(formData, moduleId);
       if (response.status === 200) {
@@ -409,15 +421,46 @@ export default function Page({ params }) {
         setIsEditingModule(false);
         setModuleId(null);
         fetchModules();
-        setFileUploaded("");
+        setFileUploaded();
+        setFile(null);
       } else {
         toast.error(`Failed to update module, status: ${response.status}`);
       }
     } catch (error) {
       toast.error(`Error updating module: ${error.message}`);
       console.log("Error updating module:", error);
+    } finally {
+      setLoaderModule(false);
     }
   }
+  const handleModuleStatus = async (id, currentStatus) => {
+    const moduleToUpdate = modules?.find((mod) => mod.id === id);
+    if (!moduleToUpdate) {
+      toast.error("Module not found");
+      return;
+    }
+
+    const newStatus = currentStatus === 1 ? 0 : 1;
+    const formData = new FormData();
+    formData.append("status", newStatus);
+
+    try {
+      const response = await deleteModule(formData, id);
+      if (response.status === 200) {
+        toast.success("Module status updated successfully!");
+        setModules((prevModules) =>
+          prevModules.map((mod) =>
+            mod.id === id ? { ...mod, status: newStatus } : mod
+          )
+        );
+      } else {
+        toast.error("Error updating module status");
+      }
+    } catch (error) {
+      toast.error("Error updating module status", error);
+      console.error(error);
+    }
+  };
 
   const handleDeleteModule = async (id) => {
     const moduletoDelete = modules?.find((mod) => mod.id === id);
@@ -467,17 +510,15 @@ export default function Page({ params }) {
   }, [sessionId]);
 
   useEffect(() => {
-    // fetchAllSkills();
-    // fetchSkillbyId();
     {
       isStudent && fetchCourseProgress();
     }
-    fetchAllSkills();
-  }, [courseId]);
+  }, [courseId, isStudent]);
 
   useEffect(() => {
     if (!courseId) return;
     fetchCoursesById();
+    fetchAllSkills();
   }, [courseId]);
 
   const handleChange = (e) => {
@@ -889,7 +930,12 @@ export default function Page({ params }) {
                 {!isStudent && (
                   <button
                     className=" flex justify-center items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl hover:bg-blue-700"
-                    onClick={() => setCreatingModule(!isCreatingModule)}
+                    onClick={() => {
+                      if (isCreatingModule) {
+                        resetFields();
+                      }
+                      setCreatingModule(!isCreatingModule);
+                    }}
                     disabled={loader}
                   >
                     {loader ? (
@@ -918,11 +964,11 @@ export default function Page({ params }) {
                         <input
                           type="checkbox"
                           checked={moduleStatus === 1}
-                          onChange={() =>
-                            setModuleStatus((prevStatus) =>
-                              prevStatus === 0 ? 1 : 0
-                            )
-                          }
+                          onChange={async () => {
+                            const newStatus = moduleStatus === 0 ? 1 : 0;
+                            setModuleStatus(newStatus);
+                            await handleModuleStatus(moduleId);
+                          }}
                           className="sr-only"
                         />
                         <div className="w-11 h-6 bg-blue-600 rounded-full"></div>
@@ -963,8 +1009,8 @@ export default function Page({ params }) {
                   <div className="flex ">
                     <input
                       type="file"
-                      className="hidden"
                       onChange={handleFileUpload}
+                      className="hidden"
                     />
                     <button
                       className="flex justify-center items-center gap-2 mt-4 text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-blue-700"
@@ -976,10 +1022,24 @@ export default function Page({ params }) {
                       Upload File
                     </button>
                     <button
-                      className=" flex justify-center items-center gap-2 mt-4 text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-blue-700"
+                      className={`w-88 flex justify-center items-center gap-2 mt-4 p-4 rounded-xl mr-4 ${
+                        loaderModule
+                          ? "bg-blue-300 cursor-not-allowed"
+                          : "bg-blue-300 hover:bg-blue-700"
+                      } text-surface-100`}
                       onClick={handleCreateModule}
+                      disabled={loaderModule} // Disable button when loading
                     >
-                      <FaCheck /> Create Module
+                      {loaderModule ? (
+                        <CircularProgress
+                          size={20}
+                          style={{ color: "white" }}
+                        />
+                      ) : (
+                        <>
+                          <FaCheck /> Create Module
+                        </>
+                      )}
                     </button>
                   </div>
                 </div>
@@ -995,51 +1055,46 @@ export default function Page({ params }) {
                       <p className="text-dark-300 my-4"> Module {index + 1}</p>
                       {!isStudent && (
                         <div className="flex">
-                          {moduleId === module.id ? (
+                          {moduleId !== module.id && (
                             <div className="flex items-center mx-4 mt-4">
                               <span className="mr-4 text-md">
                                 Module Status
                               </span>
-                              <label className="relative inline-flex items-center cursor-pointer">
+                              <label
+                                className={`relative inline-flex items-center ${
+                                  module.status === 1
+                                    ? "cursor-not-allowed"
+                                    : "cursor-pointer"
+                                }`}
+                              >
                                 <input
                                   type="checkbox"
-                                  checked={moduleStatus === 1}
+                                  checked={module.status === 1}
+                                  disabled={module.status === 1}
                                   onChange={() =>
-                                    setModuleStatus((prevStatus) =>
-                                      prevStatus === 0 ? 1 : 0
-                                    )
+                                    handleModuleStatus(module.id, module.status)
                                   }
                                   className="sr-only"
                                 />
-                                <div className="w-11 h-6 bg-blue-600 rounded-full"></div>
                                 <div
-                                  className={`absolute w-4 h-4 bg-blue-300 rounded-full shadow-md transform transition-transform ${
-                                    moduleStatus === 1
-                                      ? "translate-x-5"
-                                      : "translate-x-1"
+                                  className={`w-11 h-6 rounded-full ${
+                                    module.status === 1
+                                      ? "bg-dark-100"
+                                      : "bg-blue-600"
+                                  }`}
+                                ></div>
+                                <div
+                                  className={`absolute w-4 h-4 rounded-full shadow-md transform transition-transform ${
+                                    module.status === 1
+                                      ? "translate-x-5 bg-dark-200"
+                                      : "translate-x-1 bg-blue-300"
                                   }`}
                                 ></div>
                               </label>
                               <span className="ml-4 text-md">
-                                {moduleStatus === 1 ? "Active" : "Inactive"}
+                                {module.status === 1 ? "Active" : "Inactive"}
                               </span>
                             </div>
-                          ) : (
-                            <p
-                              className={`flex justify-center px-4 mt-4 items-center gap-2 text-surface-100 rounded-lg mr-4 ${
-                                module?.status === 1
-                                  ? "bg-mix-300 w-[110px]"
-                                  : module?.status === 0
-                                  ? "bg-mix-200 w-[110px]"
-                                  : "bg-dark-700 w-110px]"
-                              }`}
-                            >
-                              {module.status === 0
-                                ? "Inactive"
-                                : module.status === 1
-                                ? "Active"
-                                : "-"}
-                            </p>
                           )}
 
                           <button
@@ -1067,20 +1122,38 @@ export default function Page({ params }) {
                           <button
                             onClick={() => handleDeleteClick(module.id)}
                             title="Delete Module"
-                            className=" flex justify-center mt-4 items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-blue-700"
+                            className={`flex justify-center mt-4 items-center gap-2 text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-blue-700 ${
+                              moduleId === module.id ? "hidden" : ""
+                            }`}
                           >
                             <p className="flex justify-center items-center gap-2">
                               <FaTrash />
                             </p>
                           </button>
-                          {moduleId === module.id ? (
+
+                          {moduleId === module.id && (
                             <>
                               <button
-                                className=" flex justify-center items-center gap-2 mt-4 text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-blue-700"
+                                className={`flex justify-center items-center gap-2 mt-4 p-4 rounded-xl mr-4 ${
+                                  loaderModule
+                                    ? "bg-blue-300 cursor-not-allowed"
+                                    : "bg-blue-300 hover:bg-blue-700"
+                                } text-surface-100`}
                                 onClick={handleSaveModule}
+                                disabled={loaderModule} // Disable button when loading
                               >
-                                <FaCheck />
+                                {loaderModule ? (
+                                  <CircularProgress
+                                    size={20}
+                                    style={{ color: "white" }}
+                                  />
+                                ) : (
+                                  <>
+                                    <FaCheck />
+                                  </>
+                                )}
                               </button>
+
                               <input
                                 type="file"
                                 onChange={handleFileUpload}
@@ -1098,7 +1171,7 @@ export default function Page({ params }) {
                                 Upload File
                               </button>
                             </>
-                          ) : null}
+                          )}
                         </div>
                       )}
                     </div>
