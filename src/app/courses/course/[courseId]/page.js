@@ -298,6 +298,11 @@ export default function Page({ params }) {
         setLoaderModule(false);
         return;
       }
+      if (!file) {
+        toast.error("Add a file to create the module.");
+        setLoaderModule(false);
+        return;
+      }
       const formData = new FormData();
       formData.append("name", moduleData.name);
       formData.append("description", moduleData.description);
@@ -1052,7 +1057,6 @@ export default function Page({ params }) {
                       <p className="text-dark-300 my-4"> Module {index + 1}</p>
                       {!isStudent && (
                         <div className="flex">
-                          {/* Hide status toggle when editing */}
                           {moduleId !== module.id && (
                             <div className="flex items-center mx-4 mt-4">
                               <span className="mr-4 text-md">
