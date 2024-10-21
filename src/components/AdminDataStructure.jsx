@@ -424,6 +424,7 @@ const AdminDataStructure = ({
         onClose={handleCloseModal}
         loading={loading}
         field={field}
+        
       />
     </>
   );
