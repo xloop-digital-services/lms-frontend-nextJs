@@ -44,6 +44,9 @@ const ApprovalUserModal = ({
   const [selectedSessionEndtime, setSelectedSessionEndTime] = useState(null);
   const [selectedSessionStartTime, setSelectedSessionStartTime] =
     useState(null);
+  const [selectedSessionEndDate, setSelectedSessionEndDate] = useState(null);
+  const [selectedSessionStartDate, setSelectedSessionStartDate] =
+    useState(null);
   // const [selectedSessionCapacity, setSelectedSessionCapacity] = useState(null);
   const [selectedSessionStatus, setSelectedSessionStatus] = useState(null);
   const [isSessionSelected, setIsSessionSelected] = useState(null);
@@ -246,7 +249,10 @@ const ApprovalUserModal = ({
     setSelectedSessionLocation(session.location);
     setSelectedSessionEndTime(session.end_time);
     setSelectedSessionStartTime(session.start_time);
-    setWeekDays(session.days_of_week);
+    setSelectedSessionEndDate(session.end_date);
+    setSelectedSessionStartDate(session.start_date);
+
+    setWeekDays(session.schedules);
     if (session.status === 1) {
       setSelectedSessionStatus("Active");
     } else {
@@ -401,7 +407,9 @@ const ApprovalUserModal = ({
                   Resume
                 </p>
                 <div className="px-4">
-                  {resume  && resume !== 'undefined/undefined' && resume !== 'null'  ? (
+                  {resume &&
+                  resume !== "undefined/undefined" &&
+                  resume !== "null" ? (
                     <p className="max-w-[140px] truncate pt-[2px] text-[#43434a] text-sm">
                       <button
                         onClick={() => downloadFile(resume)}
@@ -483,7 +491,9 @@ const ApprovalUserModal = ({
                                 onClick={() => handleSelectSession(session)}
                                 className={`py-2 px-4 cursor-pointer m-2 rounded-md
                        ${
-                         isSelected ? "bg-blue-100 text-blue-800" : "bg-surface-100"
+                         isSelected
+                           ? "bg-blue-100 text-blue-800"
+                           : "bg-surface-100"
                        }
               hover:bg-dark-200 transition-colors duration-200 ease-in-out`}
                               >
@@ -560,8 +570,9 @@ const ApprovalUserModal = ({
 
                     <div className="w-[1.5px] h-[150px] bg-dark-200 rounded-lg"></div>
                     <div className="w-[50%]">
-                      <table className="w-full border-collapse">
+                      <table className="w-full border-collapse mb-3">
                         <tbody>
+                          {/* First Part (Two Columns) */}
                           <tr className="border-b border-[#d7e4ee]">
                             <td className="text-dark-400 text-center py-2">
                               Location
@@ -578,45 +589,6 @@ const ApprovalUserModal = ({
                               {selectedSessionCourse || "-"}
                             </td>
                           </tr>
-                          {/* <tr className="border-b border-[#d7e4ee]">
-                            <td className="text-dark-400 text-center py-2">
-                              Capacity
-                            </td>
-                            <td className="text-center py-2">
-                              {selectedSessionCapacity || "-"}
-                            </td>
-                          </tr> */}
-                          <tr className="border-b border-[#d7e4ee]">
-                            <td className="text-dark-400 text-center py-2">
-                              Start Time
-                            </td>
-                            <td className="text-center py-2">
-                              {selectedSessionStartTime || "-"}
-                            </td>
-                          </tr>
-                          <tr className="border-b border-[#d7e4ee]">
-                            <td className="text-dark-400 text-center py-2">
-                              End Time
-                            </td>
-                            <td className="text-center py-2">
-                              {selectedSessionEndtime || "-"}
-                            </td>
-                          </tr>
-                          <tr className="border-b border-[#d7e4ee]">
-                            <td className="text-dark-400 text-center py-2">
-                              Days
-                            </td>
-                            <td className="text-center py-2">
-                              {weekDays.map((day, index) => (
-                                <span key={index}>
-                                  {WEEKDAYS[day][1]}{" "}
-                                  {/* Display the short name */}
-                                  {index < weekDays.length - 1 && ", "}{" "}
-                                  {/* Add comma separator except for the last item */}
-                                </span>
-                              ))}{" "}
-                            </td>
-                          </tr>
                           <tr className="border-b border-[#d7e4ee]">
                             <td className="text-dark-400 text-center py-2">
                               Status
@@ -627,6 +599,51 @@ const ApprovalUserModal = ({
                           </tr>
                         </tbody>
                       </table>
+
+                      {/* Scrollable Section */}
+                      <div className="w-full overflow-y-auto max-h-40 scrollbar-webkit">
+                        <table className="w-full border-collapse">
+                          <thead className="sticky top-0 bg-surface-100 z-10 shadow shadow-dark-200">
+                            <tr className="border-b  border-[#d7e4ee]">
+                              <th className="text-dark-400 font-normal text-center py-2">
+                                Days
+                              </th>
+                              <th className="text-dark-400 font-normal text-center py-2">
+                                Start Time
+                              </th>
+                              <th className="text-dark-400 font-normal text-center py-2">
+                                End Time
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {weekDays.length > 0 ? (
+                              weekDays.map((week, index) => (
+                                <tr
+                                  key={index}
+                                  className="border-b border-[#d7e4ee] last:border-0"
+                                >
+                                  <td className="text-center py-2">
+                                    {week.day_of_week}
+                                  </td>
+                                  <td className="text-center py-2">
+                                    {week.start_time}
+                                  </td>
+                                  <td className="text-center py-2">
+                                    {week.end_time}
+                                  </td>
+                                </tr>
+                              ))
+                            ) : (
+                              <tr>
+                                <td colSpan="3" className="text-center py-2">
+                                  No time is scheduled
+                                </td>
+                              </tr>
+                            )}
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   </>
                 ) : (
