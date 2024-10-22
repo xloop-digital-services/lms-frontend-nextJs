@@ -2,8 +2,6 @@ import { axiosInstance } from "@/config/config";
 
 const API = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-
-
 //signup api
 // export const SignUpUser = async (user) => {
 //   try {
@@ -748,6 +746,17 @@ export const userSelectionByAdmin = async (id, data) => {
   }
 };
 
+export const resendApprovalMail = async (email) => {
+  try {
+    const response = await axiosInstance.post(
+      `/api/resend-verification-email/`, email
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const VerifyEmail = async (data) => {
   try {
     const response = await axiosInstance.post("/api/verify-email/", data);
@@ -1439,6 +1448,22 @@ export const postAttendanceBySessionId = async (
 ) => {
   try {
     const response = await axiosInstance.post(
+      `/api/attendance/instructor/${sessionId}/${courseId}/`,
+      attendanceArray
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const patchAttendanceBySessionId = async (
+  sessionId,
+  courseId,
+  attendanceArray
+) => {
+  try {
+    const response = await axiosInstance.patch(
       `/api/attendance/instructor/${sessionId}/${courseId}/`,
       attendanceArray
     );

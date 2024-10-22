@@ -45,7 +45,7 @@ export default function Navbar() {
 
   useEffect(() => {
     if (user) {
-      console.log(user);
+      // console.log(user);
     }
   });
 

@@ -174,7 +174,7 @@ const BatchTable = ({
                         </th>
                         <th
                           scope="col"
-                          className="px-12 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[20%]"
+                          className="px-12 py-4 text-start rounded-lg text-xs font-medium text-gray-500 uppercase w-[20%]"
                         >
                           Status
                         </th>

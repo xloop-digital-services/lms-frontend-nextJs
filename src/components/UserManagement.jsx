@@ -413,10 +413,10 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                         {heading === "Applicants" &&
                           isProgramSectionOpen &&
                           programSection === program.name && (
-                            <div className="z-20">
+                            <div className="relative z-20">
                               <button
                                 onClick={toggleStatusOpen}
-                                className="flex justify-between z-30 items-center min-w-[200px] text-dark-500 hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-dark-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+                                className="flex justify-between z-30 items-center w-[200px] text-dark-500 hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-dark-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
                               >
                                 {/* {selectedStatus || status[0]} */}
                                 {selectedStatus
@@ -436,7 +436,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                               {statusOpen && (
                                 <div
                                   ref={dropStatus}
-                                  className="absolute  z-40 min-w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                                  className="absolute z-40 w-full mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                                 >
                                   {Object.entries(statusDisplayMap).length >
                                   0 ? (
@@ -570,10 +570,10 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                       {heading === "Applicants" &&
                         isSkillSectionOpen &&
                         skillSection === skill.name && (
-                          <div className="z-20">
+                          <div className="relative z-20">
                             <button
                               onClick={toggleStatusOpen}
-                              className="flex justify-between z-30 items-center min-w-[200px] text-dark-500 hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-dark-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+                              className="flex justify-between z-30 items-center w-[200px] text-dark-500 hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-dark-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
                             >
                               {/* {selectedStatus || status[0]} */}
                               {selectedStatus
@@ -591,7 +591,10 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                             </button>
 
                             {statusOpen && (
-                              <div className="absolute capitalize z-40 min-w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out">
+                              <div
+                                ref={dropStatus}
+                                className="absolute capitalize z-40 w-full mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                              >
                                 {Object.entries(statusDisplayMap).length > 0 ? (
                                   Object.entries(statusDisplayMap).map(
                                     ([key, value], index) => (

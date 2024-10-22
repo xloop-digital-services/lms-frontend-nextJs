@@ -6,10 +6,11 @@ import { FaCheckCircle, FaInfoCircle } from "react-icons/fa";
 import { IoMdCloseCircle } from "react-icons/io";
 import Image from "next/image";
 import useClickOutside from "@/providers/useClickOutside";
-import { userSelectionByAdmin } from "@/api/route";
+import { resendApprovalMail, userSelectionByAdmin } from "@/api/route";
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 import { downloadFile } from "@/app/courses/course/[courseId]/page";
+import { FaRepeat } from "react-icons/fa6";
 const UserModal = ({
   selectedOption,
   setModal,
@@ -151,6 +152,22 @@ const UserModal = ({
   };
 
   useClickOutside(modalRef, () => setModal(false));
+
+  const handleRepeatApproval = async () => {
+    const data = {
+      email: email
+    }
+    try {
+      setLoading(true)
+      const response = await resendApprovalMail(data)
+      toast.success(response.data.message)
+    } catch (error) {
+      console.log(error, 'error while repeat verify')
+    } finally {
+      setLoading(false)
+    }
+  };
+
   return (
     <div className="backDropOverlay h-screen flex justify-center items-center cursor-default">
       <div className="w-[60%] z-[1000] mx-auto my-20 relative font-inter">
@@ -189,7 +206,7 @@ const UserModal = ({
               <p className="text-sm text-dark-400 text-center">{email}</p>
             </div>
             <div className="absolute top-[60px] right-[50px]">
-            <p className="text-sm text-dark-400 text-center pb-1 border-b border-dark-300">
+              <p className="text-sm text-dark-400 text-center pb-1 border-b border-dark-300">
                 Status
               </p>
               <div className=" py-2 whitespace-nowrap flex w-full justify-start text-sm text-surface-100 dark:text-gray-200 ">
@@ -244,7 +261,7 @@ const UserModal = ({
                             Experience
                           </td>
                           <td className="text-center py-2 px-4">
-                            {experience + ' Year' || "-"} 
+                            {experience + " Year" || "-"}
                           </td>
                         </tr>
                         <tr>
@@ -252,7 +269,9 @@ const UserModal = ({
                             Resume
                           </td>
                           <td className="text-center py-2 px-4">
-                            {resume  && resume !== 'undefined/undefined' && resume !== 'null'  ? (
+                            {resume &&
+                            resume !== "undefined/undefined" &&
+                            resume !== "null" ? (
                               <button
                                 onClick={() => downloadFile(resume)}
                                 // href={resume}
@@ -301,7 +320,9 @@ const UserModal = ({
                                 className="border-gray-200 mt-1 group-hover:cursor-pointer rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
                               />
                             </div>
-                            <p className="group-hover:cursor-pointer">{prog.name}</p>
+                            <p className="group-hover:cursor-pointer">
+                              {prog.name}
+                            </p>
                           </div>
                         ))
                       ) : (
@@ -334,7 +355,9 @@ const UserModal = ({
                   </div>
                 </div>
                 <div className="space-y-2 w-[30%]">
-                  <p className="text-sm text-dark-400 pb-1 border-b border-dark-300">Locations</p>
+                  <p className="text-sm text-dark-400 pb-1 border-b border-dark-300">
+                    Locations
+                  </p>
                   {location &&
                     location.length > 0 &&
                     location.map((prog, index) => (
@@ -346,7 +369,11 @@ const UserModal = ({
                         >
                           <input
                             id={`checkbox-${index}`}
-                            type={selectedOption === 'student' ? 'radio' : 'checkbox'}
+                            type={
+                              selectedOption === "student"
+                                ? "radio"
+                                : "checkbox"
+                            }
                             name="locationSelection" // Same name attribute for all radio buttons
                             // value={prog.name} // Store the value of the selected program
                             onChange={(e) =>
@@ -369,13 +396,18 @@ const UserModal = ({
 
               <div
                 className={`${
-                  status === "approved" ? "hidden" : " flex"
+                  status === "approved" && approvedStatus === "verified"
+                    ? "hidden"
+                    : " flex"
                 } flex-row w-full justify-evenly pt-6`}
               >
                 <div>
                   <div
                     className={` ${
-                      status === "short_listed" ? "hidden" : " flex"
+                      status === "short_listed" ||
+                      approvedStatus === "unverified"
+                        ? "hidden"
+                        : " flex"
                     } group relative justify-center items-center text-blue-300 text-sm font-bold`}
                   >
                     <div
@@ -392,7 +424,13 @@ const UserModal = ({
                     </div>
                   </div>
                 </div>
-                <div className="group relative flex justify-center items-center text-mix-200 text-sm font-bold">
+                <div
+                  className={
+                    approvedStatus === "unverified"
+                      ? "hidden"
+                      : " group relative flex justify-center items-center text-mix-200 text-sm font-bold"
+                  }
+                >
                   <div
                     className="shadow-md flex items-center group-hover:gap-2 p-3 rounded-full cursor-pointer duration-300"
                     onClick={() => {
@@ -406,30 +444,47 @@ const UserModal = ({
                     </span>
                   </div>
                 </div>
+                {approvedStatus !== "unverified" && (
+                  <button
+                    className={`group relative flex justify-center items-center ${
+                      (enableApprovalButton || approvalByskill) &&
+                      approvalByLocation
+                        ? "text-mix-300 cursor-pointer"
+                        : "text-[#23e1ab] cursor-not-allowed"
+                    } text-sm font-bold`}
+                    disabled={
+                      !(enableApprovalButton || approvalByskill) ||
+                      !approvalByLocation
+                    }
+                    onClick={() => {
+                      setSelectedStatus("approved");
+                      handleUserSelection("approved");
+                    }}
+                  >
+                    <div className="shadow-md flex items-center group-hover:gap-2 p-3 rounded-full duration-300">
+                      <FaCheckCircle size={20} className="fill-zinc-600" />
+                      <span className="text-[0px] group-hover:text-sm duration-300">
+                        Approve
+                      </span>
+                    </div>
+                  </button>
+                )}
+              </div>
+              {approvedStatus === 'unverified' &&
                 <button
-                  className={`group relative flex justify-center items-center ${
-                    (enableApprovalButton || approvalByskill) &&
-                    approvalByLocation
-                      ? "text-mix-300 cursor-pointer"
-                      : "text-[#23e1ab] cursor-not-allowed"
-                  } text-sm font-bold`}
-                  disabled={
-                    !(enableApprovalButton || approvalByskill) ||
-                    !approvalByLocation
-                  }
+                  className={`group relative flex justify-center items-center w-full text-mix-300 cursor-pointer text-sm font-bold`}
                   onClick={() => {
-                    setSelectedStatus("approved");
-                    handleUserSelection("approved");
+                    handleRepeatApproval();
                   }}
                 >
                   <div className="shadow-md flex items-center group-hover:gap-2 p-3 rounded-full duration-300">
-                    <FaCheckCircle size={20} className="fill-zinc-600" />
+                    <FaRepeat size={20} className="fill-zinc-600" />
                     <span className="text-[0px] group-hover:text-sm duration-300">
-                      Approve
+                      Resend Approval
                     </span>
                   </div>
                 </button>
-              </div>
+              }
             </div>
           </div>
         </div>
