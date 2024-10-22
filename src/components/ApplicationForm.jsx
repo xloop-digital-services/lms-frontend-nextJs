@@ -18,11 +18,10 @@ import { CircularProgress } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { IoClose } from "react-icons/io5";
 
-export const handleFileUploadToS3 = async (file,category) => {
+export const handleFileUploadToS3 = async (file, category) => {
   const formData = new FormData();
-  formData.append('file', file);
-  formData.append('category', category);
-
+  formData.append("file", file);
+  formData.append("category", category);
 
   try {
     const response = await fetch("/api/s3-upload", {
@@ -33,6 +32,7 @@ export const handleFileUploadToS3 = async (file,category) => {
     const data = await response.json();
     console.log("data for s3", data);
     const url = `${data.url}/${data.fileName}`;
+    console.log(url);
     return url;
   } catch (error) {
     console.log("uploading to s3 error", error);
@@ -373,8 +373,6 @@ export default function ApplicationForm() {
     setBirthDate(e.target.value);
   };
 
-  
-
   const handleApplicationCreation = async () => {
     setLoadingSubmit(true);
 
@@ -404,7 +402,7 @@ export default function ApplicationForm() {
     }
 
     try {
-      const s3Data = await handleFileUploadToS3(file, 'resumes');
+      const s3Data = await handleFileUploadToS3(file, "resumes");
       console.log("S3 Data:", s3Data);
 
       const formData = new FormData();
