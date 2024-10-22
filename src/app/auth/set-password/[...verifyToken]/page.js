@@ -152,10 +152,10 @@ export default function Page({ params }) {
                       type={showPassword ? "text" : "password"}
                       id="new-password"
                       name="new-password"
-                      placeholder="Enter new password"
+                      placeholder="Password (at least 8 characters, with letters, numbers, and special characters)"
                       value={newPassword.trim()}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="py-3 px-4 block w-full outline-none border border-dark-200 rounded-md text-sm focus:border-blue-300 focus:ring-blue-300 shadow-sm"
+                      className="py-3 px-4 pr-9 block w-full outline-none border border-dark-200 rounded-md text-sm focus:border-blue-300 focus:ring-blue-300 shadow-sm"
                       required
                       aria-describedby="email-error"
                     />
@@ -183,10 +183,10 @@ export default function Page({ params }) {
                       type={showPassword ? "text" : "password"}
                       id="confirm-password"
                       name="confirm-password"
-                      placeholder="Confirm by password"
+                      placeholder="Password (at least 8 characters, with letters, numbers, and special characters)"
                       value={confirmPassword.trim()}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="py-3 px-4 block w-full outline-none border border-dark-200 rounded-md text-sm focus:border-blue-300 focus:ring-blue-300 shadow-sm"
+                      className="py-3 px-4 pr-9 block w-full outline-none border border-dark-200 rounded-md text-sm focus:border-blue-300 focus:ring-blue-300 shadow-sm"
                       required
                       aria-describedby="email-error"
                     />

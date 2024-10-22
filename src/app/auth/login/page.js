@@ -86,10 +86,11 @@ export default function Page() {
                   name="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
+                  title="Password (at least 8 characters, with letters, numbers, and special characters)"
                   required
                   value={password.trim()}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none block w-full p-3 border border-dark-300 rounded-lg placeholder-dark-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                  className="appearance-none block w-full p-3 pr-9 border border-dark-300 rounded-lg placeholder-dark-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                 />
                 <div
                   className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-[#b0b0c0] hover:text-[#686870]"

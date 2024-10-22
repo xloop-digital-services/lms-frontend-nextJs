@@ -346,7 +346,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                 type="date"
                 value={date}
                 onChange={handleDateChange}
-                // Disable when toggle is true
+                max={formattedDate}
                 className={` border border-dark-300  text-[#424b55] cursor-default outline-none px-3 py-2 my-2 rounded-lg w-full`}
                 placeholder="Select start date"
               />
