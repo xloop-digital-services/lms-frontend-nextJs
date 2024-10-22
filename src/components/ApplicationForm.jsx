@@ -32,8 +32,8 @@ export const handleFileUploadToS3 = async (file,category) => {
 
     const data = await response.json();
     console.log("data for s3", data);
-    // const url = `${data.url}/${data.fileName}`;
-    return `https://lms-xd-bucket.s3.ap-south-1.amazonaws.com/assets/${category}/${data.fileName}`;
+    const url = `${data.url}/${data.fileName}`;
+    return url;
   } catch (error) {
     console.log("uploading to s3 error", error);
   }
