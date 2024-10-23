@@ -526,14 +526,14 @@ const ApprovalUserModal = ({
                 <CircularProgress />
               </div>
             ) : (
-              <div className="px-[30px] text-base flex gap-4 h-full w-full justify-evenly">
+              <div className="px-[24px] text-base flex gap-4 h-full w-full justify-evenly">
                 {assignedSessions && assignedSessions.length > 0 ? (
                   <>
-                    <div>
+                    <div className="w-[50%]">
                       <h2 className="border-b border-dark-300 py-1 mb-2 text-sm text-dark-400">
                         Assigned Classes:
                       </h2>
-                      <ul className="list-disc  max-h-[220px] overflow-y-auto w-full scrollbar-webkit ">
+                      <ul className="list-disc max-h-[220px] overflow-y-auto w-full scrollbar-webkit ">
                         {assignedSessions.map((session, index) => (
                           <li
                             key={index}
@@ -542,13 +542,13 @@ const ApprovalUserModal = ({
                               isSessionSelected === session
                                 ? "text-blue-300"
                                 : ""
-                            } flex gap-5 group items-center justify-between w-full hover:bg-[#1d1c1c] hover:bg-opacity-5 px-2 py-1 rounded-lg`}
+                            } flex gap-5 group items-center justify-between w-full hover:bg-[#1d1c1c] hover:bg-opacity-5 pr-2 py-1 rounded-lg`}
                           >
                             {session.location} - {session.course}
-                            <span className="mt-[2px] group-hover:text-opacity-45 text-opacity-0 text-[#1d1c1c] hover:border border-[#1d1c1c] border-opacity-45 rounded ">
+                            <span className="mt-[2px] group-hover:text-[#1d1c1c90] text-opacity-0 text-[#1d1c1c]  ">
                               <IoClose
-                                size={15}
-                                className=""
+                                size={16}
+                                className="hover:text-[#1d1c1ce2]"
                                 title="remove"
                                 onClick={() => handleDeleteSession(session)}
                               />

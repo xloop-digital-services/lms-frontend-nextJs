@@ -171,14 +171,14 @@ export default function Navbar() {
                       /> */}
                     </div>
                     <div>
-                      <div className="flex justify-end items-center cursor-pointer text-blue-500">
+                      <div className="flex justify-end items-center cursor-pointer hover:font-medium text-blue-500">
                         <div className="text-blue-500">
                           <p className="text-md capitalize">{`${user?.first_name} ${user?.last_name}`}</p>
                           <p className="text-xs uppercase">
                             {user?.registration_id}
                           </p>
                         </div>
-                        <div className={`ml-1`} onClick={toggleDropdown}>
+                        <div className={`ml-1 ${showDropdown ? 'rotate-180 duration-300' : 'duration-300'}`} onClick={toggleDropdown}>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -218,7 +218,7 @@ export default function Navbar() {
                       <Link
                         href="/user/profile"
                         passHref
-                        className="flex items-center px-4 py-2 text-blue-500 hover:bg-gray-200"
+                        className="flex items-center px-4 py-2 text-blue-500 hover:font-semibold"
                         onClick={toggleDropdown}
                       >
                         <FaUser size={17} className="mr-2" />
@@ -228,7 +228,7 @@ export default function Navbar() {
                       {/* <Link
                         href="/user/management"
                         passHref
-                        className="flex items-center px-4 py-2 text-[#07224D] hover:bg-gray-200"
+                        className="flex items-center px-4 py-2 text-[#07224D] hover:font-semibold"
                         onClick={toggleDropdown}
                       >
                         <FaUsers size={17} className="mr-2" />
@@ -238,7 +238,7 @@ export default function Navbar() {
                       <Link
                         href="/auth/login"
                         passHref
-                        className="flex items-center px-4 py-2 text-blue-500 hover:bg-gray-200"
+                        className="flex items-center px-4 py-2 text-blue-500 hover:font-semibold"
                         onClick={logOutUser}
                       >
                         <FaSignOutAlt size={17} className="mr-2" />

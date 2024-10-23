@@ -78,7 +78,7 @@ export default function Page() {
     <>
       <div
         className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-22 font-inter pb-4 ${
-          isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 px-4"
+          isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 sm:pl-5 px-4 sm:pr-5"
         }`}
         style={{
           width: isSidebarOpen ? "81%" : "100%",
@@ -109,7 +109,7 @@ export default function Page() {
                     </span>
                   )}
                   <span
-                    className={`ml-auto ${
+                    className={`${
                       isCityOpen ? "rotate-180 duration-300" : "duration-300"
                     }`}
                   >

@@ -342,7 +342,7 @@ export default function ApplicationForm() {
     if (file) {
       const fileExtension = file.name.split(".").pop().toLowerCase();
       if (supportedFormats.includes(`.${fileExtension}`)) {
-        console.log("file name", file.name);
+        // console.log("file name", file.name);
         setFile(file);
         setFileUploaded(file.name);
       } else {
