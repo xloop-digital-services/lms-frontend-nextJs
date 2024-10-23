@@ -435,13 +435,13 @@ const AdminDashboard = () => {
                 <div className="font-bold font-exo text-blue-500 text-lg">
                   Applications Status Overview
                 </div>
-                <div className="flex gap-2  justify-between items-center">
-                  <div className="relative">
+                <div className="flex gap-2  justify-between items-center w-full">
+                  <div className="relative w-full">
                     <button
                       onClick={toggleUsers}
                       className={`${
                         !isUserSelected ? "text-dark-500" : "text-[#424b55]"
-                      } flex justify-between mt-1 items-center xl:max-w-[200px] md:max-w-[150px] ssm:w-[150px] w-full  gap-1 hover:text-[#0e1721] xlg:px-4 px-2 xlg:py-3  py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                      } flex justify-between mt-1 items-center  w-full  gap-1 hover:text-[#0e1721] xlg:px-4 px-2 xlg:py-3  py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                     >
                       {selectedUser || userOptions[0]}
                       <span
@@ -458,7 +458,7 @@ const AdminDashboard = () => {
                     {isUserOpen && (
                       <div
                         ref={userDown}
-                        className="absolute capitalize z-50 xl:max-w-[200px]  md:max-w-[150px] ssm:w-[150px] w-full  mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                        className="absolute capitalize z-50 w-full  mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                       >
                         {userOptions.map((option, index) => (
                           <div
@@ -475,7 +475,7 @@ const AdminDashboard = () => {
                     )}
                   </div>
                   {selectedUser.toLowerCase() === "student" ? (
-                    <div className={`${!isUserSelected && "hidden"} relative`}>
+                    <div className={` relative w-full`}>
                       <button
                         onClick={toggleProgramOpen}
                         className={`${

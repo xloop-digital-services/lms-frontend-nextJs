@@ -215,13 +215,13 @@ const UserModal = ({
                     status === "pending"
                       ? "bg-mix-500"
                       : status === "short_listed"
-                      ? " bg-[#B8BBBE]"
+                      ? " bg-blue-300"
                       : approvedStatus === "verified"
                       ? "bg-mix-300"
                       : "bg-mix-200  "
                   }  w-[120px] text-center px-4 py-2 rounded-lg capitalize`}
                 >
-                  {status === "approved" ? approvedStatus : status}
+                  {status === "approved" ? approvedStatus : status === 'short_listed' ? 'shortlisted' : status}
                 </p>
               </div>
             </div>
