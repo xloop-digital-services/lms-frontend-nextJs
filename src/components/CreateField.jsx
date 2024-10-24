@@ -141,7 +141,7 @@ export default function CreateField({
 
       setLoading(false);
     } catch (error) {
-      console.log("Error fetching locations", error);
+      //console.log("Error fetching locations", error);
       if (error?.response?.status === 401) {
         toast.error(error?.response?.data?.code, ": Please Log in again");
       }
@@ -166,7 +166,7 @@ export default function CreateField({
       }
     } catch (error) {
       toast.error(`Error creating skill: ${error?.message}`);
-      // console.log(error?.data?.data?.skill_name?.[0])
+      // //console.log(error?.data?.data?.skill_name?.[0])
     }
   };
   const handleSkills = () => {

@@ -91,13 +91,13 @@ const SessionCreationModal = ({
           };
 
           const response = await createSession(data);
-          // console.log("session created", response.data.message);
+          // //console.log("session created", response.data.message);
           toast.success(response.data.message);
           setLoadingCreation(false);
           setOpenModal(false);
           setUpdateSession(!updateSession);
         } catch (error) {
-          console.log("error while session creation", error.response);
+          //console.log("error while session creation", error.response);
           if (error.response.status === 400) {
             toast.error(error.response.data.error[0]);
           }
@@ -130,11 +130,11 @@ const SessionCreationModal = ({
       setLoadingCourses(true);
       try {
         const response = await getAllCourses();
-        console.log("courses", response?.data?.data);
+        //console.log("courses", response?.data?.data);
 
         // Create an array of course names
         const namesArray = response?.data?.data.map((course) => course.name);
-        // console.log("names of courses", namesArray);
+        // //console.log("names of courses", namesArray);
 
         // Create a map of course names to full course objects
         const coursesObject = response?.data?.data.reduce((acc, course) => {
@@ -146,7 +146,7 @@ const SessionCreationModal = ({
         setCoursesMap(coursesObject); // Set courses map
         setLoadingCourses(false);
       } catch (error) {
-        console.log("error in courses list", error);
+        //console.log("error in courses list", error);
         setLoadingCourses(false);
       }
     };
@@ -159,8 +159,8 @@ const SessionCreationModal = ({
     // if (date instanceof Date && !isNaN(date)) {
     //   const formattedDate = date.toISOString().split("T")[0]; // Extract the date part
     //   setstartDate(formattedDate); // Set the start date
-    //   // console.log("start date,", date);
-    //   console.log("formated start date", formattedDate);
+    //   // //console.log("start date,", date);
+    //   //console.log("formated start date", formattedDate);
     // } else {
     //   toast.error("Invalid date selected");
     setstartDate(event.target.value);
@@ -171,8 +171,8 @@ const SessionCreationModal = ({
     // if (date instanceof Date && !isNaN(date)) {
     //   const formattedDate = date.toISOString().split("T")[0]; // Extract the date part
     //   setendDate(formattedDate); // Set the end date
-    //   // console.log('end date,', date)
-    //   console.log("formated end date", formattedDate);
+    //   // //console.log('end date,', date)
+    //   //console.log("formated end date", formattedDate);
     setendDate(event.target.value);
     // Check if end date is earlier than start date
     if (startDate && event.target.value <= startDate) {
@@ -194,7 +194,7 @@ const SessionCreationModal = ({
   const handleStartTimeChange = (event) => {
     const time = event.target.value;
     setStartTime(time);
-    console.log("Start time:", time);
+    //console.log("Start time:", time);
 
     // Validate again when the start time changes, to reset any lingering errors
     if (endTime && time) {
@@ -211,7 +211,7 @@ const SessionCreationModal = ({
   const handleEndTimeChange = (event) => {
     const time = event.target.value;
     setEndTime(time);
-    console.log("End time:", time);
+    //console.log("End time:", time);
 
     if (startTime) {
       const startTimeDate = convertTimeToDate(startTime);

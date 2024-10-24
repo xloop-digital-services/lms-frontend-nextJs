@@ -58,12 +58,12 @@ const LocationsTable = ({
       // if (response.status === 200){
       //   toast.success(response.data.message);
       // }
-      // console.log("location updated", response);
+      // //console.log("location updated", response);
       toast.success("Location updated successfully");
       setEdit(false);
       setUpdateLocation(!updateLocation);
     } catch (error) {
-      console.log("error while updating status", error);
+      //console.log("error while updating status", error);
     } finally {
       setLoading(false); // Set updating to false after the update is complete
     }
@@ -83,9 +83,9 @@ const LocationsTable = ({
         setUpdateLocation(!updateLocation);
         setConfirmDelete(false);
       }
-      console.log("deleting the location", response);
+      //console.log("deleting the location", response);
     } catch (error) {
-      console.log("error while deleting the lcoation", error);
+      //console.log("error while deleting the lcoation", error);
     } finally {
       setLoading(false);
     }

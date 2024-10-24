@@ -31,7 +31,7 @@ const CourseHead = ({
   const studentInstructorName =
     session?.length > 0 ? session[0].instructor?.instructor_name : null;
 
-  // console.log(session);
+  // //console.log(session);
   // const [isEditing, setIsEditing] = useState(false);
   const [courseData, setCourseData] = useState([]);
   const [programData, setProgramData] = useState([]);
@@ -45,7 +45,7 @@ const CourseHead = ({
         setCourseData(response?.data?.data);
       }
     } catch (error) {
-      console.error("Error fetching course:", error);
+      //console.error("Error fetching course:", error);
     } finally {
       setLoader(false);
     }
@@ -60,10 +60,10 @@ const CourseHead = ({
 
         setLoader(false);
       } else {
-        console.error("Failed to fetch program, status:", response.status);
+        //console.error("Failed to fetch program, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
   useEffect(() => {
@@ -71,7 +71,7 @@ const CourseHead = ({
     program === "program" && fetchProgramById();
   }, [isEditing]);
 
-  // console.log(progress);
+  // //console.log(progress);
 
   return (
     <div className=" ">

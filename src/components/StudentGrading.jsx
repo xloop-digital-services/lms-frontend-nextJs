@@ -37,7 +37,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
   const [studentInstructorName, setStudentInstructorName] = useState(null);
   const regId = isStudent ? userData?.user_data?.registration_id : propRegId;
   // const regId = userData?.user_data?.registration_id;
-  // console.log(regId);
+  // //console.log(regId);
   const toggleOpen = () => {
     setIsOpen(!isOpen);
   };
@@ -48,7 +48,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
     try {
       if (response.status === 200) {
         const sessions = response.data?.session || [];
-        console.log(sessions);
+        //console.log(sessions);
         const coursesData = sessions.map((session) => {
           return {
             course: session.course,
@@ -67,13 +67,13 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
           );
         }
       } else {
-        console.error(
-          "Failed to fetch user sessions, status:",
-          response.status
-        );
+        //console.error(
+        //   "Failed to fetch user sessions, status:",
+        //   response.status
+        // );
       }
     } catch (error) {
-      console.log("Error:", error);
+      //console.log("Error:", error);
     } finally {
       setLoader(false);
     }
@@ -83,7 +83,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
     fetchSessionForUser();
   }, []);
 
-  console.log(sessionId);
+  //console.log(sessionId);
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
     setIsOpen(false);
@@ -96,13 +96,13 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
       if (response.status === 200) {
         setProgress(response.data);
         // setLoader(false);
-        // console.log(progress);
-        // console.log(response.data);
+        // //console.log(progress);
+        // //console.log(response.data);
       } else {
-        console.error("Failed to fetch courses", response.status);
+        //console.error("Failed to fetch courses", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
@@ -141,10 +141,10 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
         setAssignment(response.data);
         setLoader(false);
       } else {
-        console.error("Failed to fetch courses", response.status);
+        //console.error("Failed to fetch courses", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
@@ -155,13 +155,13 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
       if (response.status === 200) {
         setQuiz(response.data);
         setLoader(false);
-        // console.log(quiz);
-        // console.log(response.data);
+        // //console.log(quiz);
+        // //console.log(response.data);
       } else {
-        console.error("Failed to fetch courses", response.status);
+        //console.error("Failed to fetch courses", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
@@ -172,13 +172,13 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
       if (response.status === 200) {
         setProject(response.data);
         setLoader(false);
-        // console.log(project);
-        // console.log(response.data);
+        // //console.log(project);
+        // //console.log(response.data);
       } else {
-        console.error("Failed to fetch courses", response.status);
+        //console.error("Failed to fetch courses", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
@@ -190,13 +190,13 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
       if (response.status === 200) {
         setExam(response.data);
         setLoader(false);
-        // console.log(exam);
-        // console.log(response.data);
+        // //console.log(exam);
+        // //console.log(response.data);
       } else {
-        console.error("Failed to fetch courses", response.status);
+        //console.error("Failed to fetch courses", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 

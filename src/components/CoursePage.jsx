@@ -25,10 +25,10 @@ export default function CoursePage({ path, heading }) {
 
         setLoader(false);
       } else {
-        console.error("Failed to fetch user, status:", response.status);
+        //console.error("Failed to fetch user, status:", response.status);
       }
     } catch (error) {
-      console.log("Error:", error);
+      //console.log("Error:", error);
     }
   }
 

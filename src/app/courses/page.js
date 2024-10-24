@@ -13,8 +13,8 @@ export default function Page() {
   const isAdmin = userData?.Group === "admin";
   // const isInstructor = Cookies.get("userGroup");
 
-  // console.log(group);
-  console.log(isInstructor);
+  // //console.log(group);
+  //console.log(isInstructor);
 
   return (
     // <>

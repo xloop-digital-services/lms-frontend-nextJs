@@ -12,8 +12,8 @@ const s3Client = new S3Client({
 });
 
 const uploadToS3 = async (file, fileName, category) => {
-  // console.log("access key:", process.env.S3_ACCESS_KEY_ID);
-  // console.log("secret key:", process.env.S3_SECRET_KEY);
+  // //console.log("access key:", process.env.S3_ACCESS_KEY_ID);
+  // //console.log("secret key:", process.env.S3_SECRET_KEY);
   const params = {
     Bucket: bucketName,
     Key: `assets/${category}/${fileName}`,
@@ -22,10 +22,10 @@ const uploadToS3 = async (file, fileName, category) => {
 
   try {
     const data = await s3Client.send(new PutObjectCommand(params));
-    console.log("File uploaded successfully", data);
+    // //console.log("File uploaded successfully", data);
     return fileName; 
   } catch (error) {
-    console.error("Error uploading file", error);
+    // //console.error("Error uploading file", error);
     throw error;
   }
 };
@@ -37,8 +37,8 @@ export async function POST(request) {
     const category = formData.get("category"); 
 
     // // Debugging logs
-    // console.log("File:", file);
-    // console.log("Category:", category); // Ensure category is being received correctly
+    // //console.log("File:", file);
+    // //console.log("Category:", category); // Ensure category is being received correctly
 
     // Ensure both file and category are present
     if (!file || !category) {
@@ -50,7 +50,7 @@ export async function POST(request) {
 
     return NextResponse.json({ success: "File uploaded", fileName, url });
   } catch (error) {
-    console.error("Error in POST request:", error);
+    // //console.error("Error in POST request:", error);
     return NextResponse.json({ error: error.message });
   }
 }

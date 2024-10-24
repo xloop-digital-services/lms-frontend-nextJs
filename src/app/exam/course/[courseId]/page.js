@@ -60,7 +60,7 @@ export default function Page({ params }) {
     try {
       if (response.status === 200) {
         const sessions = response.data?.session || [];
-        console.log(sessions);
+        //console.log(sessions);
         const coursesData = sessions.map((session) => {
           return {
             course: session.course,
@@ -79,13 +79,13 @@ export default function Page({ params }) {
           );
         }
       } else {
-        console.error(
-          "Failed to fetch user sessions, status:",
-          response.status
-        );
+        // //console.error(
+        //   "Failed to fetch user sessions, status:",
+        //   response.status
+        // );
       }
     } catch (error) {
-      console.log("Error:", error);
+      //console.log("Error:", error);
     } finally {
       setLoading(false);
     }
@@ -117,10 +117,10 @@ export default function Page({ params }) {
         setAssignments(response?.data?.data);
         setLoading(false);
       } else {
-        console.error("Failed to fetch exam, status:", response.status);
+        //console.error("Failed to fetch exam, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
@@ -134,7 +134,7 @@ export default function Page({ params }) {
     }
 
     const s3Data = await handleFileUploadToS3(file, "Upload Exams");
-    console.log("S3 Data:", s3Data);
+    //console.log("S3 Data:", s3Data);
 
     const formData = new FormData();
     formData.append("course", courseId);
@@ -145,7 +145,9 @@ export default function Page({ params }) {
     }
     formData.append("due_date", dueDate);
     // formData.append("no_of_resubmissions_allowed", resubmission);
-    formData.append("status", assignmentStatus);
+    if (!currentAssignment) {
+      formData.append("status", assignmentStatus);
+    }
     formData.append("start_time", startTime);
     formData.append("end_time", endTime);
     formData.append("total_grade", totalGrade);
@@ -189,7 +191,7 @@ export default function Page({ params }) {
         `Error ${currentAssignment ? "updating" : "creating"} Exam`,
         error
       );
-      console.log(error);
+      //console.log(error);
     }
   };
 
@@ -225,10 +227,10 @@ export default function Page({ params }) {
         setSessions(response.data.data);
         setLoading(false);
       } else {
-        console.error("Failed to fetch sessions, status:", response.status);
+        //console.error("Failed to fetch sessions, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
   const handleAssignmentStatus = async (id, newStatus) => {
@@ -248,7 +250,7 @@ export default function Page({ params }) {
       const response = await deleteExam(formData, assignmentToUpdate.id);
 
       // Check response.status_code instead of response.status
-      console.log("Response from deleteExam:", response);
+      //console.log("Response from deleteExam:", response);
 
       if (response?.status === 200) {
         toast.success(response.message || "Exam status updated successfully!");
@@ -271,10 +273,10 @@ export default function Page({ params }) {
             error.response.data.message || "Unknown error"
           }`
         );
-        console.error("Error response:", error.response);
+        //console.error("Error response:", error.response);
       } else {
         toast.error("Error updating exam status");
-        console.error("Error:", error);
+        //console.error("Error:", error);
       }
     }
   };
@@ -310,10 +312,10 @@ export default function Page({ params }) {
             error.response.data.message || "Unknown error"
           }`
         );
-        console.error("Error response:", error.response);
+        //console.error("Error response:", error.response);
       } else {
         toast.error("Error deleting exam");
-        console.error("Error:", error);
+        //console.error("Error:", error);
       }
     }
   };
@@ -326,10 +328,10 @@ export default function Page({ params }) {
         setSessions(response.data.data);
         setLoading(false);
       } else {
-        console.error("Failed to fetch sessions, status:", response.status);
+        //console.error("Failed to fetch sessions, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
@@ -344,10 +346,10 @@ export default function Page({ params }) {
       if (response.status === 200) {
         setSessions(response.data.data);
       } else {
-        console.error("Failed to fetch sessions, status:", response.status);
+        //console.error("Failed to fetch sessions, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
@@ -410,7 +412,7 @@ export default function Page({ params }) {
                   </option>
                   {Array.isArray(sessions) && sessions.length > 0 ? (
                     sessions.map((session) => {
-                      // console.log("Mapping session:", session);
+                      // //console.log("Mapping session:", session);
                       // Combine session_id and instructor_id in value
                       const optionValue = `${session?.session_name}|${session?.id}`;
                       return (
@@ -445,7 +447,7 @@ export default function Page({ params }) {
                   </option>
                   {Array.isArray(sessions) && sessions.length > 0 ? (
                     sessions.map((session) => {
-                      console.log("Mapping session:", session);
+                      //console.log("Mapping session:", session);
                       const optionValue = `${session.session_id}`;
                       return (
                         <option key={session.session_id} value={optionValue}>

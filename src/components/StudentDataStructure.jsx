@@ -53,7 +53,7 @@ const StudentDataStructure = ({
     setId(id);
     setResubmissionId(subId);
     setResubmitFile(!resubmitFile);
-    console.log("quiz id", id, "submission Id", subId);
+    //console.log("quiz id", id, "submission Id", subId);
   };
 
   const handleEditAssessment = (id) => {

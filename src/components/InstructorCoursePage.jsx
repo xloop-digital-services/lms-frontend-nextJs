@@ -24,13 +24,13 @@ export default function InstructorCoursePage({
   const { userData } = useAuth();
   const isStudent = userData?.Group === "student";
   const inInstructor = userData?.Group === "instructor";
-  console.log(userData?.Group);
+  //console.log(userData?.Group);
   const [courses, setCourses] = useState([]);
   const insId = userData?.user_data?.id;
   const insEmailId = userData?.User?.email;
-  console.log(insEmailId);
+  //console.log(insEmailId);
   const [loader, setLoader] = useState(true);
-  console.log(insId);
+  //console.log(insId);
   // const [courseId, setCourseId] = useState();
   // useEffect(() => {
   //   if (!insId) return;
@@ -42,12 +42,12 @@ export default function InstructorCoursePage({
   //         setCourses(response.data?.data?.courses);
   //         setLoader(false);
   //         // setCourseId(response?.data?.id)
-  //         console.log(response?.data);
+  //         //console.log(response?.data);
   //       } else {
-  //         console.error("Failed to fetch user, status:", response.status);
+  //         //console.error("Failed to fetch user, status:", response.status);
   //       }
   //     } catch (error) {
-  //       console.log("error", error);
+  //       //console.log("error", error);
   //     }
   //   }
 
@@ -65,10 +65,10 @@ export default function InstructorCoursePage({
 
         setLoader(false);
       } else {
-        console.error("Failed to fetch user, status:", response.status);
+        //console.error("Failed to fetch user, status:", response.status);
       }
     } catch (error) {
-      console.log("Error:", error);
+      //console.log("Error:", error);
     }
   }
 
@@ -76,7 +76,7 @@ export default function InstructorCoursePage({
     fetchSessionForUser();
   }, []);
 
-  console.log(courses);
+  //console.log(courses);
 
   if (loader) {
     <CircularProgress />;

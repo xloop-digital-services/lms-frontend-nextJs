@@ -13,9 +13,9 @@ export default function Page() {
   const isStudent = userData?.Group === "student";
   const isAdmin = userData?.Group === "admin";
   const isInstructor = userData?.Group === "instructor";
-  // console.log(userData?.session);
-  // console.log(isStudent);
-  // console.log(userData?.Group);
+  // //console.log(userData?.session);
+  // //console.log(isStudent);
+  // //console.log(userData?.Group);
 
   return (
     <>

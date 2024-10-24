@@ -325,7 +325,7 @@ export const updateQuizGrading = async (quizData) => {
 export const editQuizGrading = async (gradingId, quizData) => {
   try {
     const response = await axiosInstance.put(
-      `/api/course/quiz_grading/${gradingId}`,
+      `/api/course/quiz_grading/${gradingId}/`,
       quizData
     );
     return response;
@@ -363,7 +363,7 @@ export const updateAssignmentGrading = async (assignData) => {
 export const editAssignmentGrading = async (gradingId, assignData) => {
   try {
     const response = await axiosInstance.put(
-      `/api/course/assignments_grading/${gradingId}`,
+      `/api/course/assignments_grading/${gradingId}/`,
       assignData
     );
     return response;
@@ -401,7 +401,7 @@ export const updateProjectGrading = async (projectData) => {
 export const editProjectGrading = async (gradingId, projectData) => {
   try {
     const response = await axiosInstance.put(
-      `/api/course/project_gradings/${gradingId}`,
+      `/api/course/project_gradings/${gradingId}/`,
       projectData
     );
     return response;
@@ -474,7 +474,7 @@ export const updateExamGrading = async (examData) => {
 export const editExamGrading = async (gradingId, examData) => {
   try {
     const response = await axiosInstance.put(
-      `/api/course/exam_gradings/${gradingId}`,
+      `/api/course/exam_gradings/${gradingId}/`,
       examData
     );
     return response;
@@ -1510,18 +1510,6 @@ export const getCalendarSessions = async (userId) => {
     throw error;
   }
 };
-
-// //get data
-// export const getData = async () => {
-//   try {
-//     const response = await axiosInstance.get(
-//       `/api/user-process/1/?group_name=student`
-//     );
-//     return response;
-//   } catch (error) {
-//     throw error;
-//   }
-// };
 
 //get calendar sessions
 export const getCalendarData = async (userId) => {

@@ -32,12 +32,12 @@ export default function StudentProgram({ path, progress, heading, role }) {
           setProgram(response.data?.data);
           setLoader(false);
           // setCourseId(response?.data?.id)
-          console.log(response?.data);
+          //console.log(response?.data);
         } else {
-          console.error("Failed to fetch user, status:", response.status);
+          //console.error("Failed to fetch user, status:", response.status);
         }
       } catch (error) {
-        console.log("error", error);
+        //console.log("error", error);
       }
     }
 

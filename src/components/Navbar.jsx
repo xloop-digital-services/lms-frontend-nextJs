@@ -27,17 +27,17 @@ export default function Navbar() {
         const response = await getUserProfile();
         setLoader(true);
         if (response.status === 200) {
-          console.log("Fetched user data:", response.data);
+          //console.log("Fetched user data:", response.data);
           setLoader(false);
           setUser(response.data.response);
-          console.log(response.data.response);
-          console.log(user, "user");
-          // console.log(response.data.response.city, "city")
+          //console.log(response.data.response);
+          //console.log(user, "user");
+          // //console.log(response.data.response.city, "city")
         } else {
-          console.error("Failed to fetch user, status:", response.status);
+          //console.error("Failed to fetch user, status:", response.status);
         }
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        //console.error("Error fetching user data:", error);
       }
     }
     fetchUser();
@@ -45,7 +45,7 @@ export default function Navbar() {
 
   useEffect(() => {
     if (user) {
-      console.log(user);
+      //console.log(user);
     }
   });
 
@@ -92,7 +92,7 @@ export default function Navbar() {
   };
 
   const firstWord = getFirstWord(user?.first_name);
-  // console.log(firstWord)
+  // //console.log(firstWord)
 
   return (
     <>

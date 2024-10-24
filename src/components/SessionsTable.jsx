@@ -81,12 +81,12 @@ const SessionsTable = ({
   };
 
   const handleSetStatus = (status) => {
-    console.log(status);
+    //console.log(status);
     if (status === "Active") {
       setStatus(1);
     } else {
       setStatus(0);
-      console.log("ye zaero hogaya");
+      //console.log("ye zaero hogaya");
     }
   };
 
@@ -102,7 +102,7 @@ const SessionsTable = ({
   const handleStartTimeChange = (event) => {
     const time = event.target.value;
     setEditStartTime(time);
-    console.log("Start time:", time);
+    //console.log("Start time:", time);
 
     // Validate again when the start time changes, to reset any lingering errors
     if (editEndTime && time) {
@@ -119,7 +119,7 @@ const SessionsTable = ({
   const handleEndTimeChange = (event) => {
     const time = event.target.value;
     setEditEndTime(time);
-    console.log("End time:", time);
+    //console.log("End time:", time);
 
     if (editStartTime) {
       const startTimeDate = convertTimeToDate(editStartTime);
@@ -157,12 +157,12 @@ const SessionsTable = ({
         };
 
         const response = await UpdateSession(selectedSession, data);
-        console.log("session updated", response);
+        //console.log("session updated", response);
         setEdit(false);
         toast.success("Class schedule updated successfully");
         setUpdateSession(!updateSession);
       } catch (error) {
-        console.log("error while updating status", error);
+        //console.log("error while updating status", error);
       } finally {
         setUpdating(false); // Set updating to false after the update is complete
       }
