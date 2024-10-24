@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { IoIosArrowDown } from "react-icons/io";
-import { FaListCheck, FaLocationDot } from "react-icons/fa6";
+import { FaListCheck, FaLocationDot, FaMagnifyingGlass } from "react-icons/fa6";
 import logo from "../../public/assets/img/logo.png";
 import {
   FaBars,
@@ -218,6 +218,20 @@ function SideBar() {
                       }  group-hover:text-[#07224da0] p-1 rounded-md  group-hover:bg-blue-600`}
                     />
                     Class Scheduling
+                  </Link>
+                  <Link
+                    href="/initial-screening-test"
+                    ref={
+                      isLinkActive("/initial-screening-test") ? activeLinkRef : null
+                    }
+                    className={`p-4 mx-3 flex gap-4 mt-2 rounded-xl ${
+                      isLinkActive("/initial-screening-test")
+                        ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
+                        : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
+                    }`}
+                  >
+                    <FaMagnifyingGlass size={23} />
+                    Initial Screening Test
                   </Link>
                 </div>
                 {/* <div className={`${isAdmin && "hidden"}`}> */}

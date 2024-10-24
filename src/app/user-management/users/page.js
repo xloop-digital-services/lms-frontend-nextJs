@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import ShortListUserTable from "@/components/ShortlistUserTable";
 import UserManagement from "@/components/UserManagement";
 import { getAllPrograms } from "@/api/route";
 
