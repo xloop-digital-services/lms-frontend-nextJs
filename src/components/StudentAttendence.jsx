@@ -20,7 +20,7 @@ const StudentAttendence = ({ attendance, loader, isAdmin, courseId }) => {
     try {
       if (response.status === 200) {
         const sessions = response.data?.session || [];
-        console.log(sessions);
+        //console.log(sessions);
         const coursesData = sessions.map((session) => {
           return {
             course: session.course,
@@ -39,13 +39,13 @@ const StudentAttendence = ({ attendance, loader, isAdmin, courseId }) => {
           );
         }
       } else {
-        console.error(
-          "Failed to fetch user sessions, status:",
-          response.status
-        );
+        //console.error(
+        //   "Failed to fetch user sessions, status:",
+        //   response.status
+        // );
       }
     } catch (error) {
-      console.log("Error:", error);
+      //console.log("Error:", error);
     } finally {
       setLoading(false);
     }

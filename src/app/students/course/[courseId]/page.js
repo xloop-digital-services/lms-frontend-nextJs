@@ -28,14 +28,14 @@ export default function Page({ params }) {
         if (response.status === 200) {
           setAttendance(response.data);
           setLoader(false);
-          console.log(attendance);
-          console.log(response.data);
+          //console.log(attendance);
+          //console.log(response.data);
         } else {
-          console.error("Failed to fetch courses", response.status);
+          //console.error("Failed to fetch courses", response.status);
           setLoader(false);
         }
       } catch (error) {
-        console.log("error", error);
+        //console.log("error", error);
         setLoader(false);
       }
     }
@@ -52,14 +52,14 @@ export default function Page({ params }) {
   //       if (response.status === 200) {
   //         setAttendanceStudent(response.data);
   //         setLoader(false);
-  //         console.log(attendance);
-  //         console.log(response.data);
+  //         //console.log(attendance);
+  //         //console.log(response.data);
   //       } else {
-  //         console.error("Failed to fetch courses", response.status);
+  //         //console.error("Failed to fetch courses", response.status);
   //         setLoader(false);
   //       }
   //     } catch (error) {
-  //       console.log("error", error);
+  //       //console.log("error", error);
   //       setLoader(false);
   //     }
   //   }

@@ -14,7 +14,7 @@ const AssessmentDescModal = ({
 }) => {
   if (!isOpen || !quiz) return null;
 
-  //   console.log(quiz);
+  //   //console.log(quiz);
   return (
     <div className="backDropOverlay h-screen flex justify-center items-center fixed inset-0 bg-black bg-opacity-50 z-[1000]">
       <div className="w-[650px] z-[1100] bg-white p-6 rounded-md">

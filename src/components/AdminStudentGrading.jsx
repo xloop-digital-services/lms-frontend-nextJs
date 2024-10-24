@@ -32,7 +32,7 @@ const AdminStudentGrading = ({ courseId }) => {
 
   const [selectedSessionId, setSelectedSessionId] = useState("");
   const handleChange = (e) => {
-    console.log("chal rahi he", e.target.value);
+    //console.log("chal rahi he", e.target.value);
     setSelectedSessionId(e.target.value);
   };
 
@@ -47,10 +47,10 @@ const AdminStudentGrading = ({ courseId }) => {
       if (response.status === 200) {
         setInstructorSessions(response.data);
       } else {
-        console.error("Failed to fetch sessions, status:", response.status);
+        //console.error("Failed to fetch sessions, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     } finally {
       setLoading(false);
     }
@@ -61,13 +61,13 @@ const AdminStudentGrading = ({ courseId }) => {
     try {
       const response = await getAttendanceBySessionId(selectedSessionId);
       if (response.status === 200) {
-        // console.log("attendence in students", response.data.data.students);
+        // //console.log("attendence in students", response.data.data.students);
         setAttendance(response.data.data.students);
       } else {
-        console.error("Failed to fetch attendance, status:", response.status);
+        //console.error("Failed to fetch attendance, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     } finally {
       setLoading(false);
     }
@@ -83,24 +83,24 @@ const AdminStudentGrading = ({ courseId }) => {
   //       // }, {});
 
   //       setAttendance(response?.data?.data);
-  //       console.log(response.data.data);
+  //       //console.log(response.data.data);
   //       // setSelectedAttendance(initialAttendance);
-  //       // console.log(response.data);
+  //       // //console.log(response.data);
   //     } else {
-  //       console.error("Failed to fetch attendance, status:", response.status);
+  //       //console.error("Failed to fetch attendance, status:", response.status);
   //     }
   //   } catch (error) {
-  //     console.error("Error fetching attendance:", error);
+  //     //console.error("Error fetching attendance:", error);
   //   }
   // }
 
   const fetchAllSessions = async () => {
     try {
       const response = await listSessionByCourseId(courseId);
-      // console.log('admin sessions', response.data )
+      // //console.log('admin sessions', response.data )
       setAdminSessions(response.data.data);
     } catch (error) {
-      console.log("fetching sessions", error);
+      //console.log("fetching sessions", error);
     }
   };
 

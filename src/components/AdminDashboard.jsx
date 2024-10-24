@@ -129,7 +129,7 @@ const AdminDashboard = () => {
   const handleTotalUsers = async () => {
     try {
       const response = await totalUsersCount();
-      console.log("total Counts", response?.data?.data);
+      //console.log("total Counts", response?.data?.data);
       setAllUsers(response?.data?.data?.all_users_length);
       setAllIntructors(response?.data?.data?.instructor_user_length);
       setAllStudents(response?.data?.data?.student_user_length);
@@ -142,18 +142,18 @@ const AdminDashboard = () => {
       setAllActiveStudents(response?.data?.data?.active_student_length);
       setAllInActiveStudents(response?.data?.data?.inactive_student_length);
     } catch (error) {
-      console.log("error fetching the total users", error);
+      //console.log("error fetching the total users", error);
     }
   };
 
   const handleListingAllBatches = async () => {
     try {
       const response = await listAllBatches();
-      // console.log("batches", response?.data);
+      // //console.log("batches", response?.data);
       setBatches(response?.data);
       setloadingBatch(false);
     } catch (error) {
-      console.log("error while fetching the batches", error);
+      //console.log("error while fetching the batches", error);
       setloadingBatch(false);
     }
   };
@@ -181,22 +181,22 @@ const AdminDashboard = () => {
       if (response?.data?.status_code === 404) {
         setLoading(false);
         toast.error(response?.data?.message);
-        // console.log("ab aya error");
+        // //console.log("ab aya error");
       }
     } catch (err) {
       setLoading(false);
-      console.error("error while fetching the programs", err);
+      //console.error("error while fetching the programs", err);
     }
   };
 
   const handleGetAllSkills = async () => {
     try {
       const response = await getAllSkills();
-      console.log("fetching skills", response.data);
+      //console.log("fetching skills", response.data);
       setAllSkills(response?.data);
       setLoading(false);
     } catch (error) {
-      console.log("error fetching the list of skills");
+      //console.log("error fetching the list of skills");
       setLoading(false);
     }
   };
@@ -227,11 +227,11 @@ const AdminDashboard = () => {
   const handleBarChartData = async () => {
     try {
       const response = await getCityStatistics();
-      // console.log('bar chart', response?.data?.data)
+      // //console.log('bar chart', response?.data?.data)
       setBarData(response?.data?.data);
       setLoading(false);
     } catch (error) {
-      console.log("error while fetching the bar data", error);
+      //console.log("error while fetching the bar data", error);
       setLoading(false);
     }
   };
@@ -284,7 +284,7 @@ const AdminDashboard = () => {
 
         setLoading(false);
       } catch (error) {
-        console.log("error while fetching number of applications", error);
+        //console.log("error while fetching number of applications", error);
         setLoading(false);
       }
     };
@@ -323,12 +323,12 @@ const AdminDashboard = () => {
       setLoading(true);
       const response = await DeleteBatch(selectedBatch);
       toast.success("Batch deleted successfully!");
-      console.log("deleting the batch", response);
+      //console.log("deleting the batch", response);
       setUpdateBatch(!updateBatch);
       setConfirmDelete(false);
       setLoading(false);
     } catch (error) {
-      console.log("error while deleting the batch", error);
+      //console.log("error while deleting the batch", error);
     }
   };
 
@@ -434,13 +434,13 @@ const AdminDashboard = () => {
                 <div className="font-bold font-exo text-blue-500 text-lg">
                   Applications Status Overview
                 </div>
-                <div className="flex gap-2  justify-between items-center">
-                  <div className="relative">
+                <div className="flex gap-2  justify-between items-center w-full">
+                  <div className="relative w-full">
                     <button
                       onClick={toggleUsers}
                       className={`${
                         !isUserSelected ? "text-dark-500" : "text-[#424b55]"
-                      } flex justify-between mt-1 items-center xl:max-w-[200px] md:max-w-[170px] w-[240px]  gap-1 hover:text-[#0e1721] px-4 xlg:py-3  py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                      } flex justify-between mt-1 items-center w-full  gap-1 hover:text-[#0e1721] xlg:px-4 px-2 xlg:py-3  py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                     >
                       {selectedUser || userOptions[0]}
                       <span
@@ -457,7 +457,7 @@ const AdminDashboard = () => {
                     {isUserOpen && (
                       <div
                         ref={userDown}
-                        className="absolute capitalize z-50 xl:max-w-[200px] md:max-w-[170px] w-[240px]  mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                        className="absolute capitalize z-50  w-full  mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                       >
                         {userOptions.map((option, index) => (
                           <div
@@ -474,7 +474,7 @@ const AdminDashboard = () => {
                     )}
                   </div>
                   {selectedUser.toLowerCase() === "student" ? (
-                    <div className={`${!isUserSelected && "hidden"} relative`}>
+                    <div className={`relative w-full`}>
                       <button
                         onClick={toggleProgramOpen}
                         className={`${
@@ -614,7 +614,7 @@ const AdminDashboard = () => {
               </div>
             </div>
           </div>
-          <div className="bg-[rgb(255,255,255)] rounded-xl p-5 pb-0 xmd:max-h-[260px] h-[240px] ">
+          <div className="bg-[rgb(255,255,255)] rounded-xl p-5 pb-0 xmd:max-h-[260px] h-full xsm:mb-0 mb-4">
             <div className="flex nsm:items-center nsm:flex-row flex-col ">
               <h1 className="font-bold font-exo  text-blue-500 text-lg sm:w-[200px] w-[180px]  xlg:w-full">
                 <Link href="/batch" className="w-fit">

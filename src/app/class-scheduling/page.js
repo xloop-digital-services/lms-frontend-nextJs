@@ -76,13 +76,13 @@ export default function Page() {
     setLoading(true);
     try {
       const response = await listAllSessions();
-      // console.log("session fetching", response?.data);
+      // //console.log("session fetching", response?.data);
       setSessions(response?.data.data);
     } catch (error) {
-      console.log(
-        "error while fetching the class schedules",
-        error.response.data.message
-      );
+      // console.log(
+      //   "error while fetching the class schedules",
+      //   error.response.data.message
+      // );
       if (error.message === "Network Error") {
         toast.error(error.message, "Check your internet connection");
       } else {
@@ -109,11 +109,11 @@ export default function Page() {
   const getBatch = async () => {
     try {
       const response = await listAllBatches();
-      console.log("batches", response?.data);
+      //console.log("batches", response?.data);
       const batchOptionsArray = response?.data.map((batch) => batch.batch);
       setBatchOptions(batchOptionsArray);
     } catch (error) {
-      console.log("error while fetching the batches", error);
+      //console.log("error while fetching the batches", error);
       if (error.message === "Network Error") {
         toast.error(error.message, "Check your internet connection");
       }
@@ -125,7 +125,7 @@ export default function Page() {
   const getLocation = async () => {
     try {
       const response = await listAllLocations();
-      console.log("locations", response?.data);
+      //console.log("locations", response?.data);
       const LocationOptionsArray = response?.data.map((location) => ({
         id: location.id,
         name: location.name,
@@ -133,7 +133,7 @@ export default function Page() {
       }));
       setLocationOptions(LocationOptionsArray);
     } catch (error) {
-      console.log("error while fetching the locations", error);
+      //console.log("error while fetching the locations", error);
       if (error.message === "Network Error") {
         toast.error(error.message, "Check your internet connection");
       }
@@ -184,13 +184,13 @@ export default function Page() {
     try {
       setLoading(true);
       const response = await DeleteSession(selectedSession);
-      console.log("deleting the session", response);
+      //console.log("deleting the session", response);
       toast.success("Class schedule deleted successfully!");
       setUpdateSession(!updateSession);
       setConfirmDelete(false);
       setLoading(false);
     } catch (error) {
-      console.log("error while deleting the lcoation", error);
+      //console.log("error while deleting the lcoation", error);
     } finally {
       setLoading(false);
     }
@@ -200,7 +200,7 @@ export default function Page() {
     <>
       <div
         className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-22 font-inter ${
-          isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 px-4"
+          isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 sm:pl-5 px-4 sm:pr-5"
         }`}
         style={{ width: isSidebarOpen ? "81%" : "100%" }}
       >

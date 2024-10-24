@@ -18,11 +18,11 @@ export default function Page(){
       }
       if(response?.data?.status_code === 404){
         setLoading(false)
-        console.log('ab aya error')
+        //console.log('ab aya error')
       }
     } catch (err) {
         setLoading(false)
-        console.error("error while fetching the programs", err);
+        //console.error("error while fetching the programs", err);
     }
   };
 

@@ -1,6 +1,6 @@
 import React from "react";
 const StudentMarksTable = ({ field, assessments }) => {
-  console.log(assessments);
+  //console.log(assessments);
   return (
     <div className="flex flex-col cursor-default">
       <div className="-m-1.5 overflow-x-auto">

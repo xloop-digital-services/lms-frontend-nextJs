@@ -37,12 +37,12 @@ export default function StudentGradingAdmin({
   // const userId = userData?.user_data?.user;
   const regId = isStudent ? userData?.user_data?.registration_id : propRegId;
   // const regId = userData?.user_data?.registration_id;
-  // console.log(regId);
+  // //console.log(regId);
   const toggleOpen = () => {
     setIsOpen(!isOpen);
   };
 
-  console.log(sessionId);
+  //console.log(sessionId);
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
     setIsOpen(false);
@@ -55,13 +55,13 @@ export default function StudentGradingAdmin({
       if (response.status === 200) {
         setProgress(response.data);
         // setLoader(false);
-        // console.log(progress);
-        // console.log(response.data);
+        // //console.log(progress);
+        // //console.log(response.data);
       } else {
-        console.error("Failed to fetch courses", response.status);
+        //console.error("Failed to fetch courses", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
@@ -100,10 +100,10 @@ export default function StudentGradingAdmin({
         setAssignment(response.data);
         setLoader(false);
       } else {
-        console.error("Failed to fetch courses", response.status);
+        //console.error("Failed to fetch courses", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
@@ -114,13 +114,13 @@ export default function StudentGradingAdmin({
       if (response.status === 200) {
         setQuiz(response.data);
         setLoader(false);
-        // console.log(quiz);
-        // console.log(response.data);
+        // //console.log(quiz);
+        // //console.log(response.data);
       } else {
-        console.error("Failed to fetch courses", response.status);
+        //console.error("Failed to fetch courses", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
@@ -131,13 +131,13 @@ export default function StudentGradingAdmin({
       if (response.status === 200) {
         setProject(response.data);
         setLoader(false);
-        // console.log(project);
-        // console.log(response.data);
+        // //console.log(project);
+        // //console.log(response.data);
       } else {
-        console.error("Failed to fetch courses", response.status);
+        //console.error("Failed to fetch courses", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
@@ -149,13 +149,13 @@ export default function StudentGradingAdmin({
       if (response.status === 200) {
         setExam(response.data);
         setLoader(false);
-        // console.log(exam);
-        // console.log(response.data);
+        // //console.log(exam);
+        // //console.log(response.data);
       } else {
-        console.error("Failed to fetch courses", response.status);
+        //console.error("Failed to fetch courses", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 

@@ -18,7 +18,7 @@ export default function Page({ params }) {
   const router = useRouter();
   const u_id = params.verifyToken[0];
   const token = params.verifyToken[1];
-  // console.log("token", u_id, "/", token);
+  // //console.log("token", u_id, "/", token);
 
   const handlePassword = async (event) => {
     event.preventDefault();
@@ -26,17 +26,17 @@ export default function Page({ params }) {
     // const formData = new FormData();
     // formData.append("password", newPassword);
     // formData.append("password2", confirmPassword);
-    // console.log("formData",formData);
+    // //console.log("formData",formData);
 
     const data = {
       password: newPassword,
       password2: confirmPassword,
     };
-    // console.log("form", data);
+    // //console.log("form", data);
 
     try {
       const response = await setNewPassword(data, u_id, token);
-      console.log("res", response);
+      //console.log("res", response);
       if (response.status === 200) {
         toast.success("Password Reset Successfully", {
           position: "top-right",
@@ -66,7 +66,7 @@ export default function Page({ params }) {
         setloading(false);
       }
     } catch (error) {
-      console.error("Error during login:", error);
+      //console.error("Error during login:", error);
       if (error.response.data.password) {
         toast.error(error.response.data.password[0], {
           position: "top-right",
@@ -141,10 +141,10 @@ export default function Page({ params }) {
                       type={showPassword ? "text" : "password"}
                       id="new-password"
                       name="new-password"
-                      placeholder="Enter new password"
-                      value={newPassword}
+                      placeholder="Password (at least 8 characters, with letters, numbers, and special characters)"
+                      value={newPassword.trim()}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="py-3 px-4 block w-full outline-none border border-dark-200 rounded-md text-sm focus:border-blue-300 focus:ring-blue-300 shadow-sm"
+                      className="py-3 px-4 pr-9 block w-full outline-none border border-dark-200 rounded-md text-sm focus:border-blue-300 focus:ring-blue-300 shadow-sm"
                       required
                       aria-describedby="email-error"
                     />
@@ -172,10 +172,10 @@ export default function Page({ params }) {
                       type={showPassword ? "text" : "password"}
                       id="confirm-password"
                       name="confirm-password"
-                      placeholder="Confirm by password"
-                      value={confirmPassword}
+                      placeholder="Password (at least 8 characters, with letters, numbers, and special characters)"
+                      value={confirmPassword.trim()}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="py-3 px-4 block w-full outline-none border border-dark-200 rounded-md text-sm focus:border-blue-300 focus:ring-blue-300 shadow-sm"
+                      className="py-3 px-4 pr-9 block w-full outline-none border border-dark-200 rounded-md text-sm focus:border-blue-300 focus:ring-blue-300 shadow-sm"
                       required
                       aria-describedby="email-error"
                     />

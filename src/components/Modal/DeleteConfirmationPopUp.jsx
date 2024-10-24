@@ -17,7 +17,7 @@ const DeleteConfirmationPopup = ({
       setConfirmDelete(false);
       setLoading(false);
     } catch (error) {
-      console.log("Error while deleting:", error);
+      //console.log("Error while deleting:", error);
       setLoading(false);
     }
   };

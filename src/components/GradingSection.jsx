@@ -61,12 +61,12 @@ export const GradingSection = ({
       if (response.status === 200) {
         setOptions(response?.data?.data);
         setLoader(false);
-        // console.log(quizzes);
+        // //console.log(quizzes);
       } else {
-        console.error("Failed to fetch user, status:", response.status);
+        //console.error("Failed to fetch user, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
   async function fetchQuizzes() {
@@ -76,12 +76,12 @@ export const GradingSection = ({
       if (response.status === 200) {
         setOptions(response?.data?.data);
         setLoader(false);
-        // console.log(quizzes);
+        // //console.log(quizzes);
       } else {
-        console.error("Failed to fetch user, status:", response.status);
+        //console.error("Failed to fetch user, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
@@ -92,12 +92,12 @@ export const GradingSection = ({
       if (response.status === 200) {
         setOptions(response?.data?.data);
         setLoader(false);
-        // console.log(quizzes);
+        // //console.log(quizzes);
       } else {
-        console.error("Failed to fetch user, status:", response.status);
+        //console.error("Failed to fetch user, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
@@ -108,16 +108,16 @@ export const GradingSection = ({
       if (response.status === 200) {
         setOptions(response?.data?.data);
         setLoader(false);
-        // console.log(quizzes);
+        // //console.log(quizzes);
       } else {
-        console.error("Failed to fetch user, status:", response.status);
+        //console.error("Failed to fetch user, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
-  // console.log(sessionId);
+  // //console.log(sessionId);
 
   const toggleOpen = (e) => {
     e.stopPropagation();
@@ -130,12 +130,7 @@ export const GradingSection = ({
     // setSelectedDesc("")
     // setTotalMarks("")
   };
-  // useEffect(() => {
-  //   fetchQuizzes();
-  //   fetchAssignments();
-  //   fetchExams();
-  //   fetchProjects();
-  // }, [sessionId]);
+
   useEffect(() => {
     if (!sessionId) return;
     if (title === "Assignment") {
@@ -147,7 +142,7 @@ export const GradingSection = ({
     } else if (title === "Project") {
       fetchProjects();
     }
-  }, [sessionId]);
+  }, [sessionId, fetch]);
 
   const handleToggleSection = (section) => {
     if (openSection === section) {
@@ -173,12 +168,12 @@ export const GradingSection = ({
       if (response.status === 200) {
         setLoading(false);
         setQuizGrading(response?.data?.data?.students);
-        console.log(quizGrading);
+        //console.log(quizGrading);
       } else {
-        console.error("Failed to fetch quizzes, status:", response.status);
+        //console.error("Failed to fetch quizzes, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
@@ -189,17 +184,17 @@ export const GradingSection = ({
       if (response.status === 200) {
         setLoading(false);
         setAssignmentGrading(response?.data?.data?.students);
-        console.log(assignmentGrading);
+        //console.log(assignmentGrading);
       } else {
-        console.error("Failed to fetch assignments, status:", response.status);
+        //console.error("Failed to fetch assignments, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
-  console.log(selectedSessionId);
-  console.log(selected);
+  //console.log(selectedSessionId);
+  //console.log(selected);
 
   // async function fetchExamGrading() {
   //   setLoading(true);
@@ -208,12 +203,12 @@ export const GradingSection = ({
   //     if (response.status === 200) {
   //       setLoading(false);
   //       setExamGrading(response?.data?.data?.students);
-  //       console.log(examGrading);
+  //       //console.log(examGrading);
   //     } else {
-  //       console.error("Failed to fetch exams, status:", response.status);
+  //       //console.error("Failed to fetch exams, status:", response.status);
   //     }
   //   } catch (error) {
-  //     console.log("error", error);
+  //     //console.log("error", error);
   //   }
   // }
 
@@ -226,12 +221,12 @@ export const GradingSection = ({
         setLoading(false);
         setExamGrading(examData?.students);
         setTotalMarks(examData?.total_grade || 0);
-        console.log("Exam Grading Data: ", examData);
+        //console.log("Exam Grading Data: ", examData);
       } else {
-        console.error("Failed to fetch exams, status:", response.status);
+        //console.error("Failed to fetch exams, status:", response.status);
       }
     } catch (error) {
-      console.error("Error fetching exam grading:", error);
+      //console.error("Error fetching exam grading:", error);
     }
   }
 
@@ -242,15 +237,14 @@ export const GradingSection = ({
       if (response.status === 200) {
         setLoading(false);
         setProjectGrading(response?.data?.data?.students);
-        console.log(projectGrading);
+        //console.log(projectGrading);
       } else {
-        console.error("Failed to fetch projects, status:", response.status);
+        //console.error("Failed to fetch projects, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
-
   useEffect(() => {
     if (!selected) return;
     if (title === "Assignment") {
@@ -262,15 +256,16 @@ export const GradingSection = ({
     } else if (title === "Project") {
       fetchProjectGrading();
     }
+    setFetch(false);
   }, [selected, fetch, title, isAdmin, isInstructor]);
 
-  // console.log(selected);
-  // console.log(selectedValue);
+  // //console.log(selected);
+  // //console.log(selectedValue);
 
   return (
     <div className="border my-3 border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
       <div
-        className="flex justify-between items-center"
+        className="flex justify-between items-center max-md:flex-col"
         onClick={() => handleToggleSection(title)}
       >
         <div className="flex flex-col">
@@ -280,7 +275,7 @@ export const GradingSection = ({
           {selectedValue && (
             <div>
               <p className="font-semibold text-sm text-blue-300">
-                Description: {selectedDesc}
+                Description: {selectedDesc ? selectedDesc : "-"}
               </p>
               <p className="font-semibold text-sm text-blue-300">
                 Total Marks: {totalMarks ? totalMarks : 0}

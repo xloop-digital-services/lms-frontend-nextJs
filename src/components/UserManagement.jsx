@@ -95,15 +95,15 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
             setUsers(response?.data?.data.data.map((data) => data.user));
             setCount(response?.data?.data.count);
 
-            // console.log(response?.data?.data?.[0].?id)
+            // //console.log(response?.data?.data?.[0].?id)
             setLoadingUsers(false);
           } else {
             setMessage("no data found");
             setLoadingUsers(false);
           }
-          console.log("response from both idss", response.data);
+          //console.log("response from both idss", response.data);
         } catch (error) {
-          console.log("error is occuring while both", error);
+          //console.log("error is occuring while both", error);
           // setMessage(response.data.message);
           setMessage("no data found");
 
@@ -121,11 +121,11 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
       setLoadingSkills(true);
       try {
         const response = await getAllSkills();
-        // console.log("skills", response?.data);
+        // //console.log("skills", response?.data);
         setSkills(response?.data);
         setLoadingSkills(false);
       } catch (error) {
-        console.log("error in skills", error);
+        //console.log("error in skills", error);
         setLoadingSkills(false);
       }
     };
@@ -135,7 +135,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   }, [selectedOption.toLowerCase(), selectedOption]);
 
   useEffect(() => {
-    // console.log("userUpdate", statusUpdated);
+    // //console.log("userUpdate", statusUpdated);
     setMessage("");
     setUserByProgramID([]);
     if (programID) {
@@ -150,7 +150,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
           setUserByProgramID(response?.data?.data);
           setLoading(false);
         } catch (error) {
-          console.log(error);
+          //console.log(error);
           if (error.response.status === 404) {
             setMessage("no data found");
           }
@@ -173,15 +173,15 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
           programID,
           selectedOption.toLowerCase()
         );
-        // console.log("numbers", response.data);
+        // //console.log("numbers", response.data);
         setApprovedRequest(response?.data?.data.approved);
         setverfiedRequest(response?.data?.data.verified);
         setUnverifiedRequest(response?.data?.data.unverified);
         setPendingRequest(response?.data?.data.pending);
         setShortlisted(response?.data?.data.short_listed);
-        // console.log('short:',response?.data?.data.short_listed)
+        // //console.log('short:',response?.data?.data.short_listed)
       } catch (error) {
-        console.log("error while fetching number of applications", error);
+        //console.log("error while fetching number of applications", error);
       }
     };
     handleApplicationsNumber();
@@ -192,18 +192,18 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   //     setLoadingCourses(true);
   //     try {
   //       const response = await getCourseByProgId(programID);
-  //       // console.log("courses res", response?.data?.data);
+  //       // //console.log("courses res", response?.data?.data);
   //       setCourses(response?.data?.data.map((course) => course.name));
   //       setLoadingCourses(false);
   //     } catch (error) {
-  //       console.log("Courses fetching error", error.response);
+  //       //console.log("Courses fetching error", error.response);
   //       setLoadingCourses(false);
   //     }
   //   };
   //   handleCoursesByPrograms();
   // }, [programID]);
 
-  // console.log('courses Name', courses)
+  // //console.log('courses Name', courses)
 
   const handleToggleSection = (section, id) => {
     // Assign ProgramID or approvedProgramID based on heading
@@ -219,12 +219,12 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
         // Close program section if it's already open
         setIsProgramSectionOpen(false);
         setProgramSection(null);
-        console.log("Program section closed");
+        //console.log("Program section closed");
       } else {
         // Open the program section
         setProgramSection(section);
         setIsProgramSectionOpen(true);
-        console.log("Program section opened");
+        //console.log("Program section opened");
       }
     }
 
@@ -234,20 +234,20 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
         // Close skill section if it's already open
         setIsSkillSectionOpen(false);
         setSkillSection(null);
-        console.log("Skill section closed");
+        //console.log("Skill section closed");
       } else {
         // Open the skill section
         setSkillSection(section);
         setIsSkillSectionOpen(true);
         // Ensure program section is closed when opening a skill section
-        console.log("Skill section opened");
+        //console.log("Skill section opened");
       }
     }
   };
 
-  // console.log("heading0,", heading);
-  // console.log("prgramopen", isProgramSectionOpen);
-  // console.log("prgramopen", programSection);
+  // //console.log("heading0,", heading);
+  // //console.log("prgramopen", isProgramSectionOpen);
+  // //console.log("prgramopen", programSection);
 
   const handletoggleCourse = (courseName) => {
     setCourseName(courseName);
@@ -413,10 +413,10 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                         {heading === "Applicants" &&
                           isProgramSectionOpen &&
                           programSection === program.name && (
-                            <div className="z-20">
+                            <div className="relative z-20">
                               <button
                                 onClick={toggleStatusOpen}
-                                className="flex justify-between z-30 items-center min-w-[200px] text-dark-500 hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-dark-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+                                className="flex justify-between z-30 items-center w-[200px] text-dark-500 hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-dark-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
                               >
                                 {/* {selectedStatus || status[0]} */}
                                 {selectedStatus
@@ -436,7 +436,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                               {statusOpen && (
                                 <div
                                   ref={dropStatus}
-                                  className="absolute  z-40 min-w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                                  className="absolute z-40 w-full mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                                 >
                                   {Object.entries(statusDisplayMap).length >
                                   0 ? (
@@ -570,10 +570,10 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                       {heading === "Applicants" &&
                         isSkillSectionOpen &&
                         skillSection === skill.name && (
-                          <div className="z-20">
+                          <div className="relative z-20">
                             <button
                               onClick={toggleStatusOpen}
-                              className="flex justify-between z-30 items-center min-w-[200px] text-dark-500 hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-dark-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+                              className="flex justify-between z-30 items-center w-[200px] text-dark-500 hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-dark-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
                             >
                               {/* {selectedStatus || status[0]} */}
                               {selectedStatus
@@ -591,7 +591,10 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                             </button>
 
                             {statusOpen && (
-                              <div className="absolute capitalize z-40 min-w-[200px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out">
+                              <div
+                                ref={dropStatus}
+                                className="absolute capitalize z-40 w-full mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                              >
                                 {Object.entries(statusDisplayMap).length > 0 ? (
                                   Object.entries(statusDisplayMap).map(
                                     ([key, value], index) => (

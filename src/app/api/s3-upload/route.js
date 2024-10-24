@@ -27,10 +27,10 @@ const uploadToS3 = async (file, fileName, category) => {
 
   try {
     const data = await s3Client.send(new PutObjectCommand(params));
-    console.log("File uploaded successfully", data);
+    // console.log("File uploaded successfully", data);
     return fileName;
   } catch (error) {
-    console.error("Error uploading file", error);
+    // console.error("Error uploading file", error);
     throw error;
   }
 };
@@ -52,12 +52,12 @@ export async function POST(request) {
 
     const url = `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/assets/${category}`;
     const fileName = await uploadToS3(file, file.name, category);
-    console.log(bucketName);
-    console.log(url);
-    console.log(fileName);
+    // console.log(bucketName);
+    // console.log(url);
+    // console.log(fileName);
     return NextResponse.json({ success: "File uploaded", fileName, url });
   } catch (error) {
-    console.error("Error in POST request:", error);
+    // console.error("Error in POST request:", error);
     return NextResponse.json({ error: error.message });
   }
 }

@@ -39,7 +39,7 @@ export function middleware(req) {
   try {
     userData = userDataCookie ? JSON.parse(userDataCookie) : null;
   } catch (err) {
-    console.error("Error parsing userData from cookies:", err);
+    // //console.error("Error parsing userData from cookies:", err);
     userData = null;
   }
 

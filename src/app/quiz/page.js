@@ -14,8 +14,8 @@ export default function Page() {
   // const isInstructor = userData?.Group === "instructor";
   const isInstructor = Cookies.get("userGroup")
 
-  // console.log(group);
-  console.log(isInstructor);
+  // //console.log(group);
+  //console.log(isInstructor);
   return (
     // <>
     //   {loader ? (

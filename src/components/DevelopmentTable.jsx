@@ -161,7 +161,7 @@ const DevelopmentTable = ({
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap t text-sm font-medium flex space-x-2">
                               <div
-                                className="flex items-center justify-center w-full group text-[#0074EE]"
+                                className="flex items-center justify-center w-full group text-blue-300"
                                 title="info"
                                 onClick={() => handleModal(user)} // Pass the user data when clicked
                               >

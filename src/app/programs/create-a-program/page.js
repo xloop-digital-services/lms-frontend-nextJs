@@ -23,10 +23,10 @@ export default function Page() {
       if (response.status === 200) {
         setCourses(response.data?.data);
       } else {
-        console.error("Failed to fetch courses, status:", response.status);
+        //console.error("Failed to fetch courses, status:", response.status);
       }
     } catch (error) {
-      console.error("Error fetching courses:", error);
+      //console.error("Error fetching courses:", error);
     }
   }
   const handleSubmit = async (event) => {

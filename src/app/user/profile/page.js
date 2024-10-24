@@ -49,7 +49,7 @@ function Profile() {
       try {
         const response = await getUserProfile();
         if (response.status === 200) {
-          console.log("Fetched user data:", response.data);
+          //console.log("Fetched user data:", response.data);
           const userData = response.data.response;
           setUser(userData);
           setFirstName(userData.first_name || "");
@@ -62,10 +62,10 @@ function Profile() {
           setCity(userData.city || "");
           setRegistrationID(userData.registration_id || "");
         } else {
-          console.error("Failed to fetch user, status:", response.status);
+          //console.error("Failed to fetch user, status:", response.status);
         }
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        //console.error("Error fetching user data:", error);
       }
     }
     fetchUser();
@@ -233,7 +233,7 @@ function Profile() {
     setConfirmPassword(value);
     // if (validatePassword(value)) {
     // } else {
-    //   console.log("Invalid characters in password");
+    //   //console.log("Invalid characters in password");
     // }
   };
 
@@ -242,7 +242,7 @@ function Profile() {
     setPassword(value);
     // if (validatePassword(value)) {
     // } else {
-    //   console.log("Invalid characters in password");
+    //   //console.log("Invalid characters in password");
     // }
   };
 

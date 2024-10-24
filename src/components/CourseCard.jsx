@@ -42,7 +42,7 @@ const CourseCard = ({
   //       setConfirmDelete(false);
   //     }
   //   } catch (error) {
-  //     console.error("Error deleting the ", error);
+  //     //console.error("Error deleting the ", error);
   //   }
   // };
   // const handleDeleteCourse = async (id) => {
@@ -64,7 +64,7 @@ const CourseCard = ({
   //     }
   //   } catch (error) {
   //     toast.error("Error deleting assignment", error);
-  //     console.error(error);
+  //     //console.error(error);
   //   }
   // };
 

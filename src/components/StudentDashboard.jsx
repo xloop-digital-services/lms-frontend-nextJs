@@ -63,14 +63,14 @@ export default function StudentDashboard() {
         const sessions = response.data?.session || [];
         const coursesData = sessions.map((session) => session.course);
         setCourses(coursesData);
-        console.log("courses set", response.data?.session);
+        //console.log("courses set", response.data?.session);
 
         setLoader(false);
       } else {
-        console.error("Failed to fetch user, status:", response.status);
+        //console.error("Failed to fetch user, status:", response.status);
       }
     } catch (error) {
-      console.log("Error:", error);
+      //console.log("Error:", error);
     }
   }
 
@@ -86,20 +86,20 @@ export default function StudentDashboard() {
         setAssignments(response.data);
         setLoader(false);
       } else {
-        console.error(
-          "Failed to fetch pending assignments, status:",
-          response.status
-        );
+        //console.error(
+        //   "Failed to fetch pending assignments, status:",
+        //   response.status
+        // );
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
   async function fetchCalendarSessions() {
     const response = await getCalendarData(userId);
     try {
       if (response.status === 200) {
-        // console.log(response.data?.data);
+        // //console.log(response.data?.data);
         const events = Array.isArray(response?.data?.data)
           ? response.data?.data?.flatMap((item) =>
               Array.isArray(item.sessions)
@@ -115,14 +115,14 @@ export default function StudentDashboard() {
 
         setCalendarEvents(events);
       } else {
-        console.error("Failed to fetch calendar data", response.status);
+        //console.error("Failed to fetch calendar data", response.status);
       }
     } catch (error) {
-      console.error("Error fetching calendar data", error);
+      //console.error("Error fetching calendar data", error);
     }
   }
 
-  // console.log(calendarEvents);
+  // //console.log(calendarEvents);
   useEffect(() => {
     fetchPendingAssignments();
 
@@ -136,30 +136,30 @@ export default function StudentDashboard() {
       const handleCourseProgress = async () => {
         try {
           const response = await getProgressForCourse(selectedCourseId);
-          console.log("Course progress", response);
+          //console.log("Course progress", response);
           setCourseProgress(response.data.data.progress_percentage);
         } catch (error) {
-          console.log("Error fetching course progress", error);
+          //console.log("Error fetching course progress", error);
         }
       };
 
       const handleQuizProgress = async () => {
         try {
           const response = await getProgressForQuiz(selectedCourseId);
-          console.log("Quiz progress", response);
+          //console.log("Quiz progress", response);
           setQuizProgress(response.data.data.progress_percentage);
         } catch (error) {
-          console.log("Error fetching quiz progress", error);
+          //console.log("Error fetching quiz progress", error);
         }
       };
 
       const handleAssignmentProgress = async () => {
         try {
           const response = await getProgressForAssignment(selectedCourseId);
-          console.log("Assignment progress", response);
+          //console.log("Assignment progress", response);
           setAssignmentProgress(response.data.data.progress_percentage);
         } catch (error) {
-          console.log("Error fetching assignment progress", error);
+          //console.log("Error fetching assignment progress", error);
         }
       };
 
