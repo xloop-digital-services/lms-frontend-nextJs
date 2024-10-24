@@ -280,16 +280,16 @@ const AdminMarksTable = ({
                               </a>
                             )}
                           </td>
-                          <td className="px-6 py-4 flex justify-center items-center text-sm font-medium text-surface-100">
+                          <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
                             <p
-                              className={`w-[130px] text-center px-4 py-2 text-[12px] rounded-lg ${
+                              className={`w-[130px] text-surface-100 text-center px-4 py-2 text-[12px] rounded-lg ${
                                 assessment?.status === "Submitted"
-                                  ? "bg-mix-300"
+                                  ? "bg-mix-300 "
                                   : assessment?.status === "Pending"
-                                  ? "bg-mix-500 text-[#fff]"
+                                  ? "bg-mix-500 "
                                   : assessment?.status === "Late Submission"
-                                  ? "bg-mix-600 text-[#fff] "
-                                  : "bg-mix-200"
+                                  ? "bg-mix-600 "
+                                  : "bg-mix-200 "
                               }`}
                             >
                               {assessment?.status}
