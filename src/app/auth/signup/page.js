@@ -66,7 +66,7 @@ export default function Page() {
         );
 
         if (response.status === 200) {
-          console.log("res", response);
+          //console.log("res", response);
           router.push("/auth/login");
 
           storeToken(response.data.response.token, response.data);
@@ -94,7 +94,7 @@ export default function Page() {
         });
       }
     } catch (error) {
-      console.error("Error during login:", error);
+      //console.error("Error during login:", error);
       toast.error("An error occurred during login. Please try again.", {
         position: "top-right",
         autoClose: 5000,

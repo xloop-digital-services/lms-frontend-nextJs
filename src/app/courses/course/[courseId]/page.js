@@ -35,7 +35,7 @@ import DeleteConfirmationPopup from "@/components/Modal/DeleteConfirmationPopUp"
 import { handleFileUploadToS3 } from "@/components/ApplicationForm";
 
 export const downloadFile = async (filePath) => {
-  console.log("ye raha", filePath);
+  //console.log("ye raha", filePath);
   if (!filePath) return;
   const link = document.createElement("a");
   link.href = filePath;
@@ -89,7 +89,7 @@ export default function Page({ params }) {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [skill, setSkill] = useState();
   const [moduleStatus, setModuleStatus] = useState(0);
-  // console.log(isAdmin)
+  // //console.log(isAdmin)
   const [skillName, setSkillName] = useState("");
 
   async function fetchCoursesById() {
@@ -113,10 +113,10 @@ export default function Page({ params }) {
         setSkills(matchedSkills);
         setLoader(false);
       } else {
-        console.error("Failed to fetch course, status:", response.status);
+        //console.error("Failed to fetch course, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
@@ -127,7 +127,7 @@ export default function Page({ params }) {
     try {
       if (response.status === 200) {
         const sessions = response.data?.session || [];
-        console.log(sessions);
+        //console.log(sessions);
         const coursesData = sessions.map((session) => {
           return {
             course: session.course,
@@ -146,13 +146,13 @@ export default function Page({ params }) {
           );
         }
       } else {
-        console.error(
-          "Failed to fetch user sessions, status:",
-          response.status
-        );
+        //console.error(
+        //   "Failed to fetch user sessions, status:",
+        //   response.status
+        // );
       }
     } catch (error) {
-      console.log("Error:", error);
+      //console.log("Error:", error);
     } finally {
       setLoader(false);
     }
@@ -179,7 +179,7 @@ export default function Page({ params }) {
       }
     } catch (error) {
       toast.error(`Error creating skill: ${error?.message}`);
-      // console.log(error?.data?.data?.skill_name?.[0])
+      // //console.log(error?.data?.data?.skill_name?.[0])
     }
   };
   const handleSkills = () => {
@@ -197,13 +197,13 @@ export default function Page({ params }) {
     try {
       if (response.status === 200) {
         setSkillbyID(response?.data?.data);
-        console.log(response?.data?.data);
+        //console.log(response?.data?.data);
         setLoader(false);
       } else {
-        console.error("Failed to fetch skills, status:", response.status);
+        //console.error("Failed to fetch skills, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
@@ -215,13 +215,13 @@ export default function Page({ params }) {
         setCourseProgress(response?.data?.data);
         setLoader(false);
       } else {
-        console.error(
-          "Failed to fetch course progress, status:",
-          response.status
-        );
+        // console.error(
+        //   "Failed to fetch course progress, status:",
+        //   response.status
+        // );
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
   async function fetchAllSkills() {
@@ -230,10 +230,10 @@ export default function Page({ params }) {
       if (response.status === 200) {
         setCourses(response.data?.data);
       } else {
-        console.error("Failed to fetch courses, status:", response.status);
+        //console.error("Failed to fetch courses, status:", response.status);
       }
     } catch (error) {
-      console.error("Error fetching courses:", error);
+      //console.error("Error fetching courses:", error);
     }
   }
   const handleSelectChange = (event) => {
@@ -249,7 +249,7 @@ export default function Page({ params }) {
         toast.error("This skill is already selected.");
       }
     } else {
-      console.error("Skill not found");
+      //console.error("Skill not found");
     }
   };
 
@@ -265,16 +265,16 @@ export default function Page({ params }) {
         setModules(response?.data?.data);
         setLoader(false);
       } else {
-        console.error("Failed to fetch modules, status:", response.status);
+        //console.error("Failed to fetch modules, status:", response.status);
         setLoader(false);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
       setLoader(false);
     }
   }
 
-  // console.log(file);
+  // //console.log(file);
   const handleCreateModule = async (event) => {
     event.preventDefault();
     setLoaderModule(true);
@@ -428,7 +428,7 @@ export default function Page({ params }) {
       }
     } catch (error) {
       toast.error(`Error updating module: ${error.message}`);
-      console.log("Error updating module:", error);
+      //console.log("Error updating module:", error);
     } finally {
       setLoaderModule(false);
     }
@@ -458,13 +458,13 @@ export default function Page({ params }) {
       }
     } catch (error) {
       toast.error("Error updating module status", error);
-      console.error(error);
+      //console.error(error);
     }
   };
 
   const handleDeleteModule = async (id) => {
     const moduletoDelete = modules?.find((mod) => mod.id === id);
-    console.log(id);
+    //console.log(id);
     if (!moduletoDelete) {
       toast.error("Module not found");
       return;
@@ -483,7 +483,7 @@ export default function Page({ params }) {
       }
     } catch (error) {
       toast.error("Error deleting module", error);
-      console.error(error);
+      //console.error(error);
     }
   };
 
@@ -499,11 +499,11 @@ export default function Page({ params }) {
         setConfirmDelete(false);
       }
     } catch (error) {
-      console.error("Error deleting the module", error);
+      //console.error("Error deleting the module", error);
     }
   };
 
-  // console.log(sessionId);
+  // //console.log(sessionId);
   useEffect(() => {
     if (!sessionId) return;
     fetchModules();
@@ -544,10 +544,10 @@ export default function Page({ params }) {
         setSessions(response.data.data);
         setLoader(false);
       } else {
-        console.error("Failed to fetch sessions, status:", response.status);
+        //console.error("Failed to fetch sessions, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
@@ -562,10 +562,10 @@ export default function Page({ params }) {
       if (response.status === 200) {
         setSessions(response.data.data);
       } else {
-        console.error("Failed to fetch sessions, status:", response.status);
+        //console.error("Failed to fetch sessions, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
@@ -871,7 +871,7 @@ export default function Page({ params }) {
                   </option>
                   {Array.isArray(sessions) && sessions.length > 0 ? (
                     sessions.map((session) => {
-                      // console.log("Mapping session:", session);
+                      // //console.log("Mapping session:", session);
                       // Combine session_id and instructor_id in value
                       const optionValue = `${session?.session_name}|${session?.id}`;
                       return (
@@ -904,7 +904,7 @@ export default function Page({ params }) {
                   </option>
                   {Array.isArray(sessions) && sessions.length > 0 ? (
                     sessions.map((session) => {
-                      // console.log("Mapping session:", session);
+                      // //console.log("Mapping session:", session);
                       const optionValue = `${session.session_id}`;
                       return (
                         <option key={session.session_id} value={optionValue}>

@@ -29,7 +29,7 @@ export default function InstructorDashboard() {
   const [calendarEvents, setCalendarEvents] = useState([]);
   const insEmailId = userData?.User?.email;
 
-  // console.log(group);
+  // //console.log(group);
 
   // if (!insId) return;
   async function fetchSessionForUser() {
@@ -43,10 +43,10 @@ export default function InstructorDashboard() {
 
         setLoader(false);
       } else {
-        console.error("Failed to fetch user, status:", response.status);
+        //console.error("Failed to fetch user, status:", response.status);
       }
     } catch (error) {
-      console.log("Error:", error);
+      //console.log("Error:", error);
     }
   }
 
@@ -61,22 +61,22 @@ export default function InstructorDashboard() {
       if (response.status === 200) {
         setSessions(response.data);
         setLoader(false);
-        // console.log(assignments);
+        // //console.log(assignments);
       } else {
-        console.error(
-          "Failed to fetch pending assignments, status:",
-          response.status
-        );
+        //console.error(
+        //   "Failed to fetch pending assignments, status:",
+        //   response.status
+        // );
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
   async function fetchCalendarSessions() {
     const response = await getCalendarData(userId);
     try {
       if (response.status === 200) {
-        console.log(response.data?.data);
+        //console.log(response.data?.data);
         const events = Array.isArray(response?.data?.data)
           ? response.data?.data?.flatMap((item) =>
               Array.isArray(item.sessions)
@@ -92,10 +92,10 @@ export default function InstructorDashboard() {
 
         setCalendarEvents(events);
       } else {
-        console.error("Failed to fetch calendar data", response.status);
+        //console.error("Failed to fetch calendar data", response.status);
       }
     } catch (error) {
-      console.error("Error fetching calendar data", error);
+      //console.error("Error fetching calendar data", error);
     }
   }
 
@@ -108,7 +108,7 @@ export default function InstructorDashboard() {
     fetchCalendarSessions();
   }, [userId, group]);
 
-  console.log(courses);
+  //console.log(courses);
   return (
     <>
       <div

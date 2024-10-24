@@ -58,7 +58,7 @@ const UserModal = ({
     });
     setApprovalBySkill(true);
   };
-  // console.log("skills id", skillID);
+  // //console.log("skills id", skillID);
   const handleLocationSelect = (id, isChecked) => {
     if (selectedOption === "student") {
       if (isChecked) {
@@ -92,7 +92,7 @@ const UserModal = ({
     if (skillID.length === 0) {
       setApprovalBySkill(false);
     }
-    // console.log("ye chal gaya", approvalByLocation);
+    // //console.log("ye chal gaya", approvalByLocation);
   }, [locationId, skillID, studentLocationId]);
 
   const handleUserSelection = async (status) => {
@@ -118,7 +118,7 @@ const UserModal = ({
     }
     try {
       const response = await userSelectionByAdmin(id, data);
-      console.log("response while selecting", response.data);
+      //console.log("response while selecting", response.data);
       if (response.status === 200) {
         toast.success(`User has been ${status}!`, {
           position: "top-right",
@@ -143,7 +143,7 @@ const UserModal = ({
         draggable: true,
         progress: undefined,
       });
-      console.log("error while selecting", error);
+      //console.log("error while selecting", error);
       setLoading(false);
     } finally {
       setLoading(false);

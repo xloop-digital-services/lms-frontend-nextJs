@@ -18,7 +18,7 @@ export default function Page({ params }) {
   const router = useRouter();
   const u_id = params.verifyToken[0];
   const token = params.verifyToken[1];
-  // console.log("token", u_id, "/", token);
+  // //console.log("token", u_id, "/", token);
 
   const handlePassword = async (event) => {
     event.preventDefault();
@@ -26,17 +26,17 @@ export default function Page({ params }) {
     // const formData = new FormData();
     // formData.append("password", newPassword);
     // formData.append("password2", confirmPassword);
-    // console.log("formData",formData);
+    // //console.log("formData",formData);
 
     const data = {
       password: newPassword,
       password2: confirmPassword,
     };
-    // console.log("form", data);
+    // //console.log("form", data);
 
     try {
       const response = await setNewPassword(data, u_id, token);
-      console.log("res", response);
+      //console.log("res", response);
       if (response.status === 200) {
         toast.success("Password Reset Successfully", {
           position: "top-right",
@@ -66,7 +66,7 @@ export default function Page({ params }) {
         setloading(false);
       }
     } catch (error) {
-      console.error("Error during login:", error);
+      //console.error("Error during login:", error);
       if (error.response.data.password) {
         toast.error(error.response.data.password[0], {
           position: "top-right",

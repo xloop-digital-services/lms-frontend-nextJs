@@ -11,7 +11,7 @@
 // export const GroupProvider = ({ children }) => {
 //   const [group, setGroup] = useState("");
 
-//   console.log(group);
+//   //console.log(group);
 
 //   return (
 //     <GroupContext.Provider value={{ group, setGroup }}>

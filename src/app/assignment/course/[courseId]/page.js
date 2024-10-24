@@ -57,7 +57,7 @@ export default function Page({ params }) {
     try {
       if (response.status === 200) {
         const sessions = response.data?.session || [];
-        console.log(sessions);
+        //console.log(sessions);
         const coursesData = sessions.map((session) => {
           return {
             course: session.course,
@@ -76,13 +76,13 @@ export default function Page({ params }) {
           );
         }
       } else {
-        console.error(
-          "Failed to fetch user sessions, status:",
-          response.status
-        );
+        // //console.error(
+        //   "Failed to fetch user sessions, status:",
+        //   response.status
+        // );
       }
     } catch (error) {
-      console.log("Error:", error);
+      // //console.log("Error:", error);
     } finally {
       setLoading(false);
     }
@@ -107,7 +107,7 @@ export default function Page({ params }) {
     setSessionId(value);
   };
 
-  // console.log(sessionId);
+  // //console.log(sessionId);
 
   async function fetchAssignments() {
     setLoading(true);
@@ -117,13 +117,13 @@ export default function Page({ params }) {
         setAssignments(response?.data?.data);
         setLoading(false);
       } else {
-        console.error("Failed to fetch assignments, status:", response.status);
+        //console.error("Failed to fetch assignments, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
-  // console.log(regId);
+  // //console.log(regId);
 
   async function fetchAssignmentProgress() {
     setLoading(true);
@@ -134,11 +134,11 @@ export default function Page({ params }) {
         setAssignmentProgress(response?.data?.data);
       } else {
         setLoading(false);
-        console.error("Failed to fetch progress, status:", response.status);
+        //console.error("Failed to fetch progress, status:", response.status);
       }
     } catch (error) {
       setLoading(false);
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
@@ -152,7 +152,7 @@ export default function Page({ params }) {
     }
 
     const s3Data = await handleFileUploadToS3(file, "Upload Assignment");
-    console.log("S3 Data:", s3Data);
+    //console.log("S3 Data:", s3Data);
 
     const formData = new FormData();
     formData.append("course", courseId);
@@ -208,7 +208,7 @@ export default function Page({ params }) {
         `Error ${currentAssignment ? "updating" : "creating"} Assignment`,
         error
       );
-      console.log(error);
+      //console.log(error);
     }
   };
 
@@ -254,7 +254,7 @@ export default function Page({ params }) {
       }
     } catch (error) {
       toast.error("Error deleting assignment", error);
-      console.error(error);
+      //console.error(error);
     }
   };
 
@@ -288,7 +288,7 @@ export default function Page({ params }) {
       }
     } catch (error) {
       toast.error("Error updating assignment status");
-      console.error(error);
+      //console.error(error);
     }
   };
 
@@ -300,10 +300,10 @@ export default function Page({ params }) {
         setSessions(response.data.data);
         setLoading(false);
       } else {
-        console.error("Failed to fetch sessions, status:", response.status);
+        //console.error("Failed to fetch sessions, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
@@ -318,10 +318,10 @@ export default function Page({ params }) {
       if (response.status === 200) {
         setSessions(response.data.data);
       } else {
-        console.error("Failed to fetch sessions, status:", response.status);
+        //console.error("Failed to fetch sessions, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
@@ -383,7 +383,7 @@ export default function Page({ params }) {
                   </option>
                   {Array.isArray(sessions) && sessions.length > 0 ? (
                     sessions.map((session) => {
-                      // console.log("Mapping session:", session);
+                      // //console.log("Mapping session:", session);
                       // Combine session_name and id in value
                       const optionValue = `${session?.session_name}|${session?.id}`;
                       return (
@@ -419,7 +419,7 @@ export default function Page({ params }) {
                   </option>
                   {Array.isArray(sessions) && sessions.length > 0 ? (
                     sessions.map((session) => {
-                      console.log("Mapping session:", session);
+                      //console.log("Mapping session:", session);
                       const optionValue = `${session.session_id}`;
                       return (
                         <option key={session.session_id} value={optionValue}>

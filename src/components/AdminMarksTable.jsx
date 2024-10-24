@@ -12,7 +12,10 @@ import {
 } from "@/api/route";
 import { toast } from "react-toastify";
 import { downloadFile } from "@/app/courses/course/[courseId]/page";
-import { FaEdit } from "react-icons/fa";
+import { FaCheck, FaCheckCircle, FaCross, FaEdit } from "react-icons/fa";
+import { FaX } from "react-icons/fa6";
+import { IoMdCloseCircle } from "react-icons/io";
+import { IoCheckmark, IoClose } from "react-icons/io5";
 
 const AdminMarksTable = ({
   assessments,
@@ -31,21 +34,21 @@ const AdminMarksTable = ({
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 1000);
+    }, 1200);
     return () => clearTimeout(timer);
   }, []);
 
   const handleEditClick = (id, assessment) => {
     setIsEditing(id);
-    setUpdatingGrade(true);
-    // console.log(id);
-    setEditData({
-      total_marks: assessment?.total_marks || 0,
-      marks_obtain: assessment?.marks_obtain || 0,
+    // setUpdatingGrade(true);
+    // //console.log(id);
+    const data = {
+      marks_obtain: assessment?.grade || 0,
       remarks: assessment?.remarks || "-",
-      assignment_id: assessment?.assignment || null,
-      // registration_id: assessment?.registration_id || null,
-    });
+    };
+    setEditData(data);
+
+    // console.log("Edit Data Set: ", editData);
   };
 
   const handleChange = (e) => {
@@ -55,7 +58,17 @@ const AdminMarksTable = ({
       [name]: value,
     }));
   };
+  const handleEditGrading = (id, assessment) => {
+    setIsUpdatingId(id);
+    setUpdatingGrade(true);
+    const data = {
+      marks_obtain: assessment?.grade || 0,
+      remarks: assessment?.remarks || "-",
+    };
+    setEditData(data);
 
+    //console.log(id);
+  };
   const handleSave = async (id, status) => {
     if (editData.marks_obtain > editData.total_grade) {
       toast.error("Obtained marks are greater than total marks.");
@@ -68,7 +81,7 @@ const AdminMarksTable = ({
         feedback: editData.remarks,
         // assignment: editData.assignment_id,
         registration_id: editData.registration_id,
-        submission: id,
+        // submission: id,
         // submission_id: status === "Submitted" && id ? id : null,
       };
 
@@ -95,8 +108,8 @@ const AdminMarksTable = ({
 
       if (response.status === 200 || response.status === 201) {
         toast.success("Graded successfully");
-        setIsEditing(null);
         setFetch(true);
+        setIsEditing(null);
         setGradedAssessments((prev) => ({
           ...prev,
           [id]: true,
@@ -105,17 +118,12 @@ const AdminMarksTable = ({
         toast.error("Error grading the student", response?.message);
       }
     } catch (error) {
-      console.error("Failed to grade", error);
-      toast.error("Failed to grade the assessment", error);
+      //console.error("Failed to grade", error);
+      toast.error(error?.response?.data?.message);
     }
   };
 
-  const handleEditGrading = (id) => {
-    setIsUpdatingId(id);
-    console.log(id);
-  };
-
-  const handleUpdateGrade = async (id, isUpdatingId) => {
+  const handleUpdateGrade = async (id) => {
     if (editData.marks_obtain > editData.total_grade) {
       toast.error("Obtained marks are greater than total marks.");
       return;
@@ -125,20 +133,17 @@ const AdminMarksTable = ({
         total_grade: editData.total_marks,
         grade: editData.marks_obtain,
         feedback: editData.remarks,
-        // assignment: editData.assignment_id,
         registration_id: editData.registration_id,
-        submission: id,
-        // submission_id: status === "Submitted" && id ? id : null,
       };
 
       if (title === "Quiz" && id) {
-        data.quiz_submissions = id;
+        data.grading_id = id;
       } else if (title === "Assignment") {
-        data.submission = id || null;
+        data.grading_id = id || null;
       } else if (title === "Exam" && id) {
-        data.exam_submission = id;
+        data.grading_id = id;
       } else if (title === "Project" && id) {
-        data.project_submissions = id;
+        data.grading_id = id;
       }
 
       let response;
@@ -154,18 +159,23 @@ const AdminMarksTable = ({
 
       if (response.status === 200) {
         toast.success("Grade updated successfully");
-        setUpdatingGrade(false);
         setFetch(true);
+        setUpdatingGrade(false);
         setGradedAssessments((prev) => ({
           ...prev,
           [id]: true,
         }));
       } else {
-        toast.error("Error grading the student", response?.message);
+        toast.error(
+          `Error grading the student: ${response?.message || "Unknown error"}`
+        );
       }
     } catch (error) {
-      console.error("Failed to grade", error);
-      toast.error("Failed to grade the assessment", error);
+      toast.error(
+        `Failed to grade the assessment: ${
+          error?.response?.data?.message || "Unknown error"
+        }`
+      );
     }
   };
 
@@ -217,7 +227,9 @@ const AdminMarksTable = ({
                             {assessment?.student_name}
                           </td>
                           <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
-                            {isEditing === assessment.submission_id &&
+                            {(isEditing === assessment.submission_id ||
+                              (updatingGrade &&
+                                assessment.grading_id === isUpdatingId)) &&
                             assessment?.status === "Submitted" &&
                             (!assessment?.marks_obtain ||
                               assessment?.marks_obtain === 0) ? (
@@ -227,14 +239,16 @@ const AdminMarksTable = ({
                                 name="marks_obtain"
                                 value={editData.marks_obtain}
                                 onChange={handleChange}
-                                className="py-3 px-4 block w-full outline-none border-b border-dark-500 text-sm focus:border-blue-300 focus:ring-blue-300"
+                                className="py-3 block text-center w-full outline-none border-b border-dark-500 text-sm focus:border-blue-300 focus:ring-blue-300"
                               />
                             ) : (
                               assessment?.grade || 0
                             )}
                           </td>
                           <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
-                            {isEditing === assessment.submission_id &&
+                            {(isEditing === assessment.submission_id ||
+                              (updatingGrade &&
+                                assessment.grading_id === isUpdatingId)) &&
                             assessment?.status === "Submitted" &&
                             (!assessment?.marks_obtain ||
                               assessment?.marks_obtain === 0) ? (
@@ -243,7 +257,7 @@ const AdminMarksTable = ({
                                 name="remarks"
                                 value={editData.remarks}
                                 onChange={handleChange}
-                                className="py-3 px-4 block w-full outline-none border-b border-dark-500 text-sm focus:border-blue-300 focus:ring-blue-300"
+                                className="py-3 text-center block w-full outline-none border-b border-dark-500 text-sm focus:border-blue-300 focus:ring-blue-300"
                               />
                             ) : (
                               assessment?.remarks || "-"
@@ -284,8 +298,9 @@ const AdminMarksTable = ({
 
                           <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
                             <div className="flex">
-                              {assessment?.grade > 0 &&
-                              assessment.submitted_file ? (
+                              {assessment.submitted_file &&
+                              assessment.grading_id !== null &&
+                              assessment.grading_id > 0 ? (
                                 <button className="w-[110px] text-center px-4 py-2 text-[12px] rounded-lg text-sm bg-mix-300 text-surface-200">
                                   Graded
                                 </button>
@@ -316,11 +331,6 @@ const AdminMarksTable = ({
                                   onClick={() =>
                                     handleEditClick(
                                       assessment.submission_id,
-                                      // ||
-                                      //   (assessment.assignment &&
-                                      //   assessment.registration_id
-                                      //     ? assessment.assignment
-                                      //     : null),
                                       assessment
                                     )
                                   }
@@ -329,18 +339,52 @@ const AdminMarksTable = ({
                                   Grade
                                 </button>
                               )}
-                              {/* {assessment.remarks &&
-                                assessment.status === "Submitted" && (
+                              <div>
+                                {assessment.grading_id && !updatingGrade && (
                                   <button
                                     title="Edit Grading"
                                     onClick={() =>
-                                      handleEditGrading(assessment.grading_id)
+                                      handleEditGrading(
+                                        assessment.grading_id,
+                                        assessment
+                                      )
                                     }
                                     className="ml-2 text-center flex items-center justify-center px-4 py-2 text-[12px] rounded-lg text-blue-300"
                                   >
                                     <FaEdit size={18} />
                                   </button>
-                                )} */}
+                                )}
+
+                                {updatingGrade &&
+                                  assessment.grading_id === isUpdatingId && (
+                                    <div className="flex">
+                                      <button
+                                        onClick={() =>
+                                          handleUpdateGrade(
+                                            assessment.grading_id
+                                          )
+                                        }
+                                        className="m-2 flex items-center group text-dark-600"
+                                      >
+                                        <IoCheckmark
+                                          size={20}
+                                          title="Confirm update"
+                                          className="cursor-pointer hover:border-2 border-mix-300 hover:text-mix-300 font-bold rounded-full"
+                                        />
+                                      </button>
+                                      <button
+                                        onClick={() => setUpdatingGrade(false)}
+                                        className="m-2 flex items-center group text-dark-600"
+                                      >
+                                        <IoClose
+                                          size={19}
+                                          title="Cancel"
+                                          className="cursor-pointer hover:border-2 border-mix-200 hover:text-mix-200 font-bold rounded-full"
+                                        />
+                                      </button>
+                                    </div>
+                                  )}
+                              </div>
                             </div>
                           </td>
                         </tr>

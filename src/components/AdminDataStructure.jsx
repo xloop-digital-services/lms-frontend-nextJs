@@ -86,7 +86,7 @@ const AdminDataStructure = ({
         setConfirmDelete(false);
       }
     } catch (error) {
-      console.error("Error deleting the quiz", error);
+      //console.error("Error deleting the quiz", error);
     }
   };
 

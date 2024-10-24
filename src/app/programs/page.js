@@ -18,8 +18,8 @@ export default function Page() {
   const isAdmin = userData?.Group === "admin";
   const isInstructor = userData?.Group === "instructor";
 
-  console.log(userData?.Group);
-  console.log(progId);
+  //console.log(userData?.Group);
+  //console.log(progId);
 
   const [programs, setPrograms] = useState([]);
   const [program, setProgram] = useState([]);
@@ -30,10 +30,10 @@ export default function Page() {
       if (response.status === 200) {
         setPrograms(response.data?.data);
       } else {
-        console.error("Failed to fetch programs, status:", response.status);
+        //console.error("Failed to fetch programs, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
@@ -42,12 +42,12 @@ export default function Page() {
     try {
       if (response.status === 200) {
         setProgram(response.data?.data);
-        console.log(response.data?.data);
+        //console.log(response.data?.data);
       } else {
-        console.error("Failed to fetch program, status:", response.status);
+        //console.error("Failed to fetch program, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 

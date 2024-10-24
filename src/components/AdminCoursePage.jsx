@@ -25,7 +25,7 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
   const [isSessionOpen, setIsSessionOpen] = useState(false);
   const [sessionId, setSessionId] = useState(null);
   const sessionDown = useRef(null);
-  // console.log(userData?.Group);
+  // //console.log(userData?.Group);
 
   useClickOutside(sessionDown, () => setIsSessionOpen(false));
   async function fetchAllCourses() {
@@ -35,10 +35,10 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
       if (response.status === 200) {
         setCourses(response.data?.data);
       } else {
-        console.error("Failed to fetch courses, status:", response.status);
+        //console.error("Failed to fetch courses, status:", response.status);
       }
     } catch (error) {
-      console.error("Error fetching courses:", error);
+      //console.error("Error fetching courses:", error);
     } finally {
       setLoading(false);
     }
@@ -48,13 +48,13 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
     setLoading(true);
     try {
       const response = await listAllSessions();
-      // console.log("session fetching", response?.data);
+      // //console.log("session fetching", response?.data);
       setSessions(response?.data.data);
     } catch (error) {
-      console.log(
-        "error while fetching the class schedules",
-        error.response.data.message
-      );
+      //console.log(
+      //   "error while fetching the class schedules",
+      //   error.response.data.message
+      // );
       if (error.message === "Network Error") {
         toast.error(error.message, "Check your internet connection");
       } else {

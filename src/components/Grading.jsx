@@ -39,7 +39,7 @@ const Grading = ({ courseId }) => {
   const [selectedSession, setSelectedSession] = useState();
   const [sessionId, setSessionId] = useState(null);
   const userId = group === "instructor" ? userData?.User?.id : adminUserId;
-  console.log(userId);
+  //console.log(userId);
   const handleCreateWeightage = () => {
     setAssignWeightage(!assignWeightage);
   };
@@ -67,10 +67,10 @@ const Grading = ({ courseId }) => {
         setSessions(response.data.data);
         setLoader(false);
       } else {
-        console.error("Failed to fetch sessions, status:", response.status);
+        //console.error("Failed to fetch sessions, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
@@ -85,10 +85,10 @@ const Grading = ({ courseId }) => {
       if (response.status === 200) {
         setSessions(response.data.data);
       } else {
-        console.error("Failed to fetch sessions, status:", response.status);
+        //console.error("Failed to fetch sessions, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
@@ -111,10 +111,10 @@ const Grading = ({ courseId }) => {
         setWeightage(response?.data?.data);
       } else {
         setWeightagesExist(false);
-        console.error("Failed to fetch weightages", response.status);
+        //console.error("Failed to fetch weightages", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
   const handleWeightageCreationSuccess = () => {
@@ -127,8 +127,8 @@ const Grading = ({ courseId }) => {
     fetchWeightages();
   }, [sessionId]);
 
-  // console.log(sessionId);
-  // console.log(weightage);
+  // //console.log(sessionId);
+  // //console.log(weightage);
   return (
     // <div className="">
     <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4">
@@ -157,7 +157,7 @@ const Grading = ({ courseId }) => {
             </option>
             {Array.isArray(sessions) && sessions.length > 0 ? (
               sessions.map((session) => {
-                console.log("Mapping session:", session);
+                //console.log("Mapping session:", session);
                 // Combine session_id and instructor_id in value
                 const optionValue = `${session?.session_name}|${session?.id}`;
                 return (
@@ -192,7 +192,7 @@ const Grading = ({ courseId }) => {
             </option>
             {Array.isArray(sessions) && sessions.length > 0 ? (
               sessions.map((session) => {
-                console.log("Mapping session:", session);
+                //console.log("Mapping session:", session);
                 const optionValue = `${session.session_id}`;
                 return (
                   <option key={session.session_id} value={optionValue}>

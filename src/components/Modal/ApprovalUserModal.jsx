@@ -77,7 +77,7 @@ const ApprovalUserModal = ({
     const handleUserDetails = async () => {
       try {
         const response = await getApplicationUserDetails(id, selectedOption);
-        console.log("my programs", response?.data?.data);
+        //console.log("my programs", response?.data?.data);
         setUserPrograms(response?.data?.data?.programs);
         setUserLocations(response?.data?.data.locations);
         setUserSkills(response?.data.data.skills);
@@ -90,7 +90,7 @@ const ApprovalUserModal = ({
           response?.data?.data?.programs.map((program) => program.id)
         );
       } catch (error) {
-        console.log("error fetching user details", error);
+        //console.log("error fetching user details", error);
       }
     };
 
@@ -101,10 +101,10 @@ const ApprovalUserModal = ({
     const handleCoursesByPrograms = async () => {
       try {
         const response = await getCourseByProgId(userProgramId);
-        console.log("courses by program", response?.data?.data);
+        //console.log("courses by program", response?.data?.data);
         setUserPorgramCourses(response?.data?.data);
       } catch (error) {
-        console.log("error while fetching the courses by program id", error);
+        //console.log("error while fetching the courses by program id", error);
       }
     };
     handleCoursesByPrograms();
@@ -115,10 +115,10 @@ const ApprovalUserModal = ({
       setLoadingSessions(true);
       try {
         const response = await getInstructorPreferredSessions(id);
-        console.log("instructor suggested sessions", response);
+        //console.log("instructor suggested sessions", response);
         setSessions(response.data.data.sessions);
       } catch (error) {
-        console.log(
+        //console.log(
           "error while fetching the suggested sessions for isntructor",
           error
         );
@@ -173,9 +173,9 @@ const ApprovalUserModal = ({
           userLocationID
         );
         setStudentSessions(response.data.data.sessions);
-        console.log("response of the suggested sessions", response.data);
+        //console.log("response of the suggested sessions", response.data);
       } catch (error) {
-        console.log("error while fetching suggested sessions", error.response);
+        //console.log("error while fetching suggested sessions", error.response);
       }
     };
     if (selectedOption === "student") {
@@ -201,7 +201,7 @@ const ApprovalUserModal = ({
       setSessionIds([]);
       setLoadingAssign(false);
     } catch (error) {
-      console.log("Error in assigning", error);
+      //console.log("Error in assigning", error);
       if (error.message === "Network Error") {
         toast.error(error.message);
       } else if (error.response.status === 400) {
@@ -221,11 +221,11 @@ const ApprovalUserModal = ({
       setLoadingSelection(true);
       try {
         const response = await getInstructorSessions(id, selectedOption);
-        // console.log("ye rahe sessions", response?.data?.data);
+        // //console.log("ye rahe sessions", response?.data?.data);
         setAssignedSessions(response?.data?.data);
         setLoadingSelection(false);
       } catch (error) {
-        console.log("error", error);
+        //console.log("error", error);
         if (error.response.data.status_code === 404) {
           setAssignedSessions([]);
         }
@@ -267,11 +267,11 @@ const ApprovalUserModal = ({
         selectedOption,
         sessionId
       );
-      console.log("session deleted", response.data);
+      //console.log("session deleted", response.data);
       toast.success("Session removed succesfully!");
       setUpdateSessions(updateSession + 1);
     } catch (error) {
-      console.log("error removing assigned session", error);
+      //console.log("error removing assigned session", error);
     }
   };
 

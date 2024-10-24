@@ -27,21 +27,21 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   const isAdmin = userData?.Group === "admin";
   const isInstructor = userData?.Group === "instructor";
   const userId = userData?.user_data?.id;
-  // console.log(group);
-  // console.log(userData);
+  // //console.log(group);
+  // //console.log(userData);
   const today = new Date();
   const day = String(today.getDate()).padStart(2, "0");
   const month = String(today.getMonth() + 1).padStart(2, "0");
   const year = today.getFullYear();
   const formattedDate = `${year}-${month}-${day}`;
-  // console.log(formattedDate, "formated");
+  // //console.log(formattedDate, "formated");
   // const today = new Date().toISOString().split("T")[0];
 
   const [selectedSession, setSelectedSession] = useState("");
   const [isSelected, setIsSelected] = useState(false);
   const [date, setDate] = useState(null);
   const [toggle, setToggle] = useState(false);
-  // console.log(group, userId);
+  // //console.log(group, userId);
   async function fetchSessions() {
     const response = await getInstructorSessionsbyCourseId(
       userId,
@@ -53,20 +53,20 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
       if (response.status === 200) {
         setSessions(response.data.data); // Store the sessions data
       } else {
-        console.error("Failed to fetch sessions, status:", response.status);
+        //console.error("Failed to fetch sessions, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
   const fetchAllSessions = async () => {
     try {
       const response = await listSessionByCourseId(courseId);
-      // console.log('sessions in attendence', response.data.data)
+      // //console.log('sessions in attendence', response.data.data)
       setSessions(response?.data?.data);
     } catch (error) {
-      console.log("fetching sessions", error);
+      //console.log("fetching sessions", error);
     }
   };
 
@@ -84,15 +84,15 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
           {}
         );
 
-        console.log("Attendance:", response.data.data.students);
+        //console.log("Attendance:", response.data.data.students);
         setGetAttendance(response.data.data.students); // Setting attendance data
         setSelectedAttendance(initialAttendance); // Setting the initial status to 'Present'
         // Fetch additional attendance insights if needed
       } else {
-        console.error("Failed to fetch attendance, status:", response.status);
+        //console.error("Failed to fetch attendance, status:", response.status);
       }
     } catch (error) {
-      console.error("Error fetching attendance:", error);
+      //console.error("Error fetching attendance:", error);
     } finally {
       setGetting(false);
     }
@@ -107,7 +107,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
         date
       );
       if (response.status === 200) {
-        console.log("attendece per session", response.data);
+        //console.log("attendece per session", response.data);
         setAttendance(response.data.data.attendance);
         const initialAttendance = response.data.data.attendance.reduce(
           (acc, student) => {
@@ -116,14 +116,14 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
           },
           {}
         );
-        // console.log(response.data.data);
+        // //console.log(response.data.data);
         setSelectedAttendance(initialAttendance);
-        // console.log(response.data);
+        // //console.log(response.data);
       } else {
-        console.error("Failed to fetch attendance, status:", response.status);
+        //console.error("Failed to fetch attendance, status:", response.status);
       }
     } catch (error) {
-      console.error("Error fetching attendance:", error);
+      //console.error("Error fetching attendance:", error);
     } finally {
       setGetting(false);
     }
@@ -146,10 +146,10 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   //         }, {})
   //       );
   //     } else {
-  //       console.error("Failed to fetch attendance", response.status);
+  //       //console.error("Failed to fetch attendance", response.status);
   //     }
   //   } catch (error) {
-  //     console.error("Error fetching attendance:", error);
+  //     //console.error("Error fetching attendance:", error);
   //   } finally {
   //     setLoader(false);
   //   }
@@ -184,7 +184,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
         attendanceArray
       );
       if (response.status === 200 || response.status === 201) {
-        console.log("response for mark attendence", response);
+        //console.log("response for mark attendence", response);
         toast.success("Attendance marked successfully");
         setToggle(!toggle);
       } else {
@@ -193,7 +193,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
     } catch (error) {
       // toast.error("Error submitting attendance");
       if (error.response.status === 500) {
-        console.error("Error submitting attendance:", error);
+        //console.error("Error submitting attendance:", error);
         toast.success("Attendance has been marked!");
       }
     } finally {
@@ -203,7 +203,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
 
   const handleChange = (e) => {
     const session_id = e.target.value;
-    console.log("session id", session_id);
+    //console.log("session id", session_id);
     setSelectedSession(session_id); // Update the selected session ID
   };
 
@@ -221,8 +221,8 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   //   }
   // }, [isAttendancePosted, courseId, group, userId, selectedSessionId]);
   useEffect(() => {
-    console.log("isInstructor:", isInstructor);
-    console.log("isAdmin:", isAdmin);
+    //console.log("isInstructor:", isInstructor);
+    //console.log("isAdmin:", isAdmin);
 
     if (isInstructor) {
       fetchSessions();
@@ -252,11 +252,11 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
 
   const handleDateChange = (e) => {
     const selectedDate = e.target.value;
-    console.log(selectedDate);
+    //console.log(selectedDate);
     setDate(selectedDate);
   };
 
-  // console.log(selectedSessionId);
+  // //console.log(selectedSessionId);
 
   return (
     <div className="flex flex-col">

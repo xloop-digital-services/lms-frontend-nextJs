@@ -325,7 +325,7 @@ export const updateQuizGrading = async (quizData) => {
 export const editQuizGrading = async (gradingId, quizData) => {
   try {
     const response = await axiosInstance.put(
-      `/api/course/quiz_grading/${gradingId}`,
+      `/api/course/quiz_grading/${gradingId}/`,
       quizData
     );
     return response;
@@ -363,7 +363,7 @@ export const updateAssignmentGrading = async (assignData) => {
 export const editAssignmentGrading = async (gradingId, assignData) => {
   try {
     const response = await axiosInstance.put(
-      `/api/course/assignments_grading/${gradingId}`,
+      `/api/course/assignments_grading/${gradingId}/`,
       assignData
     );
     return response;
@@ -401,7 +401,7 @@ export const updateProjectGrading = async (projectData) => {
 export const editProjectGrading = async (gradingId, projectData) => {
   try {
     const response = await axiosInstance.put(
-      `/api/course/project_gradings/${gradingId}`,
+      `/api/course/project_gradings/${gradingId}/`,
       projectData
     );
     return response;
@@ -474,7 +474,7 @@ export const updateExamGrading = async (examData) => {
 export const editExamGrading = async (gradingId, examData) => {
   try {
     const response = await axiosInstance.put(
-      `/api/course/exam_gradings/${gradingId}`,
+      `/api/course/exam_gradings/${gradingId}/`,
       examData
     );
     return response;
@@ -1512,6 +1512,35 @@ export const getSessionInstructor = async (courseId) => {
   try {
     const response = await axiosInstance.get(
       `/api/instructors/course/${courseId}/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+export const patchAttendanceBySessionId = async (
+  sessionId,
+  courseId,
+  attendanceArray
+) => {
+  try {
+    const response = await axiosInstance.patch(
+      `/api/attendance/instructor/${sessionId}/${courseId}/`,
+      attendanceArray
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+ 
+export const resendApprovalMail = async (email) => {
+  try {
+    const response = await axiosInstance.post(
+      `/api/resend-verification-email/`,
+      email
     );
     return response;
   } catch (error) {

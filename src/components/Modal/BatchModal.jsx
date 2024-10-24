@@ -75,13 +75,13 @@ const BatchModal = ({
         };
 
         const response = await createBatch(data);
-        console.log("batch created", response?.data.message);
+        //console.log("batch created", response?.data.message);
         toast.success("Batch created successfully!");
         setLoadingCreation(false);
         setIsOpenModal(false);
         setUpdateBatch(!updateBatch);
       } catch (error) {
-        console.log("error is occuring", error.response);
+        //console.log("error is occuring", error.response);
         if (error.response.status === 400) {
           toast.error(error.response.data.error[0]);
         }
@@ -109,8 +109,8 @@ const BatchModal = ({
     // if (date instanceof Date && !isNaN(date)) {
     //   const formattedDate = date.toISOString().split("T")[0]; // Extract the date part
     //   setstartDate(formattedDate); // Set the start date
-    //   // console.log("start date,", date);
-    //   console.log("formated start date", formattedDate);
+    //   // //console.log("start date,", date);
+    //   //console.log("formated start date", formattedDate);
     // } else {
     //   toast.error("Invalid date selected");
     setstartDate(event.target.value);
@@ -121,8 +121,8 @@ const BatchModal = ({
     // if (date instanceof Date && !isNaN(date)) {
     //   const formattedDate = date.toISOString().split("T")[0]; // Extract the date part
     //   setendDate(formattedDate); // Set the end date
-    //   // console.log('end date,', date)
-    //   console.log("formated end date", formattedDate);
+    //   // //console.log('end date,', date)
+    //   //console.log("formated end date", formattedDate);
     setendDate(event.target.value);
     // Check if end date is earlier than start date
     if (startDate && event.target.value <= startDate) {

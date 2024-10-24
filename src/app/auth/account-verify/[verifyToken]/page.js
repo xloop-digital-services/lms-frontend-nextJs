@@ -19,7 +19,7 @@ export default function Page({ params }) {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
-  // console.log("token", verifyToken);
+  // //console.log("token", verifyToken);
 
   const handlePassword = async (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
@@ -30,11 +30,11 @@ export default function Page({ params }) {
       password: newPassword,
       password2: confirmPassword,
     };
-    // console.log("form", data);
+    // //console.log("form", data);
 
     try {
       const response = await VerifyEmail(data);
-      // console.log("res", response);
+      // //console.log("res", response);
       if (response.status === 200) {
         toast.success("Password Set Successfully", {
           position: "top-right",
@@ -64,7 +64,7 @@ export default function Page({ params }) {
         setloading(false);
       }
     } catch (error) {
-      // console.error("Error during login:", error.response.data.message);
+      // //console.error("Error during login:", error.response.data.message);
       if (error.response.data.password) {
         toast.error(error.response.data.password[0], {
           position: "top-right",

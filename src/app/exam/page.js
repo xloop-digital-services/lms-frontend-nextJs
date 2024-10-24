@@ -11,7 +11,7 @@ export default function Page() {
   const isStudent = userData?.Group === "student";
   const isAdmin = userData?.Group === "admin";
   const isInstructor = userData?.Group === "instructor";
-  console.log(isInstructor);
+  //console.log(isInstructor);
   return (
     // <>
     //   {loader ? (

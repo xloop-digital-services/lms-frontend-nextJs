@@ -41,7 +41,7 @@ export default function GetWeightage({ weigh }) {
         toast.error("Select a session to assign the weightages.");
         return;
       }
-      console.log(selectedWeightageId);
+      //console.log(selectedWeightageId);
       const response = await updateWeightages(selectedWeightageId, data);
       if (response.status === 200 || response.status === 201) {
         toast.success(
@@ -56,7 +56,7 @@ export default function GetWeightage({ weigh }) {
       toast.error("Error updating weightages");
     }
   }
-  console.log(selectedWeightageId);
+  //console.log(selectedWeightageId);
   function handleEditClick(wei) {
     setIsEditing(wei.id);
     setCourseId(wei.course);

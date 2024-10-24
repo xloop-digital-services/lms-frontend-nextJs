@@ -29,8 +29,8 @@ export default function GetAttendanceAdminTable({
   const [date, setDate] = useState(null);
   const group = userData?.Group;
   const userId = userData?.user_data?.id;
-  // console.log(courseId,'course id');
-  // console.log(userData);
+  // //console.log(courseId,'course id');
+  // //console.log(userData);
   const today = new Date();
   const day = String(today.getDate()).padStart(2, "0");
   const month = String(today.getMonth() + 1).padStart(2, "0");
@@ -38,7 +38,7 @@ export default function GetAttendanceAdminTable({
   const formattedDate = `${year}-${month}-${day}`;
   const [selectedSessionId, setSelectedSessionId] = useState(null);
 
-  // console.log(group, userId);
+  // //console.log(group, userId);
   // async function fetchSessions() {
   //   const response = await getInstructorSessions(userId, group);
   //   setLoader(true);
@@ -46,15 +46,15 @@ export default function GetAttendanceAdminTable({
   //     if (response.status === 200) {
   //       setSessions(response.data);
   //       setLoader(false);
-  //       // console.log(assignments);
+  //       // //console.log(assignments);
   //     } else {
-  //       console.error(
+  //       //console.error(
   //         "Failed to fetch pending assignments, status:",
   //         response.status
   //       );
   //     }
   //   } catch (error) {
-  //     console.log("error", error);
+  //     //console.log("error", error);
   //   }
   // }
 
@@ -69,10 +69,10 @@ export default function GetAttendanceAdminTable({
   //       setAttendance(response.data);
   //       setSelectedAttendance(initialAttendance);
   //     } else {
-  //       console.error("Failed to fetch attendance, status:", response.status);
+  //       //console.error("Failed to fetch attendance, status:", response.status);
   //     }
   //   } catch (error) {
-  //     console.error("Error fetching attendance:", error);
+  //     //console.error("Error fetching attendance:", error);
   //   }
   // }
 
@@ -92,10 +92,10 @@ export default function GetAttendanceAdminTable({
   //         }, {})
   //       );
   //     } else {
-  //       console.error("Failed to fetch attendance", response.status);
+  //       //console.error("Failed to fetch attendance", response.status);
   //     }
   //   } catch (error) {
-  //     console.error("Error fetching attendance:", error);
+  //     //console.error("Error fetching attendance:", error);
   //   } finally {
   //     setLoader(false);
   //   }
@@ -129,7 +129,7 @@ export default function GetAttendanceAdminTable({
   //     }
   //   } catch (error) {
   //     toast.error("Error submitting attendance");
-  //     console.error("Error submitting attendance:", error);
+  //     //console.error("Error submitting attendance:", error);
   //   }
   // };
 
@@ -148,16 +148,16 @@ export default function GetAttendanceAdminTable({
   const fetchAllSessions = async () => {
     try {
       const response = await listSessionByCourseId(courseId);
-      // console.log('sessions in attendence', response.data.data)
+      // //console.log('sessions in attendence', response.data.data)
       setSessions(response?.data?.data);
     } catch (error) {
-      console.log("fetching sessions", error);
+      //console.log("fetching sessions", error);
     }
   };
 
   const handleChange = (e) => {
     const session_id = e.target.value;
-    console.log("session id", session_id);
+    //console.log("session id", session_id);
     setSelectedSessionId(session_id); // Update the selected session ID
   };
 
@@ -169,7 +169,7 @@ export default function GetAttendanceAdminTable({
         courseId,
         date
       );
-      console.log("response for admin attendence", response.data.data);
+      //console.log("response for admin attendence", response.data.data);
       setGetAttendance(response.data.data.attendance);
       const initialAttendance = response.data.reduce((acc, student) => {
         acc[student.student] = 0;
@@ -188,11 +188,11 @@ export default function GetAttendanceAdminTable({
 
   const handleDateChange = (e) => {
     const selectedDate = e.target.value;
-    console.log(selectedDate);
+    //console.log(selectedDate);
     setDate(selectedDate);
     // fetchAttendanceIns();
   };
-  console.log(date);
+  //console.log(date);
   useEffect(() => {
     if (group === "admin" && selectedSessionId && date) {
       handleAdminStudentAttendence();

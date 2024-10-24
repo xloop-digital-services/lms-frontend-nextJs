@@ -36,7 +36,7 @@ export function AuthProvider({ children }) {
     }
   }, [userData]);
   const isInstructor = Cookies.get("userGroup") === "instructor";
-  // console.log(isInstructor);
+  // //console.log(isInstructor);
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -82,7 +82,7 @@ export function AuthProvider({ children }) {
         setLoading(false);
       }
     } catch (error) {
-      console.error("Error during login:", error);
+      //console.error("Error during login:", error);
       toast.error("An error occurred during login. Please try again.", {
         position: "top-right",
         autoClose: 5000,
@@ -100,7 +100,7 @@ export function AuthProvider({ children }) {
   };
 
   const logOutUser = () => {
-    // console.log("Logging out user...");
+    // //console.log("Logging out user...");
     setUserData(null);
     setEmail("");
     setPassword("");

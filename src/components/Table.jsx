@@ -23,8 +23,8 @@ const Table = ({ courseId, isAttendancePosted }) => {
   const year = today.getFullYear();
 
   const formattedDate = `${year}-${month}-${day}`;
-  // console.log(formattedDate);
-  // console.log(today);
+  // //console.log(formattedDate);
+  // //console.log(today);
 
   async function fetchAttendanceAdmin() {
     try {
@@ -37,10 +37,10 @@ const Table = ({ courseId, isAttendancePosted }) => {
         setAttendance(response.data);
         setSelectedAttendance(initialAttendance);
       } else {
-        console.error("Failed to fetch attendance, status:", response.status);
+        //console.error("Failed to fetch attendance, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
@@ -54,11 +54,11 @@ const Table = ({ courseId, isAttendancePosted }) => {
         setStatus(response.status);
         setData(response.data);
       } else {
-        console.error("Failed to fetch attendance", response.status);
+        //console.error("Failed to fetch attendance", response.status);
         setLoader(false);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
       setLoader(false);
     }
   }
@@ -86,7 +86,7 @@ const Table = ({ courseId, isAttendancePosted }) => {
       fetchAttendance();
     } catch (error) {
       toast.error("Error submitting attendance", error);
-      console.log("error", error);
+      //console.log("error", error);
     }
   };
 

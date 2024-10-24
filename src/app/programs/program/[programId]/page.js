@@ -38,7 +38,7 @@ export default function Page({ params }) {
       if (response.status === 200) {
         const program = response?.data?.data;
         setProgramStatus(program?.status);
-        console.log(programStatus);
+        //console.log(programStatus);
         setProgramData(program);
 
         if (program.courses && program.courses.length > 0) {
@@ -52,10 +52,10 @@ export default function Page({ params }) {
         }
         setLoader(false);
       } else {
-        console.error("Failed to fetch program, status:", response.status);
+        //console.error("Failed to fetch program, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      //console.log("error", error);
     }
   }
 
@@ -82,7 +82,7 @@ export default function Page({ params }) {
           draggable: true,
           progress: undefined,
         });
-        // console.error("Failed to update program, status:", response.status);
+        // //console.error("Failed to update program, status:", response.status);
       }
     } catch (error) {
       toast.error("Error updating program:", error, {
@@ -94,7 +94,7 @@ export default function Page({ params }) {
         draggable: true,
         progress: undefined,
       });
-      // console.log("Error updating program:", error);
+      // //console.log("Error updating program:", error);
     }
   }
 
@@ -111,7 +111,7 @@ export default function Page({ params }) {
         toast.error("This course is already selected.");
       }
     } else {
-      console.error("Course not found");
+      //console.error("Course not found");
     }
   };
 
@@ -121,10 +121,10 @@ export default function Page({ params }) {
       if (response.status === 200) {
         setCourses(response.data?.data);
       } else {
-        console.error("Failed to fetch courses, status:", response.status);
+        //console.error("Failed to fetch courses, status:", response.status);
       }
     } catch (error) {
-      console.error("Error fetching courses:", error);
+      //console.error("Error fetching courses:", error);
     }
   }
 
@@ -149,7 +149,7 @@ export default function Page({ params }) {
     fetchProgramById();
   }, []);
 
-  // console.log(programData.short_description)
+  // //console.log(programData.short_description)
   return (
     <>
       {loader ? (

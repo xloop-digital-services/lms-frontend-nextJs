@@ -31,11 +31,11 @@ export const handleFileUploadToS3 = async (file,category) => {
     });
 
     const data = await response.json();
-    console.log("data for s3", data);
+    //console.log("data for s3", data);
     const url = `${data.url}/${data.fileName}`;
     return url;
   } catch (error) {
-    console.log("uploading to s3 error", error);
+    //console.log("uploading to s3 error", error);
   }
 };
 
@@ -287,9 +287,9 @@ export default function ApplicationForm() {
       try {
         const response = await listAllLocations();
         setAllLocations(response.data);
-        // console.log("all locations", response);
+        // //console.log("all locations", response);
       } catch (error) {
-        console.log(error);
+        //console.log(error);
       }
     };
     handleListLocation();
@@ -300,9 +300,9 @@ export default function ApplicationForm() {
       try {
         const response = await getAllPrograms();
         setAllPrograms(response.data.data);
-        // console.log("programs", response.data.data);
+        // //console.log("programs", response.data.data);
       } catch (error) {
-        console.log("program error", error);
+        //console.log("program error", error);
       }
     };
 
@@ -313,10 +313,10 @@ export default function ApplicationForm() {
     const handleListingSkills = async () => {
       try {
         const response = await getAllSkills();
-        // console.log("skills", response.data);
+        // //console.log("skills", response.data);
         setAllSkills(response.data);
       } catch (error) {
-        console.log("skills error", error);
+        //console.log("skills error", error);
       }
     };
 
@@ -342,7 +342,7 @@ export default function ApplicationForm() {
     if (file) {
       const fileExtension = file.name.split(".").pop().toLowerCase();
       if (supportedFormats.includes(`.${fileExtension}`)) {
-        console.log("file name", file.name);
+        //console.log("file name", file.name);
         setFile(file);
         setFileUploaded(file.name);
       } else {
@@ -405,7 +405,7 @@ export default function ApplicationForm() {
 
     try {
       const s3Data = await handleFileUploadToS3(file, 'resumes');
-      console.log("S3 Data:", s3Data);
+      //console.log("S3 Data:", s3Data);
 
       const formData = new FormData();
       formData.append("email", email);
@@ -436,9 +436,9 @@ export default function ApplicationForm() {
       }
       const response = await submitApplication(formData);
       router.push("/application/submitted");
-      console.log("submit", response);
+      //console.log("submit", response);
     } catch (error) {
-      console.log("Error in submitting", error);
+      //console.log("Error in submitting", error);
       if (error.response && error.response.status === 400) {
         toast.error(error.response.data.email[0]);
       } else {
