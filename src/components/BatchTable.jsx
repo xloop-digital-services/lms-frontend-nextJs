@@ -17,13 +17,13 @@ const BatchTable = ({
   setConfirmDelete,
   setSelectedBatch,
   selectedBatch,
-  confirmDelete
+  confirmDelete,
 }) => {
   const [edit, setEdit] = useState(false);
- 
+
   const [batch, setbatch] = useState(null);
   const [status, setStatus] = useState(null);
- 
+
   const [updating, setUpdating] = useState(false);
   const [editYear, setEditYear] = useState(null);
   const [editEndDate, setEditEndDate] = useState(null);
@@ -95,8 +95,6 @@ const BatchTable = ({
     setConfirmDelete(true);
   };
 
-  
-
   const handleEndDateChange = (event) => {
     setEditEndDate(event.target.value);
     // Check if end date is earlier than start date
@@ -132,7 +130,7 @@ const BatchTable = ({
                       <tr>
                         <th
                           scope="col"
-                          className="px-6 py-4 rounded-lg  text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
+                          className="px-6 py-4 rounded-lg  text-start text-xs font-medium text-gray-500 uppercase w-[14%]"
                         >
                           Batch Name
                         </th>
@@ -144,37 +142,37 @@ const BatchTable = ({
                     </th> */}
                         <th
                           scope="col"
-                          className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[16%]"
+                          className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[12%]"
                         >
                           Capacity
                         </th>
                         <th
                           scope="col"
-                          className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
+                          className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[12%]"
                         >
                           Start Date
                         </th>
                         <th
                           scope="col"
-                          className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
+                          className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[12%]"
                         >
                           End Date
                         </th>
                         <th
                           scope="col"
-                          className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
+                          className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[8%]"
                         >
                           year
                         </th>
                         <th
                           scope="col"
-                          className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
+                          className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
                         >
-                          Categories
+                          Application Submission Date
                         </th>
                         <th
                           scope="col"
-                          className="px-12 py-4 text-start rounded-lg text-xs font-medium text-gray-500 uppercase w-[20%]"
+                          className="px-12 py-4 text-start rounded-lg text-xs font-medium text-gray-500 uppercase w-[5%]"
                         >
                           Status
                         </th>
@@ -297,14 +295,12 @@ const BatchTable = ({
                                 )}
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                                {
-                                  // !(edit && selectedBatch === batch.batch) ? (
-                                  batch.term || "-"
-                                  // ) : (
-                                  //   <input
-                                  //   />
-                                  // )
-                                }
+                                {batch.application_start_date &&
+                                batch.application_end_date
+                                  ? batch.application_start_date +
+                                    " to " +
+                                    batch.application_end_date
+                                  : "-"}
                               </td>
                               <td className="px-6 py-2 whitespace-nowrap flex w-full justify-start items-center text-sm text-surface-100">
                                 <p
@@ -419,7 +415,6 @@ const BatchTable = ({
           </div>
         </div>
       </div>
-     
     </>
   );
 };

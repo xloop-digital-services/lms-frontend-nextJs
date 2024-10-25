@@ -22,9 +22,9 @@ const SessionCreationModal = ({
   session,
   selectedSession,
 }) => {
-  const [selectedLocation, setSelectedLocation] = useState("select Location");
+  const [selectedLocation, setSelectedLocation] = useState("Select room");
   const [selectedLocationId, setSelectedLocationId] = useState(null);
-  const [selectedBatch, setSelectedBatch] = useState("select batch");
+  const [selectedBatch, setSelectedBatch] = useState("Select batch");
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [isBatchOpen, setIsBatchOpen] = useState(false);
   const [isBatchSelected, setIsBatchSelected] = useState(false);
@@ -70,6 +70,12 @@ const SessionCreationModal = ({
     5: ["Saturday", "Sat"],
     6: ["Sunday", "Sun"],
   };
+
+  const Locations = [
+    { id: 1, name: "Magnitude" },
+    { id: 2, name: "Meteor" },
+    { id: 3, name: "Twilight" },
+  ];
 
   // console.log(session, "session for update");
 
@@ -202,6 +208,7 @@ const SessionCreationModal = ({
         try {
           // Format time to "hh:mm:ss" or "hh:mm:ss.uuuuuu" (24-hour format) before sending to backend
           const data = {
+            batch: selectedBatch,
             location: selectedLocationId,
             no_of_students: capacity,
             start_date: startDate,
@@ -279,26 +286,12 @@ const SessionCreationModal = ({
   }, []);
 
   const handleStartDate = (event) => {
-    // Check if the date is a valid Date object
-    // if (date instanceof Date && !isNaN(date)) {
-    //   const formattedDate = date.toISOString().split("T")[0]; // Extract the date part
-    //   setstartDate(formattedDate); // Set the start date
-    //   // console.log("start date,", date);
-    //   console.log("formated start date", formattedDate);
-    // } else {
-    //   toast.error("Invalid date selected");
     setstartDate(event.target.value);
-    // }
   };
 
   const handleEndDateChange = (event) => {
-    // if (date instanceof Date && !isNaN(date)) {
-    //   const formattedDate = date.toISOString().split("T")[0]; // Extract the date part
-    //   setendDate(formattedDate); // Set the end date
-    //   // console.log('end date,', date)
-    //   console.log("formated end date", formattedDate);
     setendDate(event.target.value);
-    // Check if end date is earlier than start date
+
     if (startDate && event.target.value <= startDate) {
       setDateErrorMessage("End date should be greater than start date");
     } else {
@@ -365,13 +358,14 @@ const SessionCreationModal = ({
   };
 
   const handleLocationSelect = (option) => {
-    setSelectedLocation(option.name);
-    setSelectedLocationId(option.id);
-    setIsLocationOpen(false);
-    setIsLocationSelected(true);
+    setSelectedLocation(option.name); // Setting the selected location name
+    setSelectedLocationId(option.id); // Setting the selected location id
+    setIsLocationOpen(false); // Closing the dropdown
+    setIsLocationSelected(true); // Indicating that a location is selected
   };
+
   const handleBatchSelect = (option) => {
-    setSelectedBatch(option);
+    setSelectedBatch(option.batch);
     setIsBatchSelected(true);
     setIsBatchOpen(false);
   };
@@ -465,7 +459,7 @@ const SessionCreationModal = ({
           </div>
           <div className="bg-surface-100 xsm:p-6 px-3 py-4 rounded-xl xsm:space-y-5 space-y-2 font-inter">
             <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
-              {/* <div className="space-y-2 text-[15px] w-full">
+              <div className="space-y-2 text-[15px] w-full">
                 <p>Batch</p>
                 <button
                   onClick={toggleBatchOpen}
@@ -493,17 +487,25 @@ const SessionCreationModal = ({
                         <CircularProgress size={15} />
                       </div>
                     ) : batchOptions && batchOptions.length > 0 ? (
-                      batchOptions.map((option, index) => (
-                        <div
-                          key={index}
-                          onClick={() => handleBatchSelect(option)}
-                          className="p-2 cursor-pointer "
-                        >
-                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
-                            {option}
+                      batchOptions
+                        .filter(
+                          (batch) => batch.year === new Date().getFullYear()
+                        )
+                        .sort(
+                          (a, b) =>
+                            new Date(b.created_at) - new Date(a.created_at)
+                        )
+                        .map((option, index) => (
+                          <div
+                            key={index}
+                            onClick={() => handleBatchSelect(option)}
+                            className="p-2 cursor-pointer "
+                          >
+                            <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
+                              {option.batch}
+                            </div>
                           </div>
-                        </div>
-                      ))
+                        ))
                     ) : (
                       <div className="text-sm text-center text-dark-300">
                         no batch found
@@ -511,15 +513,13 @@ const SessionCreationModal = ({
                     )}
                   </div>
                 )}
-              </div> */}
+              </div>
               <div className="relative space-y-2 text-[15px] w-full">
                 <p>Course</p>
                 <button
                   onClick={toggleCourseOpen}
                   className={`${
-                    !isCourseSelected || !edit
-                      ? "text-[#92A7BE]"
-                      : "text-[#424b55]"
+                    !isCourseSelected ? "text-[#92A7BE]" : "text-[#424b55]"
                   } flex justify-between items-center w-full truncate px-4 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                   style={{
                     // maxWidth: "220px", // Set the maximum width of the button
@@ -549,17 +549,22 @@ const SessionCreationModal = ({
                         <CircularProgress size={15} />
                       </div>
                     ) : courseNames && courseNames.length > 0 ? (
-                      courseNames.map((name, index) => (
-                        <div
-                          key={index}
-                          onClick={() => handleCourseSelect(name)}
-                          className="py-1 px-2  cursor-pointer"
-                        >
-                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
-                            {name.name}
+                      courseNames
+                        .sort(
+                          (a, b) =>
+                            new Date(b.created_at) - new Date(a.created_at)
+                        )
+                        .map((name, index) => (
+                          <div
+                            key={index}
+                            onClick={() => handleCourseSelect(name)}
+                            className="py-1 px-2  cursor-pointer"
+                          >
+                            <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
+                              {name.name}
+                            </div>
                           </div>
-                        </div>
-                      ))
+                        ))
                     ) : (
                       <div className="text-sm text-center text-dark-300">
                         No course found
@@ -571,14 +576,14 @@ const SessionCreationModal = ({
             </div>
             <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
               <div className="space-y-2 text-[15px] w-full">
-                <p>Location</p>
+                <p>Room</p>
                 <button
                   onClick={toggleLocationOpen}
                   className={`${
-                    !isLocationSelected ? " text-[#92A7BE]" : "text-[#424b55]"
-                  } flex justify-between items-center w-full  hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                    !isLocationSelected ? "text-[#92A7BE]" : "text-[#424b55]"
+                  } flex justify-between items-center w-full hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
-                  {selectedLocation || LocationOptions[0]}
+                  {selectedLocation || "Select a location"}
                   <span
                     className={`${
                       isLocationOpen
@@ -595,33 +600,21 @@ const SessionCreationModal = ({
                     ref={mouseClick}
                     className="absolute z-10 min-w-[240px] max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
                   >
-                    {loadingLocation ? (
-                      <div className="w-full flex items-center justify-center p-1">
-                        <CircularProgress size={15} />
-                      </div>
-                    ) : LocationOptions && LocationOptions.length > 0 ? (
-                      LocationOptions.sort(
-                        (a, b) =>
-                          new Date(b.created_at) - new Date(a.created_at)
-                      ).map((option, index) => (
-                        <div
-                          key={index}
-                          onClick={() => handleLocationSelect(option)}
-                          className="p-2 cursor-pointer"
-                        >
-                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
-                            {option.name}
-                          </div>
+                    {Locations.map((option) => (
+                      <div
+                        key={option.id}
+                        onClick={() => handleLocationSelect(option)}
+                        className="p-2 cursor-pointer"
+                      >
+                        <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
+                          {option.name}
                         </div>
-                      ))
-                    ) : (
-                      <div className="text-sm text-center text-dark-300">
-                        no location found
                       </div>
-                    )}
+                    ))}
                   </div>
                 )}
               </div>
+
               <div className="space-y-2 text-[15px] w-full">
                 <p>Capacity</p>
                 <input

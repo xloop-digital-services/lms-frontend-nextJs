@@ -48,12 +48,12 @@ export default function Page() {
     handleListingAllBatches();
   }, [updateBatch]);
 
-  useEffect(() => {
-    const filteredList = batches.filter((batch) =>
-      batch.city.toLowerCase().includes(selectedCity.toLowerCase())
-    );
-    setFilterCity(filteredList);
-  }, [selectedCity, batches]);
+  // useEffect(() => {
+  //   const filteredList = batches.filter((batch) =>
+  //     batch.city.toLowerCase().includes(selectedCity.toLowerCase())
+  //   );
+  //   setFilterCity(filteredList);
+  // }, [selectedCity, batches]);
 
   const handleResetFilter = () => {
     setSelectedCity("Select city");
@@ -107,7 +107,7 @@ export default function Page() {
               <p className="font-bold text-blue-500 text-xl font-exo">Batch Details</p>
             </div>
             <div className="flex gap-3 ">
-              <div className="relative">
+              {/* <div className="relative">
                 <button
                   onClick={toggleCityOpen}
                   className={`${
@@ -153,7 +153,7 @@ export default function Page() {
                     )}
                   </div>
                 )}
-              </div>
+              </div> */}
               {/* <div>
               <button
                 onClick={toggleLocationOpen}

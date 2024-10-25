@@ -14,6 +14,8 @@ const BatchModal = ({
   setUpdateBatch,
   cityOptions,
 }) => {
+  const [batchName, setbatchName] = useState(null);
+  const [batchShortName, setbatchShortName] = useState(null);
   const [selectedCity, setSelectedCity] = useState("Select city");
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [locations, setLocations] = useState([]); // State to store the list of location names
@@ -21,7 +23,10 @@ const BatchModal = ({
   const inputRef = useRef(null); // Ref to focus the input field
   const [startDate, setstartDate] = useState(null);
   const [endDate, setendDate] = useState(null);
+  const [applicationStartDate, setApplicationStartDate] = useState(null);
+  const [applicationendDate, setApplicationEndDate] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [appErrorMessage, setAppErrorMessage] = useState("");
   const [studentCapacity, setStudentCapacity] = useState();
   const [year, setYear] = useState();
   const [loadingCreation, setLoadingCreation] = useState(false);
@@ -51,48 +56,55 @@ const BatchModal = ({
 
   const handleBatchCreation = async () => {
     setLoadingCreation(true);
-    if (error) {
-      toast.error("Capacity must be a positive value"); // Display the error toast
-      setLoadingCreation(false); // Set loading to false
-      return; // Stop further execution
-    }
-    if (
-      !errorMessage &&
-      selectedCity &&
-      cityShortName &&
-      year &&
-      studentCapacity &&
-      startDate &&
-      endDate &&
-      selectedCategory
-    ) {
-      try {
+    try {
+      if (error) {
+        toast.error("Capacity must be a positive value"); // Display the error toast
+        return; // Stop further execution
+      }
+
+      if (errorMessage || appErrorMessage) {
+        toast.error("Set the date properly!");
+        return;
+      }
+
+      if (
+        !errorMessage &&
+        batchName &&
+        batchShortName &&
+        year &&
+        studentCapacity &&
+        startDate &&
+        endDate &&
+        applicationStartDate &&
+        applicationendDate
+      ) {
         const data = {
-          city: selectedCity,
-          city_abb: cityShortName,
+          name: batchName,
+          short_name: batchShortName,
           year: year,
           no_of_students: studentCapacity,
           start_date: startDate,
           end_date: endDate,
-          term: selectedCategory,
+          application_start_date: applicationStartDate,
+          application_end_date: applicationendDate,
         };
 
         const response = await createBatch(data);
         console.log("batch created", response?.data.message);
         toast.success("Batch created successfully!");
-        setLoadingCreation(false);
+
         setIsOpenModal(false);
         setUpdateBatch(!updateBatch);
-      } catch (error) {
-        console.log("error is occuring", error.response);
-        if (error.response.status === 400) {
-          toast.error(error.response.data.error[0]);
-        }
-        // toast.error(error?.response?.data?.error[0])
+      } else {
+        toast.error("All fields are required!");
         setLoadingCreation(false);
       }
-    } else {
-      toast.error("All fields are required!");
+    } catch (error) {
+      console.log("error is occuring", error.response);
+      if (error.response.status === 400) {
+        toast.error(error.response.data.error[0]);
+      }
+    } finally {
       setLoadingCreation(false);
     }
   };
@@ -108,30 +120,30 @@ const BatchModal = ({
   };
 
   const handleStartDate = (event) => {
-    // Check if the date is a valid Date object
-    // if (date instanceof Date && !isNaN(date)) {
-    //   const formattedDate = date.toISOString().split("T")[0]; // Extract the date part
-    //   setstartDate(formattedDate); // Set the start date
-    //   // console.log("start date,", date);
-    //   console.log("formated start date", formattedDate);
-    // } else {
-    //   toast.error("Invalid date selected");
     setstartDate(event.target.value);
-    // }
   };
 
   const handleEndDateChange = (event) => {
-    // if (date instanceof Date && !isNaN(date)) {
-    //   const formattedDate = date.toISOString().split("T")[0]; // Extract the date part
-    //   setendDate(formattedDate); // Set the end date
-    //   // console.log('end date,', date)
-    //   console.log("formated end date", formattedDate);
     setendDate(event.target.value);
-    // Check if end date is earlier than start date
+
     if (startDate && event.target.value <= startDate) {
       setErrorMessage("End date should be greater than start date");
     } else {
       setErrorMessage("");
+    }
+  };
+
+  const handleAppStartDate = (event) => {
+    setApplicationStartDate(event.target.value);
+  };
+
+  const handleAppEndDateChange = (event) => {
+    setApplicationEndDate(event.target.value);
+
+    if (applicationStartDate && event.target.value <= applicationStartDate) {
+      setAppErrorMessage("End date should be greater than start date");
+    } else {
+      setAppErrorMessage("");
     }
   };
 
@@ -214,7 +226,7 @@ const BatchModal = ({
             className={`bg-surface-100 xsm:p-6 px-3 py-4 rounded-xl xsm:space-y-5 space-y-2 font-inter`}
           >
             <div className="flex  gap-3 mx-auto w-full justify-between">
-              {/* <div className="space-y-2 text-[15px] w-full">
+              <div className="space-y-2 text-[15px] w-full">
                 <p>Batch</p>
                 <input
                   type="text"
@@ -223,8 +235,18 @@ const BatchModal = ({
                   value={batchName}
                   onChange={(e) => setbatchName(e.target.value)}
                 />
-              </div>         */}
-              <div className="relative space-y-2 text-[15px] w-full">
+              </div>
+              <div className="space-y-2 text-[15px] w-full">
+                <p>Short Name</p>
+                <input
+                  type="text"
+                  className="border border-dark-300 outline-none p-3 rounded-lg w-full "
+                  placeholder="batch short name"
+                  value={batchShortName}
+                  onChange={(e) => setbatchShortName(e.target.value)}
+                />
+              </div>
+              {/* <div className="relative space-y-2 text-[15px] w-full">
                 <p>City</p>
                 <button
                   onClick={toggleCityOpen}
@@ -260,19 +282,7 @@ const BatchModal = ({
                     ))}
                   </div>
                 )}
-              </div>
-              <div className="space-y-2 text-[15px] w-full">
-                <p>Capacity</p>
-                <input
-                  type="number"
-                  className="border border-dark-300 outline-none p-3 rounded-lg w-full "
-                  placeholder="Number of students"
-                  value={studentCapacity}
-                  min={0}
-                  onChange={handleInputChange}
-                />
-                {error && <p className="text-mix-200 text-[12px]">{error}</p>}{" "}
-              </div>
+              </div> */}
             </div>
 
             <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
@@ -319,7 +329,7 @@ const BatchModal = ({
                   )}
                 </div>
               </div> */}
-              <div className="space-y-2 text-[15px] w-full relative">
+              {/* <div className="space-y-2 text-[15px] w-full relative">
                 <p>Category</p>
                 <button
                   onClick={toggleCategoryOpen}
@@ -357,6 +367,18 @@ const BatchModal = ({
                     ))}
                   </div>
                 )}
+              </div> */}
+              <div className="space-y-2 text-[15px] w-full">
+                <p>Capacity</p>
+                <input
+                  type="number"
+                  className="border border-dark-300 outline-none p-3 rounded-lg w-full "
+                  placeholder="Number of students"
+                  value={studentCapacity}
+                  min={0}
+                  onChange={handleInputChange}
+                />
+                {error && <p className="text-mix-200 text-[12px]">{error}</p>}{" "}
               </div>
 
               <div className="space-y-2 text-[15px] w-full">
@@ -371,41 +393,76 @@ const BatchModal = ({
               </div>
             </div>
 
-            <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
-              {/* Start Date Input */}
-              <div className="space-y-2 text-[15px] w-full">
-                <p>Start Date</p>
-                <div className="relative w-full">
-                  <input
-                    type="date"
-                    value={startDate}
-                    onChange={handleStartDate}
-                    className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
-                    placeholder="Select start date"
-                  />
-                  {/* <FaCalendar className="absolute right-3 top-1/2 transform -translate-y-1/2 text-dark-400 pointer-events-none" /> */}
+            <div>
+              <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
+                <div className="space-y-2 text-[15px] w-full">
+                  <p>Start Date</p>
+                  <div className="relative w-full">
+                    <input
+                      type="date"
+                      value={startDate}
+                      onChange={handleStartDate}
+                      className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
+                      placeholder="Select start date"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2 text-[15px] w-full">
+                  <p>End Date</p>
+                  <div className="relative w-full">
+                    <input
+                      type="date"
+                      value={endDate}
+                      onChange={handleEndDateChange}
+                      className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
+                      placeholder="Select end date"
+                    />
+                  </div>
                 </div>
               </div>
 
-              {/* End Date Input */}
-              <div className="space-y-2 text-[15px] w-full">
-                <p>End Date</p>
-                <div className="relative w-full">
-                  <input
-                    type="date"
-                    value={endDate}
-                    onChange={handleEndDateChange}
-                    className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
-                    placeholder="Select end date"
-                  />
-                  {/* <FaCalendar className="absolute right-3 top-1/2 transform -translate-y-1/2 text-dark-400 pointer-events-none" /> */}
+              {errorMessage && (
+                <p className="text-mix-200 text-[12px] mt-2 text-center">
+                  {errorMessage}
+                </p>
+              )}
+            </div>
+            <div>
+              <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
+                {/* Start Date Input */}
+                <div className="space-y-2 text-[15px] w-full">
+                  <p>Application Start Date</p>
+                  <div className="relative w-full">
+                    <input
+                      type="date"
+                      value={applicationStartDate}
+                      onChange={handleAppStartDate}
+                      className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
+                      placeholder="Select start date"
+                    />
+                  </div>
                 </div>
-                {errorMessage && (
-                  <p className="text-mix-200 text-[12px] mt-2">
-                    {errorMessage}
-                  </p>
-                )}
+
+                {/* End Date Input */}
+                <div className="space-y-2 text-[15px] w-full">
+                  <p>Application End Date</p>
+                  <div className="relative w-full">
+                    <input
+                      type="date"
+                      value={applicationendDate}
+                      onChange={handleAppEndDateChange}
+                      className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
+                      placeholder="Select end date"
+                    />
+                  </div>
+                </div>
               </div>
+              {appErrorMessage && (
+                <p className="text-mix-200 text-[12px] mt-2 text-center">
+                  {appErrorMessage}
+                </p>
+              )}
             </div>
 
             <div className="flex gap-3 mx-auto w-full justify-between"></div>

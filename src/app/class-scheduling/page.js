@@ -115,7 +115,7 @@ export default function Page() {
       const response = await listAllBatches();
       console.log("batches", response?.data);
       const batchOptionsArray = response?.data.map((batch) => batch.batch);
-      setBatchOptions(batchOptionsArray);
+      setBatchOptions(response?.data);
     } catch (error) {
       console.log("error while fetching the batches", error);
       if (error.message === "Network Error") {

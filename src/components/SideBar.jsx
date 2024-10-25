@@ -174,7 +174,7 @@ function SideBar() {
                       </div>
                     )}
                   </div>
-                  <Link
+                  {/* <Link
                     href="/location"
                     ref={isLinkActive("/location") ? activeLinkRef : null}
                     className={`p-4 mx-3 flex gap-4 mt-2 rounded-xl ${
@@ -185,7 +185,7 @@ function SideBar() {
                   >
                     <FaLocationDot size={24} />
                     Location
-                  </Link>
+                  </Link> */}
                   <Link
                     href="/batch"
                     ref={isLinkActive("/batch") ? activeLinkRef : null}
