@@ -54,7 +54,9 @@ const UserApprovalTable = ({
                           scope="col"
                           className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
                         >
-                          Experience
+                          {selectedOption === "student"
+                            ? "Registration ID"
+                            : "Experience"}
                         </th>
                         <th
                           scope="col"
@@ -100,7 +102,8 @@ const UserApprovalTable = ({
                                 <div className="flex items-center gap-3">
                                   <div className="data">
                                     <p className="font-normal text-sm text-dark-900 capitalize">
-                                      {user?.application.first_name} {user?.application.last_name}
+                                      {user?.application.first_name}{" "}
+                                      {user?.application.last_name}
                                     </p>
                                   </div>
                                 </div>
@@ -109,12 +112,18 @@ const UserApprovalTable = ({
                                 {user?.application.email || "-"}
                               </td>
                               <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800">
-                              {user?.registration_id || '-'}
+                                {selectedOption === "student"
+                                  ? user?.registration_id || "-"
+                                  : user?.application?.years_of_experience > 1
+                                  ? `${user.application.years_of_experience} years`
+                                  : user?.application?.years_of_experience === 1
+                                  ? "1 year"
+                                  : "-"}
                               </td>
                               <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800">
                                 {user?.application.contact || "-"}
                               </td>
-                             
+
                               {/* <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
                               <div className="whitespace-nowrap flex w-full justify-start text-sm text-surface-100">
                                 <p

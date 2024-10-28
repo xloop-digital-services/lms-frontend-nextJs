@@ -65,8 +65,7 @@ const BatchTable = ({
       try {
         const data = {
           batch: selectedBatch,
-          city: batch.city,
-          city_abb: batch.city_abb,
+          short_name: batch.short_name,
           year: editYear,
           no_of_students: editCapacity,
           start_date: editStartDate,
@@ -130,7 +129,7 @@ const BatchTable = ({
                       <tr>
                         <th
                           scope="col"
-                          className="px-6 py-4 rounded-lg  text-start text-xs font-medium text-gray-500 uppercase w-[14%]"
+                          className="px-6 py-4 rounded-lg  text-start text-xs font-medium text-gray-500 uppercase w-[12%]"
                         >
                           Batch Name
                         </th>
@@ -142,19 +141,19 @@ const BatchTable = ({
                     </th> */}
                         <th
                           scope="col"
-                          className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[12%]"
+                          className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[11%]"
                         >
                           Capacity
                         </th>
                         <th
                           scope="col"
-                          className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[12%]"
+                          className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[11%]"
                         >
                           Start Date
                         </th>
                         <th
                           scope="col"
-                          className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[12%]"
+                          className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[11%]"
                         >
                           End Date
                         </th>
@@ -172,16 +171,16 @@ const BatchTable = ({
                         </th>
                         <th
                           scope="col"
-                          className="px-12 py-4 text-start rounded-lg text-xs font-medium text-gray-500 uppercase w-[5%]"
+                          className="px-12 py-4 text-start rounded-lg text-xs font-medium text-gray-500 uppercase w-[8%]"
                         >
                           Status
                         </th>
-                        {/* <th
+                        <th
                           scope="col"
-                          className="px-6 py-4 rounded-lg text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
+                          className="px-6 py-4 rounded-lg text-start text-xs font-medium text-gray-500 uppercase w-[5%]"
                         >
                           Actions
-                        </th> */}
+                        </th>
                       </tr>
                     </thead>
                     {/* {updating && (
@@ -348,7 +347,7 @@ const BatchTable = ({
                                   )}
                                 </p>
                               </td>
-                              {/* <td className="px-8 py-2 whitespace-nowrap text-blue-300 ">
+                              <td className="px-8 py-2 whitespace-nowrap text-blue-300 ">
                                 <div className="flex gap-4">
                                   <div>
                                     {!(
@@ -392,7 +391,7 @@ const BatchTable = ({
                                     )}
                                   </div>
                                 </div>
-                              </td> */}
+                              </td>
                             </tr>
                           ))
                       ) : (
