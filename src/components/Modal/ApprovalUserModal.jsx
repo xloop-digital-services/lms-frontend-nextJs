@@ -96,9 +96,8 @@ const ApprovalUserModal = ({
         console.log("error fetching user details", error);
       }
     };
-    if (selectedOption === "student") {
+
       handleUserDetails();
-    }
   }, [id, selectedOption]);
 
   useEffect(() => {
