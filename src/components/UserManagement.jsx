@@ -8,6 +8,7 @@ import {
   getCourseByProgId,
   getAllSkills,
   getUserDataByProgramIdnSkillId,
+  getAllPrograms,
 } from "@/api/route";
 import { CircularProgress } from "@mui/material";
 import useClickOutside from "@/providers/useClickOutside";
@@ -16,8 +17,11 @@ import { toast } from "react-toastify";
 import ApprovalUserModal from "./Modal/ApprovalUserModal";
 import UserModal from "./Modal/UserModal";
 
-const UserManagement = ({ heading, program, loadingProgram }) => {
+const UserManagement = ({ heading }) => {
   const { isSidebarOpen } = useSidebar();
+  const [getPrograms, setGetPrograms] = useState([]);
+  const [loadingPrograms, setLoadingPrograms] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [selectedOption, setSelectedOption] = useState("Student");
   const [selectedStatus, setSelectedStatus] = useState("pending");
   const [statusUpdated, setStatusUpdated] = useState(false);
@@ -30,7 +34,6 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   const [isSkillSectionOpen, setIsSkillSectionOpen] = useState(false);
   const [programID, setPorgramID] = useState(null);
   const [userByProgramID, setUserByProgramID] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [approvedRequest, setApprovedRequest] = useState(null);
   const [verifiedRequest, setverfiedRequest] = useState(null);
   const [unverifiedRequest, setUnverifiedRequest] = useState(null);
@@ -63,6 +66,30 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   useClickOutside(dropdownRef, () => setIsOpen(false));
   useClickOutside(dropProgram, () => setIsProgramSectionOpen(false));
   useClickOutside(dropStatus, () => setStatusOpen(false));
+
+  useEffect(() => {
+    const handleGetAllPrograms = async () => {
+      try {
+        setLoadingPrograms(true);
+        const response = await getAllPrograms();
+        if (response?.data?.status_code === 200) {
+          setGetPrograms(response?.data?.data || []);
+          setLoadingPrograms(false);
+        }
+        if (response?.data?.status_code === 404) {
+          setLoading(false);
+          console.log("ab aya error");
+        }
+      } catch (err) {
+        setLoading(false);
+        console.error("error while fetching the programs", err);
+      }
+    };
+
+    if (selectedOption.toLowerCase() === "student") {
+      handleGetAllPrograms();
+    }
+  }, [selectedOption.toLowerCase(), selectedOption]);
 
   useEffect(() => {
     const handleApprovedUsers = async () => {
@@ -181,7 +208,9 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
         console.log("error while fetching number of applications", error);
       }
     };
-    handleApplicationsNumber();
+    if (programID && selectedOption) {
+      handleApplicationsNumber();
+    }
   }, [programID, selectedOption, statusUpdated]);
 
   // useEffect(() => {
@@ -357,21 +386,21 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
               flexGrow: 1, // Allow this section to grow and take up remaining space
             }}
           >
-            {loadingProgram ? (
+            {loadingPrograms ? (
               <div className="w-full h-full flex items-center justify-center">
                 <CircularProgress />
               </div>
             ) : selectedOption.toLowerCase() === "student" ? (
-              program && program.length > 0 ? (
+              getPrograms && getPrograms.length > 0 ? (
                 // Display Program Logic
-                program.map((program) => (
+                getPrograms.map((program) => (
                   <div
                     className="border border-dark-300 w-full  px-4 rounded-lg cursor-pointer flex flex-col"
                     key={program.id}
                   >
                     <div className="flex nsm:flex-row flex-col space-y-2 justify-between items-center">
                       <div
-                        className="flex gap-3 text-[17px] text-blue-500 py-4 font-semibold font-exo w-full"
+                        className="flex gap-3 text-[17px] text-blue-500 py-4 font-semibold font-exo w-full capitalize"
                         onClick={() =>
                           handleToggleSection(program.name, program.id)
                         }
@@ -381,7 +410,8 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                           className="mt-1 text-[12px] text-blue-300 font-bold"
                           title={`number of ${selectedStatus} applications`}
                         >
-                          {loading || loadingUsers ? (
+                          {(loading || loadingUsers) &&
+                          programSection === program.name ? (
                             <div>
                               <CircularProgress size={12} />
                             </div>
@@ -528,7 +558,9 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
               )
             ) : // Display Skills Logic
             loadingSkills ? (
-              <div className="text-dark-300 text-center">Loading skills...</div>
+              <div className="w-full h-full flex items-center justify-center">
+                <CircularProgress />
+              </div>
             ) : skills && skills.length > 0 ? (
               skills.map((skill) => (
                 <div
@@ -537,7 +569,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                 >
                   <div className="flex nsm:flex-row flex-col space-y-2 justify-between items-center">
                     <div
-                      className="flex gap-3 text-blue-500 text-[17px] p-4 font-semibold font-exo w-full"
+                      className="flex gap-3 text-blue-500 text-[17px] p-4 font-semibold font-exo w-full capitalize"
                       onClick={() => handleToggleSection(skill.name, skill.id)}
                     >
                       {skill.name}
@@ -545,9 +577,14 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                         className="mt-1 text-[12px] text-blue-300 font-bold"
                         title={`number of ${selectedStatus} applications`}
                       >
-                        {heading === "Applicants" &&
-                        isSkillSectionOpen &&
+                        {(loading || loadingUsers) &&
                         skillSection === skill.name ? (
+                          <div>
+                            <CircularProgress size={12}  />
+                          </div>
+                        ) : heading === "Applicants" &&
+                          isSkillSectionOpen &&
+                          skillSection === skill.name ? (
                           selectedStatus === "pending" ? (
                             <p>( {pendingRequest} )</p>
                           ) : selectedStatus === "approved" ? (

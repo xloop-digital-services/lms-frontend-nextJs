@@ -213,75 +213,70 @@ const BatchTable = ({
                       {batch.city_id || '-'}
                     </td> */}
                               <td
-                                className={` ${
-                                  !(edit && selectedBatch === batch.batch)
-                                    ? "py-4 px-6"
-                                    : "py-1 px-4"
-                                } whitespace-nowrap text-sm text-gray-800 dark:text-gray-200`}
+                                className={` 
+                                  
+                                 whitespace-nowrap py-4 px-6 text-sm text-gray-800 dark:text-gray-200`}
                               >
-                                {!(edit && selectedBatch === batch.batch) ? (
+                                {
+                                  // !(edit && selectedBatch === batch.batch) ? (
                                   batch.no_of_students || "-"
-                                ) : (
-                                  <input
-                                    type="number"
-                                    value={editCapacity}
-                                    onChange={handleInputChange}
-                                    className=" px-2 py-3 border border-dark-300 outline-none rounded-lg w-full"
-                                    placeholder={batch.no_of_students}
-                                    min={0}
-                                  />
-                                )}
+                                  // ) : (
+                                  //   <input
+                                  //     type="number"
+                                  //     value={editCapacity}
+                                  //     onChange={handleInputChange}
+                                  //     className=" px-2 py-3 border border-dark-300 outline-none rounded-lg w-full"
+                                  //     placeholder={batch.no_of_students}
+                                  //     min={0}
+                                  //   />
+                                  // )
+                                }
                               </td>
                               <td
-                                className={` ${
-                                  !(edit && selectedBatch === batch.batch)
-                                    ? "py-4 px-6"
-                                    : "py-1 px-4"
-                                } whitespace-nowrap text-sm text-gray-800 dark:text-gray-200`}
+                                className={`
+                                  
+                                 whitespace-nowrap py-4 px-6 text-sm text-gray-800 dark:text-gray-200`}
                               >
-                                {!(edit && selectedBatch === batch.batch) ? (
+                                {
+                                  // !(edit && selectedBatch === batch.batch) ? (
                                   batch.start_date || "-"
-                                ) : (
-                                  <input
-                                    type="date"
-                                    value={editStartDate}
-                                    onChange={(e) =>
-                                      setEditStartDate(e.target.value)
-                                    }
-                                    className=" px-2 py-3 border border-dark-300 outline-none  rounded-lg w-full"
-                                    placeholder={batch.start_date}
-                                  />
-                                )}
+                                  // ) : (
+                                  //   <input
+                                  //     type="date"
+                                  //     value={editStartDate}
+                                  //     onChange={(e) =>
+                                  //       setEditStartDate(e.target.value)
+                                  //     }
+                                  //     className=" px-2 py-3 border border-dark-300 outline-none  rounded-lg w-full"
+                                  //     placeholder={batch.start_date}
+                                  //   />
+                                  // )
+                                }
                               </td>
                               <td
-                                className={` ${
-                                  !(edit && selectedBatch === batch.batch)
-                                    ? "py-4 px-6"
-                                    : "py-1 px-4"
-                                } whitespace-nowrap text-sm text-gray-800 dark:text-gray-200`}
+                                className={`
+                                   whitespace-nowrap text-sm py-4 px-6 text-gray-800 dark:text-gray-200`}
                               >
-                                {!(edit && selectedBatch === batch.batch) ? (
+                                {
+                                  // !(edit && selectedBatch === batch.batch) ? (
                                   batch.end_date || "-"
-                                ) : (
-                                  <input
-                                    type="date"
-                                    value={editEndDate}
-                                    onChange={handleEndDateChange}
-                                    className="border border-dark-300  outline-none  px-2 py-3  rounded-lg w-full"
-                                    placeholder={batch.end_date}
-                                  />
-                                )}
+                                  // ) : (
+                                  //   <input
+                                  //     type="date"
+                                  //     value={editEndDate}
+                                  //     onChange={handleEndDateChange}
+                                  //     className="border border-dark-300  outline-none  px-2 py-3  rounded-lg w-full"
+                                  //     placeholder={batch.end_date}
+                                  //   />
+                                  // )
+                                }
                               </td>
                               <td
-                                className={` ${
-                                  !(edit && selectedBatch === batch.batch)
-                                    ? "py-4 px-6"
-                                    : "py-1 px-4"
-                                } whitespace-nowrap text-sm text-gray-800 dark:text-gray-200`}
+                                className={` py-4 px-6 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200`}
                               >
-                                {!(edit && selectedBatch === batch.batch) ? (
-                                  batch.year || "-"
-                                ) : (
+                                {/* {!(edit && selectedBatch === batch.batch) ? ( */}
+                                {batch.year || "-"}
+                                {/* ) : (
                                   <input
                                     type="text"
                                     className=" border border-dark-300 px-2 py-3 outline-none rounded-lg w-full"
@@ -291,7 +286,7 @@ const BatchTable = ({
                                     }
                                     placeholder={batch.year}
                                   />
-                                )}
+                                )} */}
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
                                 {batch.application_start_date &&
@@ -348,7 +343,7 @@ const BatchTable = ({
                                 </p>
                               </td>
                               <td className="px-8 py-2 whitespace-nowrap text-blue-300 ">
-                                <div className="flex gap-4">
+                                <div className="flex gap-4 justify-center">
                                   <div>
                                     {!(
                                       edit && selectedBatch === batch.batch
@@ -378,7 +373,7 @@ const BatchTable = ({
                                       </div>
                                     )}
                                   </div>
-                                  <div>
+                                  {/* <div>
                                     {!(
                                       edit && selectedBatch === batch.batch
                                     ) && (
@@ -389,7 +384,7 @@ const BatchTable = ({
                                         title="delete"
                                       />
                                     )}
-                                  </div>
+                                  </div> */}
                                 </div>
                               </td>
                             </tr>

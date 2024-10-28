@@ -23,31 +23,28 @@ export default function Navbar() {
 
   useEffect(() => {
     async function fetchUser() {
+      setLoader(true);
       try {
         const response = await getUserProfile();
-        setLoader(true);
         if (response.status === 200) {
-          console.log("Fetched user data:", response.data);
-          setLoader(false);
+          // console.log("Fetched user data:", response.data);
+
           setUser(response.data.response);
-          console.log(response.data.response);
-          console.log(user, "user");
+          // console.log(response.data.response);
+          // console.log(user, "user");
           // console.log(response.data.response.city, "city")
         } else {
           console.error("Failed to fetch user, status:", response.status);
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
+      } finally {
+        setLoader(false);
       }
     }
+
     fetchUser();
   }, []);
-
-  useEffect(() => {
-    if (user) {
-      // console.log(user);
-    }
-  });
 
   const isLinkActive = (path) => {
     return pathname === path;
@@ -178,7 +175,14 @@ export default function Navbar() {
                             {user?.registration_id}
                           </p>
                         </div>
-                        <div className={`ml-1 ${showDropdown ? 'rotate-180 duration-300' : 'duration-300'}`} onClick={toggleDropdown}>
+                        <div
+                          className={`ml-1 ${
+                            showDropdown
+                              ? "rotate-180 duration-300"
+                              : "duration-300"
+                          }`}
+                          onClick={toggleDropdown}
+                        >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
