@@ -85,9 +85,9 @@ const ApprovalUserModal = ({
         setUserLocations(response?.data?.data.locations);
         setUserSkills(response?.data.data.skills);
 
-        setUserLocationID(
-          response?.data?.data.locations.map((location) => location.id)
-        );
+        // setUserLocationID(
+        //   response?.data?.data.locations
+        // );
 
         setUserPorgramId(
           response?.data?.data?.programs.map((program) => program.id)
@@ -96,8 +96,9 @@ const ApprovalUserModal = ({
         console.log("error fetching user details", error);
       }
     };
-
-    handleUserDetails();
+    if (selectedOption === "student") {
+      handleUserDetails();
+    }
   }, [id, selectedOption]);
 
   useEffect(() => {
@@ -129,9 +130,11 @@ const ApprovalUserModal = ({
         setLoadingSessions(false);
       }
     };
-    handleSuggestedSessionsForInstructor();
-    setSelected(false);
-  }, [id]);
+    if (selectedOption === "instructor") {
+      handleSuggestedSessionsForInstructor();
+      setSelected(false);
+    }
+  }, [id, selectedOption]);
 
   const handleToggle = (e) => {
     e.stopPropagation();
@@ -172,8 +175,7 @@ const ApprovalUserModal = ({
     const handleGetSuggestedSessions = async () => {
       try {
         const response = await getSuggestedSessionForStudent(
-          userProgramId,
-          userLocationID
+          userProgramId
         );
         setStudentSessions(response.data.data.sessions);
         console.log("response of the suggested sessions", response.data);
@@ -184,7 +186,7 @@ const ApprovalUserModal = ({
     if (selectedOption === "student") {
       handleGetSuggestedSessions();
     }
-  }, [userProgramId, userLocationID]);
+  }, [userProgramId]);
 
   const handleSessionAssign = async () => {
     setLoadingAssign(true);
@@ -365,25 +367,6 @@ const ApprovalUserModal = ({
                   </>
                 )}
               </div>
-              {/* <div className="w-[40%]">
-                <h2 className="border-b border-dark-300 py-1 mb-2 text-sm text-dark-400">
-                  Locations
-                </h2>
-                {userLocations && userLocations.length > 0 ? (
-                  userLocations.map((location, index) => (
-                    <ul
-                      key={location.id}
-                      className={`${
-                        userLocations.length > 1 && "list-disc pl-4"
-                      }`}
-                    >
-                      <li>{location.name}</li>
-                    </ul>
-                  ))
-                ) : (
-                  <p className="text-[12px]">No location found</p>
-                )}
-              </div> */}
             </div>
             <div className="absolute top-[60px] right-[50px]">
               <p className="text-sm text-dark-400 text-center pb-1 border-b border-dark-300">
@@ -413,13 +396,9 @@ const ApprovalUserModal = ({
                     <p className="max-w-[140px] truncate pt-[2px] text-[#43434a] text-sm">
                       <button
                         onClick={() => downloadFile(resume)}
-                        // href={resume}
-                        // target="_blank"
-                        // rel="noopener noreferrer"
                         className=" hover:text-blue-300 hover:underline"
                       >
                         {resume.split("/").pop()}{" "}
-                        {/* Display only the filename */}
                       </button>
                     </p>
                   ) : (
