@@ -49,6 +49,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   const [userPrograms, setUserPrograms] = useState([]);
   const [userSkills, setUserSkills] = useState([]);
   const [users, setUsers] = useState([]);
+  const [regId, setRegId] = useState([]);
   const [message, setMessage] = useState("");
   const [count, setCount] = useState(0);
 
@@ -65,11 +66,11 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
 
   useEffect(() => {
     const handleApprovedUsers = async () => {
+      setCount(0);
       setMessage("");
       setUsers([]);
       setApplications([]);
       setLocations([]);
-      setCount(0);
       if (approvedProgramID !== null) {
         try {
           setLoadingUsers(true);
@@ -82,9 +83,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
             response.data.status_code === 200 &&
             response.data.data.data.length > 0
           ) {
-            setApplications(
-              response?.data?.data.data.map((data) => data.application)
-            );
+            setApplications(response?.data?.data.data);
             setLocations(
               response?.data?.data.data.map((data) => data.location)
             );
@@ -93,20 +92,18 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
               response?.data?.data.data.map((data) => data.program)
             );
             setUsers(response?.data?.data.data.map((data) => data.user));
+            setRegId(response?.data?.data.data.map((id) => id.registration_id));
             setCount(response?.data?.data.count);
 
-            // console.log(response?.data?.data?.[0].?id)
-            setLoadingUsers(false);
+            // console.log(response?.data?.data?.[0].?id
           } else {
             setMessage("no data found");
-            setLoadingUsers(false);
           }
-          console.log("response from both idss", response.data);
         } catch (error) {
           console.log("error is occuring while both", error);
           // setMessage(response.data.message);
           setMessage("no data found");
-
+        } finally {
           setLoadingUsers(false);
         }
       }
@@ -148,12 +145,12 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
             selectedStatus
           );
           setUserByProgramID(response?.data?.data);
-          setLoading(false);
         } catch (error) {
           console.log(error);
           if (error.response.status === 404) {
             setMessage("no data found");
           }
+        } finally {
           setLoading(false);
         }
       };
@@ -384,9 +381,13 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                           className="mt-1 text-[12px] text-blue-300 font-bold"
                           title={`number of ${selectedStatus} applications`}
                         >
-                          {heading === "Applicants" &&
-                          isProgramSectionOpen &&
-                          programSection === program.name ? (
+                          {loading || loadingUsers ? (
+                            <div>
+                              <CircularProgress size={12} />
+                            </div>
+                          ) : heading === "Applicants" &&
+                            isProgramSectionOpen &&
+                            programSection === program.name ? (
                             selectedStatus === "pending" ? (
                               <p>( {pendingRequest} )</p>
                             ) : selectedStatus === "approved" ? (
@@ -512,6 +513,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                                 setSelectedUser={setSelectedUser}
                                 setUserID={setUserID}
                                 setModal={setModal}
+                                regId={regId}
                               />
                             )}
                           </div>
@@ -663,6 +665,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                             setSelectedUser={setSelectedUser}
                             setUserID={setUserID}
                             setModal={setModal}
+                            regId={regId}
                           />
                         )}
                       </div>

@@ -316,7 +316,7 @@ const ApprovalUserModal = ({
               </h1>
               <p className="text-sm text-dark-400 text-center">{email}</p>
             </div>
-            <div className="flex justify-evenly items-start pt-2">
+            <div className="flex justify-start items-start pt-2 px-[20%]">
               <div className="w-[40%]">
                 {selectedOption === "student" && (
                   <>
@@ -365,7 +365,7 @@ const ApprovalUserModal = ({
                   </>
                 )}
               </div>
-              <div className="w-[40%]">
+              {/* <div className="w-[40%]">
                 <h2 className="border-b border-dark-300 py-1 mb-2 text-sm text-dark-400">
                   Locations
                 </h2>
@@ -383,7 +383,7 @@ const ApprovalUserModal = ({
                 ) : (
                   <p className="text-[12px]">No location found</p>
                 )}
-              </div>
+              </div> */}
             </div>
             <div className="absolute top-[60px] right-[50px]">
               <p className="text-sm text-dark-400 text-center pb-1 border-b border-dark-300">

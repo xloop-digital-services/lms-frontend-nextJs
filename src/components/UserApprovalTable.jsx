@@ -14,12 +14,11 @@ const UserApprovalTable = ({
   setSelectedUser,
   setUserID,
   setModal,
+  regId,
 }) => {
-
- 
   const handleModal = (user, userApplication) => {
     setUserID(userApplication.id);
-    setSelectedUser(user);
+    setSelectedUser(user.application);
     setModal(true);
   };
   const getUserApplication = (userEmail) => {
@@ -45,12 +44,6 @@ const UserApprovalTable = ({
                         >
                           {selectedOption} Name
                         </th>
-                        {/* <th
-                      scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
-                    >
-                      DOB
-                    </th> */}
                         <th
                           scope="col"
                           className=" py-4 px-6 text-start text-xs font-medium text-gray-500 uppercase w-[22%]"
@@ -61,7 +54,7 @@ const UserApprovalTable = ({
                           scope="col"
                           className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
                         >
-                          City
+                          Experience
                         </th>
                         <th
                           scope="col"
@@ -69,12 +62,6 @@ const UserApprovalTable = ({
                         >
                           Contact No.
                         </th>
-                        {/* <th
-                        scope="col"
-                        className="px-14 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
-                      >
-                        Status
-                      </th> */}
                         <th
                           scope="col"
                           className="px-6 py-4 rounded-lg text-center text-xs font-medium text-gray-500 uppercase w-[10%]"
@@ -102,10 +89,10 @@ const UserApprovalTable = ({
                             {message}
                           </td>
                         </tr>
-                      ) : applications && users && locations ? (
+                      ) : applications ? (
                         applications.map((user, index) => {
                           const userApplication = getUserApplication(
-                            user.email
+                            user.application.email
                           );
                           return (
                             <tr key={index}>
@@ -113,23 +100,21 @@ const UserApprovalTable = ({
                                 <div className="flex items-center gap-3">
                                   <div className="data">
                                     <p className="font-normal text-sm text-dark-900 capitalize">
-                                      {user?.first_name} {user?.last_name}
+                                      {user?.application.first_name} {user?.application.last_name}
                                     </p>
                                   </div>
                                 </div>
                               </td>
                               <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800">
-                                {user?.email || "-"}
+                                {user?.application.email || "-"}
                               </td>
                               <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800">
-                                {user?.city || "-"}
+                              {user?.registration_id || '-'}
                               </td>
                               <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800">
-                                {user?.contact || "-"}
+                                {user?.application.contact || "-"}
                               </td>
-                              {/* <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800">
-                            16 years
-                          </td> */}
+                             
                               {/* <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
                               <div className="whitespace-nowrap flex w-full justify-start text-sm text-surface-100">
                                 <p
@@ -190,7 +175,6 @@ const UserApprovalTable = ({
           </div>
         </div>
       </div>
-      
     </>
   );
 };

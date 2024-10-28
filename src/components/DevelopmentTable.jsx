@@ -51,24 +51,18 @@ const DevelopmentTable = ({
                         >
                           Email
                         </th>
-                        <th
-                          scope="col"
-                          className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[14%]"
-                        >
-                          City
-                        </th>
-                        <th
+                        {/* <th
                           scope="col"
                           className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[14%]"
                         >
                           Year
-                        </th>
-                        {/* <th
+                        </th> */}
+                        <th
                       scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
+                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[13%]"
                     >
                       Contact No.
-                    </th> */}
+                    </th>
                         <th
                           scope="col"
                           className="px-14 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[13%]"
@@ -77,7 +71,7 @@ const DevelopmentTable = ({
                         </th>
                         <th
                           scope="col"
-                          className="px-6 py-4 rounded-lg text-center text-xs font-medium text-gray-500 uppercase w-[14%]"
+                          className="px-6 py-4 rounded-lg text-start text-xs font-medium text-gray-500 uppercase w-[5%]"
                         >
                           Action
                         </th>
@@ -127,15 +121,12 @@ const DevelopmentTable = ({
                             <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 ">
                               {user?.email || "-"}
                             </td>
-                            <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 ">
-                              {user?.city || "-"}
-                            </td>
-                            <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 ">
-                              {user?.year || "-"}
-                            </td>
                             {/* <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 ">
+                              {user?.year || "-"}
+                            </td> */}
+                            <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 ">
                           {user?.contact || '-'}
-                        </td> */}
+                        </td>
                             <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-800 ">
                               <div className=" whitespace-nowrap flex w-full justify-start text-sm text-surface-100  ">
                                 <p
@@ -159,9 +150,9 @@ const DevelopmentTable = ({
                                 </p>
                               </div>
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap t text-sm font-medium flex space-x-2">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex space-x-2">
                               <div
-                                className="flex items-center justify-center w-full group text-blue-300"
+                                className="flex items-center justify-start px-4 w-full group text-blue-300"
                                 title="info"
                                 onClick={() => handleModal(user)} // Pass the user data when clicked
                               >

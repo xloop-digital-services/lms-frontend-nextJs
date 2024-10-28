@@ -403,9 +403,7 @@ export default function ApplicationForm() {
       !firstName ||
       !lastName ||
       !contactNumber ||
-      !selectedCity ||
-      (!experience && selectedRole !== "student") ||
-      !locationId
+      (!experience && selectedRole !== "student")
     ) {
       toast.error("Please properly fill out all the fields");
       setLoadingSubmit(false);
@@ -424,15 +422,9 @@ export default function ApplicationForm() {
       formData.append("first_name", firstName.trim());
       formData.append("last_name", lastName.trim());
       formData.append("contact", contactNumber);
-      formData.append("city", selectedCity);
-      formData.append("city_abb", cityShortName);
       formData.append("group_name", selectedRole);
       formData.append("year", currentYear);
       formData.append("date_of_birth", birthDate);
-
-      locationId.forEach((id) => {
-        formData.append("location", id);
-      });
 
       if (selectedRole !== "instructor") {
         programId.forEach((id) => {
@@ -465,7 +457,7 @@ export default function ApplicationForm() {
     <div className="flex flex-col w-full h-screen justify-center items-center p-4 gap-7 bg-gradient-to-t from-blue-600 ">
       <Image src={logo} className="lg:w-[250px] w-[200px]" alt="" />
 
-      <div className="bg-surface-100 rounded-xl xsm:p-4 flex flex-col space-y-4 xl:w-[70%] sm:w-[80%] w-[95%] max-h-screen overflow-y-auto scrollbar-webkit ">
+      <div className="bg-surface-100 rounded-xl xsm:p-4 xsm:pb-6 flex flex-col space-y-4 xl:w-[70%] sm:w-[80%] w-[95%] max-h-screen overflow-y-auto scrollbar-webkit ">
         {loadingSubmit && (
           <div className="absolute inset-0 w-full p-2 flex items-center justify-center bg-surface-100 bg-opacity-30 z-[1100]">
             <CircularProgress size={30} />
@@ -531,134 +523,24 @@ export default function ApplicationForm() {
                 <p className="text-mix-200 text-[12px] mt-1">{errorMessage}</p>
               )}
             </div>
-            <div className="relative space-y-2 text-[15px] w-full">
-              <p>City</p>
-              <button
-                onClick={toggleCityOpen}
-                className={`${
-                  !isCitySelected ? " text-[#92A7BE]" : "text-[#424B55]"
-                } flex justify-between items-center w-full hover:text-[#0E1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#ACC5E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
-              >
-                {selectedCity}
-                <span className="">
-                  <IoIosArrowDown />
-                </span>
-              </button>
-
-              {isCityOpen && (
-                <div
-                  ref={cityDown}
-                  className="absolute top-full left-0 z-10 w-full lg:max-h-[170px] max-h-[150px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
-                >
-                  {/* Filter the cityOptions based on available locations */}
-                  {cityOptions
-                    .filter((city) =>
-                      allLocations.some(
-                        (location) => location.city === city.name
-                      )
-                    )
-                    .map((option, index) => (
-                      <div
-                        key={index}
-                        onClick={() => handleCitySelect(option)}
-                        className="p-2 cursor-pointer "
-                      >
-                        <div className="px-4 py-1 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
-                          {option.name}
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              )}
-            </div>
-
-            <div className=" relative space-y-2 text-[15px] w-full">
-              <p>
-                Location{" "}
-                <span className="text-[12px] text-dark-400">(maximum 3)</span>
-              </p>
-              <div>
-                <button
-                  onClick={toggleLocationOpen}
-                  className={`${
-                    !isLocationSelected
-                      ? " text-[#92A7BE] py-3"
-                      : "text-[#424b55] py-2"
-                  } flex justify-between items-center  w-full hover:text-[#0e1721] px-4 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
-                >
-                  {locationName.length > 0
-                    ? locationName.map((program, index) => (
-                        <div key={index} className="flex flex-wrap gap-2">
-                          <span className="bg-[#d0e9f888] px-2 py-1 text-blue-300 rounded flex gap-1 items-center cursor-default">
-                            {program}
-                            <span className="cursor-pointer hover:bg-[#0d192125]">
-                              <IoClose
-                                onClick={() => handleRemoveLocations(program)}
-                              />
-                            </span>
-                          </span>
-                        </div>
-                      ))
-                    : "Select your suitable locations"}
-                  <span className="">
-                    <IoIosArrowDown />
-                  </span>
-                </button>
-
-                {isLocationOpen &&
-                selectedCity !== "Select your city" &&
-                allLocations.length > 0 ? (
-                  <div
-                    ref={cityDown}
-                    className="absolute  top-full left-0 z-10 w-full mt-2 lg:max-h-[160px] max-h-[150px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
-                  >
-                    {[
-                      ...new Map(
-                        allLocations
-                          .filter((option) => option.city === selectedCity) // Filter by selected city
-                          .map((location) => [location.name, location]) // Create map entries using name as key
-                      ).values(),
-                    ] // Extract unique values
-                      .map((option, index) => (
-                        <div
-                          key={index}
-                          onClick={() => handleLocationSelect(option)}
-                          className={`m-2 cursor-pointer ${
-                            locationName.includes(option.name)
-                              ? "bg-[#03a3d84c] text-[#03A1D8] font-semibold rounded-lg"
-                              : ""
-                          }`}
-                        >
-                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
-                            {option.name}
-                          </div>
-                        </div>
-                      ))}
-                  </div>
-                ) : (
-                  isLocationOpen &&
-                  !isCitySelected &&
-                  selectedCity === "Select your city" && (
-                    <div
-                      ref={cityDown}
-                      className="absolute  top-full left-0 z-10 w-full mt-2 lg:max-h-[170px] max-h-[150px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
-                    >
-                      <p className="text-[12px] text-dark-400 text-center p-1">
-                        Select your city first
-                      </p>
-                    </div>
-                  )
-                )}
-              </div>
+            <div className="space-y-2 text-[15px] w-full">
+              <p>Applying Year</p>
+              <input
+                className="border border-dark-300 outline-none p-3 rounded-lg w-full"
+                value={currentYear} // Set value to current year
+                readOnly // Make the field read-only, or remove if you want it editable
+              />
             </div>
             <div className="space-y-2 text-[15px] w-full">
-              <p>Location Code</p>
+              <p>Date of Birth</p>
               <input
-                className="border border-dark-300 outline-none p-3 rounded-lg w-full "
-                value={cityShortName}
-                placeholder="Location code"
-                readOnly
+                type="date"
+                className="border border-dark-300 text-[#424b55] outline-none px-3 py-3 my-2 rounded-lg w-full"
+                placeholder="Select your date of birth"
+                value={birthDate}
+                onChange={handleDateChange}
               />
+              {error && <p className="text-mix-200 text-[12px]">{error}</p>}
             </div>
           </div>
           <div className="bg-gradient-to-t from-transparent via-dark-200 to-transparent h-full lg:flex hidden w-[2px] py-6"></div>
@@ -691,28 +573,9 @@ export default function ApplicationForm() {
                 </div>
               </div>
             </div>
-            <div className="space-y-2 text-[15px] w-full lg:pt-5 pt-6">
-              <p>Applying Year</p>
-              <input
-                className="border border-dark-300 outline-none p-3 rounded-lg w-full"
-                value={currentYear} // Set value to current year
-                readOnly // Make the field read-only, or remove if you want it editable
-              />
-            </div>
-            <div className="space-y-2 text-[15px] w-full">
-              <p>Date of Birth</p>
-              <input
-                type="date"
-                className="border border-dark-300 text-[#424b55] outline-none px-3 py-3 my-2 rounded-lg w-full"
-                placeholder="Select your date of birth"
-                value={birthDate}
-                onChange={handleDateChange}
-              />
-              {error && <p className="text-mix-200 text-[12px]">{error}</p>}
-            </div>
 
             {selectedRole === "student" ? (
-              <div className=" relative space-y-2 text-[15px] w-full">
+              <div className=" relative space-y-2 text-[15px] w-full  lg:pt-5 pt-6">
                 <p>
                   Programs
                   <span className="text-[12px] text-dark-400">
@@ -781,8 +644,8 @@ export default function ApplicationForm() {
                 )}
               </div>
             ) : selectedRole === "instructor" ? (
-              <div>
-                <div className=" relative space-y-2 text-[15px] w-full">
+              <div className="space-y-4">
+                <div className=" relative space-y-2 text-[15px] w-full  lg:pt-5 pt-6">
                   <p>
                     Skills{" "}
                     <span className="text-[12px] text-dark-400">
@@ -850,11 +713,11 @@ export default function ApplicationForm() {
                     </div>
                   )}
                 </div>
-                <div className="my-4 text-[15px] w-full">
+                <div className=" space-y-2 text-[15px] w-full">
                   <p>Years of Experience</p>
                   <input
                     type="number"
-                    className="border border-dark-300 text-[#424b55] outline-none px-3 py-3 my-2 rounded-lg w-full"
+                    className="border border-dark-300 text-[#424b55] outline-none px-3 py-3  rounded-lg w-full"
                     placeholder="Your experience in years"
                     inputMode="numeric"
                     value={experience}
@@ -862,12 +725,12 @@ export default function ApplicationForm() {
                     onChange={(e) => setExperience(e.target.value)}
                   />
                 </div>
-                <div className="my-2 text-[15px] w-full ">
+                <div className="space-y-2  text-[15px] w-full ">
                   <p>Resume</p>
                   <input
                     required
                     type="file"
-                    className="border border-dark-300 text-[#424b55] outline-none px-3 py-3 my-2 rounded-lg w-full"
+                    className="border border-dark-300 text-[#424b55] outline-none px-3 py-3  rounded-lg w-full"
                     placeholder="Upload your resume"
                     onChange={(e) => setFile(e.target.files[0])}
                   />
@@ -876,19 +739,19 @@ export default function ApplicationForm() {
             ) : (
               <></>
             )}
+          <div className="flex w-full h-full lg:py-0 pt-8 pb-4 justify-center items-end font-inter">
+            <button
+              type="submit"
+              onClick={handleApplicationCreation}
+              className="w-fit flex justify-center py-3 px-12 text-sm font-medium rounded-lg text-dark-100 bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
+            >
+              {loadingSubmit && (
+                <CircularProgress size={19} style={{ color: "#fffff" }} />
+              )}{" "}
+              Submit
+            </button>
           </div>
-        </div>
-        <div className="flex w-full lg:py-0 pt-8 pb-4 justify-center items-center font-inter">
-          <button
-            type="submit"
-            onClick={handleApplicationCreation}
-            className="w-fit flex justify-center py-3 px-12 text-sm font-medium rounded-lg text-dark-100 bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
-          >
-            {loadingSubmit && (
-              <CircularProgress size={19} style={{ color: "#fffff" }} />
-            )}{" "}
-            Submit
-          </button>
+          </div>
         </div>
       </div>
     </div>

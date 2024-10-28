@@ -168,7 +168,7 @@ const BatchTable = ({
                           scope="col"
                           className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
                         >
-                          Application Submission Date
+                          Application Submission Deadline
                         </th>
                         <th
                           scope="col"
@@ -297,9 +297,7 @@ const BatchTable = ({
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
                                 {batch.application_start_date &&
                                 batch.application_end_date
-                                  ? batch.application_start_date +
-                                    " to " +
-                                    batch.application_end_date
+                                  ? batch.application_end_date
                                   : "-"}
                               </td>
                               <td className="px-6 py-2 whitespace-nowrap flex w-full justify-start items-center text-sm text-surface-100">

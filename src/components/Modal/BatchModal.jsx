@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import useClickOutside from "@/providers/useClickOutside";
 
 const BatchModal = ({
+  batches,
   updateBatch,
   setIsOpenModal,
   setUpdateBatch,
@@ -54,9 +55,21 @@ const BatchModal = ({
 
   useClickOutside(modalDown, () => setIsOpenModal(false));
 
+  const checkForDuplicateShortName = (shortName) => {
+    return batches.some(
+      (batch) => batch.short_name === shortName.toUpperCase()
+    );
+  };
+
   const handleBatchCreation = async () => {
     setLoadingCreation(true);
     try {
+      if (checkForDuplicateShortName(batchShortName)) {
+        toast.error(
+          "This short name already exists! Please choose another one."
+        );
+        return;
+      }
       if (error) {
         toast.error("Capacity must be a positive value"); // Display the error toast
         return; // Stop further execution
@@ -80,7 +93,7 @@ const BatchModal = ({
       ) {
         const data = {
           name: batchName,
-          short_name: batchShortName,
+          short_name: batchShortName.toUpperCase(),
           year: year,
           no_of_students: studentCapacity,
           start_date: startDate,
@@ -243,7 +256,7 @@ const BatchModal = ({
                   className="border border-dark-300 outline-none p-3 rounded-lg w-full "
                   placeholder="batch short name"
                   value={batchShortName}
-                  onChange={(e) => setbatchShortName(e.target.value)}
+                  onChange={(e) => setbatchShortName(e.target.value.toUpperCase())} 
                 />
               </div>
               {/* <div className="relative space-y-2 text-[15px] w-full">

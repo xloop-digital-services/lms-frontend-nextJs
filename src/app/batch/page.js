@@ -11,6 +11,7 @@ import { IoIosCloseCircleOutline } from "react-icons/io";
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 import DeleteConfirmationPopup from "@/components/Modal/DeleteConfirmationPopUp";
+import { FaMagnifyingGlass } from "react-icons/fa6";
 
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
@@ -18,6 +19,7 @@ export default function Page() {
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [batches, setBatches] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [updateBatch, setUpdateBatch] = useState(false);
   const [city0ptions, setCityOptions] = useState([]);
@@ -47,6 +49,18 @@ export default function Page() {
   useEffect(() => {
     handleListingAllBatches();
   }, [updateBatch]);
+
+  useEffect(() => {
+    if (searchTerm.length > 0 ) {
+      const filteredData = batches.filter((batch) => {
+        const searchTermMatches = batch.batch
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        return searchTermMatches;
+      });
+      setFilterCity(filteredData);
+    }
+  },[searchTerm]);
 
   // useEffect(() => {
   //   const filteredList = batches.filter((batch) =>
@@ -104,7 +118,9 @@ export default function Page() {
         <div className="bg-surface-100 p-6 rounded-xl">
           <div className="w-full mx-auto flex xsm:flex-row flex-col justify-between items-center gap-4 max-md:flex-col">
             <div>
-              <p className="font-bold text-blue-500 text-xl font-exo">Batch Details</p>
+              <p className="font-bold text-blue-500 text-xl font-exo">
+                Batch Details
+              </p>
             </div>
             <div className="flex gap-3 ">
               {/* <div className="relative">
@@ -208,19 +224,35 @@ export default function Page() {
                 </div>
               )}
             </div> */}
+              <div className=" relative flex grow items-center nsm:mt-0 mt-1">
+                {" "}
+                {/* Ensure the container is growable */}
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-dark-300">
+                  <FaMagnifyingGlass size={18} />
+                </span>
+                <div className="border sm:py-3 py-2 border-dark-500 rounded-lg w-full">
+                  <input
+                    type="text"
+                    placeholder="Search by names"
+                    className="pl-9 px-3  text-sm  outline-none w-full" // w-full ensures full width
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+              </div>
               <div>
                 <button
                   className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] sm:flex text-sm sm:p-4 px-3 py-3 md:px-6 rounded-lg hover:cursor-pointer"
                   onClick={handleBatchCreate}
                 >
-                  Create <span className="sm:flex hidden px-1">a new </span>{" "}
+                  Create <span className="ssm:flex hidden px-1">a new </span>{" "}
                   batch
                 </button>
               </div>
             </div>
           </div>
           <div>
-            {isCitySelected && filterCity.length > 0 ? (
+            {searchTerm.length >0 && filterCity.length > 0 ? (
               <div className="mt-4">
                 <BatchTable
                   batches={filterCity}
@@ -234,7 +266,7 @@ export default function Page() {
                   confirmDelete={confirmDelete}
                 />
               </div>
-            ) : !isCitySelected && batches.length > 0 ? (
+            ) : searchTerm.length == 0 && batches.length > 0 ? (
               <div className="mt-4">
                 <BatchTable
                   batches={batches}
@@ -253,7 +285,7 @@ export default function Page() {
                 <CircularProgress size={20} />
               </div>
             ) : (
-              <p>No Batch found in this city</p>
+              <p className="text-dark-300 text-sm">No Batch found with this name</p>
             )}
           </div>
         </div>
@@ -261,6 +293,7 @@ export default function Page() {
       <div>
         {isOpenModal && (
           <BatchModal
+            batches={batches}
             setIsOpenModal={setIsOpenModal}
             setUpdateBatch={setUpdateBatch}
             cityOptions={city0ptions}

@@ -155,16 +155,16 @@ const UserModal = ({
 
   const handleRepeatApproval = async () => {
     const data = {
-      email: email
-    }
+      email: email,
+    };
     try {
-      setLoading(true)
-      const response = await resendApprovalMail(data)
-      toast.success(response.data.message)
+      setLoading(true);
+      const response = await resendApprovalMail(data);
+      toast.success(response.data.message);
     } catch (error) {
-      console.log(error, 'error while repeat verify')
+      console.log(error, "error while repeat verify");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -176,7 +176,10 @@ const UserModal = ({
             <CircularProgress size={30} />
           </div>
         )}
-        <div style={{ backgroundColor: "#EBF6FF" }} className="p-5 rounded-xl">
+        <div
+          style={{ backgroundColor: "#EBF6FF" }}
+          className="p-5 rounded-xl "
+        >
           <div className="flex justify-between">
             <h1
               style={{
@@ -194,297 +197,258 @@ const UserModal = ({
             </button>
           </div>
           <div
-            className={`bg-surface-100 p-6 rounded-xl flex flex-col justify-start space-y-5 font-inter`}
+            className={`bg-surface-100 p-6 rounded-xl  font-inter`}
           >
             {/* <div className=" flex justify-center items-center w-full">
               <Image src={image} className="w-[30%]" />
             </div> */}
-            <div>
-              <h1 className="text-2xl text-center">
-                {firstName} {lastName}
-              </h1>
-              <p className="text-sm text-dark-400 text-center">{email}</p>
-            </div>
-            <div className="absolute top-[60px] right-[50px]">
-              <p className="text-sm text-dark-400 text-center pb-1 border-b border-dark-300">
-                Status
-              </p>
-              <div className=" py-2 whitespace-nowrap flex w-full justify-start text-sm text-surface-100 dark:text-gray-200 ">
-                <p
-                  className={`${
-                    status === "pending"
-                      ? "bg-mix-500"
-                      : status === "short_listed"
-                      ? " bg-blue-300"
-                      : approvedStatus === "verified"
-                      ? "bg-mix-300"
-                      : "bg-mix-200  "
-                  }  w-[120px] text-center px-4 py-2 rounded-lg capitalize`}
-                >
-                  {status === "approved" ? approvedStatus : status === 'short_listed' ? 'shortlisted' : status}
-                </p>
+            <div className="flex flex-col  justify-start space-y-5">
+              <div>
+                <h1 className="text-2xl text-center">
+                  {firstName} {lastName}
+                </h1>
+                <p className="text-sm text-dark-400 text-center">{email}</p>
               </div>
-            </div>
-            <div className="w-full h-[2px] bg-dark-200"></div>
-            <div className="px-[40px] text-base">
-              <div className="md:flex justify-evenly gap-6">
-                <table className="w-[40%] border-collapse">
-                  <tbody>
-                    <tr className="border-b border-[#d7e4ee]">
-                      <td className="text-dark-400 text-center py-2">DOB</td>
-                      <td className="text-center py-2">{dob || "-"}</td>
-                    </tr>
-                    {/* <tr className="border-b border-[#d7e4ee]">
-                      <td className="text-dark-400 text-center py-2">Area</td>
-                      <td className="text-center py-2">{location.name}</td>
-                    </tr> */}
-                    <tr className="border-b border-[#d7e4ee]">
-                      <td className="text-dark-400 text-center py-2">City</td>
-                      <td className="text-center py-2">{city || "-"}</td>
-                    </tr>
-                    <tr className="border-b border-[#d7e4ee]">
-                      <td className="text-dark-400 text-center py-2">
-                        Contact
-                      </td>
-                      <td className="text-center py-2">{contact || "-"}</td>
-                    </tr>
-                    {/* <tr className="">
+              <div className="absolute top-[60px] right-[50px]">
+                <p className="text-sm text-dark-400 text-center pb-1 border-b border-dark-300">
+                  Status
+                </p>
+                <div className=" py-2 whitespace-nowrap flex w-full justify-start text-sm text-surface-100 dark:text-gray-200 ">
+                  <p
+                    className={`${
+                      status === "pending"
+                        ? "bg-mix-500"
+                        : status === "short_listed"
+                        ? " bg-blue-300"
+                        : approvedStatus === "verified"
+                        ? "bg-mix-300"
+                        : "bg-mix-200  "
+                    }  w-[120px] text-center px-4 py-2 rounded-lg capitalize`}
+                  >
+                    {status === "approved"
+                      ? approvedStatus
+                      : status === "short_listed"
+                      ? "shortlisted"
+                      : status}
+                  </p>
+                </div>
+              </div>
+              <div className="w-full h-[2px] bg-dark-200"></div>
+              <div className="px-[40px] text-base">
+                <div className="md:flex justify-evenly gap-6">
+                  <table className="w-[40%] border-collapse">
+                    <tbody>
+                      <tr className="border-b border-[#d7e4ee]">
+                        <td className="text-dark-400 text-center py-2">DOB</td>
+                        <td className="text-center py-2">{dob || "-"}</td>
+                      </tr>
+                      <tr className="">
+                        <td className="text-dark-400 text-center py-2">
+                          Contact
+                        </td>
+                        <td className="text-center py-2">{contact || "-"}</td>
+                      </tr>
+                      {/* <tr className="">
                       <td className="text-dark-400 text-center py-2">
                         Education
                       </td>
                       <td className="text-center py-2">BS(CS)</td>
                     </tr> */}
-                    {selectedOption === "instructor" && (
-                      <>
-                        <tr className="border-b border-[#d7e4ee]">
-                          <td className="text-dark-400 text-center py-2">
-                            Experience
-                          </td>
-                          <td className="text-center py-2 px-4">
-                            {experience + " Year" || "-"}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className="text-dark-400 text-center py-2">
-                            Resume
-                          </td>
-                          <td className="text-center py-2 px-4">
-                            {resume &&
-                            resume !== "undefined/undefined" &&
-                            resume !== "null" ? (
-                              <button
-                                onClick={() => downloadFile(resume)}
-                                // href={resume}
-                                // target="_blank"
-                                // rel="noopener noreferrer"
-                                className=" hover:text-blue-300 hover:underline"
-                              >
-                                {resume.split("/").pop()}{" "}
-                                {/* Display only the filename */}
-                              </button>
-                            ) : (
-                              "-"
-                            )}
-                          </td>
-                        </tr>
-                      </>
-                    )}
-                  </tbody>
-                </table>
+                      {selectedOption === "instructor" && (
+                        <>
+                          <tr className="border-y border-[#d7e4ee]">
+                            <td className="text-dark-400 text-center py-2">
+                              Experience
+                            </td>
+                            <td className="text-center py-2 px-4">
+                              {experience
+                                ? `${experience} ${
+                                    experience > 1 ? "Years" : "Year"
+                                  }`
+                                : "-"}
+                            </td>
+                          </tr>
 
-                <div className="space-y-2  w-[30%]">
-                  <p className="text-sm text-dark-400 pb-1 border-b border-dark-300">
-                    {selectedOption === "student"
-                      ? status === "approved"
-                        ? "Selected Program"
-                        : "Areas of Interest"
-                      : "Skill Sets"}
-                  </p>
-                  <div className="space-y-2 ">
-                    {selectedOption === "student" ? (
-                      program && program.length > 0 ? (
-                        // Display Program Logic
-                        program.map((prog, index) => (
+                          <tr>
+                            <td className="text-dark-400 text-center py-2">
+                              Resume
+                            </td>
+                            <td className="text-center py-2 px-4">
+                              {resume &&
+                              resume !== "undefined/undefined" &&
+                              resume !== "null" ? (
+                                <button
+                                  onClick={() => downloadFile(resume)}
+                                  // href={resume}
+                                  // target="_blank"
+                                  // rel="noopener noreferrer"
+                                  className=" hover:text-blue-300 hover:underline"
+                                >
+                                  {resume.split("/").pop()}{" "}
+                                  {/* Display only the filename */}
+                                </button>
+                              ) : (
+                                "-"
+                              )}
+                            </td>
+                          </tr>
+                        </>
+                      )}
+                    </tbody>
+                  </table>
+
+                  <div className="space-y-2  w-[30%]">
+                    <p className="text-sm text-dark-400 pb-1 border-b border-dark-300">
+                      {selectedOption === "student"
+                        ? status === "approved"
+                          ? "Selected Program"
+                          : "Areas of Interest"
+                        : "Skill Sets"}
+                    </p>
+                    <div className="space-y-2 ">
+                      {selectedOption === "student" ? (
+                        program && program.length > 0 ? (
+                          // Display Program Logic
+                          program.map((prog, index) => (
+                            <div key={index} className="flex gap-2">
+                              {/* Radio Button for Program Selection */}
+                              <div
+                                className={`${
+                                  status === "approved" ? "hidden" : "flex"
+                                } items-center h-5 group`}
+                              >
+                                <input
+                                  id={`radio-${index}`}
+                                  type="radio"
+                                  name="programSelection"
+                                  onChange={() => handleEnableApprove(prog.id)}
+                                  className="border-gray-200 mt-1 group-hover:cursor-pointer rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
+                                />
+                              </div>
+                              <p className="group-hover:cursor-pointer">
+                                {prog.name}
+                              </p>
+                            </div>
+                          ))
+                        ) : (
+                          <p>No programs available.</p>
+                        )
+                      ) : skill && skill.length > 0 ? (
+                        // Display Skills Logic
+                        skill.map((skill, index) => (
                           <div key={index} className="flex gap-2">
-                            {/* Radio Button for Program Selection */}
+                            {/* Checkbox for Skill Selection */}
                             <div
                               className={`${
                                 status === "approved" ? "hidden" : "flex"
-                              } items-center h-5 group`}
+                              } items-center h-5`}
                             >
                               <input
-                                id={`radio-${index}`}
-                                type="radio"
-                                name="programSelection"
-                                onChange={() => handleEnableApprove(prog.id)}
-                                className="border-gray-200 mt-1 group-hover:cursor-pointer rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
+                                id={`checkbox-${index}`}
+                                type="checkbox"
+                                name="skillSelection"
+                                onChange={() => handleSkillSelection(skill.id)}
+                                className="border-gray-200 rounded mt-1 text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
                               />
                             </div>
-                            <p className="group-hover:cursor-pointer">
-                              {prog.name}
-                            </p>
+                            <p>{skill.name}</p>
                           </div>
                         ))
                       ) : (
-                        <p>No programs available.</p>
-                      )
-                    ) : skill && skill.length > 0 ? (
-                      // Display Skills Logic
-                      skill.map((skill, index) => (
-                        <div key={index} className="flex gap-2">
-                          {/* Checkbox for Skill Selection */}
-                          <div
-                            className={`${
-                              status === "approved" ? "hidden" : "flex"
-                            } items-center h-5`}
-                          >
-                            <input
-                              id={`checkbox-${index}`}
-                              type="checkbox"
-                              name="skillSelection"
-                              onChange={() => handleSkillSelection(skill.id)}
-                              className="border-gray-200 rounded mt-1 text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
-                            />
-                          </div>
-                          <p>{skill.name}</p>
-                        </div>
-                      ))
-                    ) : (
-                      <p>No skills available.</p>
-                    )}
-                  </div>
-                </div>
-                <div className="space-y-2 w-[30%]">
-                  <p className="text-sm text-dark-400 pb-1 border-b border-dark-300">
-                    Locations
-                  </p>
-                  {location &&
-                    location.length > 0 &&
-                    location.map((prog, index) => (
-                      <div key={index} className="flex items-center gap-2">
-                        <div
-                          className={`${
-                            status === "approved" ? "hidden" : " flex"
-                          } items-center h-5`}
-                        >
-                          <input
-                            id={`checkbox-${index}`}
-                            type={
-                              selectedOption === "student"
-                                ? "radio"
-                                : "checkbox"
-                            }
-                            name="locationSelection" // Same name attribute for all radio buttons
-                            // value={prog.name} // Store the value of the selected program
-                            onChange={(e) =>
-                              handleLocationSelect(prog.id, e.target.checked)
-                            } // Call a function to handle the selection
-                            className="border-gray-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
-                          />
-                          {/* <label
-                                htmlFor={`radio-${index}`}
-                                className="sr-only"
-                              >
-                                Select {prog.name}
-                              </label> */}
-                        </div>
-                        <p>{prog.name}</p>
-                      </div>
-                    ))}
-                </div>
-              </div>
-
-              <div
-                className={`${
-                  status === "approved" && approvedStatus === "verified"
-                    ? "hidden"
-                    : " flex"
-                } flex-row w-full justify-evenly pt-6`}
-              >
-                <div>
-                  <div
-                    className={` ${
-                      status === "short_listed" ||
-                      approvedStatus === "unverified"
-                        ? "hidden"
-                        : " flex"
-                    } group relative justify-center items-center text-blue-300 text-sm font-bold`}
-                  >
-                    <div
-                      className={`shadow-md flex items-center group-hover:gap-2 p-3 rounded-full cursor-pointer duration-300`}
-                      onClick={() => {
-                        setSelectedStatus("short_listed");
-                        handleUserSelection("short_listed");
-                      }}
-                    >
-                      <PiListPlusFill size={23} className="fill-zinc-600" />
-                      <span className="text-[0px] group-hover:text-sm duration-300">
-                        Shortlist
-                      </span>
+                        <p>No skills available.</p>
+                      )}
                     </div>
                   </div>
                 </div>
+
                 <div
-                  className={
-                    approvedStatus === "unverified"
+                  className={`${
+                    status === "approved" && approvedStatus === "verified"
                       ? "hidden"
-                      : " group relative flex justify-center items-center text-mix-200 text-sm font-bold"
-                  }
+                      : " flex"
+                  } flex-row w-full justify-evenly pt-10`}
                 >
-                  <div
-                    className="shadow-md flex items-center group-hover:gap-2 p-3 rounded-full cursor-pointer duration-300"
-                    onClick={() => {
-                      setSelectedStatus("removed");
-                      handleUserSelection("removed");
-                    }}
-                  >
-                    <IoMdCloseCircle size={24} className="fill-zinc-600" />
-                    <span className="text-[0px] group-hover:text-sm duration-300">
-                      Reject
-                    </span>
+                  <div>
+                    <div
+                      className={` ${
+                        status === "short_listed" ||
+                        approvedStatus === "unverified"
+                          ? "hidden"
+                          : " flex"
+                      } group relative justify-center items-center text-blue-300 text-sm font-bold`}
+                    >
+                      <div
+                        className={`shadow-md flex items-center group-hover:gap-2 p-3 rounded-full cursor-pointer duration-300`}
+                        onClick={() => {
+                          setSelectedStatus("short_listed");
+                          handleUserSelection("short_listed");
+                        }}
+                      >
+                        <PiListPlusFill size={23} className="fill-zinc-600" />
+                        <span className="text-[0px] group-hover:text-sm duration-300">
+                          Shortlist
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                {approvedStatus !== "unverified" && (
-                  <button
-                    className={`group relative flex justify-center items-center ${
-                      (enableApprovalButton || approvalByskill) &&
-                      approvalByLocation
-                        ? "text-mix-300 cursor-pointer"
-                        : "text-[#23e1ab] cursor-not-allowed"
-                    } text-sm font-bold`}
-                    disabled={
-                      !(enableApprovalButton || approvalByskill) ||
-                      !approvalByLocation
+                  <div
+                    className={
+                      approvedStatus === "unverified"
+                        ? "hidden"
+                        : " group relative flex justify-center items-center text-mix-200 text-sm font-bold"
                     }
+                  >
+                    <div
+                      className="shadow-md flex items-center group-hover:gap-2 p-3 rounded-full cursor-pointer duration-300"
+                      onClick={() => {
+                        setSelectedStatus("removed");
+                        handleUserSelection("removed");
+                      }}
+                    >
+                      <IoMdCloseCircle size={24} className="fill-zinc-600" />
+                      <span className="text-[0px] group-hover:text-sm duration-300">
+                        Reject
+                      </span>
+                    </div>
+                  </div>
+                  {approvedStatus !== "unverified" && (
+                    <button
+                      className={`group relative flex justify-center items-center ${
+                        enableApprovalButton || approvalByskill
+                          ? "text-mix-300 cursor-pointer"
+                          : "text-[#23e1ab] cursor-not-allowed"
+                      } text-sm font-bold`}
+                      disabled={!(enableApprovalButton || approvalByskill)}
+                      onClick={() => {
+                        setSelectedStatus("approved");
+                        handleUserSelection("approved");
+                      }}
+                    >
+                      <div className="shadow-md flex items-center group-hover:gap-2 p-3 rounded-full duration-300">
+                        <FaCheckCircle size={20} className="fill-zinc-600" />
+                        <span className="text-[0px] group-hover:text-sm duration-300">
+                          Approve
+                        </span>
+                      </div>
+                    </button>
+                  )}
+                </div>
+                {approvedStatus === "unverified" && (
+                  <button
+                    className={`group relative flex justify-center items-center w-full text-mix-300 cursor-pointer text-sm font-bold`}
                     onClick={() => {
-                      setSelectedStatus("approved");
-                      handleUserSelection("approved");
+                      handleRepeatApproval();
                     }}
                   >
                     <div className="shadow-md flex items-center group-hover:gap-2 p-3 rounded-full duration-300">
-                      <FaCheckCircle size={20} className="fill-zinc-600" />
+                      <FaRepeat size={20} className="fill-zinc-600" />
                       <span className="text-[0px] group-hover:text-sm duration-300">
-                        Approve
+                        Resend Approval
                       </span>
                     </div>
                   </button>
                 )}
               </div>
-              {approvedStatus === 'unverified' &&
-                <button
-                  className={`group relative flex justify-center items-center w-full text-mix-300 cursor-pointer text-sm font-bold`}
-                  onClick={() => {
-                    handleRepeatApproval();
-                  }}
-                >
-                  <div className="shadow-md flex items-center group-hover:gap-2 p-3 rounded-full duration-300">
-                    <FaRepeat size={20} className="fill-zinc-600" />
-                    <span className="text-[0px] group-hover:text-sm duration-300">
-                      Resend Approval
-                    </span>
-                  </div>
-                </button>
-              }
             </div>
           </div>
         </div>
