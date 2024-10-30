@@ -331,57 +331,46 @@ const UserManagement = ({ heading }) => {
             flexDirection: "column",
           }}
         >
-          <div>
+          <div className="w-full flex justify-between items-start">
             <p className="text-xl font-bold text-blue-500">{heading}</p>
-          </div>
-          <div className="w-full flex items-center gap-4">
-            {/* <div className="flex grow">
-            <input
-              type="text"
-              placeholder="Search program by names"
-              className="p-3 sm:text-base text-sm border border-dark-500 rounded-lg outline-none w-full"
-            />
-          </div> */}
-            {/* <p><Se></Se></p> */}
-            <div className="flex justify-end items-end w-full">
-              <div className="relative  ">
-                <button
-                  onClick={toggleOpen}
-                  className="flex justify-between sm:text-base text-sm z-50 items-center xsm:w-[200px] w-full gap-1 md:w-[200px] text-dark-500 hover:text-[#0e1721] px-4 py-3 text-left bg-white border  border-dark-500 rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+            <div className="relative  ">
+              <button
+                onClick={toggleOpen}
+                className="flex justify-between sm:text-base text-sm z-50 items-center xsm:w-[200px] w-full gap-1 md:w-[200px] text-dark-500 hover:text-[#0e1721] px-4 py-3 text-left bg-white border  border-dark-500 rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+              >
+                {selectedOption || options[0]}
+                <span
+                  className={`${
+                    isOpen ? "rotate-180 duration-300" : "duration-300"
+                  }`}
                 >
-                  {selectedOption || options[0]}
-                  <span
-                    className={`${
-                      isOpen ? "rotate-180 duration-300" : "duration-300"
-                    }`}
-                  >
-                    <IoIosArrowDown />
-                  </span>
-                </button>
+                  <IoIosArrowDown />
+                </span>
+              </button>
 
-                {isOpen && (
-                  <div
-                    ref={dropdownRef}
-                    className="absolute capitalize z-50 w-full mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
-                  >
-                    {options.map((option, index) => (
-                      <div
-                        key={index}
-                        onClick={() => handleOptionSelect(option)}
-                        className="p-2 cursor-pointer "
-                      >
-                        <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
-                          {option}
-                        </div>
+              {isOpen && (
+                <div
+                  ref={dropdownRef}
+                  className="absolute capitalize z-50 w-full mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                >
+                  {options.map((option, index) => (
+                    <div
+                      key={index}
+                      onClick={() => handleOptionSelect(option)}
+                      className="p-2 cursor-pointer "
+                    >
+                      <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
+                        {option}
                       </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
+         
           <div
-            className="my-5 space-y-3 max-h-screen overflow-auto  scrollbar-webkit"
+            className="my-5 mt-8 space-y-3 max-h-screen overflow-auto  scrollbar-webkit"
             style={{
               flexGrow: 1, // Allow this section to grow and take up remaining space
             }}
@@ -580,7 +569,7 @@ const UserManagement = ({ heading }) => {
                         {(loading || loadingUsers) &&
                         skillSection === skill.name ? (
                           <div>
-                            <CircularProgress size={12}  />
+                            <CircularProgress size={12} />
                           </div>
                         ) : heading === "Applicants" &&
                           isSkillSectionOpen &&

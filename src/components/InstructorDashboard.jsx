@@ -215,7 +215,7 @@ export default function InstructorDashboard() {
           <div className="flex mx-2  h-[840px] w-[30%] max-md:w-full flex-col overflow-y-auto bg-surface-100 p-2 rounded-xl lg:w-fit scrollbar-webkit max-md:m-4">
             <div>
               <h1 className="text-xl font-bold px-3 py-4 font-exo text-blue-500">
-                Your Current sessions
+                Your Current Sessions
               </h1>
             </div>
 
@@ -229,8 +229,8 @@ export default function InstructorDashboard() {
                       type={`Course Name: ${assignment.course}`}
                       // title={assignment.question || assignment.title}
                       // content={assignment.description}
-                      priority={`Start Time: ${assignment?.start_time}\n End Time:${assignment?.end_time}`}
-                      category={`Capacity: ${assignment.no_of_student}\t\t\tLocation:${assignment.location}`}
+                      priority={assignment.schedules}
+                      category={`Capacity: ${assignment.no_of_students}\t\t\t\tLocation:${assignment.location}`}
                       // avatars={avatars}
                       // extraCount={50}
                     />

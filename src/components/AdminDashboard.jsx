@@ -423,7 +423,7 @@ const AdminDashboard = () => {
             <div className="bg-surface-100 xmd:w-[66.5%] w-full overflow-x-auto scrollbar-webkit p-5 rounded-xl  h-[450px]">
               <div className="border border-dark-300 rounded-xl p-3 h-full w-full">
                 <div className="font-bold font-exo text-blue-500 text-lg pb-2">
-                  Capacity in Different Cities
+                  Capacity in Xloop Digitals - Karachi
                 </div>
                 <div>
                   <BarChart barData={barData} />

@@ -11,7 +11,7 @@ const BarChart = ({ barData }) => {
         {/* Ensure enough space for horizontal scrolling */}
         <Bar
           data={{
-            labels: cityAreas.map((city) => city.name),
+            labels: ["Magnitude", "Meteor", "Twilight"],
             datasets: [
               {
                 label: "Capacity",
