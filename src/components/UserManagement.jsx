@@ -8,6 +8,7 @@ import {
   getCourseByProgId,
   getAllSkills,
   getUserDataByProgramIdnSkillId,
+  getAllPrograms,
 } from "@/api/route";
 import { CircularProgress } from "@mui/material";
 import useClickOutside from "@/providers/useClickOutside";
@@ -16,8 +17,11 @@ import { toast } from "react-toastify";
 import ApprovalUserModal from "./Modal/ApprovalUserModal";
 import UserModal from "./Modal/UserModal";
 
-const UserManagement = ({ heading, program, loadingProgram }) => {
+const UserManagement = ({ heading }) => {
   const { isSidebarOpen } = useSidebar();
+  const [getPrograms, setGetPrograms] = useState([]);
+  const [loadingPrograms, setLoadingPrograms] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [selectedOption, setSelectedOption] = useState("Student");
   const [selectedStatus, setSelectedStatus] = useState("pending");
   const [statusUpdated, setStatusUpdated] = useState(false);
@@ -30,7 +34,6 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   const [isSkillSectionOpen, setIsSkillSectionOpen] = useState(false);
   const [programID, setPorgramID] = useState(null);
   const [userByProgramID, setUserByProgramID] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [approvedRequest, setApprovedRequest] = useState(null);
   const [verifiedRequest, setverfiedRequest] = useState(null);
   const [unverifiedRequest, setUnverifiedRequest] = useState(null);
@@ -49,6 +52,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   const [userPrograms, setUserPrograms] = useState([]);
   const [userSkills, setUserSkills] = useState([]);
   const [users, setUsers] = useState([]);
+  const [regId, setRegId] = useState([]);
   const [message, setMessage] = useState("");
   const [count, setCount] = useState(0);
 
@@ -64,12 +68,36 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   useClickOutside(dropStatus, () => setStatusOpen(false));
 
   useEffect(() => {
+    const handleGetAllPrograms = async () => {
+      try {
+        setLoadingPrograms(true);
+        const response = await getAllPrograms();
+        if (response?.data?.status_code === 200) {
+          setGetPrograms(response?.data?.data || []);
+          setLoadingPrograms(false);
+        }
+        if (response?.data?.status_code === 404) {
+          setLoading(false);
+          console.log("ab aya error");
+        }
+      } catch (err) {
+        setLoading(false);
+        console.error("error while fetching the programs", err);
+      }
+    };
+
+    if (selectedOption.toLowerCase() === "student") {
+      handleGetAllPrograms();
+    }
+  }, [selectedOption.toLowerCase(), selectedOption]);
+
+  useEffect(() => {
     const handleApprovedUsers = async () => {
+      setCount(0);
       setMessage("");
       setUsers([]);
       setApplications([]);
       setLocations([]);
-      setCount(0);
       if (approvedProgramID !== null) {
         try {
           setLoadingUsers(true);
@@ -93,20 +121,18 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
               response?.data?.data.data.map((data) => data.program)
             );
             setUsers(response?.data?.data.data.map((data) => data.user));
+            setRegId(response?.data?.data.data.map((id) => id.registration_id));
             setCount(response?.data?.data.count);
 
-            // //console.log(response?.data?.data?.[0].?id)
-            setLoadingUsers(false);
+            // console.log(response?.data?.data?.[0].?id
           } else {
             setMessage("no data found");
-            setLoadingUsers(false);
           }
-          //console.log("response from both idss", response.data);
         } catch (error) {
-          //console.log("error is occuring while both", error);
+          console.log("error is occuring while both", error);
           // setMessage(response.data.message);
           setMessage("no data found");
-
+        } finally {
           setLoadingUsers(false);
         }
       }
@@ -121,11 +147,11 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
       setLoadingSkills(true);
       try {
         const response = await getAllSkills();
-        // //console.log("skills", response?.data);
+        // console.log("skills", response?.data);
         setSkills(response?.data);
         setLoadingSkills(false);
       } catch (error) {
-        //console.log("error in skills", error);
+        console.log("error in skills", error);
         setLoadingSkills(false);
       }
     };
@@ -135,7 +161,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   }, [selectedOption.toLowerCase(), selectedOption]);
 
   useEffect(() => {
-    // //console.log("userUpdate", statusUpdated);
+    // console.log("userUpdate", statusUpdated);
     setMessage("");
     setUserByProgramID([]);
     if (programID) {
@@ -148,12 +174,12 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
             selectedStatus
           );
           setUserByProgramID(response?.data?.data);
-          setLoading(false);
         } catch (error) {
-          //console.log(error);
+          console.log(error);
           if (error.response.status === 404) {
             setMessage("no data found");
           }
+        } finally {
           setLoading(false);
         }
       };
@@ -173,37 +199,21 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
           programID,
           selectedOption.toLowerCase()
         );
-        // //console.log("numbers", response.data);
+        // console.log("numbers", response.data);
         setApprovedRequest(response?.data?.data.approved);
         setverfiedRequest(response?.data?.data.verified);
         setUnverifiedRequest(response?.data?.data.unverified);
         setPendingRequest(response?.data?.data.pending);
         setShortlisted(response?.data?.data.short_listed);
-        // //console.log('short:',response?.data?.data.short_listed)
+        // console.log('short:',response?.data?.data.short_listed)
       } catch (error) {
-        //console.log("error while fetching number of applications", error);
+        console.log("error while fetching number of applications", error);
       }
     };
-    handleApplicationsNumber();
+    if (programID && selectedOption) {
+      handleApplicationsNumber();
+    }
   }, [programID, selectedOption, statusUpdated]);
-
-  // useEffect(() => {
-  //   const handleCoursesByPrograms = async () => {
-  //     setLoadingCourses(true);
-  //     try {
-  //       const response = await getCourseByProgId(programID);
-  //       // //console.log("courses res", response?.data?.data);
-  //       setCourses(response?.data?.data.map((course) => course.name));
-  //       setLoadingCourses(false);
-  //     } catch (error) {
-  //       //console.log("Courses fetching error", error.response);
-  //       setLoadingCourses(false);
-  //     }
-  //   };
-  //   handleCoursesByPrograms();
-  // }, [programID]);
-
-  // //console.log('courses Name', courses)
 
   const handleToggleSection = (section, id) => {
     // Assign ProgramID or approvedProgramID based on heading
@@ -219,12 +229,12 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
         // Close program section if it's already open
         setIsProgramSectionOpen(false);
         setProgramSection(null);
-        //console.log("Program section closed");
+        console.log("Program section closed");
       } else {
         // Open the program section
         setProgramSection(section);
         setIsProgramSectionOpen(true);
-        //console.log("Program section opened");
+        console.log("Program section opened");
       }
     }
 
@@ -234,23 +244,15 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
         // Close skill section if it's already open
         setIsSkillSectionOpen(false);
         setSkillSection(null);
-        //console.log("Skill section closed");
+        console.log("Skill section closed");
       } else {
         // Open the skill section
         setSkillSection(section);
         setIsSkillSectionOpen(true);
         // Ensure program section is closed when opening a skill section
-        //console.log("Skill section opened");
+        console.log("Skill section opened");
       }
     }
-  };
-
-  // //console.log("heading0,", heading);
-  // //console.log("prgramopen", isProgramSectionOpen);
-  // //console.log("prgramopen", programSection);
-
-  const handletoggleCourse = (courseName) => {
-    setCourseName(courseName);
   };
 
   const toggleOpen = () => {
@@ -305,53 +307,41 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
             flexDirection: "column",
           }}
         >
-          <div>
+          <div className="flex items-center justify-between w-full mb-4">
             <p className="text-xl font-bold text-blue-500">{heading}</p>
-          </div>
-          <div className="w-full flex items-center gap-4">
-            {/* <div className="flex grow">
-            <input
-              type="text"
-              placeholder="Search program by names"
-              className="p-3 sm:text-base text-sm border border-dark-500 rounded-lg outline-none w-full"
-            />
-          </div> */}
-            {/* <p><Se></Se></p> */}
-            <div className="flex justify-end items-end w-full">
-              <div className="relative  ">
-                <button
-                  onClick={toggleOpen}
-                  className="flex justify-between sm:text-base text-sm z-50 items-center xsm:w-[200px] w-full gap-1 md:w-[200px] text-dark-500 hover:text-[#0e1721] px-4 py-3 text-left bg-white border  border-dark-500 rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+            <div className="relative  ">
+              <button
+                onClick={toggleOpen}
+                className="flex justify-between sm:text-base text-sm z-50 items-center xsm:w-[200px] w-full gap-1 md:w-[200px] text-dark-500 hover:text-[#0e1721] px-4 py-3 text-left bg-white border  border-dark-500 rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+              >
+                {selectedOption || options[0]}
+                <span
+                  className={`${
+                    isOpen ? "rotate-180 duration-300" : "duration-300"
+                  }`}
                 >
-                  {selectedOption || options[0]}
-                  <span
-                    className={`${
-                      isOpen ? "rotate-180 duration-300" : "duration-300"
-                    }`}
-                  >
-                    <IoIosArrowDown />
-                  </span>
-                </button>
+                  <IoIosArrowDown />
+                </span>
+              </button>
 
-                {isOpen && (
-                  <div
-                    ref={dropdownRef}
-                    className="absolute capitalize z-50 w-full mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
-                  >
-                    {options.map((option, index) => (
-                      <div
-                        key={index}
-                        onClick={() => handleOptionSelect(option)}
-                        className="p-2 cursor-pointer "
-                      >
-                        <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
-                          {option}
-                        </div>
+              {isOpen && (
+                <div
+                  ref={dropdownRef}
+                  className="absolute capitalize z-50 w-full mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                >
+                  {options.map((option, index) => (
+                    <div
+                      key={index}
+                      onClick={() => handleOptionSelect(option)}
+                      className="p-2 cursor-pointer "
+                    >
+                      <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
+                        {option}
                       </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
           <div
@@ -360,21 +350,25 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
               flexGrow: 1, // Allow this section to grow and take up remaining space
             }}
           >
-            {loadingProgram ? (
+            {loadingPrograms ? (
               <div className="w-full h-full flex items-center justify-center">
                 <CircularProgress />
               </div>
             ) : selectedOption.toLowerCase() === "student" ? (
-              program && program.length > 0 ? (
+              getPrograms && getPrograms.length > 0 ? (
                 // Display Program Logic
-                program.map((program) => (
+                getPrograms.map((program) => (
                   <div
                     className="border border-dark-300 w-full  px-4 rounded-lg cursor-pointer flex flex-col"
                     key={program.id}
                   >
                     <div className="flex nsm:flex-row flex-col space-y-2 justify-between items-center">
                       <div
-                        className="flex gap-3 text-[17px] text-blue-500 py-4 font-semibold font-exo w-full"
+                        className={`${
+                          programSection === program.name
+                            ? "text-blue-300"
+                            : "text-blue-500"
+                        } flex gap-3 text-[17px]  py-4 font-semibold font-exo w-full capitalize`}
                         onClick={() =>
                           handleToggleSection(program.name, program.id)
                         }
@@ -384,9 +378,14 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                           className="mt-1 text-[12px] text-blue-300 font-bold"
                           title={`number of ${selectedStatus} applications`}
                         >
-                          {heading === "Applicants" &&
-                          isProgramSectionOpen &&
+                          {(loading || loadingUsers) &&
                           programSection === program.name ? (
+                            <div>
+                              <CircularProgress size={12} />
+                            </div>
+                          ) : heading === "Applicants" &&
+                            isProgramSectionOpen &&
+                            programSection === program.name ? (
                             selectedStatus === "pending" ? (
                               <p>( {pendingRequest} )</p>
                             ) : selectedStatus === "approved" ? (
@@ -484,7 +483,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                     >
                       {isProgramSectionOpen &&
                         programSection === program.name && (
-                          <div className="pb-4">
+                          <div className="pb-4 pt-1">
                             {heading === "Applicants" ? (
                               <DevelopmentTable
                                 loading={loading}
@@ -512,6 +511,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                                 setSelectedUser={setSelectedUser}
                                 setUserID={setUserID}
                                 setModal={setModal}
+                                regId={regId}
                               />
                             )}
                           </div>
@@ -526,7 +526,9 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
               )
             ) : // Display Skills Logic
             loadingSkills ? (
-              <div className="text-dark-300 text-center">Loading skills...</div>
+              <div className="w-full h-full flex items-center justify-center">
+                <CircularProgress />
+              </div>
             ) : skills && skills.length > 0 ? (
               skills.map((skill) => (
                 <div
@@ -535,7 +537,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                 >
                   <div className="flex nsm:flex-row flex-col space-y-2 justify-between items-center">
                     <div
-                      className="flex gap-3 text-blue-500 text-[17px] p-4 font-semibold font-exo w-full"
+                      className="flex gap-3 text-blue-500 text-[17px] p-4 font-semibold font-exo w-full capitalize"
                       onClick={() => handleToggleSection(skill.name, skill.id)}
                     >
                       {skill.name}
@@ -543,9 +545,14 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                         className="mt-1 text-[12px] text-blue-300 font-bold"
                         title={`number of ${selectedStatus} applications`}
                       >
-                        {heading === "Applicants" &&
-                        isSkillSectionOpen &&
+                        {(loading || loadingUsers) &&
                         skillSection === skill.name ? (
+                          <div>
+                            <CircularProgress size={12} />
+                          </div>
+                        ) : heading === "Applicants" &&
+                          isSkillSectionOpen &&
+                          skillSection === skill.name ? (
                           selectedStatus === "pending" ? (
                             <p>( {pendingRequest} )</p>
                           ) : selectedStatus === "approved" ? (
@@ -663,6 +670,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                             setSelectedUser={setSelectedUser}
                             setUserID={setUserID}
                             setModal={setModal}
+                            regId={regId}
                           />
                         )}
                       </div>

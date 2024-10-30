@@ -105,7 +105,10 @@ function SideBar() {
                       className={`flex items-center justify-between w-full ${
                         isOpen && "border-b border-dark-300 pb-2"
                       }`}
-                      onClick={ToggleOptions}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        ToggleOptions();
+                      }}
                     >
                       <div className="flex gap-4">
                         <FaListCheck
@@ -174,6 +177,7 @@ function SideBar() {
                       </div>
                     )}
                   </div>
+
                   <Link
                     href="/location"
                     ref={isLinkActive("/location") ? activeLinkRef : null}
