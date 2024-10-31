@@ -370,7 +370,7 @@ const UserManagement = ({ heading }) => {
           </div>
          
           <div
-            className="my-5 mt-8 space-y-3 max-h-screen overflow-auto  scrollbar-webkit"
+            className="my-5 mt-8 space-y-3 max-h-screen overflow-auto  scrollbar-webkit "
             style={{
               flexGrow: 1, // Allow this section to grow and take up remaining space
             }}
@@ -504,7 +504,7 @@ const UserManagement = ({ heading }) => {
                     >
                       {isProgramSectionOpen &&
                         programSection === program.name && (
-                          <div className="pb-4">
+                          <div className="pb-4 mt-2">
                             {heading === "Applicants" ? (
                               <DevelopmentTable
                                 loading={loading}

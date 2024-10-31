@@ -71,7 +71,6 @@ const AdminDashboard = () => {
   const dropdownRef = useRef(null);
   const statusDown = useRef(null);
   const userDown = useRef(null);
-  const BatchDown = useRef(null);
 
   useClickOutside(statusDown, () => setIsOpen(false));
 
@@ -441,11 +440,11 @@ const AdminDashboard = () => {
           <div className="flex gap-4 xmd:flex-row flex-col">
             <div className="bg-surface-100 xmd:w-[66.5%] w-full overflow-x-auto scrollbar-webkit p-5 rounded-xl  h-[450px]">
               <div className="border border-dark-300 rounded-xl p-3 h-full w-full">
-                <div className="flex justify-between items-center w-full">
+                <div >
                   <div className="font-bold font-exo text-blue-500 text-lg pb-2">
                     Capacity in Xloop Digitals - Karachi
                   </div>
-                  <div className=" relative space-y-2 text-[15px] w-full">
+                  {/* <div className=" relative space-y-2 text-[15px] w-full">
                     <button
                       onClick={toggleBatchOpen}
                       className={` flex justify-between items-center w-full text-[#424b55]  hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
@@ -474,10 +473,10 @@ const AdminDashboard = () => {
                         ))}
                       </div>
                     )}
-                  </div>
+                  </div> */}
                 </div>
                 <div>
-                  <BarChart barData={filteredBarData} />
+                  <BarChart barData={barData} />
                 </div>
               </div>
             </div>
@@ -541,7 +540,7 @@ const AdminDashboard = () => {
                           textOverflow: "ellipsis",
                         }}
                       >
-                        <span className=" xl:max-w-[190px] xlg:max-w-[120px] xmd:max-w-[60px] w-full truncate">
+                        <span className=" xl:max-w-[190px] xlg:max-w-[120px] xmd:max-w-[60px] w-full truncate capitalize">
                           {selectedProgram}
                         </span>
                         <span
@@ -574,7 +573,7 @@ const AdminDashboard = () => {
                                 className="p-2 cursor-pointer"
                                 title={option.name}
                               >
-                                <div className="px-4 py-2 hover:bg-[#03a3d838] truncate hover:text-blue-300 hover:font-semibold rounded-lg">
+                                <div className="px-4 py-2 capitalize hover:bg-[#03a3d838] truncate hover:text-blue-300 hover:font-semibold rounded-lg">
                                   {option.name}
                                 </div>
                               </div>
@@ -588,14 +587,14 @@ const AdminDashboard = () => {
                       )}
                     </div>
                   ) : (
-                    <div className={`${!isUserSelected && "hidden"} relative`}>
+                    <div className={`${!isUserSelected && "hidden"} relative w-full`}>
                       <button
                         onClick={toggleSkillOpen}
                         className={`${
                           !isSkillSelected ? " text-dark-500" : "text-[#424b55]"
                         } flex justify-between mt-1 items-center w-full gap-1 hover:text-[#0e1721] px-4 xlg:py-3 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                       >
-                        <span className="xl:max-w-[190px] xmd:max-w-[100px] w-[200px] truncate">
+                        <span className=" xl:max-w-[190px] xlg:max-w-[120px] xmd:max-w-[60px] w-full truncate capitalize">
                           {selectedSkill}
                         </span>
                         <span className="">
@@ -616,7 +615,7 @@ const AdminDashboard = () => {
                                 className="p-2 cursor-pointer"
                                 title={option.name}
                               >
-                                <div className="px-4 py-2 hover:bg-[#03a3d838] truncate hover:text-blue-300 hover:font-semibold rounded-lg">
+                                <div className="px-4 py-2 capitalize hover:bg-[#03a3d838] truncate hover:text-blue-300 hover:font-semibold rounded-lg">
                                   {option.name}
                                 </div>
                               </div>

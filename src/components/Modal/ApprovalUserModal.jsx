@@ -174,7 +174,7 @@ const ApprovalUserModal = ({
     const handleGetSuggestedSessions = async () => {
       try {
         const response = await getSuggestedSessionForStudent(
-          userProgramId
+          userProgramId, id
         );
         setStudentSessions(response.data.data.sessions);
         console.log("response of the suggested sessions", response.data);
@@ -185,7 +185,7 @@ const ApprovalUserModal = ({
     if (selectedOption === "student") {
       handleGetSuggestedSessions();
     }
-  }, [userProgramId]);
+  }, [userProgramId, id, selectedOption]);
 
   const handleSessionAssign = async () => {
     setLoadingAssign(true);

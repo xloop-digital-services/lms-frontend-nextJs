@@ -955,7 +955,7 @@ export const assignSessiontoStudent = async (data) => {
 export const getSuggestedSessionForStudent = async (programId, locationId) => {
   try {
     const response = await axiosInstance.get(
-      `/api/preferred-sessions/?program_id=${programId}&location_id=${locationId}`
+      `/api/preferred-sessions/?program_id=${programId}&user_id=${locationId}`
     );
     return response;
   } catch (error) {
