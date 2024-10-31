@@ -1,72 +1,69 @@
 import React from "react";
-import { Chart as ChartJS } from "chart.js/auto";
 import { Bar } from "react-chartjs-2";
-import cityAreas from "../../public/data/cityAreas.json";
+
+const Locations = [
+  { id: 1, name: "Magnitude" },
+  { id: 2, name: "Meteorite" },
+  { id: 3, name: "Twilight" },
+];
 
 const BarChart = ({ barData }) => {
+  if (barData.length === 0) return null; // Handle case where no batch is selected
+
+  const labels = barData[0].locations.map((location) => {
+    const locationName = Locations.find(
+      (loc) => loc.id === location.location_name
+    )?.name;
+    return locationName;
+  });
+
+  const datasets = [
+    {
+      label: "Capacity",
+      data: barData[0].locations.map((location) => location.total_capacity),
+      backgroundColor: "#0074EE",
+    },
+    {
+      label: "Students",
+      data: barData[0].locations.map((location) => location.student_count),
+      backgroundColor: "#18A07A",
+    },
+  ];
+
   return (
     <div style={{ height: "350px", width: "100%" }}>
-      <div className="h-full">
-        {" "}
-        {/* Ensure enough space for horizontal scrolling */}
-        <Bar
-          data={{
-            labels: ["Magnitude", "Meteor", "Twilight"],
-            datasets: [
-              {
-                label: "Capacity",
-                data: barData.map((data) => data.total_capacity),
-                backgroundColor: "#0074EE",
+      <Bar
+        data={{
+          labels, // Location names as labels
+          datasets,
+        }}
+        options={{
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              grid: {
+                display: false,
               },
-              {
-                label: "Intructors",
-                data: barData.map((data) => data.instructor_count),
-                backgroundColor: "#F29D41",
-              },
-              {
-                label: "Students",
-                data: barData.map((data) => data.student_count),
-                backgroundColor: "#18A07A",
-              },
-              // {
-              //   label: "Guest",
-              //   data: [120],
-              //   backgroundColor: "#18A07A",
-              // },
-            ],
-          }}
-          options={{
-            maintainAspectRatio: false,
-            scales: {
-              x: {
-                grid: {
-                  display: false, // Hide X-axis grid lines
-                },
-                ticks: {
-                  autoSkip: false, // Prevent skipping of ticks to ensure all labels are shown
-                },
-                barThickness: 50, // Adjust bar thickness to fit more bars if necessary
-              },
-              y: {
-                grid: {
-                  display: false, // Hide Y-axis grid lines
-                },
+              ticks: {
+                autoSkip: false, // Show all labels
+                maxRotation: 45,
+                minRotation: 0,
               },
             },
-            plugins: {
-              legend: {
-                display: true, // Show the legend
-                position: "bottom", // Position the legend at the bottom
-                labels: {
-                  boxWidth: 40, // Width of the color box
-                  boxHeight: 5,
-                  padding: 20, // Padding between the legend and chart
-                },
+            y: {
+              grid: {
+                display: false,
               },
             },
-          }}
-        />
-      </div>
+          },
+          plugins: {
+            legend: {
+              display: true,
+              position: "bottom",
+            },
+          },
+        }}
+      />
     </div>
   );
 };

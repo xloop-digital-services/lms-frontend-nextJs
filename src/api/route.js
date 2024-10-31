@@ -927,7 +927,7 @@ export const getApplicationsTotalNumber = async (
 
 export const getCityStatistics = async () => {
   try {
-    const response = await axiosInstance.get("/api/city-stats/");
+    const response = await axiosInstance.get("/api/stats");
     return response;
   } catch (error) {
     throw error;

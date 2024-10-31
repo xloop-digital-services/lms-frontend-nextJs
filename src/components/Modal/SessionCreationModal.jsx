@@ -73,7 +73,7 @@ const SessionCreationModal = ({
 
   const Locations = [
     { id: 1, name: "Magnitude" },
-    { id: 2, name: "Meteor" },
+    { id: 2, name: "Meteorite" },
     { id: 3, name: "Twilight" },
   ];
 

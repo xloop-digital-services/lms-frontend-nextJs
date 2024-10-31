@@ -112,6 +112,7 @@ export default function Page() {
                   className={`w-full flex justify-center gap-4 py-3 px-4 text-sm font-medium rounded-lg text-dark-100 bg-blue-300 hover:bg-[#3272b6] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out ${
                     loading ? "read-only" : ""
                   }`}
+                  disabled={loading}
                 >
                   {loading && (
                     <CircularProgress size={20} style={{ color: "white" }} />

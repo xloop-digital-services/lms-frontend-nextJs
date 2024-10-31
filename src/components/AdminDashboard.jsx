@@ -64,10 +64,14 @@ const AdminDashboard = () => {
   const [filterStatus, setFilterStatus] = useState(false);
   const [selectedBatch, setSelectedBatch] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [selectedBarBatch, setSelectedBarBatch] = useState(null);
+  const [isBatchOpen, setIsBatchOpen] = useState(false);
+  const [isBatchSelected, setIsBatchSelected] = useState(false);
 
   const dropdownRef = useRef(null);
   const statusDown = useRef(null);
   const userDown = useRef(null);
+  const BatchDown = useRef(null);
 
   useClickOutside(statusDown, () => setIsOpen(false));
 
@@ -239,6 +243,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     setSelectedUser("Student");
     setIsUserSelected(true);
+    setSelectedBarBatch(barData.map((data) => data.batch[0]));
   }, []);
 
   useEffect(() => {
@@ -331,6 +336,20 @@ const AdminDashboard = () => {
     }
   };
 
+  const toggleBatchOpen = () => {
+    setIsBatchOpen(true);
+  };
+
+  const handleBatchSelect = (batch) => {
+    setSelectedBarBatch(batch);
+    setIsBatchOpen(false);
+    setIsBatchSelected(true);
+  };
+
+  const filteredBarData = barData.filter(
+    (data) => data.batch === selectedBarBatch
+  );
+
   return (
     <>
       <div
@@ -422,11 +441,43 @@ const AdminDashboard = () => {
           <div className="flex gap-4 xmd:flex-row flex-col">
             <div className="bg-surface-100 xmd:w-[66.5%] w-full overflow-x-auto scrollbar-webkit p-5 rounded-xl  h-[450px]">
               <div className="border border-dark-300 rounded-xl p-3 h-full w-full">
-                <div className="font-bold font-exo text-blue-500 text-lg pb-2">
-                  Capacity in Xloop Digitals - Karachi
+                <div className="flex justify-between items-center w-full">
+                  <div className="font-bold font-exo text-blue-500 text-lg pb-2">
+                    Capacity in Xloop Digitals - Karachi
+                  </div>
+                  <div className=" relative space-y-2 text-[15px] w-full">
+                    <button
+                      onClick={toggleBatchOpen}
+                      className={` flex justify-between items-center w-full text-[#424b55]  hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                    >
+                      {selectedBarBatch}
+                      <span className="">
+                        <IoIosArrowDown />
+                      </span>
+                    </button>
+
+                    {isBatchOpen && (
+                      <div
+                        ref={BatchDown}
+                        className="absolute z-10 w-full max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                      >
+                        {barData.map((option, index) => (
+                          <div
+                            key={index}
+                            onClick={() => handleBatchSelect(option.batch)}
+                            className="p-2 cursor-pointer "
+                          >
+                            <div className="px-4 py-1 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
+                              {option.batch}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div>
-                  <BarChart barData={barData} />
+                  <BarChart barData={filteredBarData} />
                 </div>
               </div>
             </div>

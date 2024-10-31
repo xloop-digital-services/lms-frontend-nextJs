@@ -429,7 +429,7 @@ const ApprovalUserModal = ({
                   {showDropdown && (
                     <div
                       ref={click}
-                      className="absolute z-10 min-w-[200px] mt-1 max-h-[250px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                      className="absolute z-20 min-w-[200px] mt-1 max-h-[250px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                     >
                       <div className="py-2">
                         {loadingSessions ? (
