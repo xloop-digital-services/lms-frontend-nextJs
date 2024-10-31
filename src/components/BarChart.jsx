@@ -1,5 +1,4 @@
 import React from "react";
-import { Chart as ChartJS } from "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 
 const Locations = [
@@ -9,49 +8,46 @@ const Locations = [
 ];
 
 const BarChart = ({ barData }) => {
-  // Extract labels: batch names and location names for each batch
-  const labels = barData.map((data) => data.batch); // Only batch names
-
+  // Extract labels: batch names for each batch
+  const labels = barData.map((data) => data.batch);
 
   // Ensure each batch contains data for all locations, even if some are missing in the response
-  const getLocationData = (locations, locationId) => {
+  const getLocationData = (locations, locationId, field) => {
     const location = locations.find((loc) => loc.location_name === locationId);
-    return location ? location.total_capacity : 0; // If no data, return 0 for that location
+    return location ? location[field] : 0; // If no data, return 0 for that location
   };
 
-  // Prepare datasets for each location and its capacity, instructors, and students
+  // Prepare datasets for each location's capacity and student count
   const datasets = [
     {
-      label: " Capacity",
-      data: barData.map((data) => getLocationData(data.locations, 1)),
+      label: "Capacity - Magnitude",
+      data: barData.map((data) => getLocationData(data.locations, 1, 'total_capacity')),
       backgroundColor: "#0074EE",
     },
     {
-      label: "Magnitude",
-      data: barData.map(
-        (data) =>
-          data.locations.find((loc) => loc.location_name === 1)
-            ?.student_count || 0
-      ),
+      label: "Students - Magnitude",
+      data: barData.map((data) => getLocationData(data.locations, 1, 'student_count')),
       backgroundColor: "#18A07A",
     },
     {
-      label: "Meteorite",
-      data: barData.map(
-        (data) =>
-          data.locations.find((loc) => loc.location_name === 2)
-            ?.student_count || 0
-      ),
-      backgroundColor: "#F29D41",
+      label: "Capacity - Meteorite",
+      data: barData.map((data) => getLocationData(data.locations, 2, 'total_capacity')),
+      backgroundColor: "#0074EE",
     },
     {
-      label: "Twilight",
-      data: barData.map(
-        (data) =>
-          data.locations.find((loc) => loc.location_name === 3)
-            ?.student_count || 0
-      ),
+      label: "Students - Meteorite",
+      data: barData.map((data) => getLocationData(data.locations, 2, 'student_count')),
       backgroundColor: "#FF5733",
+    },
+    {
+      label: "Capacity - Twilight",
+      data: barData.map((data) => getLocationData(data.locations, 3, 'total_capacity')),
+      backgroundColor: "#0074EE", // Different color for clarity
+    },
+    {
+      label: "Students - Twilight",
+      data: barData.map((data) => getLocationData(data.locations, 3, 'student_count')),
+      backgroundColor: "#E74C3C", // Different color for clarity
     },
   ];
 
