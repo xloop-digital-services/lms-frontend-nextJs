@@ -18,6 +18,7 @@ import {
 import { CircularProgress } from "@mui/material";
 import Link from "next/link";
 import DeleteConfirmationPopup from "./Modal/DeleteConfirmationPopUp";
+import { FaMagnifyingGlass } from "react-icons/fa6";
 
 const AdminDashboard = () => {
   const { isSidebarOpen } = useSidebar();
@@ -129,7 +130,7 @@ const AdminDashboard = () => {
   const handleTotalUsers = async () => {
     try {
       const response = await totalUsersCount();
-      //console.log("total Counts", response?.data?.data);
+      console.log("total Counts", response?.data?.data);
       setAllUsers(response?.data?.data?.all_users_length);
       setAllIntructors(response?.data?.data?.instructor_user_length);
       setAllStudents(response?.data?.data?.student_user_length);
@@ -142,18 +143,18 @@ const AdminDashboard = () => {
       setAllActiveStudents(response?.data?.data?.active_student_length);
       setAllInActiveStudents(response?.data?.data?.inactive_student_length);
     } catch (error) {
-      //console.log("error fetching the total users", error);
+      console.log("error fetching the total users", error);
     }
   };
 
   const handleListingAllBatches = async () => {
     try {
       const response = await listAllBatches();
-      // //console.log("batches", response?.data);
+      // console.log("batches", response?.data);
       setBatches(response?.data);
       setloadingBatch(false);
     } catch (error) {
-      //console.log("error while fetching the batches", error);
+      console.log("error while fetching the batches", error);
       setloadingBatch(false);
     }
   };
@@ -181,27 +182,25 @@ const AdminDashboard = () => {
       if (response?.data?.status_code === 404) {
         setLoading(false);
         toast.error(response?.data?.message);
-        // //console.log("ab aya error");
+        // console.log("ab aya error");
       }
     } catch (err) {
       setLoading(false);
-      //console.error("error while fetching the programs", err);
+      console.error("error while fetching the programs", err);
     }
   };
 
   const handleGetAllSkills = async () => {
     try {
       const response = await getAllSkills();
-      //console.log("fetching skills", response.data);
+      console.log("fetching skills", response.data);
       setAllSkills(response?.data);
       setLoading(false);
     } catch (error) {
-      //console.log("error fetching the list of skills");
+      console.log("error fetching the list of skills");
       setLoading(false);
     }
   };
-
-
 
   const toggleProgramOpen = () => {
     setIsProgramOpen((prev) => !prev);
@@ -227,11 +226,11 @@ const AdminDashboard = () => {
   const handleBarChartData = async () => {
     try {
       const response = await getCityStatistics();
-      // //console.log('bar chart', response?.data?.data)
+      // console.log('bar chart', response?.data?.data)
       setBarData(response?.data?.data);
       setLoading(false);
     } catch (error) {
-      //console.log("error while fetching the bar data", error);
+      console.log("error while fetching the bar data", error);
       setLoading(false);
     }
   };
@@ -239,7 +238,7 @@ const AdminDashboard = () => {
   // Set the initial selectedUser to "Student"
   useEffect(() => {
     setSelectedUser("Student");
-    setIsUserSelected(true)
+    setIsUserSelected(true);
   }, []);
 
   useEffect(() => {
@@ -284,7 +283,7 @@ const AdminDashboard = () => {
 
         setLoading(false);
       } catch (error) {
-        //console.log("error while fetching number of applications", error);
+        console.log("error while fetching number of applications", error);
         setLoading(false);
       }
     };
@@ -323,20 +322,22 @@ const AdminDashboard = () => {
       setLoading(true);
       const response = await DeleteBatch(selectedBatch);
       toast.success("Batch deleted successfully!");
-      //console.log("deleting the batch", response);
+      console.log("deleting the batch", response);
       setUpdateBatch(!updateBatch);
       setConfirmDelete(false);
       setLoading(false);
     } catch (error) {
-      //console.log("error while deleting the batch", error);
+      console.log("error while deleting the batch", error);
     }
   };
 
   return (
     <>
       <div
-        className={`flex-1 transition-transform pt-[100px] space-y-4 max-md:pt-32 font-inter ${
-          isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 pl-10 pr-4"
+        className={`flex-1 transition-transform pt-[100px] space-y-4 max-md:pt-22 font-inter ${
+          isSidebarOpen
+            ? "translate-x-64 ml-20 "
+            : "translate-x-0 xlg:pl-10 pl-4 pr-4"
         }`}
         style={{
           // paddingBottom: "20px",
@@ -430,7 +431,7 @@ const AdminDashboard = () => {
               </div>
             </div>
             <div className="bg-surface-100 min-w-[32%] p-4 rounded-xl  h-[450px]">
-              <div className="flex w-full xmd:flex-col justify-between xmd:items-start items-center">
+              <div className="flex w-full xmd:flex-col ssm:flex-row flex-col justify-between xmd:items-start items-center">
                 <div className="font-bold font-exo text-blue-500 text-lg">
                   Applications Status Overview
                 </div>
@@ -440,7 +441,7 @@ const AdminDashboard = () => {
                       onClick={toggleUsers}
                       className={`${
                         !isUserSelected ? "text-dark-500" : "text-[#424b55]"
-                      } flex justify-between mt-1 items-center w-full  gap-1 hover:text-[#0e1721] xlg:px-4 px-2 xlg:py-3  py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                      } flex justify-between mt-1 items-center  w-full  gap-1 hover:text-[#0e1721] xlg:px-4 px-2 xlg:py-3  py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                     >
                       {selectedUser || userOptions[0]}
                       <span
@@ -457,7 +458,7 @@ const AdminDashboard = () => {
                     {isUserOpen && (
                       <div
                         ref={userDown}
-                        className="absolute capitalize z-50  w-full  mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                        className="absolute capitalize z-50 w-full  mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                       >
                         {userOptions.map((option, index) => (
                           <div
@@ -474,14 +475,14 @@ const AdminDashboard = () => {
                     )}
                   </div>
                   {selectedUser.toLowerCase() === "student" ? (
-                    <div className={`relative w-full`}>
+                    <div className={` relative w-full`}>
                       <button
                         onClick={toggleProgramOpen}
                         className={`${
                           !isProgramSelected
                             ? "text-dark-500"
                             : "text-[#424b55]"
-                        } flex justify-between items-center w-full px-4 xlg:py-3  py-2 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                        } flex justify-between items-center w-full xlg:px-4 px-2  xlg:py-3  py-2 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                         style={{
                           // maxWidth: "220px", // Set the maximum width of the button
                           whiteSpace: "nowrap",
@@ -489,7 +490,7 @@ const AdminDashboard = () => {
                           textOverflow: "ellipsis",
                         }}
                       >
-                        <span className="xl:max-w-[190px] xmd:max-w-[100px] w-[200px] truncate">
+                        <span className=" xl:max-w-[190px] xlg:max-w-[120px] xmd:max-w-[60px] w-full truncate">
                           {selectedProgram}
                         </span>
                         <span
@@ -622,16 +623,21 @@ const AdminDashboard = () => {
                 </Link>
               </h1>
               <div className="w-full flex items-center justify-end gap-4 ">
-                <div className="flex w-[50%]">
+                <div className=" relative flex nsm:w-[50%] w-full nsm:mt-0 mt-1">
                   {" "}
                   {/* Ensure the container is growable */}
-                  <input
-                    type="text"
-                    placeholder="Search batch by names"
-                    className="px-3 py-2 text-sm border border-dark-500 rounded-lg outline-none w-full" // w-full ensures full width
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-dark-300">
+                    <FaMagnifyingGlass size={18} />
+                  </span>
+                  <div className="border py-2 border-dark-500 rounded-lg w-full">
+                    <input
+                      type="text"
+                      placeholder="Search by names"
+                      className="pl-9 px-3  text-sm  outline-none w-full" // w-full ensures full width
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
                 </div>
                 {/* <div>
                   <button
@@ -674,7 +680,7 @@ const AdminDashboard = () => {
               </div>
             </div>
 
-            <div className="xmd:max-h-[160px] max-h-[355px] mt-3 overflow-y-auto overflow-x-hidden scrollbar-webkit">
+            <div className="xmd:max-h-[160px] max-h-[300px] mt-3 overflow-y-auto overflow-x-hidden scrollbar-webkit">
               {loadingBatch ? (
                 <div className="flex justify-center items-center w-full h-full p-5">
                   <CircularProgress size={20} />
