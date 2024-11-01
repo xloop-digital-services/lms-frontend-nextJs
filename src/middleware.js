@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+
 const restrictedPathsStudent = [
   "/batch",
   "/location",
@@ -30,17 +31,24 @@ const restrictedPaths = [
   "/class-scheduling",
   "/user-management",
 ];
+
 export function middleware(req) {
   const accessToken = req.cookies.get("access_token")?.value;
   const userGroup = req.cookies.get("userGroup")?.value;
   const userDataCookie = req.cookies.get("userData")?.value;
   const path = req.nextUrl.pathname;
   let userData;
+
   try {
     userData = userDataCookie ? JSON.parse(userDataCookie) : null;
   } catch (err) {
-    // //console.error("Error parsing userData from cookies:", err);
     userData = null;
+  }
+
+  if (path === "/") {
+    return accessToken
+      ? NextResponse.redirect(new URL("/dashboard", req.url))
+      : NextResponse.redirect(new URL("/auth/login", req.url));
   }
 
   const isPublicRoute =
@@ -66,11 +74,7 @@ export function middleware(req) {
     if (userGroup === "admin") {
       return NextResponse.next();
     }
-    if (
-      accessToken &&
-      path.startsWith("/auth/login")
-      //   || path.startsWith("/auth/signup")
-    ) {
+    if (accessToken && path.startsWith("/auth/login")) {
       return NextResponse.redirect(new URL("/dashboard", req.url));
     }
     if (userGroup === "student" || userGroup === "instructor") {
@@ -88,6 +92,7 @@ export function middleware(req) {
       return NextResponse.redirect(new URL("/auth/login", req.url));
     }
   }
+
   return NextResponse.next();
 }
 

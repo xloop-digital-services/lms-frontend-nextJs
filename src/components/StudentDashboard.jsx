@@ -179,7 +179,7 @@ export default function StudentDashboard() {
   }, [courses]);
 
   useEffect(() => {
-    if (assignments.length >= 0) {
+    if (assignments.length > 0) {
       setSelectedCategory("Show All");
     }
   }, []);

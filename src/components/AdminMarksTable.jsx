@@ -136,14 +136,16 @@ const AdminMarksTable = ({
         registration_id: editData.registration_id,
       };
 
-      if (title === "Quiz" && id) {
+      if (
+        (title === "Quiz" ||
+          title === "Exam" ||
+          title === "Project" ||
+          title === "Assignment") &&
+        id
+      ) {
         data.grading_id = id;
-      } else if (title === "Assignment") {
-        data.grading_id = id || null;
-      } else if (title === "Exam" && id) {
-        data.grading_id = id;
-      } else if (title === "Project" && id) {
-        data.grading_id = id;
+      } else {
+        data.grading_id = null;
       }
 
       let response;

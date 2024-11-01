@@ -1140,7 +1140,7 @@ export default function Page({ params }) {
                                     : "bg-blue-300 hover:bg-blue-700"
                                 } text-surface-100`}
                                 onClick={handleSaveModule}
-                                disabled={loaderModule} // Disable button when loading
+                                disabled={loaderModule} 
                               >
                                 {loaderModule ? (
                                   <CircularProgress

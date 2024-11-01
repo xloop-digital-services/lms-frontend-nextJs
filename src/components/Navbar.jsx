@@ -19,7 +19,8 @@ export default function Navbar() {
   const [showNotification, setShowNotifications] = useState(false);
   const dropdownRef = useRef(null);
   const [user, setUser] = useState({});
-  const { logOutUser } = useAuth();
+  const { userData, logOutUser } = useAuth();
+  const group = userData?.Group;
 
   useEffect(() => {
     async function fetchUser() {
@@ -41,7 +42,7 @@ export default function Navbar() {
       }
     }
     fetchUser();
-  }, []);
+  }, [group]);
 
   useEffect(() => {
     if (user) {
@@ -178,7 +179,14 @@ export default function Navbar() {
                             {user?.registration_id}
                           </p>
                         </div>
-                        <div className={`ml-1 ${showDropdown ? 'rotate-180 duration-300' : 'duration-300'}`} onClick={toggleDropdown}>
+                        <div
+                          className={`ml-1 ${
+                            showDropdown
+                              ? "rotate-180 duration-300"
+                              : "duration-300"
+                          }`}
+                          onClick={toggleDropdown}
+                        >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"

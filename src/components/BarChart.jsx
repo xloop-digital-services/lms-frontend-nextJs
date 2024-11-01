@@ -19,7 +19,7 @@ const BarChart = ({ barData }) => {
                 backgroundColor: "#0074EE",
               },
               {
-                label: "Intructors",
+                label: "Instructors",
                 data: barData.map((data) => data.instructor_count),
                 backgroundColor: "#F29D41",
               },

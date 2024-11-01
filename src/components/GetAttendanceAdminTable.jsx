@@ -219,7 +219,7 @@ export default function GetAttendanceAdminTable({
                 className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                 value=""
                 disabled
-                selected
+                // selected;
               >
                 Select a session
               </option>
