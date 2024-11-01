@@ -52,8 +52,8 @@ const BarChart = ({ barData }) => {
   ];
 
   return (
-    <div style={{ height: "350px", width: "100%" }}>
-      <div className="h-full">
+    <div style={{ width: "100%", overflowX: "auto" }} className="scroller-thin">
+      <div style={{ minWidth: barData.length * 100, height: "350px" }}>
         <Bar
           data={{
             labels, // Only batch names as labels
@@ -64,7 +64,7 @@ const BarChart = ({ barData }) => {
             scales: {
               x: {
                 grid: {
-                  display: false, // Hide X-axis grid lines
+                  display: true, // Hide X-axis grid lines
                 },
                 ticks: {
                   autoSkip: false, // Prevent skipping of ticks

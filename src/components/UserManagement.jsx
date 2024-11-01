@@ -370,7 +370,7 @@ const UserManagement = ({ heading }) => {
           </div>
          
           <div
-            className="my-5 mt-8 space-y-3 max-h-screen overflow-auto  scrollbar-webkit "
+            className="my-5  space-y-3 max-h-screen overflow-auto  scrollbar-webkit "
             style={{
               flexGrow: 1, // Allow this section to grow and take up remaining space
             }}
@@ -384,7 +384,7 @@ const UserManagement = ({ heading }) => {
                 // Display Program Logic
                 getPrograms.map((program) => (
                   <div
-                    className="border border-dark-300 w-full  px-4 rounded-lg cursor-pointer flex flex-col"
+                    className="border border-dark-300 w-full mt-3 px-4 rounded-lg cursor-pointer flex flex-col"
                     key={program.id}
                   >
                     <div className="flex nsm:flex-row flex-col space-y-2 justify-between items-center">
@@ -553,7 +553,7 @@ const UserManagement = ({ heading }) => {
             ) : skills && skills.length > 0 ? (
               skills.map((skill) => (
                 <div
-                  className="border border-dark-300 w-full px-4 rounded-lg cursor-pointer flex flex-col"
+                  className="border border-dark-300 w-full px-4 mt-3 rounded-lg cursor-pointer flex flex-col"
                   key={skill.id}
                 >
                   <div className="flex nsm:flex-row flex-col space-y-2 justify-between items-center">

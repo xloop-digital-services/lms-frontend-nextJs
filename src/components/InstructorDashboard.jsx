@@ -112,8 +112,8 @@ export default function InstructorDashboard() {
   return (
     <>
       <div
-        className={`flex-1 transition-transform pt-[97px] space-y-4 max-md:pt-32 font-inter ${
-          isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 pl-10 "
+        className={`flex-1 transition-transform pt-[97px] space-y-4 max-md:pt-22 font-inter ${
+          isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 sm:px-5 px-4 "
         }`}
         style={{
           // paddingBottom: "20px",
