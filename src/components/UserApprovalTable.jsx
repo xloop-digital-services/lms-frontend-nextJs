@@ -103,7 +103,12 @@ const UserApprovalTable = ({
                           </td>
                         </tr>
                       ) : applications && users && locations ? (
-                        applications.map((user, index) => {
+                        applications
+                        .sort(
+                          (a, b) =>
+                            new Date(b.created_at) - new Date(a.created_at)
+                        )
+                        .map((user, index) => {
                           const userApplication = getUserApplication(
                             user.email
                           );

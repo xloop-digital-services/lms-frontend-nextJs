@@ -103,7 +103,12 @@ const DevelopmentTable = ({
                           </td>
                         </tr>
                       ) : userByProgramID && userByProgramID.length > 0 ? (
-                        userByProgramID.map((user, index) => (
+                        userByProgramID
+                        .sort(
+                          (a, b) =>
+                            new Date(b.created_at) - new Date(a.created_at)
+                        )
+                        .map((user, index) => (
                           <tr key={index}>
                             {/* <td className="py-3 ps-4">
                           <div className="flex items-center h-5">

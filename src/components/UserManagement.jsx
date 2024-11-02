@@ -334,13 +334,13 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                         className={`${
                           isProgramSectionOpen &&
                           programSection === program.name
-                            ? "flex nsm:flex-row flex-col"
-                            : "flex"
-                        }  space-y-2 justify-between items-center`}
+                            ? "flex xsm:flex-row flex-col "
+                            : "flex justify-between"
+                        }  space-y-2  items-center`}
                       >
                         <div
                           className={`${isProgramSectionOpen &&
-                            programSection === program.name ? 'py-0': 'py-4'} flex gap-3 text-[17px] text-blue-500 capitalize font-semibold font-exo w-full`}
+                            programSection === program.name ? 'py-0 pt-2': 'py-4'} flex gap-3 text-[17px] text-blue-500 capitalize font-semibold font-exo w-full`}
                           onClick={() =>
                             handleToggleSection(program.name, program.id)
                           }
@@ -387,7 +387,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                               <div className="relative z-20">
                                 <button
                                   onClick={toggleStatusOpen}
-                                  className="flex justify-between z-30 items-center w-[200px] text-dark-500 hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-dark-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+                                  className="flex justify-between z-30 items-center nsm:w-[200px] xsm:w-full w-[200px] gap-1 text-dark-500 hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-dark-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
                                 >
                                   {/* {selectedStatus || status[0]} */}
                                   {selectedStatus
@@ -400,7 +400,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                                         : "duration-300"
                                     }`}
                                   >
-                                    <IoIosArrowDown />
+                                    <IoIosArrowDown  />
                                   </span>
                                 </button>
 
@@ -442,7 +442,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                                 : "duration-300"
                             }`}
                           >
-                            <IoIosArrowDown />
+                            <IoIosArrowDown onClick={handleToggleSection} />
                           </span>
                         </div>
                       </div>
@@ -456,7 +456,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                       >
                         {isProgramSectionOpen &&
                           programSection === program.name && (
-                            <div className="pb-4">
+                            <div className="pb-4 pt-2">
                               {heading === "Applicants" ? (
                                 <DevelopmentTable
                                   loading={loading}
@@ -608,7 +608,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                               : "duration-300"
                           }`}
                         >
-                          <IoIosArrowDown />
+                          <IoIosArrowDown onClick={handleToggleSection} />
                         </span>
                       </div>
                     </div>
