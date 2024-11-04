@@ -13,7 +13,7 @@ const DevelopmentTable = ({
   setModal,
   setSelectedUser,
 }) => {
-   // State to store the selected user
+  // State to store the selected user
   const handleModal = (user) => {
     setSelectedUser(user); // Set the clicked user as the selected user
     setModal(true);
@@ -103,9 +103,14 @@ const DevelopmentTable = ({
                           </td>
                         </tr>
                       ) : userByProgramID && userByProgramID.length > 0 ? (
-                        userByProgramID.map((user, index) => (
-                          <tr key={index}>
-                            {/* <td className="py-3 ps-4">
+                        userByProgramID
+                          .sort(
+                            (a, b) =>
+                              new Date(b.created_at) - new Date(a.created_at)
+                          )
+                          .map((user, index) => (
+                            <tr key={index}>
+                              {/* <td className="py-3 ps-4">
                           <div className="flex items-center h-5">
                             <input
                               id="hs-table-pagination-checkbox-1"
@@ -115,64 +120,64 @@ const DevelopmentTable = ({
                             <label className="sr-only">Checkbox</label>
                           </div>
                         </td> */}
-                            <td className="px-6 whitespace-nowrap text-sm text-gray-800 ">
-                              <div className="flex items-center gap-3">
-                                <div className="data">
-                                  <p className="font-normal text-sm text-dark-900 capitalize">
-                                    {user?.first_name} {user?.last_name}
-                                  </p>
+                              <td className="px-6 whitespace-nowrap text-sm text-gray-800 ">
+                                <div className="flex items-center gap-3">
+                                  <div className="data">
+                                    <p className="font-normal text-sm text-dark-900 capitalize">
+                                      {user?.first_name} {user?.last_name}
+                                    </p>
+                                  </div>
                                 </div>
-                              </div>
-                            </td>
-                            <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 ">
-                              {user?.email || "-"}
-                            </td>
-                            <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 ">
-                              {user?.city || "-"}
-                            </td>
-                            <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 ">
-                              {user?.year || "-"}
-                            </td>
-                            {/* <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 ">
+                              </td>
+                              <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 ">
+                                {user?.email || "-"}
+                              </td>
+                              <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 ">
+                                {user?.city || "-"}
+                              </td>
+                              <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 ">
+                                {user?.year || "-"}
+                              </td>
+                              {/* <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800 ">
                           {user?.contact || '-'}
                         </td> */}
-                            <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-800 ">
-                              <div className=" whitespace-nowrap flex w-full justify-start text-sm text-surface-100  ">
-                                <p
-                                  className={`${
-                                    user?.application_status === "pending"
-                                      ? "bg-mix-500"
+                              <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-800 ">
+                                <div className=" whitespace-nowrap flex w-full justify-start text-sm text-surface-100  ">
+                                  <p
+                                    className={`${
+                                      user?.application_status === "pending"
+                                        ? "bg-mix-500"
+                                        : user?.application_status ===
+                                          "short_listed"
+                                        ? " bg-blue-300 "
+                                        : user?.account_status === "verified"
+                                        ? "bg-mix-300"
+                                        : "bg-mix-200 "
+                                    }  w-[120px] text-center px-4 py-2 rounded-lg capitalize`}
+                                  >
+                                    {user?.application_status === "approved"
+                                      ? user?.account_status
                                       : user?.application_status ===
                                         "short_listed"
-                                      ? " bg-blue-300 "
-                                      : user?.account_status === "verified"
-                                      ? "bg-mix-300"
-                                      : "bg-mix-200 "
-                                  }  w-[120px] text-center px-4 py-2 rounded-lg capitalize`}
+                                      ? "shortlisted"
+                                      : user?.application_status}
+                                  </p>
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap t text-sm font-medium flex space-x-2">
+                                <div
+                                  className="flex items-center justify-center w-full group text-blue-300"
+                                  title="info"
+                                  onClick={() => handleModal(user)} // Pass the user data when clicked
                                 >
-                                  {user?.application_status === "approved"
-                                    ? user?.account_status
-                                    : user?.application_status ===
-                                      "short_listed"
-                                    ? "shortlisted"
-                                    : user?.application_status}
-                                </p>
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap t text-sm font-medium flex space-x-2">
-                              <div
-                                className="flex items-center justify-center w-full group text-blue-300"
-                                title="info"
-                                onClick={() => handleModal(user)} // Pass the user data when clicked
-                              >
-                                <FaEye
-                                  size={23}
-                                  className="group-hover:text-blue-400"
-                                />
-                              </div>
-                            </td>
-                          </tr>
-                        ))
+                                  <FaEye
+                                    size={23}
+                                    className="group-hover:text-blue-400"
+                                  />
+                                </div>
+                              </td>
+                            </tr>
+                          ))
                       ) : (
                         <tr>
                           <td
@@ -191,7 +196,6 @@ const DevelopmentTable = ({
           </div>
         </div>
       </div>
-      
     </>
   );
 };

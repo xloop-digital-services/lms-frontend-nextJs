@@ -466,7 +466,7 @@ const AdminDashboard = () => {
                             onClick={() => handleUserSelect(option)}
                             className="p-2 cursor-pointer "
                           >
-                            <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
+                            <div className="xlg:px-4 px-2 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
                               {option}
                             </div>
                           </div>
@@ -475,7 +475,7 @@ const AdminDashboard = () => {
                     )}
                   </div>
                   {selectedUser.toLowerCase() === "student" ? (
-                    <div className={` relative w-full`}>
+                    <div className={`${loading && "hidden"} relative w-full`}>
                       <button
                         onClick={toggleProgramOpen}
                         className={`${
@@ -523,7 +523,7 @@ const AdminDashboard = () => {
                                 className="p-2 cursor-pointer"
                                 title={option.name}
                               >
-                                <div className="px-4 py-2 hover:bg-[#03a3d838] truncate hover:text-blue-300 hover:font-semibold rounded-lg">
+                                <div className="xlg:px-4 px-2 py-2 hover:bg-[#03a3d838] truncate hover:text-blue-300 hover:font-semibold rounded-lg">
                                   {option.name}
                                 </div>
                               </div>
@@ -537,7 +537,7 @@ const AdminDashboard = () => {
                       )}
                     </div>
                   ) : (
-                    <div className={`${!isUserSelected && "hidden"} relative`}>
+                    <div className={`${loading && "hidden"} relative`}>
                       <button
                         onClick={toggleSkillOpen}
                         className={`${
@@ -565,7 +565,7 @@ const AdminDashboard = () => {
                                 className="p-2 cursor-pointer"
                                 title={option.name}
                               >
-                                <div className="px-4 py-2 hover:bg-[#03a3d838] truncate hover:text-blue-300 hover:font-semibold rounded-lg">
+                                <div className="xlg:px-4 px-2 py-2 hover:bg-[#03a3d838] truncate hover:text-blue-300 hover:font-semibold rounded-lg">
                                   {option.name}
                                 </div>
                               </div>

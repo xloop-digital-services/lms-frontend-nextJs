@@ -59,7 +59,7 @@ const UserModal = ({
     });
     setApprovalBySkill(true);
   };
-  // console.log("skills id", skillID);
+  // //console.log("skills id", skillID);
   const handleLocationSelect = (id, isChecked) => {
     if (selectedOption === "student") {
       if (isChecked) {
@@ -93,7 +93,7 @@ const UserModal = ({
     if (skillID.length === 0) {
       setApprovalBySkill(false);
     }
-    // console.log("ye chal gaya", approvalByLocation);
+    // //console.log("ye chal gaya", approvalByLocation);
   }, [locationId, skillID, studentLocationId]);
 
   const handleUserSelection = async (status) => {
@@ -119,7 +119,7 @@ const UserModal = ({
     }
     try {
       const response = await userSelectionByAdmin(id, data);
-      console.log("response while selecting", response.data);
+      //console.log("response while selecting", response.data);
       if (response.status === 200) {
         toast.success(`User has been ${status}!`, {
           position: "top-right",
@@ -144,7 +144,7 @@ const UserModal = ({
         draggable: true,
         progress: undefined,
       });
-      console.log("error while selecting", error);
+      //console.log("error while selecting", error);
       setLoading(false);
     } finally {
       setLoading(false);
@@ -155,22 +155,22 @@ const UserModal = ({
 
   const handleRepeatApproval = async () => {
     const data = {
-      email: email
-    }
+      email: email,
+    };
     try {
-      setLoading(true)
-      const response = await resendApprovalMail(data)
-      toast.success(response.data.message)
+      setLoading(true);
+      const response = await resendApprovalMail(data);
+      toast.success(response.data.message);
     } catch (error) {
-      console.log(error, 'error while repeat verify')
+      console.log(error, "error while repeat verify");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 
   return (
     <div className="backDropOverlay h-screen flex justify-center items-center cursor-default">
-      <div className="w-[60%] z-[1000] mx-auto my-20 relative font-inter">
+      <div className="lg:w-[60%] md:w-[80%] w-[95%] z-[1000] mx-auto my-20 relative font-inter">
         {loading && (
           <div className="absolute inset-0 flex items-center justify-center bg-surface-100 bg-opacity-30 z-[1100]">
             <CircularProgress size={30} />
@@ -221,13 +221,17 @@ const UserModal = ({
                       : "bg-mix-200  "
                   }  w-[120px] text-center px-4 py-2 rounded-lg capitalize`}
                 >
-                  {status === "approved" ? approvedStatus : status === 'short_listed' ? 'shortlisted' : status}
+                  {status === "approved"
+                    ? approvedStatus
+                    : status === "short_listed"
+                    ? "shortlisted"
+                    : status}
                 </p>
               </div>
             </div>
             <div className="w-full h-[2px] bg-dark-200"></div>
-            <div className="px-[40px] text-base">
-              <div className="md:flex justify-evenly gap-6">
+            <div className="md:px-[40px] px-[20px] text-base">
+              <div className="flex justify-evenly gap-6 w-full">
                 <table className="w-[40%] border-collapse">
                   <tbody>
                     <tr className="border-b border-[#d7e4ee]">
@@ -291,106 +295,107 @@ const UserModal = ({
                     )}
                   </tbody>
                 </table>
-
-                <div className="space-y-2  w-[30%]">
-                  <p className="text-sm text-dark-400 pb-1 border-b border-dark-300">
-                    {selectedOption === "student"
-                      ? status === "approved"
-                        ? "Selected Program"
-                        : "Areas of Interest"
-                      : "Skill Sets"}
-                  </p>
-                  <div className="space-y-2 ">
-                    {selectedOption === "student" ? (
-                      program && program.length > 0 ? (
-                        // Display Program Logic
-                        program.map((prog, index) => (
+                <div className="flex gap-6 items-start ">
+                  <div className="space-y-2 w-[50%]">
+                    <p className="text-sm text-dark-400 pb-1 border-b border-dark-300">
+                      {selectedOption === "student"
+                        ? status === "approved"
+                          ? "Selected Program"
+                          : "Areas of Interest"
+                        : "Skill Sets"}
+                    </p>
+                    <div className="space-y-2 ">
+                      {selectedOption === "student" ? (
+                        program && program.length > 0 ? (
+                          // Display Program Logic
+                          program.map((prog, index) => (
+                            <div key={index} className="flex gap-2">
+                              {/* Radio Button for Program Selection */}
+                              <div
+                                className={`${
+                                  status === "approved" ? "hidden" : "flex"
+                                } items-center h-5 group`}
+                              >
+                                <input
+                                  id={`radio-${index}`}
+                                  type="radio"
+                                  name="programSelection"
+                                  onChange={() => handleEnableApprove(prog.id)}
+                                  className="border-gray-200 mt-1 group-hover:cursor-pointer rounded text-blue-600 focus:ring-blue-500"
+                                />
+                              </div>
+                              <p className="group-hover:cursor-pointer">
+                                {prog.name}
+                              </p>
+                            </div>
+                          ))
+                        ) : (
+                          <p>No programs available.</p>
+                        )
+                      ) : skill && skill.length > 0 ? (
+                        // Display Skills Logic
+                        skill.map((skill, index) => (
                           <div key={index} className="flex gap-2">
-                            {/* Radio Button for Program Selection */}
+                            {/* Checkbox for Skill Selection */}
                             <div
                               className={`${
                                 status === "approved" ? "hidden" : "flex"
-                              } items-center h-5 group`}
+                              } items-center h-5`}
                             >
                               <input
-                                id={`radio-${index}`}
-                                type="radio"
-                                name="programSelection"
-                                onChange={() => handleEnableApprove(prog.id)}
-                                className="border-gray-200 mt-1 group-hover:cursor-pointer rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
+                                id={`checkbox-${index}`}
+                                type="checkbox"
+                                name="skillSelection"
+                                onChange={() => handleSkillSelection(skill.id)}
+                                className="border-gray-200 rounded mt-1 text-blue-600 focus:ring-blue-500 "
                               />
                             </div>
-                            <p className="group-hover:cursor-pointer">
-                              {prog.name}
-                            </p>
+                            <p>{skill.name}</p>
                           </div>
                         ))
                       ) : (
-                        <p>No programs available.</p>
-                      )
-                    ) : skill && skill.length > 0 ? (
-                      // Display Skills Logic
-                      skill.map((skill, index) => (
+                        <p>No skills available.</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="space-y-2 w-[50%]">
+                    <p className="text-sm text-dark-400 pb-1 border-b border-dark-300">
+                      Locations
+                    </p>
+                    {location &&
+                      location.length > 0 &&
+                      location.map((prog, index) => (
                         <div key={index} className="flex gap-2">
-                          {/* Checkbox for Skill Selection */}
                           <div
                             className={`${
-                              status === "approved" ? "hidden" : "flex"
+                              status === "approved" ? "hidden" : " flex"
                             } items-center h-5`}
                           >
                             <input
                               id={`checkbox-${index}`}
-                              type="checkbox"
-                              name="skillSelection"
-                              onChange={() => handleSkillSelection(skill.id)}
-                              className="border-gray-200 rounded mt-1 text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
+                              type={
+                                selectedOption === "student"
+                                  ? "radio"
+                                  : "checkbox"
+                              }
+                              name="locationSelection" // Same name attribute for all radio buttons
+                              // value={prog.name} // Store the value of the selected program
+                              onChange={(e) =>
+                                handleLocationSelect(prog.id, e.target.checked)
+                              } // Call a function to handle the selection
+                              className="border-gray-200 mt-1 group-hover:cursor-pointer rounded text-blue-600 focus:ring-blue-500"
                             />
-                          </div>
-                          <p>{skill.name}</p>
-                        </div>
-                      ))
-                    ) : (
-                      <p>No skills available.</p>
-                    )}
-                  </div>
-                </div>
-                <div className="space-y-2 w-[30%]">
-                  <p className="text-sm text-dark-400 pb-1 border-b border-dark-300">
-                    Locations
-                  </p>
-                  {location &&
-                    location.length > 0 &&
-                    location.map((prog, index) => (
-                      <div key={index} className="flex items-center gap-2">
-                        <div
-                          className={`${
-                            status === "approved" ? "hidden" : " flex"
-                          } items-center h-5`}
-                        >
-                          <input
-                            id={`checkbox-${index}`}
-                            type={
-                              selectedOption === "student"
-                                ? "radio"
-                                : "checkbox"
-                            }
-                            name="locationSelection" // Same name attribute for all radio buttons
-                            // value={prog.name} // Store the value of the selected program
-                            onChange={(e) =>
-                              handleLocationSelect(prog.id, e.target.checked)
-                            } // Call a function to handle the selection
-                            className="border-gray-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
-                          />
-                          {/* <label
+                            {/* <label
                                 htmlFor={`radio-${index}`}
                                 className="sr-only"
                               >
                                 Select {prog.name}
                               </label> */}
+                          </div>
+                          <p>{prog.name}</p>
                         </div>
-                        <p>{prog.name}</p>
-                      </div>
-                    ))}
+                      ))}
+                  </div>
                 </div>
               </div>
 
@@ -470,7 +475,7 @@ const UserModal = ({
                   </button>
                 )}
               </div>
-              {approvedStatus === 'unverified' &&
+              {approvedStatus === "unverified" && (
                 <button
                   className={`group relative flex justify-center items-center w-full text-mix-300 cursor-pointer text-sm font-bold`}
                   onClick={() => {
@@ -484,7 +489,7 @@ const UserModal = ({
                     </span>
                   </div>
                 </button>
-              }
+              )}
             </div>
           </div>
         </div>

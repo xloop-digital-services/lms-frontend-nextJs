@@ -51,7 +51,7 @@ const DeleteConfirmationPopup = ({
                   Cancel
                 </button>
                 <button
-                  className="bg-mix-200 text-surface-100 rounded-lg px-5 py-2.5 hover:bg-[#be4141]"
+                  className="bg-blue-300 text-surface-100 rounded-lg px-5 py-2.5 hover:bg-[#2670be]"
                   onClick={handleDeleteAction}
                   disabled={loading}
                 >

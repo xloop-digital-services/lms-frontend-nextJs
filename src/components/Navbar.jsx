@@ -5,11 +5,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import userIcon from "../../public/assets/img/images.png";
 import logo from "../../public/assets/img/xCelerate-Logo.png";
-import { FaBell, FaSignOutAlt, FaUser, FaUsers } from "react-icons/fa";
+import { FaBell, FaRegBell, FaSignOutAlt, FaUser, FaUsers } from "react-icons/fa";
 import Notifications from "./Notifications";
 import { getUserProfile } from "@/api/route";
 import { CircularProgress } from "@mui/material";
 import { useAuth } from "@/providers/AuthContext";
+import useClickOutside from "@/providers/useClickOutside";
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
@@ -20,6 +21,8 @@ export default function Navbar() {
   const dropdownRef = useRef(null);
   const [user, setUser] = useState({});
   const { logOutUser } = useAuth();
+
+  useClickOutside(dropdownRef, () => setShowNotifications(false));
 
   useEffect(() => {
     async function fetchUser() {
@@ -43,12 +46,6 @@ export default function Navbar() {
     fetchUser();
   }, []);
 
-  useEffect(() => {
-    if (user) {
-      // console.log(user);
-    }
-  });
-
   const isLinkActive = (path) => {
     return pathname === path;
   };
@@ -68,19 +65,6 @@ export default function Navbar() {
   const closeNotifications = () => {
     setShowNotifications(false);
   };
-  useEffect(() => {
-    const handleOutsideClick = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        closeDropdown();
-      }
-    };
-
-    document.addEventListener("click", handleOutsideClick);
-
-    return () => {
-      document.removeEventListener("click", handleOutsideClick);
-    };
-  }, []);
 
   const toggleDropdownLogout = () => {
     setShowDropdown(!showDropdown);
@@ -118,21 +102,23 @@ export default function Navbar() {
             ) : (
               <div className="flex justify-end items-center w-full">
                 <div className="absolute inset-y-0 right-0 flex justify-center items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                  <div className="flex items-center" ref={dropdownRef}>
-                    {/* <button
+                  <div className="flex items-center">
+                    <button
                       type="button"
-                      className="relative flex text-sm focus:outline-none "
+                      className="relative flex text-sm text-blue-500 focus:outline-none hover:text-blue-400 "
                       id="user-menu-button"
                       aria-expanded="false"
                       aria-haspopup="true"
+                      title="announcements"
                       onClick={toggleNotifications}
                     >
                       <FaBell size={24} />
-                    </button> */}
+                    </button>
                   </div>
                 </div>
-                {/* {showNotification && (
+                {showNotification && (
                   <div
+                    ref={dropdownRef}
                     className="absolute border border-dark-100 right-0 mx-16 mt-[420px] z-10 w-80 origin-top-right rounded-md bg-surface-100 py-1 shadow-lg ring-opacity-5 focus:outline-none"
                     role="menu"
                     aria-orientation="vertical"
@@ -141,7 +127,7 @@ export default function Navbar() {
                   >
                     <Notifications />
                   </div>
-                )} */}
+                )}
                 <button
                   type="button"
                   className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
@@ -178,7 +164,14 @@ export default function Navbar() {
                             {user?.registration_id}
                           </p>
                         </div>
-                        <div className={`ml-1 ${showDropdown ? 'rotate-180 duration-300' : 'duration-300'}`} onClick={toggleDropdown}>
+                        <div
+                          className={`ml-1 ${
+                            showDropdown
+                              ? "rotate-180 duration-300"
+                              : "duration-300"
+                          }`}
+                          onClick={toggleDropdown}
+                        >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"

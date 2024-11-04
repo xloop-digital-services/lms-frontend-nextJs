@@ -27,8 +27,10 @@ export default function Page() {
   };
 
   useEffect(() => {
-    handleGetAllPrograms();
-  }, []);
+    if(getPrograms.length === 0 ){
+      handleGetAllPrograms();
+    }
+  }, [getPrograms.length]);
 
   return (
     <>
