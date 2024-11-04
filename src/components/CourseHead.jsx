@@ -91,12 +91,12 @@ const CourseHead = ({
                   {`${programData.name} ${programAbb ? `(${programAbb})` : ""}`}
                 </h2>
               ) : (
-                <h2 className="font-exo text-blue-500 text-xl font-bold">
+                <h2 className="font-exo max-md:text-center text-blue-500 text-xl font-bold">
                   {courseData.name}
                 </h2>
               )}
               <div
-                className={`w-4 h-4 mx-2 flex justify-center items-center rounded-full ${
+                className={`w-4 h-4 mx-2 max-sm:w-6 max-sm:h-6 flex justify-center items-center rounded-full  ${
                   (program === "program"
                     ? programData.status
                     : courseData.status) === 0

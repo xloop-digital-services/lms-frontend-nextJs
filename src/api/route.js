@@ -749,7 +749,8 @@ export const userSelectionByAdmin = async (id, data) => {
 export const resendApprovalMail = async (email) => {
   try {
     const response = await axiosInstance.post(
-      `/api/resend-verification-email/`, email
+      `/api/resend-verification-email/`,
+      email
     );
     return response;
   } catch (error) {
@@ -1526,6 +1527,17 @@ export const getCalendarData = async (userId) => {
   try {
     const response = await axiosInstance.get(
       `/api/sessions/calendar/${userId}/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+//get calendar Instructor sessions
+export const getCalendarInstructor = async (userId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/api/instructor/${userId}/session-calendar/`
     );
     return response;
   } catch (error) {

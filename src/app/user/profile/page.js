@@ -107,8 +107,8 @@ function Profile() {
     event.preventDefault();
     if (errorMessage !== "") {
       toast.error("Please enter a valid contact number.");
-      setLoaderEdit(false); // Set loader to false
-      return; // Prevent form submission
+      setLoaderEdit(false);
+      return;
     } else {
       setLoaderEdit(true);
       setFirstName(editFirstName);
@@ -252,23 +252,22 @@ function Profile() {
       .slice(0, 11)
       .replace(/(\d{4})(\d{1,7})?/, "$1-$2"); // Format as XXXX-XXXXXXX
     if (numericValue.length <= 4) {
-      formattedValue = numericValue; // Don't add hyphen if there are less than 5 digits
+      formattedValue = numericValue;
     }
 
     return { formattedValue, caretPos };
   };
 
-  // Validate the contact number input
   const validateContactNumber = (value) => {
-    const contactPattern = /^[0-9]{4}-[0-9]{7}$/; // Ensure valid format (XXXX-XXXXXXX)
-    const invalidPrefix = /^0000-/; // Prevent numbers starting with 0000
+    const contactPattern = /^[0-9]{4}-[0-9]{7}$/;
+    const invalidPrefix = /^0000-/;
 
     if (invalidPrefix.test(value)) {
       setErrorMessage("Contact number cannot start with 0000.");
     } else if (!contactPattern.test(value)) {
       setErrorMessage("Please enter a valid contact number.");
     } else {
-      setErrorMessage(""); // Clear error if the input is valid
+      setErrorMessage("");
     }
   };
 
@@ -330,11 +329,13 @@ function Profile() {
 
               <div className="flex lg:flex-col flex-row lg:w-[50%] w-[100%] lg:ml-8 lg:justify-center lg:items-center mt-4">
                 <div className="flex flex-col w-full mb-8">
-                  <h2 className=" text-sm text-dark-400">Name</h2>
-                  <p className="font-medium text-xl capitalize">{`${firstName} ${lastName}`}</p>
+                  <h2 className=" text-sm text-dark-400 cursor-default">
+                    Name
+                  </h2>
+                  <p className="font-medium text-xl capitalize cursor-default">{`${firstName} ${lastName}`}</p>
                 </div>
                 {isStudent && (
-                  <div className="flex flex-col w-full">
+                  <div className="flex flex-col w-full cursor-default">
                     <h2 className=" text-sm text-dark-400">Registration ID</h2>
                     <p className="font-medium text-xl uppercase">
                       {registrationID}
@@ -365,7 +366,9 @@ function Profile() {
 
           <div className="lg:px-16 px-4 pt-8 pb-0 mt-4 rounded-xl">
             <form onSubmit={handleSubmit} className="space-y-6">
-              <h2 className="text-lg font-bold block leading-6">Basic Info</h2>
+              <h2 className="text-lg font-bold block leading-6 cursor-default">
+                Basic Info
+              </h2>
               <div className="flex sm:flex-row flex-col lg:w-[100%]">
                 <div className="w-full mb-4 sm:mb-0 lg:w-[50%] md:w-[50%]">
                   <label htmlFor="first-name">First Name</label>

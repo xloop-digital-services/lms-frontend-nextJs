@@ -555,7 +555,7 @@ export default function Page({ params }) {
             width: isSidebarOpen ? "86%" : "100%",
           }}
         >
-          <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4">
+          <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl max-sm:p-0 max-sm:m-0">
             <CourseHead
               id={courseId}
               program="course"

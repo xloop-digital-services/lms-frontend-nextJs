@@ -66,8 +66,8 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
   };
 
   useEffect(() => {
-    if (isAdmin && title === "Programs") return; 
-    fetchAllCourses(); 
+    if (isAdmin && title === "Programs") return;
+    fetchAllCourses();
   }, [isAdmin, title]);
 
   const handleSessionToggle = (session) => {
@@ -78,26 +78,28 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
 
   return (
     <div
-      className={`flex-1 transition-transform pt-[97px]  space-y-4 max-md:pt-32 font-inter ${
-        isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 pl-10 pr-10"
+      className={`flex-1 transition-transform pt-[97px] space-y-4 max-md:pt-32 font-inter ${
+        isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 pl-10 pr-10 max-md:pl-2 max-md:pr-2"
       }`}
       style={{
         // paddingBottom: "20px",
-        width: isSidebarOpen ? "81%" : "100%",
+        width: isSidebarOpen ? "81%" : "100%",  
       }}
     >
-      <div className="bg-surface-100 p-8 rounded-xl">
+      <div className="bg-surface-100 p-8 rounded-xl max-md:p-4">
         <div className="flex justify-between max-md:flex-col max-md:items-center">
           <div className="flex flex-col">
-          <h2 className="font-exo text-xl text-blue-500 font-bold flex pb-2 justify-start items-center">
+            <h2 className="font-exo text-xl max-md:text-center max-md:justify-center text-blue-500 font-bold flex pb-2 justify-start items-center">
               {title}
             </h2>
-            <p className="pb-4">Select a scheduled class to view the {title}</p>
+            <p className="pb-4 max-md:text-center max-md:justify-center">
+              Select a scheduled class to view the {title}
+            </p>
           </div>
           {route1 === "programs" || route1 === "courses" ? (
             <>
               <Link href={`/${route1}/create-a-${route}`}>
-                <button className=" flex justify-center items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl mr-4  hover:bg-[#3272b6]">
+                <button className="flex justify-center items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl mr-4  hover:bg-[#3272b6] max-sm:text-sm">
                   <FaPlus /> Create a New {route}
                 </button>
               </Link>
@@ -109,7 +111,7 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
             <CircularProgress />
           </div>
         ) : (
-          <div className="flex flex-wrap max-md:w-full max-md:flex-col">
+          <div className="flex flex-wrap max-md:w-full">
             {programs?.length > 0
               ? programs
                   ?.sort((a, b) => a.name.localeCompare(b.name))
@@ -154,7 +156,7 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
                 key={session.id}
                 className="border border-dark-300 w-full p-4 mb-2 rounded-lg cursor-pointer flex flex-col"
               >
-                <div className="flex  flex-col   items-center">
+                <div className="flex flex-col items-center">
                   <div
                     className="flex gap-3 text-[17px] font-semibold font-exo items-center justify-between w-full"
                     onClick={() => handleSessionToggle(session)}
