@@ -97,20 +97,24 @@ const ApprovalUserModal = ({
       }
     };
 
-    handleUserDetails();
+    if (id && selectedOption) {
+      handleUserDetails();
+    }
   }, [id, selectedOption]);
 
   useEffect(() => {
     const handleCoursesByPrograms = async () => {
       try {
         const response = await getCourseByProgId(userProgramId);
-        console.log("courses by program", response?.data?.data);
+        // console.log("courses by program", response?.data?.data);
         setUserPorgramCourses(response?.data?.data);
       } catch (error) {
         console.log("error while fetching the courses by program id", error);
       }
     };
-    handleCoursesByPrograms();
+    if (userProgramId) {
+      handleCoursesByPrograms();
+    }
   }, [userProgramId]);
 
   useEffect(() => {
@@ -129,9 +133,11 @@ const ApprovalUserModal = ({
         setLoadingSessions(false);
       }
     };
-    handleSuggestedSessionsForInstructor();
-    setSelected(false);
-  }, [id]);
+    if (selectedOption === "instructor" && id) {
+      handleSuggestedSessionsForInstructor();
+      setSelected(false);
+    }
+  }, [id, selectedOption]);
 
   const handleToggle = (e) => {
     e.stopPropagation();
@@ -182,10 +188,10 @@ const ApprovalUserModal = ({
         console.log("error while fetching suggested sessions", error.response);
       }
     };
-    if (selectedOption === "student") {
+    if (selectedOption === "student" && userLocationID && userProgramId) {
       handleGetSuggestedSessions();
     }
-  }, [userProgramId, userLocationID]);
+  }, [userProgramId, userLocationID, id, selectedOption]);
 
   const handleSessionAssign = async () => {
     setLoadingAssign(true);
@@ -236,6 +242,7 @@ const ApprovalUserModal = ({
         setLoadingSelection(false);
       }
     };
+
     handleUserSessions();
   }, [id, selectedOption, updateSession]);
 

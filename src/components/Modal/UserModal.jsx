@@ -232,7 +232,7 @@ const UserModal = ({
             <div className="w-full h-[2px] bg-dark-200"></div>
             <div className="md:px-[40px] px-[20px] text-base">
               <div className="flex justify-evenly gap-6 w-full">
-                <table className="w-[40%] border-collapse">
+                <table className="w-[60%] border-collapse">
                   <tbody>
                     <tr className="border-b border-[#d7e4ee]">
                       <td className="text-dark-400 text-center py-2">DOB</td>
@@ -295,8 +295,8 @@ const UserModal = ({
                     )}
                   </tbody>
                 </table>
-                <div className="flex gap-6 items-start ">
-                  <div className="space-y-2 w-[50%]">
+                <div className="flex gap-6 items-start w-full">
+                  <div className="space-y-2 w-[70%]">
                     <p className="text-sm text-dark-400 pb-1 border-b border-dark-300">
                       {selectedOption === "student"
                         ? status === "approved"
@@ -310,23 +310,23 @@ const UserModal = ({
                           // Display Program Logic
                           program.map((prog, index) => (
                             <div key={index} className="flex gap-2">
-                              {/* Radio Button for Program Selection */}
-                              <div
+                              <label
+                                htmlFor={`radio-${index}`}
                                 className={`${
                                   status === "approved" ? "hidden" : "flex"
-                                } items-center h-5 group`}
+                                } items-center group cursor-pointer`} // Added cursor-pointer for better UX
                               >
+                                {/* Radio Button for Program Selection */}
                                 <input
                                   id={`radio-${index}`}
                                   type="radio"
                                   name="programSelection"
                                   onChange={() => handleEnableApprove(prog.id)}
-                                  className="border-gray-200 mt-1 group-hover:cursor-pointer rounded text-blue-600 focus:ring-blue-500"
+                                  className="border-gray-200 mt-1 rounded text-blue-600 focus:ring-blue-500"
                                 />
-                              </div>
-                              <p className="group-hover:cursor-pointer">
-                                {prog.name}
-                              </p>
+                                <span className="ml-2">{prog.name}</span>{" "}
+                                {/* Clicking on this selects the input */}
+                              </label>
                             </div>
                           ))
                         ) : (
@@ -336,21 +336,23 @@ const UserModal = ({
                         // Display Skills Logic
                         skill.map((skill, index) => (
                           <div key={index} className="flex gap-2">
-                            {/* Checkbox for Skill Selection */}
-                            <div
+                            <label
+                              htmlFor={`checkbox-${index}`}
                               className={`${
                                 status === "approved" ? "hidden" : "flex"
-                              } items-center h-5`}
+                              } items-center cursor-pointer`} // Added cursor-pointer for better UX
                             >
+                              {/* Checkbox for Skill Selection */}
                               <input
                                 id={`checkbox-${index}`}
                                 type="checkbox"
                                 name="skillSelection"
                                 onChange={() => handleSkillSelection(skill.id)}
-                                className="border-gray-200 rounded mt-1 text-blue-600 focus:ring-blue-500 "
+                                className="border-gray-200 rounded mt-1 text-blue-600 focus:ring-blue-500"
                               />
-                            </div>
-                            <p>{skill.name}</p>
+                              <span className="ml-2">{skill.name}</span>{" "}
+                              {/* Clicking on this selects the input */}
+                            </label>
                           </div>
                         ))
                       ) : (
@@ -358,7 +360,7 @@ const UserModal = ({
                       )}
                     </div>
                   </div>
-                  <div className="space-y-2 w-[50%]">
+                  <div className="space-y-2 w-[70%]">
                     <p className="text-sm text-dark-400 pb-1 border-b border-dark-300">
                       Locations
                     </p>
@@ -366,33 +368,28 @@ const UserModal = ({
                       location.length > 0 &&
                       location.map((prog, index) => (
                         <div key={index} className="flex gap-2">
-                          <div
+                          <label
+                            htmlFor={`input-${index}`}
                             className={`${
-                              status === "approved" ? "hidden" : " flex"
-                            } items-center h-5`}
+                              status === "approved" ? "hidden" : "flex"
+                            } items-center cursor-pointer`} // Add cursor-pointer here for better UX
                           >
                             <input
-                              id={`checkbox-${index}`}
+                              id={`input-${index}`}
                               type={
                                 selectedOption === "student"
                                   ? "radio"
                                   : "checkbox"
                               }
-                              name="locationSelection" // Same name attribute for all radio buttons
-                              // value={prog.name} // Store the value of the selected program
+                              name="locationSelection" // Same name for all radio buttons
                               onChange={(e) =>
                                 handleLocationSelect(prog.id, e.target.checked)
-                              } // Call a function to handle the selection
-                              className="border-gray-200 mt-1 group-hover:cursor-pointer rounded text-blue-600 focus:ring-blue-500"
+                              } // Function to handle selection
+                              className="border-gray-200 mt-1 rounded text-blue-600 focus:ring-blue-500"
                             />
-                            {/* <label
-                                htmlFor={`radio-${index}`}
-                                className="sr-only"
-                              >
-                                Select {prog.name}
-                              </label> */}
-                          </div>
-                          <p>{prog.name}</p>
+                            <span className="ml-2">{prog.name}</span>{" "}
+                            {/* Clicking on this will now select the input */}
+                          </label>
                         </div>
                       ))}
                   </div>

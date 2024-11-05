@@ -787,6 +787,15 @@ export const listAllSessions = async () => {
   }
 };
 
+export const listSessionsByBatch = async (batch) => {
+  try {
+    const response = await axiosInstance.get(`/api/batch-session/${batch}`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const listSessionByCourseId = async (courseId) => {
   try {
     const response = await axiosInstance.get(
@@ -953,7 +962,11 @@ export const assignSessiontoStudent = async (data) => {
   }
 };
 
-export const getSuggestedSessionForStudent = async (programId, locationId, userId) => {
+export const getSuggestedSessionForStudent = async (
+  programId,
+  locationId,
+  userId
+) => {
   try {
     const response = await axiosInstance.get(
       `/api/preferred-sessions/?program_id=${programId}&location_id=${locationId}&user_id=${userId}`
