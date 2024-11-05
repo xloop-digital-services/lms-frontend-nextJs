@@ -51,8 +51,8 @@ const SessionInfoModal = ({ setOpenModal, selectedSession }) => {
                 </thead>
                 <tbody>
                   {selectedSession.schedules.length > 0 ? (
-                    selectedSession.schedules.map((session) => (
-                      <tr className="last:border-0 border-b border-[#d7e4ee]">
+                    selectedSession.schedules.map((session, index) => (
+                      <tr className="last:border-0 border-b border-[#d7e4ee]" key={index}>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-800 dark:text-gray-200">
                           {session.day_of_week}
                         </td>

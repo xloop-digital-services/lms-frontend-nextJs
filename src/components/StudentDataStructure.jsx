@@ -20,6 +20,7 @@ const StudentDataStructure = ({
   remarks,
   setQuizzes,
   setUpdateStatus,
+  studentInstructorID,
 }) => {
   const [uploadFile, setUploadFile] = useState(false);
   const [resubmitFile, setResubmitFile] = useState(false);
@@ -439,6 +440,7 @@ const StudentDataStructure = ({
           setUploadFile={setUploadFile}
           assignmentID={iD}
           setUpdateStatus={setUpdateStatus}
+          studentInstructorID={studentInstructorID}
         />
       )}
 
@@ -450,6 +452,7 @@ const StudentDataStructure = ({
           assignmentID={iD}
           submissionId={resubmissionId}
           setUpdateStatus={setUpdateStatus}
+          studentInstructorID={studentInstructorID}
         />
       )}
     </div>

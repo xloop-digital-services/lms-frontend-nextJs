@@ -346,7 +346,7 @@ const AdminDashboard = () => {
       >
         <div className="text-[#07224D] flex flex-col gap-5">
           {/* <h2 className=" font-exo text-3xl font-bold">Admin Dashboard</h2> */}
-          <div className="flex gap-5 flex-wrap xmd:flex-nowrap">
+          <div className="flex gap-5 flex-wrap xmd:flex-nowrap w-full">
             <Link href="/user-management/users" className="w-full xmd:w-1/3">
               <div className="bg-surface-100 flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
                 <div className="flex flex-col text-sm h-full justify-center items-center">
@@ -372,51 +372,54 @@ const AdminDashboard = () => {
               </div>
             </Link>
 
-            <div className="bg-surface-100 w-full xmd:w-1/3 flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
-              <div className="flex flex-col text-sm h-full justify-center items-center">
-                Total Students
-                <span className="text-xl font-semibold font-exo text-blue-500">
-                  {allStudents}
-                </span>
-              </div>
-              <div className="space-y-2">
-                <div className="flex flex-col text-[12px] justify-center items-center">
-                  Active Students
-                  <span className="text-base font-semibold font-exo text-blue-500">
-                    {allActiveStudents}
+            <Link href="/user-management/users" className="w-full xmd:w-1/3">
+              <div className="bg-surface-100 flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
+                <div className="flex flex-col text-sm h-full justify-center items-center">
+                  Total Students
+                  <span className="text-xl font-semibold font-exo text-blue-500">
+                    {allStudents}
                   </span>
                 </div>
-                <div className="flex flex-col text-[12px] justify-center items-center">
-                  Inactive Students
-                  <span className="text-base font-semibold font-exo text-blue-500">
-                    {allInActiveStudents}
-                  </span>
+                <div className="space-y-2">
+                  <div className="flex flex-col text-[12px] justify-center items-center">
+                    Active Students
+                    <span className="text-base font-semibold font-exo text-blue-500">
+                      {allActiveStudents}
+                    </span>
+                  </div>
+                  <div className="flex flex-col text-[12px] justify-center items-center">
+                    Inactive Students
+                    <span className="text-base font-semibold font-exo text-blue-500">
+                      {allInActiveStudents}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-
-            <div className="bg-surface-100 w-full xmd:w-1/3 flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
-              <div className="flex flex-col text-sm h-full justify-center items-center">
-                Total Instructors
-                <span className="text-xl font-semibold font-exo text-blue-500">
-                  {allInstructors}
-                </span>
-              </div>
-              <div className="space-y-2">
-                <div className="flex flex-col text-[12px] justify-center items-center">
-                  Active Instructors
-                  <span className="text-base font-semibold font-exo text-blue-500">
-                    {allActiveInstructors}
+            </Link>
+            <Link href="/user-management/users" className="w-full xmd:w-1/3">
+              <div className="bg-surface-100  flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
+                <div className="flex flex-col text-sm h-full justify-center items-center">
+                  Total Instructors
+                  <span className="text-xl font-semibold font-exo text-blue-500">
+                    {allInstructors}
                   </span>
                 </div>
-                <div className="flex flex-col text-[12px] justify-center items-center">
-                  Inactive Instructors
-                  <span className="text-base font-semibold font-exo text-blue-500">
-                    {allInActiveInstructors}
-                  </span>
+                <div className="space-y-2">
+                  <div className="flex flex-col text-[12px] justify-center items-center">
+                    Active Instructors
+                    <span className="text-base font-semibold font-exo text-blue-500">
+                      {allActiveInstructors}
+                    </span>
+                  </div>
+                  <div className="flex flex-col text-[12px] justify-center items-center">
+                    Inactive Instructors
+                    <span className="text-base font-semibold font-exo text-blue-500">
+                      {allInActiveInstructors}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
+            </Link>
           </div>
 
           <div className="flex gap-4 xmd:flex-row flex-col">
@@ -547,7 +550,13 @@ const AdminDashboard = () => {
                         <span className="xl:max-w-[190px] xmd:max-w-[100px] w-[200px] truncate">
                           {selectedSkill}
                         </span>
-                        <span className="">
+                        <span
+                          className={
+                            isSkillOpen
+                              ? "rotate-180 duration-300"
+                              : "duration-300"
+                          }
+                        >
                           <IoIosArrowDown />
                         </span>
                       </button>

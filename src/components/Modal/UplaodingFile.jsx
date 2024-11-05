@@ -16,6 +16,7 @@ const UploadingFile = ({
   setUploadFile,
   assignmentID,
   setUpdateStatus,
+  studentInstructorID,
 }) => {
   const [comment, setComment] = useState("");
   const [fileUploaded, setFileUploaded] = useState(null);
@@ -102,7 +103,7 @@ const UploadingFile = ({
         throw new Error("Invalid upload type");
       }
 
-      const response = await uploadFunction(formData);
+      const response = await uploadFunction(studentInstructorID,formData);
       if (response.status === 201) {
         toast.success(`${capitalizeFirstLetter(type)} has been submitted`);
         setComment("");

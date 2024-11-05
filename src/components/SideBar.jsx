@@ -137,8 +137,8 @@ function SideBar() {
 
                     {isOpen && (
                       <div>
-                        <ul className="flex flex-col list-disc pl-9 space-y-2">
-                          <li>
+                        <ul className="flex flex-col list-disc pl-9 space-y-2 w-full">
+                          <li className="w-full hover:font-semibold hover:text-blue-200">
                             <Link
                               href="/user-management/applicants"
                               ref={
@@ -149,12 +149,12 @@ function SideBar() {
                               className={`${
                                 isLinkActive("/user-management/applicants") &&
                                 "font-semibold"
-                              } hover:font-semibold hover:text-blue-200`}
+                              } `}
                             >
                               Applicants
                             </Link>
                           </li>
-                          <li>
+                          <li className="w-full hover:font-semibold hover:text-blue-200">
                             <Link
                               href="/user-management/users"
                               ref={
@@ -165,7 +165,7 @@ function SideBar() {
                               className={`${
                                 isLinkActive("/user-management/users") &&
                                 "font-semibold"
-                              } hover:font-semibold hover:text-blue-200`}
+                              }`}
                             >
                               Verified Users
                             </Link>

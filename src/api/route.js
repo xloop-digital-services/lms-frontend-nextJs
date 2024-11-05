@@ -544,10 +544,9 @@ export const getProgressForAssignment = async (courseId) => {
 };
 
 //upload submission of assignments
-export const uploadAssignment = async (assignment) => {
+export const uploadAssignment = async (studentInstructorID, assignment) => {
   try {
-    const response = await axiosInstance.post(
-      "/api/course/submissions/",
+    const response = await axiosInstance.post(`/api/course/submissions/?instructor_id=${studentInstructorID}`,
       assignment,
       {
         headers: {
@@ -634,10 +633,10 @@ export const resubmitExam = async (submissionId, exam) => {
 };
 
 //upload Quiz
-export const uploadQuiz = async (quiz) => {
+export const uploadQuiz = async (studentInstructorID, quiz) => {
   try {
     const response = await axiosInstance.post(
-      "/api/course/quiz_submissions/",
+      `/api/course/quiz_submissions/?instructor_id=${studentInstructorID}`,
       quiz,
       {
         headers: {
@@ -652,10 +651,10 @@ export const uploadQuiz = async (quiz) => {
 };
 
 //upload project
-export const uploadProject = async (project) => {
+export const uploadProject = async (studentInstructorID, project) => {
   try {
     const response = await axiosInstance.post(
-      "/api/course/project_submissions/",
+      `/api/course/project_submissions/?instructor_id=${studentInstructorID}`,
       project,
       {
         headers: {
@@ -670,10 +669,10 @@ export const uploadProject = async (project) => {
 };
 
 //upload exam
-export const uploadExam = async (exam) => {
+export const uploadExam = async (studentInstructorID, exam) => {
   try {
     const response = await axiosInstance.post(
-      "/api/course/exam_submissions/",
+      `/api/course/exam_submissions/?instructor_id=${studentInstructorID}`,
       exam,
       {
         headers: {
@@ -766,6 +765,15 @@ export const VerifyEmail = async (data) => {
     throw error;
   }
 };
+
+export const broadcastAnnouncement = async (data) => {
+  try {
+    const response = await axiosInstance.post('/api/announcements/create/', data)
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
 
 //Admin APIs
 //get all programs
