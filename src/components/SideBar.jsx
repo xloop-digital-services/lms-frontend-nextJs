@@ -77,7 +77,7 @@ function SideBar() {
         </div>
         <nav className="flex flex-col p-2 text-blue-500 sidebar bg-blue-500">
           <div className="flex flex-col h-screen">
-            <div className="flex flex-col justify-between lg:h-[90%] h-[75%] overflow-y-auto scrollbar-webkit pb-4">
+            <div className="flex flex-col justify-between h-[90%] overflow-y-auto scrollbar-webkit pb-4">
               <div className="py-4 rounded flex flex-col">
                 <Link
                   href="/dashboard"

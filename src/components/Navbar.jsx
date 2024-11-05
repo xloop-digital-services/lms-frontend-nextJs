@@ -160,7 +160,7 @@ export default function Navbar() {
                     onClick={toggleDropdown}
                     ref={dropdownRef}
                   >
-                    <div className="w-[50px] h-[50px] uppercase rounded-full mr-2 flex justify-center items-center text-surface-100 bg-blue-300">
+                    <div className="w-[50px] cursor-pointer h-[50px] uppercase rounded-full mr-2 flex justify-center items-center text-surface-100 bg-blue-300">
                       {firstWord}
                       {/* <Image
                         src={userIcon}

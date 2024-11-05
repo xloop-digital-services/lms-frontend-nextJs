@@ -405,7 +405,7 @@ export default function Page({ params }) {
                 <select
                   value={selectedSession || ""}
                   onChange={handleChange}
-                  className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                  className="bg-surface-100 cursor-pointer block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                 >
                   <option value="" disabled>
                     Select a session
@@ -440,7 +440,7 @@ export default function Page({ params }) {
                 <select
                   value={selectedSession || ""}
                   onChange={handleChangeInstructor}
-                  className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                  className="bg-surface-100 cursor-pointer block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                 >
                   <option value="" disabled>
                     Select a session
@@ -515,7 +515,7 @@ export default function Page({ params }) {
             {isCreatingQuiz && (
               <>
                 <div className="flex justify-between max-md:flex-col">
-                  <h2 className="text-lg font-exo text-blue-500 font-bold my-4">
+                  <h2 className="text-lg font-exo text-blue-500 font-bold my-4 cursor-default">
                     {currentAssignment ? "Update Exam" : "Create Exam"}
                   </h2>
                   {!currentAssignment && (
@@ -630,7 +630,7 @@ export default function Page({ params }) {
                     type="submit"
                     onClick={handleAssignmentCreation}
                     disabled={loading}
-                    className={`w-44 my-4 flex justify-center py-3 px-4 text-sm font-medium rounded-lg text-surface-100 
+                    className={`w-44 max-sm:w-full my-4 flex justify-center py-3 px-4 text-sm font-medium rounded-lg text-surface-100 
     ${
       loading
         ? "bg-blue-300 text-surface-100"

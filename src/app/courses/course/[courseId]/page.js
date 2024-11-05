@@ -588,13 +588,10 @@ export default function Page({ params }) {
         <div
           className={`flex-1 transition-transform pt-[90px] space-y-4 max-md:pt-32 font-inter ${
             isSidebarOpen
-              ? "translate-x-64 pl-16 "
-              : "translate-x-0 pl-10 pr-10"
+              ? "translate-x-64 ml-20 "
+              : "translate-x-0 pl-10 pr-10 max-md:pl-2 max-md:pr-2"
           }`}
-          style={{
-            // paddingBottom: "20px",
-            width: isSidebarOpen ? "86%" : "100%",
-          }}
+          style={{ width: isSidebarOpen ? "81%" : "100%" }}
         >
           <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4">
             <CourseHead
@@ -613,12 +610,12 @@ export default function Page({ params }) {
             {isEditing ? (
               <div className="flex flex-col">
                 <div>
-                  <div className="flex justify-between my-2">
-                    <label className="text-lg font-exo text-blue-500 font-bold">
+                  <div className="flex justify-between my-2 max-sm:flex-col">
+                    <label className="text-lg font-exo text-blue-500 font-bold cursor-default">
                       Course Name
                     </label>
                     <div className="flex items-center">
-                      <span className="mr-4 text-md">Course Status</span>
+                      <span className="mr-4 text-md cursor-default">Course Status</span>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
                           type="checkbox"
@@ -682,9 +679,9 @@ export default function Page({ params }) {
                   <label className="text-lg  text-blue-500 font-exo font-bold">
                     Credit Hours
                   </label>
-                  <div className="sm:pr-4">
-                    <div className="relative w-full h-12 px-2 gap-4 flex items-center border-dark-400 rounded-md border mt-2 py-1.5">
-                      Theory Hours and
+                  <div className="max-sm:pr-4">
+                    <div className="relative w-full h-auto px-2 gap-2 sm:gap-4 flex flex-wrap items-center border-dark-400 rounded-md border mt-2 py-1.5">
+                      <span className="text-sm sm:text-base">Theory Hours</span>
                       <input
                         id="cr-hr-th"
                         name="cr-hr-th"
@@ -701,9 +698,11 @@ export default function Page({ params }) {
                           })
                         }
                         placeholder="select"
-                        className="px-2 block w-20 outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset sm:text-sm sm:leading-6"
+                        className="px-2 block w-16 sm:w-20 outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 py-1 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset text-xs sm:text-sm"
                       />
-                      Lab/Practical Hours
+                      <span className="text-sm sm:text-base">
+                        Lab/Practical Hours
+                      </span>
                       <input
                         id="cr-hr"
                         name="cr-hr"
@@ -720,10 +719,11 @@ export default function Page({ params }) {
                                 : Number(e.target.value),
                           })
                         }
-                        className="px-2 block w-20 outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset sm:text-sm sm:leading-6"
+                        className="px-2 block w-16 sm:w-20 outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 py-1 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset text-xs sm:text-sm"
                       />
                     </div>
                   </div>
+
                   <div className="my-4 sm:mb-0">
                     <label className="text-lg  text-blue-500 font-exo font-bold">
                       Skills Names
@@ -801,7 +801,7 @@ export default function Page({ params }) {
                   </p>
                 </div>
                 <div className="flex flex-col">
-                  <div className="flex justify-between max-md:flex-col mt-8 mb-4">
+                  <div className="flex justify-between max-md:flex-col mt-8 mb-4 max-sm:my-2">
                     <h2 className="text-xl text-blue-500 font-exo font-bold">
                       Skills You gain
                     </h2>
@@ -811,7 +811,7 @@ export default function Page({ params }) {
                       skills.map((skillName, index) => (
                         <div
                           key={index}
-                          className="flex bg-blue-600 w-fit py-[9px] px-5 rounded-lg items-center space-x-2 max-md:mt-2"
+                          className="flex bg-blue-600 w-fit py-[9px] px-5 rounded-lg items-center space-x-2 max-md:mt-2 "
                         >
                           <p className="uppercase text-[12px] text-blue-300">
                             {skillName}
@@ -864,7 +864,7 @@ export default function Page({ params }) {
                 <select
                   value={selectedSession || ""}
                   onChange={handleChange}
-                  className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                  className="bg-surface-100 cursor-pointer block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                 >
                   <option value="" disabled>
                     Select a session
@@ -897,7 +897,7 @@ export default function Page({ params }) {
                 <select
                   value={selectedSession || ""}
                   onChange={handleChangeInstructor}
-                  className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                  className="bg-surface-100 cursor-pointer block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                 >
                   <option value="" disabled>
                     Select a session
@@ -1013,7 +1013,7 @@ export default function Page({ params }) {
                       className="hidden"
                     />
                     <button
-                      className="flex justify-center items-center gap-2 mt-4 text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-blue-700"
+                      className="flex justify-center items-center gap-2 mt-4 text-surface-100 bg-blue-300 p-4 rounded-xl mr-4  hover:bg-blue-700"
                       onClick={() =>
                         document.querySelector('input[type="file"]').click()
                       }
@@ -1022,13 +1022,13 @@ export default function Page({ params }) {
                       Upload File
                     </button>
                     <button
-                      className={`w-88 flex justify-center items-center gap-2 mt-4 p-4 rounded-xl mr-4 ${
+                      className={`w-88 flex justify-center items-center gap-2 mt-4 p-4 max-sm:p-2 rounded-xl mr-4 max-sm:text-sm ${
                         loaderModule
                           ? "bg-blue-300 cursor-not-allowed"
                           : "bg-blue-300 hover:bg-blue-700"
                       } text-surface-100`}
                       onClick={handleCreateModule}
-                      disabled={loaderModule} // Disable button when loading
+                      disabled={loaderModule}
                     >
                       {loaderModule ? (
                         <CircularProgress
@@ -1049,14 +1049,14 @@ export default function Page({ params }) {
                 modules.map((module, index) => (
                   <div
                     key={module.id}
-                    className="border border-dark-300 rounded-xl px-4"
+                    className="border border-dark-300 rounded-xl px-4 max-sm:flex max-sm:flex-col max-sm:items-center"
                   >
-                    <div className="flex justify-between ">
+                    <div className="flex justify-between max-sm:items-center max-sm:flex-col  ">
                       <p className="text-dark-300 my-4"> Module {index + 1}</p>
                       {!isStudent && (
-                        <div className="flex">
+                        <div className="flex max-sm:flex-col">
                           {moduleId !== module.id && (
-                            <div className="flex items-center mx-4 mt-4">
+                            <div className="flex max-sm:justify-center text-center gap-1 items-center mx-4 mt-4 max-sm:mx-1">
                               <span className="mr-4 text-md">
                                 Module Status
                               </span>
@@ -1140,7 +1140,7 @@ export default function Page({ params }) {
                                     : "bg-blue-300 hover:bg-blue-700"
                                 } text-surface-100`}
                                 onClick={handleSaveModule}
-                                disabled={loaderModule} 
+                                disabled={loaderModule}
                               >
                                 {loaderModule ? (
                                   <CircularProgress

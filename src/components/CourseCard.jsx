@@ -42,7 +42,7 @@ const CourseCard = ({
   //       setConfirmDelete(false);
   //     }
   //   } catch (error) {
-  //     //console.error("Error deleting the ", error);
+  //     console.error("Error deleting the ", error);
   //   }
   // };
   // const handleDeleteCourse = async (id) => {
@@ -64,14 +64,14 @@ const CourseCard = ({
   //     }
   //   } catch (error) {
   //     toast.error("Error deleting assignment", error);
-  //     //console.error(error);
+  //     console.error(error);
   //   }
   // };
 
   return (
     <Link href={`/${route1}/${route}/${id}`} className="mx-1">
-      <div className="w-[330px] bg-surface-100 rounded-xl lg:mx-0 group max-md:w-full ">
-        <div className="mx-1 rounded-xl h-[320px] p-2 border border-blue-100 group-hover:cursor-pointer group-hover:border-2 group-hover:border-blue-300 my-4">
+      <div className="w-[330px] max-sm:w-[250px] bg-surface-100 rounded-xl lg:mx-0 group ">
+        <div className="mx-1 max-md:mx-0 rounded-xl h-[320px] max-sm:h-[290px] p-2 border border-blue-100 group-hover:cursor-pointer group-hover:border-2 group-hover:border-blue-300 my-4">
           <div className="relative">
             <Image
               src={image}

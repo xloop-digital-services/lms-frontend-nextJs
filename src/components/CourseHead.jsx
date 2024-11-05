@@ -31,7 +31,7 @@ const CourseHead = ({
   const studentInstructorName =
     session?.length > 0 ? session[0].instructor?.instructor_name : null;
 
-  // //console.log(session);
+  // console.log(session);
   // const [isEditing, setIsEditing] = useState(false);
   const [courseData, setCourseData] = useState([]);
   const [programData, setProgramData] = useState([]);
@@ -45,7 +45,7 @@ const CourseHead = ({
         setCourseData(response?.data?.data);
       }
     } catch (error) {
-      //console.error("Error fetching course:", error);
+      console.error("Error fetching course:", error);
     } finally {
       setLoader(false);
     }
@@ -60,10 +60,10 @@ const CourseHead = ({
 
         setLoader(false);
       } else {
-        //console.error("Failed to fetch program, status:", response.status);
+        console.error("Failed to fetch program, status:", response.status);
       }
     } catch (error) {
-      //console.log("error", error);
+      console.log("error", error);
     }
   }
   useEffect(() => {
@@ -71,7 +71,7 @@ const CourseHead = ({
     program === "program" && fetchProgramById();
   }, [isEditing]);
 
-  // //console.log(progress);
+  // console.log(progress);
 
   return (
     <div className=" ">
@@ -85,18 +85,18 @@ const CourseHead = ({
             key={courseData.id}
             className="flex justify-between max-md:flex-col max-md:items-center"
           >
-            <div className="flex my-2 justify-center items-center ">
+            <div className="flex my-2 justify-center items-center cursor-default ">
               {program === "program" ? (
-                <h2 className="text-blue-500 font-exo text-xl font-bold">
+                <h2 className="font-exo max-md:text-center text-blue-500 text-xl font-bold">
                   {`${programData.name} ${programAbb ? `(${programAbb})` : ""}`}
                 </h2>
               ) : (
-                <h2 className="font-exo text-blue-500 text-xl font-bold">
+                <h2 className="font-exo max-md:text-center text-blue-500 text-xl font-bold">
                   {courseData.name}
                 </h2>
               )}
               <div
-                className={`w-4 h-4 mx-2 flex justify-center items-center rounded-full ${
+                className={`w-4 h-4 mx-2 max-sm:w-6 max-sm:h-6 cursor-default flex justify-center items-center rounded-full  ${
                   (program === "program"
                     ? programData.status
                     : courseData.status) === 0
@@ -106,7 +106,7 @@ const CourseHead = ({
               ></div>
             </div>
 
-            <div className=" flex items-center justify-center max-md:flex-col gap-2">
+            <div className=" cursor-default flex items-center justify-center max-md:flex-col gap-2">
               {program === "program" ? null : (
                 <>
                   {chr ? (
@@ -128,7 +128,7 @@ const CourseHead = ({
                     (title !== "Edit course" ||
                       (title === "Edit course" && isAdmin)) && (
                       <button
-                        className="flex justify-center items-center gap-2 text-surface-100 bg-blue-300 p-4 rounded-xl hover:bg-blue-700"
+                        className="flex justify-center items-center gap-2 text-surface-100 bg-blue-300 p-4 max-sm:p-2 max-sm:text-sm max-sm:rounded-md rounded-xl hover:bg-blue-700"
                         onClick={() => {
                           if (isEditing) {
                             window.location.reload();
@@ -156,18 +156,18 @@ const CourseHead = ({
           {program === "program"
             ? null
             : isStudent && (
-                <p className="flex items-center text-blue-300 font-semibold">
+                <p className="flex items-center text-blue-300 font-semibold cursor-default">
                   {instructorName
                     ? `Instructor: ${instructorName}`
                     : "Instructor: To be Assigned"}
                 </p>
               )}
           {program === "program" ? (
-            <p className="mt-2 mb-2 text-dark-500 max-md:text-center">
+            <p className="mt-2 mb-2 text-dark-500 max-md:text-center cursor-default">
               {programData.short_description}
             </p>
           ) : (
-            <p className="mt-2 mb-2 text-dark-500 max-md:text-center">
+            <p className="mt-2 mb-2 text-dark-500 max-md:text-center cursor-default">
               {courseData.short_description}
             </p>
           )}
@@ -182,11 +182,7 @@ const CourseHead = ({
         </div>
       )}
 
-      {progress ? (
-        <>
-          <Progress progress={progress} />
-        </>
-      ) : null}
+      {progress ? <Progress progress={progress} /> : null}
 
       {haveStatus ? <StatusSummary /> : null}
       {/* </div>
