@@ -173,7 +173,8 @@ const ApprovalUserModal = ({
       try {
         const response = await getSuggestedSessionForStudent(
           userProgramId,
-          userLocationID
+          userLocationID,
+          id
         );
         setStudentSessions(response.data.data.sessions);
         console.log("response of the suggested sessions", response.data);
