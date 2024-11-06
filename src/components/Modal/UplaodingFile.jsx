@@ -103,7 +103,7 @@ const UploadingFile = ({
         throw new Error("Invalid upload type");
       }
 
-      const response = await uploadFunction(studentInstructorID,formData);
+      const response = await uploadFunction(studentInstructorID, formData);
       if (response.status === 201) {
         toast.success(`${capitalizeFirstLetter(type)} has been submitted`);
         setComment("");

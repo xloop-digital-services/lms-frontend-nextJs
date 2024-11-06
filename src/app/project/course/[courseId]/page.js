@@ -46,6 +46,7 @@ export default function Page({ params }) {
   const userId = group === "instructor" ? userData?.User?.id : adminUserId;
   const [sessionId, setSessionId] = useState(null);
   const [studentInstructorName, setStudentInstructorName] = useState(null);
+  const [studentInstructorID, setStudentInstructorID] = useState(null);
 
   async function fetchSessionForUser() {
     const response = await getUserSessions();
@@ -71,6 +72,7 @@ export default function Page({ params }) {
           setStudentInstructorName(
             foundSession.instructor?.instructor_name || "To be Assigned"
           );
+          setStudentInstructorID(foundSession.instructor?.instructor_id);
         }
       } else {
         console.error(
@@ -283,7 +285,9 @@ export default function Page({ params }) {
   return (
     <div
       className={`flex-1 transition-transform pt-[90px] space-y-4 max-md:pt-32 font-inter ${
- isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 pl-10 pr-10 max-md:pl-2 max-md:pr-2"
+        isSidebarOpen
+          ? "translate-x-64 ml-20 "
+          : "translate-x-0 pl-10 pr-10 max-md:pl-2 max-md:pr-2"
       }`}
       style={{ width: isSidebarOpen ? "86%" : "100%" }}
     >
@@ -526,6 +530,7 @@ export default function Page({ params }) {
                   assessment="Projects"
                   setUpdateStatus={setUpdateStatus}
                   handleUpdateAssignment={handleUpdateAssignment}
+                  studentInstructorID={studentInstructorID}
                 />
               ) : (
                 <AdminDataStructure

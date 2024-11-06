@@ -633,7 +633,7 @@ export const resubmitExam = async (submissionId, exam) => {
 };
 
 //upload Quiz
-export const uploadQuiz = async (studentInstructorID, quiz) => {
+export const uploadQuiz = async (studentInstructorID , quiz) => {
   try {
     const response = await axiosInstance.post(
       `/api/course/quiz_submissions/?instructor_id=${studentInstructorID}`,

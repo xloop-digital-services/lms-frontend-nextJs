@@ -52,6 +52,7 @@ export default function Page({ params }) {
   const [sessionId, setSessionId] = useState(null);
   // const [courses, setCourses] = useState([]);
   const [studentInstructorName, setStudentInstructorName] = useState(null);
+  const [studentInstructorID, setStudentInstructorID] = useState(null);
 
   async function fetchSessionForUser() {
     const response = await getUserSessions();
@@ -77,6 +78,7 @@ export default function Page({ params }) {
           setStudentInstructorName(
             foundSession.instructor?.instructor_name || "To be Assigned"
           );
+          setStudentInstructorID(foundSession.instructor?.instructor_id);
         }
       } else {
         console.error(
@@ -133,9 +135,9 @@ export default function Page({ params }) {
       return;
     }
 
-    const s3Data = await handleFileUploadToS3(file, 'Upload Exams');
+    const s3Data = await handleFileUploadToS3(file, "Upload Exams");
     console.log("S3 Data:", s3Data);
-    
+
     const formData = new FormData();
     formData.append("course", courseId);
     formData.append("title", question);
@@ -523,7 +525,7 @@ export default function Page({ params }) {
                         className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
                         onChange={(e) => setFile(e.target.files[0])}
                       />
-                       {currentAssignment && currentAssignment.content && (
+                      {currentAssignment && currentAssignment.content && (
                         <p className="text-sm text-gray-500 mt-2">
                           Current file:{" "}
                           {currentAssignment.content?.split("/").pop()}
@@ -601,6 +603,7 @@ export default function Page({ params }) {
                   assessment="Exam"
                   setUpdateStatus={setUpdateStatus}
                   handleUpdateAssignment={handleUpdateAssignment}
+                  studentInstructorID={studentInstructorID}
                 />
               ) : (
                 <AdminDataStructure
