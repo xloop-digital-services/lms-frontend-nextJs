@@ -36,7 +36,7 @@ export default function Page({ params }) {
         }
       } catch (error) {
         //console.log("error", error);
-        setLoader(false);
+        // setLoader(false);
       }
     }
 
@@ -86,7 +86,7 @@ export default function Page({ params }) {
               id={courseId}
               // rating="Top Instructor"
               // instructorName="Maaz"
-             haveStatus={isStudent ? true : false}
+              haveStatus={isStudent ? true : false}
               program="course"
             />
             <AdminStudentGrading courseId={courseId} />

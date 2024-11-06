@@ -20,7 +20,7 @@ export default function Page({ params }) {
       }}
     >
       <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4">
-        <h2 className="text-2xl text-blue-500 flex items-center justify-center font-bold my-4 font-exo ">
+        <h2 className="text-2xl text-center text-blue-500 flex items-center justify-center font-bold my-4 font-exo ">
           Student Overall Performance for the course{" "}
         </h2>
         <CourseHead
