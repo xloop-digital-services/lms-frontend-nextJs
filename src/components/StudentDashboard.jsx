@@ -321,9 +321,9 @@ export default function StudentDashboard() {
               </div>
             </div>
           </div>
-          <div className="flex gap-4 flex-col  w-[30%] max-md:w-full mx-2 ">
-            <div className="flex  h-[410px] flex-col overflow-y-auto bg-surface-100 p-2 rounded-xl lg:w-fit scrollbar-webkit max-md:m-4">
-              <div className="flex max-md:flex-col justify-between w-full px-3 py-2 items-center mb-2">
+          <div className="flex gap-4 flex-col  w-[30%] max-md:w-full ml-3">
+            <div className="flex  h-[410px] flex-col overflow-y-auto bg-surface-100 px-3 py-2 rounded-xl lg:w-fit scrollbar-webkit max-md:m-4">
+              <div className="flex justify-between w-full px-3 py-2 items-center mb-2">
                 <h1 className="text-xl text-blue-500 font-bold   font-exo">
                   Upcoming Activities
                 </h1>

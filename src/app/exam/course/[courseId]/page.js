@@ -55,10 +55,9 @@ export default function Page({ params }) {
   const [studentInstructorID, setStudentInstructorID] = useState(null);
 
   async function fetchSessionForUser() {
-    const response = await getUserSessions();
     setLoading(true);
-
     try {
+      const response = await getUserSessions();
       if (response.status === 200) {
         const sessions = response.data?.session || [];
         console.log(sessions);
@@ -112,17 +111,18 @@ export default function Page({ params }) {
   };
 
   async function fetchAssignments() {
-    const response = await getExamByCourseId(courseId, sessionId);
     setLoading(true);
     try {
+      const response = await getExamByCourseId(courseId, sessionId);
       if (response.status === 200) {
         setAssignments(response?.data?.data);
-        setLoading(false);
       } else {
         console.error("Failed to fetch exam, status:", response.status);
       }
     } catch (error) {
       console.log("error", error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -159,7 +159,6 @@ export default function Page({ params }) {
         : await createExam(formData);
 
       if (response.status === (currentAssignment ? 200 : 201)) {
-        setLoading(false);
         toast.success(
           currentAssignment
             ? "Exam updated successfully!"
@@ -179,19 +178,19 @@ export default function Page({ params }) {
         setCurrentAssignment(null);
         fetchAssignments();
       } else {
-        setLoading(false);
         toast.error(
           `Error ${currentAssignment ? "updating" : "creating"} Exam`,
           response?.message
         );
       }
     } catch (error) {
-      setLoading(false);
       toast.error(
         `Error ${currentAssignment ? "updating" : "creating"} Exam`,
         error
       );
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -216,21 +215,22 @@ export default function Page({ params }) {
   };
 
   async function fetchSessions() {
-    const response = await getSessionInstructor(
-      // userId,
-      // group,
-      courseId
-    );
     setLoading(true);
     try {
+      const response = await getSessionInstructor(
+        // userId,
+        // group,
+        courseId
+      );
       if (response.status === 200) {
         setSessions(response.data.data);
-        setLoading(false);
       } else {
         console.error("Failed to fetch sessions, status:", response.status);
       }
     } catch (error) {
       console.log("error", error);
+    } finally {
+      setLoading(false);
     }
   }
   const handleDeleteAssignment = async (id) => {
@@ -262,28 +262,28 @@ export default function Page({ params }) {
   };
 
   async function fetchSessions() {
-    const response = await listSessionByCourseId(courseId);
     setLoading(true);
     try {
+      const response = await listSessionByCourseId(courseId);
       if (response.status === 200) {
         setSessions(response.data.data);
-        setLoading(false);
       } else {
         console.error("Failed to fetch sessions, status:", response.status);
       }
     } catch (error) {
       console.log("error", error);
+    } finally {
+      setLoading(false);
     }
   }
 
   async function fetchSessionsInstructor() {
-    const response = await getInstructorSessionsbyCourseId(
-      userId,
-      group,
-      courseId
-    );
-
     try {
+      const response = await getInstructorSessionsbyCourseId(
+        userId,
+        group,
+        courseId
+      );
       if (response.status === 200) {
         setSessions(response.data.data);
       } else {
@@ -319,22 +319,24 @@ export default function Page({ params }) {
         width: isSidebarOpen ? "81%" : "100%",
       }}
     >
-      <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4">
-        <CourseHead
-          id={courseId}
-          program="course"
-          haveStatus={isStudent ? true : false}
-          title="Create Exam"
-          isEditing={isCreatingQuiz}
-          setIsEditing={setCreatingQuiz}
-          instructorName={studentInstructorName ? studentInstructorName : ""}
-        />{" "}
+      <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4 ">
         {loading ? (
           <div className="flex h-screen bg-surface-100 justify-center py-10">
             <CircularProgress />
           </div>
         ) : (
           <>
+            <CourseHead
+              id={courseId}
+              program="course"
+              haveStatus={isStudent ? true : false}
+              title="Create Exam"
+              isEditing={isCreatingQuiz}
+              setIsEditing={setCreatingQuiz}
+              instructorName={
+                studentInstructorName ? studentInstructorName : ""
+              }
+            />{" "}
             {isAdmin && (
               <div className="w-full">
                 <label className="text-blue-500">
@@ -406,7 +408,7 @@ export default function Page({ params }) {
                 </select>
               </div>
             )}
-            <h2 className="text-xl font-exo font-bold mb-4">
+            <h2 className="text-xl font-exo font-bold mb-2 mt-4 ">
               Exam instructions
             </h2>
             <ul className="text-dark-400 list-decimal">
@@ -592,7 +594,7 @@ export default function Page({ params }) {
                 </form>
               </>
             )}
-            <div className="mt-10">
+            <div className="mt-4">
               {isStudent ? (
                 <StudentDataStructure
                   quizzes={assignments}

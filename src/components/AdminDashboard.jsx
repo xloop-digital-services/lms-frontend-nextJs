@@ -296,7 +296,7 @@ const AdminDashboard = () => {
   }, [selectedProgram, programId, selectedSkill, skillId, selectedUser]);
 
   const toggleUsers = () => {
-    setIsUserOpen(true);
+    setIsUserOpen((prev) => !prev);
   };
 
   const handleUserSelect = (option) => {
@@ -443,8 +443,8 @@ const AdminDashboard = () => {
                     <button
                       onClick={toggleUsers}
                       className={`${
-                        !isUserSelected ? "text-dark-500" : "text-[#424b55]"
-                      } flex justify-between mt-1 items-center  w-full  gap-1 hover:text-[#0e1721] xlg:px-4 px-2 xlg:py-3  py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                        !selectedUser ? "text-dark-500" : "text-[#424b55]"
+                      } flex justify-between mt-1 items-center w-full gap-1 hover:text-[#0e1721] xlg:px-4 px-2 xlg:py-3 py-2 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                     >
                       {selectedUser || userOptions[0]}
                       <span
@@ -461,13 +461,13 @@ const AdminDashboard = () => {
                     {isUserOpen && (
                       <div
                         ref={userDown}
-                        className="absolute capitalize z-50 w-full  mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                        className="absolute capitalize z-50 w-full mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                       >
                         {userOptions.map((option, index) => (
                           <div
                             key={index}
                             onClick={() => handleUserSelect(option)}
-                            className="p-2 cursor-pointer "
+                            className="p-2 cursor-pointer"
                           >
                             <div className="xlg:px-4 px-2 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
                               {option}
@@ -493,7 +493,7 @@ const AdminDashboard = () => {
                           textOverflow: "ellipsis",
                         }}
                       >
-                        <span className=" xl:max-w-[190px] xlg:max-w-[120px] xmd:max-w-[60px] w-full truncate">
+                        <span className=" xl:max-w-[190px] xlg:max-w-[120px] xmd:max-w-[60px] w-full truncate capitalize">
                           {selectedProgram}
                         </span>
                         <span
@@ -526,7 +526,7 @@ const AdminDashboard = () => {
                                 className="p-2 cursor-pointer"
                                 title={option.name}
                               >
-                                <div className="xlg:px-4 px-2 py-2 hover:bg-[#03a3d838] truncate hover:text-blue-300 hover:font-semibold rounded-lg">
+                                <div className="xlg:px-4 px-2 py-2 capitalize hover:bg-[#03a3d838] truncate hover:text-blue-300 hover:font-semibold rounded-lg">
                                   {option.name}
                                 </div>
                               </div>
@@ -547,7 +547,7 @@ const AdminDashboard = () => {
                           !isSkillSelected ? " text-dark-500" : "text-[#424b55]"
                         } flex justify-between mt-1 items-center w-full gap-1 hover:text-[#0e1721] px-4 xlg:py-3 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                       >
-                        <span className="xl:max-w-[190px] xmd:max-w-[100px] w-[200px] truncate">
+                        <span className="xl:max-w-[190px] xmd:max-w-[100px] w-[200px] truncate capitalize">
                           {selectedSkill}
                         </span>
                         <span
@@ -574,7 +574,7 @@ const AdminDashboard = () => {
                                 className="p-2 cursor-pointer"
                                 title={option.name}
                               >
-                                <div className="xlg:px-4 px-2 py-2 hover:bg-[#03a3d838] truncate hover:text-blue-300 hover:font-semibold rounded-lg">
+                                <div className="xlg:px-4 px-2 py-2 capitalize hover:bg-[#03a3d838] truncate hover:text-blue-300 hover:font-semibold rounded-lg">
                                   {option.name}
                                 </div>
                               </div>

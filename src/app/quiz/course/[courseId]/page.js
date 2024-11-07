@@ -540,7 +540,7 @@ export default function Page({ params }) {
               </>
             )}
 
-            <div className="mt-10">
+            <div className="mt-4">
               {isStudent ? (
                 <StudentDataStructure
                   quizzes={assignments}
