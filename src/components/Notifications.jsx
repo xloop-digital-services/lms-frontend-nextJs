@@ -27,7 +27,14 @@ export default function Notifications() {
   // console.log(announcements);
   // console.log(messages);
   // console.log(messages.map((message) => message.assesment_type));
-  // console.log(messages.filter((message) => message.status === "read").length);
+  console.log(
+    announcements.filter((message) => message.read === true).length,
+    "read"
+  );
+  console.log(
+    announcements.filter((message) => message.read === false).length,
+    "unread"
+  );
 
   console.log(
     announcements.map((announcement) => announcement.announcement_id)

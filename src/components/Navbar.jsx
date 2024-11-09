@@ -11,6 +11,7 @@ import { getUserProfile } from "@/api/route";
 import { CircularProgress } from "@mui/material";
 import { useAuth } from "@/providers/AuthContext";
 import useClickOutside from "@/providers/useClickOutside";
+import useWebSocket from "@/providers/useWebSockets";
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
@@ -23,6 +24,14 @@ export default function Navbar() {
   const { logOutUser, userData } = useAuth();
   const isStudent = userData?.Group === "student";
   const isAdmin = userData?.Group === "admin";
+  const userID = userData?.User?.id;
+  const { messages: messages, loading: loading } = useWebSocket(
+    `ws://13.126.167.22:8000/ws/notification/?user_id=${userID}`
+  );
+
+  const { messages: announcements, loading: load } = useWebSocket(
+    `ws://13.126.167.22:8000/ws/announcements/?user_id=${userID}`
+  );
 
   useClickOutside(dropdownRef, () => setShowNotifications(false));
 
@@ -117,7 +126,10 @@ export default function Navbar() {
                             onClick={handleCreateAnnoucement}
                           >
                             <FaPlus />
-                            <p className="max-sm:hidden " title="New Announcement">
+                            <p
+                              className="max-sm:hidden "
+                              title="New Announcement"
+                            >
                               New announcement
                             </p>
                           </button>

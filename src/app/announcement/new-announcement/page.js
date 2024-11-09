@@ -126,18 +126,14 @@ export default function Page() {
     );
 
     if (isAlreadySelected) {
-      // Remove session name and ID if already selected
       setSelectedSessions(
         selectedSessions.filter((session) => session.id !== option.id)
       );
       setSelectedSessionID(selectedSessionID.filter((id) => id !== option.id));
     } else {
-      // Add session name and ID if not already selected
       setSelectedSessions([...selectedSessions, option]);
       setSelectedSessionID([...selectedSessionID, option.id]);
     }
-
-    // Check if any session is selected to toggle the button color
     setIsSessionSelected(selectedSessions.length > 0);
   };
 
@@ -162,14 +158,16 @@ export default function Page() {
 
   return (
     <div
-    className={`flex-1 transition-transform pt-[97px] space-y-4 max-md:pt-32 font-inter ${
-      isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 pl-10 pr-10 max-md:pl-2 max-md:pr-2"
-    }`}
-    style={{
-      // paddingBottom: "20px",
-      width: isSidebarOpen ? "81%" : "100%",  
-    }}
-  >
+      className={`flex-1 transition-transform pt-[97px] space-y-4 max-md:pt-32 font-inter ${
+        isSidebarOpen
+          ? "translate-x-64 ml-20 "
+          : "translate-x-0 pl-10 pr-10 max-md:pl-2 max-md:pr-2"
+      }`}
+      style={{
+        // paddingBottom: "20px",
+        width: isSidebarOpen ? "81%" : "100%",
+      }}
+    >
       <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4">
         <div className="flex flex-col gap-4 w-full">
           <p className="font-bold text-blue-500 text-xl font-exo mb-3">
@@ -181,6 +179,7 @@ export default function Page() {
               type="text"
               className="px-4 py-3 border border-dark-300 rounded-xl w-full outline-none"
               value={title}
+              placeholder="Enter the title for announcement"
               onChange={(e) => setTitle(e.target.value)}
             />
           </div>
@@ -188,7 +187,7 @@ export default function Page() {
             <p className="font-medium text-sm">Message</p>
             <textarea
               className="px-4 py-3 border border-dark-300 rounded-xl w-full min-h-[100px] max-h-[150px] overflow-auto resize-y scrollbar-webkit outline-none"
-              placeholder="Type your message here..."
+              placeholder="Type your message here"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
             />
@@ -197,7 +196,7 @@ export default function Page() {
             <p className="font-medium text-sm">Select the batch</p>
 
             <div className="border border-dark-300 rounded-xl w-full flex items-center justify-between pl-4 pr-2 py-2">
-              <p>{selectedBatch}</p>
+              <p className={`${selectedBatch ? "": "text-dark-400"}`}>{selectedBatch || "Select a batch"}</p>
               <div className="relative text-[15px] ">
                 <button
                   onClick={toggleBatchOpen}
