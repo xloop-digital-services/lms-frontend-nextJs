@@ -2,12 +2,7 @@
 import { useEffect, useState } from "react";
 
 const useWebSocket = (url) => {
-  const [messages, setMessages] = useState([{
-    title: "",
-    message: "",
-    assessment_type: "",
-    status: "",
-  }]);
+  const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -23,17 +18,18 @@ const useWebSocket = (url) => {
       setMessages((prevMessages) => [
         ...prevMessages,
         {
+          announcement_id: data.announcement_id,
           title: data.title,
           message: data.message,
-          assessment_type: data.assesment_type,
-          status: data.status,
+          assesment_type: data.assesment_type,
+          assessment_id: parseInt(data.assessment_id, 10),
+          status: data.status, // for notification read, unread status
+          created_at: data.created_at,
+          read: data.read, //for announcement 
+          course_id: parseInt(data.course_id, 10),
+          notification_id: data.notification_id,
         },
       ]);
-    };
-
-    socket.onclose = () => {
-      console.log("WebSocket connection closed");
-      setLoading(false);
     };
 
     socket.onerror = function (error) {
@@ -41,8 +37,15 @@ const useWebSocket = (url) => {
       setLoading(false);
     };
 
+    socket.onclose = () => {
+      console.log("WebSocket connection closed. Reconnecting...");
+      setLoading(true);
+      setTimeout(() => {
+        // useWebSocket(url);
+      }, 3000);
+    };
+
     return () => {
-      socket.close();
       setLoading(false);
     };
   }, [url]);

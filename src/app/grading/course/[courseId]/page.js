@@ -15,12 +15,14 @@ export default function Page({ params }) {
   const isAdmin = userData?.Group === "admin";
   return (
     <div
-      className={`flex-1 transition-transform pt-[90px] space-y-4 max-md:pt-32 font-inter ${
- isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 pl-10 pr-10 max-md:pl-2 max-md:pr-2"
+      className={`flex-1 transition-transform pt-[97px] space-y-4 max-md:pt-32 font-inter ${
+        isSidebarOpen
+          ? "translate-x-64 ml-20 "
+          : "translate-x-0 pl-10 pr-10 max-md:pl-2 max-md:pr-2"
       }`}
       style={{
         // paddingBottom: "20px",
-        width: isSidebarOpen ? "86%" : "100%",
+        width: isSidebarOpen ? "81%" : "100%",
       }}
     >
       {/* <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4">
@@ -31,10 +33,10 @@ export default function Page({ params }) {
           haveStatus={true}
           program="course"
         /> */}
-        <div>
-          {/* NOTIFICATION CODE */}
+      <div>
+        {/* NOTIFICATION CODE */}
 
-          {/* <div className='flex justify-between items-center'>
+        {/* <div className='flex justify-between items-center'>
             <p className='text-[18px] font-semibold'>{selectedOption}</p>
             <div className="group relative inline-block w-64" ref={dropdownRef}>
               <button
@@ -63,15 +65,15 @@ export default function Page({ params }) {
             </div>
           </div> */}
 
-          {isStudent ? (
-            <StudentGrading courseId={courseId} />
-          ) : (
-            <Grading courseId={courseId} />
-          )}
+        {isStudent ? (
+          <StudentGrading courseId={courseId} />
+        ) : (
+          <Grading courseId={courseId} />
+        )}
 
-          {/* </div> */}
-        </div>
+        {/* </div> */}
       </div>
+    </div>
     // </div>
   );
 }

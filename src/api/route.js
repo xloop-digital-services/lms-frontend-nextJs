@@ -546,7 +546,8 @@ export const getProgressForAssignment = async (courseId) => {
 //upload submission of assignments
 export const uploadAssignment = async (studentInstructorID, assignment) => {
   try {
-    const response = await axiosInstance.post(`/api/course/submissions/?instructor_id=${studentInstructorID}`,
+    const response = await axiosInstance.post(
+      `/api/course/submissions/?instructor_id=${studentInstructorID}`,
       assignment,
       {
         headers: {
@@ -768,12 +769,15 @@ export const VerifyEmail = async (data) => {
 
 export const broadcastAnnouncement = async (data) => {
   try {
-    const response = await axiosInstance.post('/api/announcements/create/', data)
+    const response = await axiosInstance.post(
+      "/api/announcements/create/",
+      data
+    );
     return response;
   } catch (error) {
     throw error;
   }
-}
+};
 
 //Admin APIs
 //get all programs
@@ -1571,6 +1575,43 @@ export const getSessionInstructor = async (courseId) => {
   try {
     const response = await axiosInstance.get(
       `/api/instructors/course/${courseId}/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//get announcement by Id
+export const getAnnouncementById = async (announcementId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/api/announcements/${announcementId}/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//read announcement
+export const readAnnouncement = async (data) => {
+  try {
+    const response = await axiosInstance.post(
+      `api/announcements/update/`,
+      data
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//read Notification
+export const readNotification = async (userId, notificationId) => {
+  try {
+    const response = await axiosInstance.post(
+      `api/notifications/${userId}/${notificationId}/mark_as_read/`
     );
     return response;
   } catch (error) {
