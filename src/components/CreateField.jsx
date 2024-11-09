@@ -7,6 +7,7 @@ import { FaPlus, FaTimes } from "react-icons/fa";
 import { toast } from "react-toastify";
 import SessionCreationModal from "./Modal/SessionCreationModal";
 import { useRouter } from "next/navigation";
+import { CircularProgress } from "@mui/material";
 
 export default function CreateField({
   title,
@@ -36,6 +37,7 @@ export default function CreateField({
   create,
   programAbb,
   setProgramAbb,
+  loader,
 }) {
   const router = useRouter();
   const { isSidebarOpen } = useSidebar();
@@ -293,26 +295,26 @@ export default function CreateField({
                       })}
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       <input
                         id="courses-names"
                         disabled
                         placeholder={
                           inputCourses.length === 0 && `Select ${list}`
                         }
-                        className="flex-grow outline-none bg-surface-100 placeholder-dark-300"
+                        className="flex-grow outline-none bg-surface-100 placeholder-dark-300 w-full sm:w-auto"
                       />
                       <div className="">
                         {create === "course" ? (
                           <Link href={`/${create}s/create-a-${create}`}>
-                            <button className="text-surface-100 px-2 py-1.5 rounded-md bg-blue-300">
+                            <button className="text-surface-100 px-2 py-1.5 rounded-md bg-blue-300 w-full sm:w-auto">
                               Create a {list}
                             </button>
                           </Link>
                         ) : (
                           <button
                             type="button"
-                            className="text-surface-100 px-2 py-1.5 rounded-md bg-blue-300"
+                            className="text-surface-100 px-2 py-1.5 rounded-md bg-blue-300 w-full sm:w-auto"
                             onClick={handleSkills}
                           >
                             Create a {list}
@@ -323,7 +325,7 @@ export default function CreateField({
                       <select
                         value=""
                         onChange={handleSelectChange}
-                        className="w-34 bg-surface-100 outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 py-1 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-8 p-2 sm:text-sm sm:leading-6"
+                        className="w-34 max-sm:w-40 bg-surface-100 outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 py-1 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-8 p-2 sm:text-sm sm:leading-6"
                       >
                         <option value="" disabled>
                           Select a {list}
@@ -348,7 +350,7 @@ export default function CreateField({
                   <div className="my-4 sm:mb-0">
                     <label htmlFor="skill">Create a skill</label>
                     <div className="sm:pr-4">
-                      <div className="relative w-full h-12 px-2 gap-4 flex items-center border-dark-400 rounded-md border mt-2 py-1.5">
+                      <div className="relative w-full flex flex-col sm:flex-row sm:items-center sm:h-12 px-2 gap-4 border-dark-400 rounded-md border mt-2 py-1.5">
                         <label>Enter a new skill</label>
                         <input
                           id="skill"
@@ -357,10 +359,10 @@ export default function CreateField({
                           value={skillName}
                           onChange={(e) => setSkillName(e.target.value)}
                           placeholder="select"
-                          className="px-2 block w-80 outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset sm:text-sm sm:leading-6"
+                          className="px-2 block w-full sm:w-80 outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset sm:text-sm sm:leading-6"
                         />
                         <button
-                          className="text-surface-100 p-2 rounded-md bg-blue-300"
+                          className="text-surface-100 px-2 py-1.5 rounded-md bg-blue-300 w-full sm:w-auto"
                           onClick={handleCreateSkill}
                         >
                           Create skill
@@ -379,7 +381,7 @@ export default function CreateField({
                       e.preventDefault();
                       handleOpenSessionModal();
                     }}
-                    className="flex text-center justify-center items-center gap-2 text-surface-100 bg-blue-300 py-2 px-4 mt-4 rounded-md mr-4 hover:bg-[#3272b6]"
+                    className=" max-sm:text-sm flex text-center justify-center items-center gap-2 text-surface-100 bg-blue-300 py-2 px-4 mt-4 rounded-md mr-4 hover:bg-[#3272b6]"
                     // onClick={handleSession}
                   >
                     {" "}
@@ -391,10 +393,17 @@ export default function CreateField({
               {route === "courses" && (
                 <>
                   <div className="my-4 sm:mb-0">
-                    <label htmlFor="about">Credit Hours</label>
-                    <div className="sm:pr-4">
-                      <div className="relative w-full h-12 px-2 gap-4 flex items-center border-dark-400 rounded-md border mt-2 py-1.5">
-                        Theory Hours and
+                    <label
+                    // className="text-lg  text-blue-500 font-exo font-bold"
+                    >
+                      Credit Hours
+                    </label>
+                    <div className="">
+                      <div className="relative w-full h-auto px-2 gap-2 sm:gap-4 flex flex-wrap items-center border-dark-400 rounded-md border mt-2 py-1.5">
+                        <span className="text-sm sm:text-base">
+                          Theory Hours
+                        </span>
+
                         <input
                           id="cr-hr-th"
                           name="cr-hr-th"
@@ -403,9 +412,11 @@ export default function CreateField({
                           value={chr}
                           onChange={(e) => setChr(e.target.value)}
                           placeholder="select"
-                          className="px-2 block w-20 outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset sm:text-sm sm:leading-6"
+                          className="px-2 block w-16 sm:w-20 outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 py-1 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset text-xs sm:text-sm"
                         />
-                        Lab/Practical Hours
+                        <span className="text-sm sm:text-base">
+                          Lab/Practical Hours
+                        </span>
                         <input
                           id="cr-hr"
                           name="cr-hr"
@@ -414,19 +425,20 @@ export default function CreateField({
                           placeholder="select"
                           value={chrLab}
                           onChange={(e) => setChrLab(e.target.value)}
-                          className="px-2 block w-20 outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset sm:text-sm sm:leading-6"
+                          className="px-2 block w-16 sm:w-20 outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 py-1 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset text-xs sm:text-sm"
                         />
                       </div>
                     </div>
                   </div>
                 </>
               )}
+
               <button
                 onClick={goBack}
                 type="submit"
-                className="flex text-center justify-center items-center gap-2 text-surface-100 bg-blue-300 py-2 px-4 mt-4 rounded-md mr-4 hover:bg-[#3272b6]"
+                className=" flex text-center max-sm:text-sm justify-center items-center gap-2 text-surface-100 bg-blue-300 py-2 px-4 mt-4 rounded-md mr-4 hover:bg-[#3272b6]"
               >
-                Create a {title}
+                {loader ? <CircularProgress /> : `Create a ${title}`}
               </button>
             </div>
           </form>

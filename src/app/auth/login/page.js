@@ -36,7 +36,7 @@ export default function Page() {
       <div className="mt-9 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-surface-100 py-8 px-4 shadow rounded-xl sm:px-10">
           <div className="space-y-2">
-            <h1 className="font-exo font-bold text-xl text-center text-blue-500">Login</h1>
+            <h1 className="font-exo font-bold text-xl text-center">Login</h1>
             <p className="text-[#8A8A95] text-sm text-center">
               Please enter your login information
             </p>

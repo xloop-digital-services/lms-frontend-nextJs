@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { IoIosArrowDown } from "react-icons/io";
-import { FaListCheck, FaLocationDot } from "react-icons/fa6";
+import { FaListCheck, FaLocationDot, FaMagnifyingGlass } from "react-icons/fa6";
 import logo from "../../public/assets/img/logo.png";
 import {
   FaBars,
@@ -77,7 +77,7 @@ function SideBar() {
         </div>
         <nav className="flex flex-col p-2 text-blue-500 sidebar bg-blue-500">
           <div className="flex flex-col h-screen">
-            <div className="flex flex-col justify-between h-[90%] overflow-y-auto scrollbar-webkit pb-4">
+            <div className="flex flex-col justify-between lg:h-[90%] h-[75%] overflow-y-auto scrollbar-webkit pb-4">
               <div className="py-4 rounded flex flex-col">
                 <Link
                   href="/dashboard"
@@ -137,8 +137,8 @@ function SideBar() {
 
                     {isOpen && (
                       <div>
-                        <ul className="flex flex-col list-disc pl-9 space-y-2">
-                          <li>
+                        <ul className="flex flex-col list-disc pl-9 space-y-2 w-full">
+                          <li className="w-full hover:font-semibold hover:text-blue-200">
                             <Link
                               href="/user-management/applicants"
                               ref={
@@ -149,12 +149,12 @@ function SideBar() {
                               className={`${
                                 isLinkActive("/user-management/applicants") &&
                                 "font-semibold"
-                              } hover:font-semibold hover:text-blue-200`}
+                              } `}
                             >
                               Applicants
                             </Link>
                           </li>
-                          <li>
+                          <li className="w-full hover:font-semibold hover:text-blue-200">
                             <Link
                               href="/user-management/users"
                               ref={
@@ -165,7 +165,7 @@ function SideBar() {
                               className={`${
                                 isLinkActive("/user-management/users") &&
                                 "font-semibold"
-                              } hover:font-semibold hover:text-blue-200`}
+                              }`}
                             >
                               Verified Users
                             </Link>
@@ -219,6 +219,20 @@ function SideBar() {
                     />
                     Class Scheduling
                   </Link>
+                  {/* <Link
+                    href="/initial-screening-test"
+                    ref={
+                      isLinkActive("/initial-screening-test") ? activeLinkRef : null
+                    }
+                    className={`p-4 mx-3 flex gap-4 mt-2 rounded-xl ${
+                      isLinkActive("/initial-screening-test")
+                        ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
+                        : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
+                    }`}
+                  >
+                    <FaMagnifyingGlass size={23} />
+                    Initial Screening Test
+                  </Link> */}
                 </div>
                 {/* <div className={`${isAdmin && "hidden"}`}> */}
                 {(isAdmin || isStudent) && (

@@ -18,6 +18,7 @@ import useClickOutside from "@/providers/useClickOutside";
 import { CircularProgress } from "@mui/material";
 import DeleteConfirmationPopup from "@/components/Modal/DeleteConfirmationPopUp";
 import { toast } from "react-toastify";
+import SessionInfoModal from "@/components/Modal/SessionInfoModal";
 
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
@@ -43,6 +44,9 @@ export default function Page() {
   const [filterLocation, setfilterLocation] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [selectedSession, setSelectedSession] = useState(null);
+  const [openInfoModal, setOpenInfoModal] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [session, setSession] = useState(null);
   const dropdownRef = useRef(null);
 
   // Update states based on screen size
@@ -76,7 +80,7 @@ export default function Page() {
     setLoading(true);
     try {
       const response = await listAllSessions();
-      // //console.log("session fetching", response?.data);
+      // console.log("session fetching", response?.data);
       setSessions(response?.data.data);
     } catch (error) {
       // console.log(
@@ -109,11 +113,11 @@ export default function Page() {
   const getBatch = async () => {
     try {
       const response = await listAllBatches();
-      //console.log("batches", response?.data);
+      // console.log("batches", response?.data);
       const batchOptionsArray = response?.data.map((batch) => batch.batch);
       setBatchOptions(batchOptionsArray);
     } catch (error) {
-      //console.log("error while fetching the batches", error);
+      // console.log("error while fetching the batches", error);
       if (error.message === "Network Error") {
         toast.error(error.message, "Check your internet connection");
       }
@@ -125,7 +129,7 @@ export default function Page() {
   const getLocation = async () => {
     try {
       const response = await listAllLocations();
-      //console.log("locations", response?.data);
+      // console.log("locations", response?.data);
       const LocationOptionsArray = response?.data.map((location) => ({
         id: location.id,
         name: location.name,
@@ -133,7 +137,7 @@ export default function Page() {
       }));
       setLocationOptions(LocationOptionsArray);
     } catch (error) {
-      //console.log("error while fetching the locations", error);
+      // console.log("error while fetching the locations", error);
       if (error.message === "Network Error") {
         toast.error(error.message, "Check your internet connection");
       }
@@ -180,17 +184,19 @@ export default function Page() {
 
   const handleOpenSessionModal = () => setOpenModal(true);
 
+  
+
   const handleDelete = async () => {
     try {
       setLoading(true);
       const response = await DeleteSession(selectedSession);
-      //console.log("deleting the session", response);
+      // console.log("deleting the session", response);
       toast.success("Class schedule deleted successfully!");
       setUpdateSession(!updateSession);
       setConfirmDelete(false);
       setLoading(false);
     } catch (error) {
-      //console.log("error while deleting the lcoation", error);
+      // console.log("error while deleting the lcoation", error);
     } finally {
       setLoading(false);
     }
@@ -200,19 +206,21 @@ export default function Page() {
     <>
       <div
         className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-22 font-inter ${
-          isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 sm:pl-5 px-4 sm:pr-5"
+          isSidebarOpen
+            ? "translate-x-64 ml-20 "
+            : "translate-x-0 sm:pl-5 px-4 sm:pr-5"
         }`}
         style={{ width: isSidebarOpen ? "81%" : "100%" }}
       >
         <div className="bg-surface-100 p-6 rounded-xl">
-          <div className="w-full mx-auto flex lsm:flex-row flex-col justify-between items-center gap-4 max-md:flex-col">
+          <div className="w-full mx-auto flex smm:flex-row flex-col justify-between items-center gap-4 max-md:flex-col">
             <div>
               <p className="font-bold text-xl text-blue-500 font-exo">
                 Class Details
               </p>
             </div>
             <div className="flex gap-3">
-              <div className="">
+              <div className=" ">
                 {/* City Dropdown */}
                 {/* <div>
                 <button
@@ -265,7 +273,7 @@ export default function Page() {
                     onClick={toggleLocationOpen}
                     className={`${
                       !isLocationSelected ? " text-dark-500" : "text-[#424b55]"
-                    } flex justify-between items-center  md:w-[200px] sm:w-[150px] w-full gap-1 hover:text-[#0e1721] sm:p-4 px-2 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                    } flex justify-between items-center md:w-[200px]  w-full  gap-2 hover:text-[#0e1721] sm:p-4 px-2 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                   >
                     {selectedLocation}
                     {isLocationSelected && (
@@ -276,7 +284,13 @@ export default function Page() {
                         <IoIosCloseCircleOutline size={20} />
                       </span>
                     )}
-                    <span className="">
+                    <span
+                      className={
+                        isLocationOpen
+                          ? "rotate-180 duration-300"
+                          : "duration-300"
+                      }
+                    >
                       <IoIosArrowDown />
                     </span>
                   </button>
@@ -384,6 +398,11 @@ export default function Page() {
                 setConfirmDelete={setConfirmDelete}
                 selectedSession={selectedSession}
                 confirmDelete={confirmDelete}
+                setOpenModal={setOpenInfoModal}
+                setEdit={setEdit}
+                edit={edit}
+                session={session}
+                setSession={setSession}
               />
             ) : (
               !isLocationSelected &&
@@ -398,6 +417,11 @@ export default function Page() {
                   setConfirmDelete={setConfirmDelete}
                   selectedSession={selectedSession}
                   confirmDelete={confirmDelete}
+                  setOpenModal={setOpenInfoModal}
+                  setEdit={setEdit}
+                  edit={edit}
+                  session={session}
+                  setSession={setSession}
                 />
               )
             )}
@@ -407,7 +431,7 @@ export default function Page() {
         {/* Session Creation Modal */}
       </div>
       <div>
-        {openModal && (
+        {(openModal || edit) && (
           <SessionCreationModal
             setOpenModal={setOpenModal}
             LocationOptions={LocationOptions}
@@ -416,6 +440,10 @@ export default function Page() {
             setUpdateSession={setUpdateSession}
             updateSession={updateSession}
             loadingBatch={loadingBatch}
+            setEdit={setEdit}
+            edit={edit}
+            session={session}
+            selectedSession={selectedSession}
           />
         )}
       </div>
@@ -425,6 +453,14 @@ export default function Page() {
             setConfirmDelete={setConfirmDelete}
             handleDelete={handleDelete}
             field="session"
+          />
+        )}
+      </div>
+      <div>
+        {openInfoModal && (
+          <SessionInfoModal
+            selectedSession={selectedSession}
+            setOpenModal={setOpenInfoModal}
           />
         )}
       </div>

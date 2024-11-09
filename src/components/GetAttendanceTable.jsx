@@ -55,10 +55,10 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
       if (response.status === 200) {
         setSessions(response.data.data); // Store the sessions data
       } else {
-        console.error("Failed to fetch sessions, status:", response.status);
+        // console.error("Failed to fetch sessions, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      // console.log("error", error);
     }
   }
 
@@ -68,7 +68,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
       // console.log('sessions in attendence', response.data.data)
       setSessions(response?.data?.data);
     } catch (error) {
-      console.log("fetching sessions", error);
+      // console.log("fetching sessions", error);
     }
   };
 
@@ -86,15 +86,15 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
           {}
         );
 
-        console.log("Attendance:", response.data.data.students);
+        // console.log("Attendance:", response.data.data.students);
         setGetAttendance(response.data.data.students); // Setting attendance data
         setSelectedAttendance(initialAttendance); // Setting the initial status to 'Present'
         // Fetch additional attendance insights if needed
       } else {
-        console.error("Failed to fetch attendance, status:", response.status);
+        // console.error("Failed to fetch attendance, status:", response.status);
       }
     } catch (error) {
-      console.error("Error fetching attendance:", error);
+      // console.error("Error fetching attendance:", error);
     } finally {
       setGetting(false);
     }
@@ -109,7 +109,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
         date
       );
       if (response.status === 200) {
-        console.log("attendece per session", response.data);
+        // console.log("attendece per session", response.data);
         setAttendance(response.data.data.attendance);
         const initialAttendance = response.data.data.attendance.reduce(
           (acc, student) => {
@@ -122,10 +122,10 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
         setSelectedAttendance(initialAttendance);
         // console.log(response.data);
       } else {
-        console.error("Failed to fetch attendance, status:", response.status);
+        // console.error("Failed to fetch attendance, status:", response.status);
       }
     } catch (error) {
-      console.error("Error fetching attendance:", error);
+      // console.error("Error fetching attendance:", error);
     } finally {
       setGetting(false);
     }
@@ -187,7 +187,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
         attendanceArray
       );
       if (response.status === 200 || response.status === 201) {
-        console.log("response for mark attendence", response);
+        // console.log("response for mark attendence", response);
         toast.success("Attendance marked successfully");
         setToggle(!toggle);
       } else {
@@ -196,8 +196,9 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
     } catch (error) {
       // toast.error("Error submitting attendance");
       if (error.response.status === 500) {
-        console.error("Error submitting attendance:", error);
-        toast.success("Attendance has been marked!");
+        toast.error(error.response.data.message);
+        // console.error("Error submitting attendance:", error);
+        // toast.success("Attendance has been marked!");
       }
     } finally {
       setLoader(false);
@@ -206,7 +207,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
 
   const handleEdit = () => {
     setEdit(true);
-  
+
     // Initialize selectedAttendance with the current attendance status
     const initialAttendance = {};
     attendance.forEach((att) => {
@@ -214,8 +215,6 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
     });
     setSelectedAttendance(initialAttendance); // Preload the selectedAttendance with current values
   };
-  
-  
 
   const handleResubmission = async () => {
     setLoader(true);
@@ -233,12 +232,12 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
         courseId,
         attendanceArray
       );
-      console.log("response while resubmission", response);
-      toast.success(response.data.message)
+      // console.log("response while resubmission", response);
+      toast.success(response.data.message);
       setToggle(!toggle);
-      setEdit(false)
+      setEdit(false);
     } catch (error) {
-      console.log(error, "error while resubmission");
+      // console.log(error, "error while resubmission");
     } finally {
       setLoader(false);
     }
@@ -246,7 +245,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
 
   const handleChange = (e) => {
     const session_id = e.target.value;
-    console.log("session id", session_id);
+    // console.log("session id", session_id);
     setSelectedSession(session_id); // Update the selected session ID
   };
 
@@ -295,7 +294,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
 
   const handleDateChange = (e) => {
     const selectedDate = e.target.value;
-    console.log(selectedDate);
+    // console.log(selectedDate);
     setDate(selectedDate);
   };
 
@@ -317,7 +316,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
               <select
                 value={selectedSession}
                 onChange={(e) => handleChange(e)}
-                className={` bg-surface-100 cursor-pointer block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5`}
+                className={` bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5`}
               >
                 <option value="" disabled>
                   Select a session
@@ -347,7 +346,6 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                 value={date}
                 onChange={handleDateChange}
                 max={formattedDate}
-                disabled={edit}
                 className={` border border-dark-300  text-[#424b55] cursor-default outline-none px-3 py-2 my-2 rounded-lg w-full`}
                 placeholder="Select start date"
               />

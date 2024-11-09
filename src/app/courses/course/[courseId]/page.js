@@ -56,7 +56,7 @@ export default function Page({ params }) {
   const [downloadStatus, setDownloadStatus] = useState("");
   const [loader, setLoader] = useState(false);
   const [loaderModule, setLoaderModule] = useState(false);
-
+  const [loaderSkills, setLoaderSkills] = useState(false);
   const [courseProgress, setCourseProgress] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingModule, setIsEditingModule] = useState(false);
@@ -167,11 +167,13 @@ export default function Page({ params }) {
     const skills = {
       skill_name: skillName,
     };
+
+    setLoaderSkills(true);
+
     try {
       const response = await createSkill(skills);
       if (response.status === 201) {
         toast.success("Skill created Successfully!");
-        // setSkillName("");
         setSkill(false);
         fetchAllSkills();
       } else {
@@ -179,9 +181,11 @@ export default function Page({ params }) {
       }
     } catch (error) {
       toast.error(`Error creating skill: ${error?.message}`);
-      // //console.log(error?.data?.data?.skill_name?.[0])
+    } finally {
+      setLoaderSkills(false);
     }
   };
+
   const handleSkills = () => {
     setSkill(!skill);
   };
@@ -615,7 +619,9 @@ export default function Page({ params }) {
                       Course Name
                     </label>
                     <div className="flex items-center">
-                      <span className="mr-4 text-md cursor-default">Course Status</span>
+                      <span className="mr-4 text-md cursor-default">
+                        Course Status
+                      </span>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
                           type="checkbox"
@@ -668,7 +674,7 @@ export default function Page({ params }) {
                 </label>
                 <textarea
                   rows="3"
-                  className="px-2 block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset sm:text-sm sm:leading-6"
+                  className="px-2 block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset sm:text-sm sm:leading-6 max-sm:scrollbar-webkit"
                   value={courseData.about}
                   onChange={(e) =>
                     setCourseData({ ...courseData, about: e.target.value })
@@ -847,8 +853,13 @@ export default function Page({ params }) {
                       <button
                         className="text-surface-100 p-2 rounded-md bg-blue-300"
                         onClick={handleCreateSkill}
+                        disabled={loaderSkills}
                       >
-                        Create skill
+                        {loaderSkills ? (
+                          <CircularProgress size={16} />
+                        ) : (
+                          "Create skill"
+                        )}
                       </button>
                     </div>
                   </div>
@@ -1234,7 +1245,7 @@ export default function Page({ params }) {
                             size={20}
                             fill="#03A1D8"
                             className="group-hover:cursor-pointer"
-                          />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                          />
                           <button
                             onClick={() => downloadFile(file.file)}
                             className="flex items-center text-blue-300 my-4 group-hover:cursor-pointer"

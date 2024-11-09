@@ -94,19 +94,12 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
             );
             setUsers(response?.data?.data.data.map((data) => data.user));
             setCount(response?.data?.data.count);
-
-            // //console.log(response?.data?.data?.[0].?id)
-            setLoadingUsers(false);
           } else {
             setMessage("no data found");
-            setLoadingUsers(false);
           }
-          //console.log("response from both idss", response.data);
         } catch (error) {
-          //console.log("error is occuring while both", error);
-          // setMessage(response.data.message);
           setMessage("no data found");
-
+        } finally {
           setLoadingUsers(false);
         }
       }
@@ -114,7 +107,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
     if (heading === "Verified Users") {
       handleApprovedUsers();
     }
-  }, [approvedProgramID, selectedOption]);
+  }, [approvedProgramID, selectedOption, heading]);
 
   useEffect(() => {
     const handleGetAllSkills = async () => {
@@ -132,7 +125,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
     if (selectedOption.toLowerCase() !== "student") {
       handleGetAllSkills(); // Fetch skills only when selectedOption is not 'student'
     }
-  }, [selectedOption.toLowerCase(), selectedOption]);
+  }, [selectedOption]);
 
   useEffect(() => {
     // //console.log("userUpdate", statusUpdated);
@@ -157,6 +150,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
           setLoading(false);
         }
       };
+
       handleUserByStatus();
     }
   }, [programID, selectedStatus, selectedOption, statusUpdated]);
@@ -184,26 +178,10 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
         //console.log("error while fetching number of applications", error);
       }
     };
-    handleApplicationsNumber();
+    if (programID && selectedOption) {
+      handleApplicationsNumber();
+    }
   }, [programID, selectedOption, statusUpdated]);
-
-  // useEffect(() => {
-  //   const handleCoursesByPrograms = async () => {
-  //     setLoadingCourses(true);
-  //     try {
-  //       const response = await getCourseByProgId(programID);
-  //       // //console.log("courses res", response?.data?.data);
-  //       setCourses(response?.data?.data.map((course) => course.name));
-  //       setLoadingCourses(false);
-  //     } catch (error) {
-  //       //console.log("Courses fetching error", error.response);
-  //       setLoadingCourses(false);
-  //     }
-  //   };
-  //   handleCoursesByPrograms();
-  // }, [programID]);
-
-  // //console.log('courses Name', courses)
 
   const handleToggleSection = (section, id) => {
     // Assign ProgramID or approvedProgramID based on heading
@@ -219,12 +197,10 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
         // Close program section if it's already open
         setIsProgramSectionOpen(false);
         setProgramSection(null);
-        //console.log("Program section closed");
       } else {
         // Open the program section
         setProgramSection(section);
         setIsProgramSectionOpen(true);
-        //console.log("Program section opened");
       }
     }
 
@@ -234,20 +210,13 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
         // Close skill section if it's already open
         setIsSkillSectionOpen(false);
         setSkillSection(null);
-        //console.log("Skill section closed");
       } else {
         // Open the skill section
         setSkillSection(section);
         setIsSkillSectionOpen(true);
-        // Ensure program section is closed when opening a skill section
-        //console.log("Skill section opened");
       }
     }
   };
-
-  // //console.log("heading0,", heading);
-  // //console.log("prgramopen", isProgramSectionOpen);
-  // //console.log("prgramopen", programSection);
 
   const handletoggleCourse = (courseName) => {
     setCourseName(courseName);
@@ -287,8 +256,8 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   return (
     <>
       <div
-        className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-32 font-inter ${
-          isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 pl-10 pr-4"
+        className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-22 font-inter ${
+          isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 sm:px-5 px-4"
         }`}
         style={{
           paddingBottom: "24px",
@@ -298,95 +267,266 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
         }}
       >
         <div
-          className="bg-surface-100 p-6 rounded-xl space-y-4"
+          className="bg-surface-100 rounded-xl space-y-4"
           style={{
             height: "100%", // Fill the remaining height
             display: "flex",
             flexDirection: "column",
           }}
         >
-          <div>
+          <div className="w-full flex justify-between mb-4 p-6 pb-0">
             <p className="text-xl font-bold text-blue-500">{heading}</p>
-          </div>
-          <div className="w-full flex items-center gap-4">
-            {/* <div className="flex grow">
-            <input
-              type="text"
-              placeholder="Search program by names"
-              className="p-3 sm:text-base text-sm border border-dark-500 rounded-lg outline-none w-full"
-            />
-          </div> */}
-            {/* <p><Se></Se></p> */}
-            <div className="flex justify-end items-end w-full">
-              <div className="relative  ">
-                <button
-                  onClick={toggleOpen}
-                  className="flex justify-between sm:text-base text-sm z-50 items-center xsm:w-[200px] w-full gap-1 md:w-[200px] text-dark-500 hover:text-[#0e1721] px-4 py-3 text-left bg-white border  border-dark-500 rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+            <div className="relative  ">
+              <button
+                onClick={toggleOpen}
+                className="flex justify-between sm:text-base text-sm z-50 items-center xsm:w-[200px] w-full gap-1 md:w-[200px] text-dark-500 hover:text-[#0e1721] px-4 py-3 text-left bg-white border  border-dark-500 rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+              >
+                {selectedOption || options[0]}
+                <span
+                  className={`${
+                    isOpen ? "rotate-180 duration-300" : "duration-300"
+                  }`}
                 >
-                  {selectedOption || options[0]}
-                  <span
-                    className={`${
-                      isOpen ? "rotate-180 duration-300" : "duration-300"
-                    }`}
-                  >
-                    <IoIosArrowDown />
-                  </span>
-                </button>
+                  <IoIosArrowDown />
+                </span>
+              </button>
 
-                {isOpen && (
-                  <div
-                    ref={dropdownRef}
-                    className="absolute capitalize z-50 w-full mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
-                  >
-                    {options.map((option, index) => (
-                      <div
-                        key={index}
-                        onClick={() => handleOptionSelect(option)}
-                        className="p-2 cursor-pointer "
-                      >
-                        <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
-                          {option}
-                        </div>
+              {isOpen && (
+                <div
+                  ref={dropdownRef}
+                  className="absolute capitalize z-50 w-full mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                >
+                  {options.map((option, index) => (
+                    <div
+                      key={index}
+                      onClick={() => handleOptionSelect(option)}
+                      className="p-2 cursor-pointer "
+                    >
+                      <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
+                        {option}
                       </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
-          <div
-            className="my-5 space-y-3 max-h-screen overflow-auto  scrollbar-webkit"
-            style={{
-              flexGrow: 1, // Allow this section to grow and take up remaining space
-            }}
-          >
-            {loadingProgram ? (
-              <div className="w-full h-full flex items-center justify-center">
-                <CircularProgress />
-              </div>
-            ) : selectedOption.toLowerCase() === "student" ? (
-              program && program.length > 0 ? (
-                // Display Program Logic
-                program.map((program) => (
+          <div className="my-5  max-h-screen overflow-auto  scrollbar-webkit">
+            <div
+              className=" space-y-3 p-6 pt-0"
+              style={{
+                flexGrow: 1, // Allow this section to grow and take up remaining space
+              }}
+            >
+              {loadingProgram ? (
+                <div className="w-full h-full flex items-center justify-center">
+                  <CircularProgress />
+                </div>
+              ) : selectedOption.toLowerCase() === "student" ? (
+                program && program.length > 0 ? (
+                  // Display Program Logic
+                  program.map((program) => (
+                    <div
+                      className="border border-dark-300 w-full  px-4 rounded-lg cursor-pointer flex flex-col "
+                      key={program.id}
+                    >
+                      <div
+                        className={`${
+                          isProgramSectionOpen &&
+                          programSection === program.name
+                            ? "flex xsm:flex-row flex-col "
+                            : "flex justify-between"
+                        }  space-y-2  items-center`}
+                      >
+                        <div
+                          className={`${isProgramSectionOpen &&
+                            programSection === program.name ? 'py-0 pt-4': 'py-4'} flex gap-3 text-[17px] text-blue-500 capitalize font-semibold font-exo w-full`}
+                          onClick={() =>
+                            handleToggleSection(program.name, program.id)
+                          }
+                        >
+                          {program.name}
+                          <div
+                            className="mt-1 text-[12px] text-blue-300 font-bold"
+                            title={`number of ${selectedStatus} applications`}
+                          >
+                            {(loading || loadingUsers) &&
+                            programSection === program.name ? (
+                              <div>
+                                <CircularProgress size={12} />
+                              </div>
+                            ) : heading === "Applicants" &&
+                              isProgramSectionOpen &&
+                              programSection === program.name ? (
+                              selectedStatus === "pending" ? (
+                                <p>( {pendingRequest} )</p>
+                              ) : selectedStatus === "approved" ? (
+                                <p className="tracking-wide flex gap-2">
+                                  <span>( {approvedRequest} )</span>
+                                  <span>
+                                    (verified: {verifiedRequest}, unverified:{" "}
+                                    {unverifiedRequest})
+                                  </span>
+                                </p>
+                              ) : (
+                                <p>( {shortListRequest} )</p>
+                              )
+                            ) : (
+                              isProgramSectionOpen &&
+                              programSection === program.name && (
+                                <p>( {count} )</p>
+                              )
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          {heading === "Applicants" &&
+                            isProgramSectionOpen &&
+                            programSection === program.name && (
+                              <div className="relative z-20">
+                                <button
+                                  onClick={toggleStatusOpen}
+                                  className="flex justify-between z-30 items-center nsm:w-[200px] xsm:w-full w-[200px] gap-1 text-dark-500 hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-dark-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+                                >
+                                  {/* {selectedStatus || status[0]} */}
+                                  {selectedStatus
+                                    ? statusDisplayMap[selectedStatus]
+                                    : statusDisplayMap[status[0]]}
+                                  <span
+                                    className={`${
+                                      statusOpen
+                                        ? "rotate-180 duration-300"
+                                        : "duration-300"
+                                    }`}
+                                  >
+                                    <IoIosArrowDown   />
+                                  </span>
+                                </button>
+
+                                {statusOpen && (
+                                  <div
+                                    ref={dropStatus}
+                                    className="absolute z-40 w-full mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                                  >
+                                    {Object.entries(statusDisplayMap).length >
+                                    0 ? (
+                                      Object.entries(statusDisplayMap).map(
+                                        ([key, value], index) => (
+                                          <div
+                                            key={index}
+                                            onClick={() =>
+                                              handleStatusSelect(key)
+                                            }
+                                            className="p-2 cursor-pointer"
+                                          >
+                                            <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
+                                              {value}{" "}
+                                            </div>
+                                          </div>
+                                        )
+                                      )
+                                    ) : (
+                                      <div>No status available</div>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            )}
+
+                          <span
+                            className={`${
+                              isProgramSectionOpen &&
+                              programSection === program.name
+                                ? "rotate-180 duration-300"
+                                : "duration-300"
+                            }`}
+                          >
+                            <IoIosArrowDown onClick={handleToggleSection} />
+                          </span>
+                        </div>
+                      </div>
+                      <div
+                        className={`transition-container ${
+                          isProgramSectionOpen &&
+                          programSection === program.name
+                            ? "max-height-full"
+                            : "max-height-0"
+                        }`}
+                      >
+                        {isProgramSectionOpen &&
+                          programSection === program.name && (
+                            <div className="pb-4 pt-2">
+                              {heading === "Applicants" ? (
+                                <DevelopmentTable
+                                  loading={loading}
+                                  selectedStatus={selectedStatus}
+                                  selectedOption={selectedOption.toLowerCase()}
+                                  userByProgramID={userByProgramID}
+                                  message={message}
+                                  setStatusUpdated={setStatusUpdated}
+                                  statusUpdated={statusUpdated}
+                                  setModal={setModal}
+                                  setSelectedUser={setSelectedUser}
+                                />
+                              ) : (
+                                <UserApprovalTable
+                                  loadingUsers={loadingUsers}
+                                  selectedOption={selectedOption.toLowerCase()}
+                                  applications={applications}
+                                  locations={locations}
+                                  userPrograms={userPrograms}
+                                  userSkills={userSkills}
+                                  users={users}
+                                  message={message}
+                                  count={count}
+                                  approvedProgramID={approvedProgramID}
+                                  setSelectedUser={setSelectedUser}
+                                  setUserID={setUserID}
+                                  setModal={setModal}
+                                />
+                              )}
+                            </div>
+                          )}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-dark-300 text-center">
+                    No programs found
+                  </div>
+                )
+              ) : // Display Skills Logic
+              loadingSkills ? (
+                <div className="w-full h-full flex items-center justify-center">
+                  <CircularProgress />
+                </div>
+              ) : skills && skills.length > 0 ? (
+                skills.map((skill) => (
                   <div
-                    className="border border-dark-300 w-full  px-4 rounded-lg cursor-pointer flex flex-col"
-                    key={program.id}
+                    className="border border-dark-300 w-full px-4 rounded-lg cursor-pointer flex flex-col"
+                    key={skill.id}
                   >
                     <div className="flex nsm:flex-row flex-col space-y-2 justify-between items-center">
                       <div
-                        className="flex gap-3 text-[17px] text-blue-500 py-4 font-semibold font-exo w-full"
+                        className="flex gap-3 text-blue-500 text-[17px] p-4 font-semibold font-exo w-full capitalize"
                         onClick={() =>
-                          handleToggleSection(program.name, program.id)
+                          handleToggleSection(skill.name, skill.id)
                         }
                       >
-                        {program.name}
+                        {skill.name}
                         <div
                           className="mt-1 text-[12px] text-blue-300 font-bold"
                           title={`number of ${selectedStatus} applications`}
                         >
-                          {heading === "Applicants" &&
-                          isProgramSectionOpen &&
-                          programSection === program.name ? (
+                          {(loading || loadingUsers) &&
+                          skillSection === skill.name ? (
+                            <div>
+                              <CircularProgress size={12} />
+                            </div>
+                          ) : heading === "Applicants" &&
+                            isSkillSectionOpen &&
+                            skillSection === skill.name ? (
                             selectedStatus === "pending" ? (
                               <p>( {pendingRequest} )</p>
                             ) : selectedStatus === "approved" ? (
@@ -401,18 +541,16 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                               <p>( {shortListRequest} )</p>
                             )
                           ) : (
-                            isProgramSectionOpen &&
-                            programSection === program.name && (
-                              <p>( {count} )</p>
-                            )
+                            isSkillSectionOpen &&
+                            skillSection === skill.name && <p>( {count} )</p>
                           )}
                         </div>
                       </div>
 
                       <div className="flex items-center gap-2">
                         {heading === "Applicants" &&
-                          isProgramSectionOpen &&
-                          programSection === program.name && (
+                          isSkillSectionOpen &&
+                          skillSection === skill.name && (
                             <div className="relative z-20">
                               <button
                                 onClick={toggleStatusOpen}
@@ -436,7 +574,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                               {statusOpen && (
                                 <div
                                   ref={dropStatus}
-                                  className="absolute z-40 w-full mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                                  className="absolute capitalize z-40 w-full mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                                 >
                                   {Object.entries(statusDisplayMap).length >
                                   0 ? (
@@ -465,214 +603,61 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
 
                         <span
                           className={`${
-                            isProgramSectionOpen &&
-                            programSection === program.name
+                            isSkillSectionOpen && skillSection === skill.name
                               ? "rotate-180 duration-300"
                               : "duration-300"
                           }`}
                         >
-                          <IoIosArrowDown />
+                          <IoIosArrowDown onClick={handleToggleSection} />
                         </span>
                       </div>
                     </div>
                     <div
                       className={`transition-container ${
-                        isProgramSectionOpen && programSection === program.name
+                        isSkillSectionOpen && skillSection === skill.name
                           ? "max-height-full"
                           : "max-height-0"
                       }`}
                     >
-                      {isProgramSectionOpen &&
-                        programSection === program.name && (
-                          <div className="pb-4">
-                            {heading === "Applicants" ? (
-                              <DevelopmentTable
-                                loading={loading}
-                                selectedStatus={selectedStatus}
-                                selectedOption={selectedOption.toLowerCase()}
-                                userByProgramID={userByProgramID}
-                                message={message}
-                                setStatusUpdated={setStatusUpdated}
-                                statusUpdated={statusUpdated}
-                                setModal={setModal}
-                                setSelectedUser={setSelectedUser}
-                              />
-                            ) : (
-                              <UserApprovalTable
-                                loadingUsers={loadingUsers}
-                                selectedOption={selectedOption.toLowerCase()}
-                                applications={applications}
-                                locations={locations}
-                                userPrograms={userPrograms}
-                                userSkills={userSkills}
-                                users={users}
-                                message={message}
-                                count={count}
-                                approvedProgramID={approvedProgramID}
-                                setSelectedUser={setSelectedUser}
-                                setUserID={setUserID}
-                                setModal={setModal}
-                              />
-                            )}
-                          </div>
-                        )}
+                      {isSkillSectionOpen && skillSection === skill.name && (
+                        <div className="pb-4">
+                          {heading === "Applicants" ? (
+                            <DevelopmentTable
+                              loading={loading}
+                              selectedStatus={selectedStatus}
+                              selectedOption={selectedOption.toLowerCase()}
+                              userByProgramID={userByProgramID}
+                              setStatusUpdated={setStatusUpdated}
+                              statusUpdated={statusUpdated}
+                              setModal={setModal}
+                              setSelectedUser={setSelectedUser}
+                            />
+                          ) : (
+                            <UserApprovalTable
+                              loadingUsers={loadingUsers}
+                              selectedOption={selectedOption.toLowerCase()}
+                              applications={applications}
+                              locations={locations}
+                              userPrograms={userPrograms}
+                              userSkills={userSkills}
+                              users={users}
+                              message={message}
+                              count={count}
+                              approvedProgramID={approvedProgramID}
+                              setSelectedUser={setSelectedUser}
+                              setUserID={setUserID}
+                              setModal={setModal}
+                            />
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="text-dark-300 text-center">
-                  No programs found
-                </div>
-              )
-            ) : // Display Skills Logic
-            loadingSkills ? (
-              <div className="text-dark-300 text-center">Loading skills...</div>
-            ) : skills && skills.length > 0 ? (
-              skills.map((skill) => (
-                <div
-                  className="border border-dark-300 w-full px-4 rounded-lg cursor-pointer flex flex-col"
-                  key={skill.id}
-                >
-                  <div className="flex nsm:flex-row flex-col space-y-2 justify-between items-center">
-                    <div
-                      className="flex gap-3 text-blue-500 text-[17px] p-4 font-semibold font-exo w-full"
-                      onClick={() => handleToggleSection(skill.name, skill.id)}
-                    >
-                      {skill.name}
-                      <div
-                        className="mt-1 text-[12px] text-blue-300 font-bold"
-                        title={`number of ${selectedStatus} applications`}
-                      >
-                        {heading === "Applicants" &&
-                        isSkillSectionOpen &&
-                        skillSection === skill.name ? (
-                          selectedStatus === "pending" ? (
-                            <p>( {pendingRequest} )</p>
-                          ) : selectedStatus === "approved" ? (
-                            <p className="tracking-wide flex gap-2">
-                              <span>( {approvedRequest} )</span>
-                              <span>
-                                (verified: {verifiedRequest}, unverified:{" "}
-                                {unverifiedRequest})
-                              </span>
-                            </p>
-                          ) : (
-                            <p>( {shortListRequest} )</p>
-                          )
-                        ) : (
-                          isSkillSectionOpen &&
-                          skillSection === skill.name && <p>( {count} )</p>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      {heading === "Applicants" &&
-                        isSkillSectionOpen &&
-                        skillSection === skill.name && (
-                          <div className="relative z-20">
-                            <button
-                              onClick={toggleStatusOpen}
-                              className="flex justify-between z-30 items-center w-[200px] text-dark-500 hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-dark-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
-                            >
-                              {/* {selectedStatus || status[0]} */}
-                              {selectedStatus
-                                ? statusDisplayMap[selectedStatus]
-                                : statusDisplayMap[status[0]]}
-                              <span
-                                className={`${
-                                  statusOpen
-                                    ? "rotate-180 duration-300"
-                                    : "duration-300"
-                                }`}
-                              >
-                                <IoIosArrowDown />
-                              </span>
-                            </button>
-
-                            {statusOpen && (
-                              <div
-                                ref={dropStatus}
-                                className="absolute capitalize z-40 w-full mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
-                              >
-                                {Object.entries(statusDisplayMap).length > 0 ? (
-                                  Object.entries(statusDisplayMap).map(
-                                    ([key, value], index) => (
-                                      <div
-                                        key={index}
-                                        onClick={() => handleStatusSelect(key)}
-                                        className="p-2 cursor-pointer"
-                                      >
-                                        <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
-                                          {value}{" "}
-                                        </div>
-                                      </div>
-                                    )
-                                  )
-                                ) : (
-                                  <div>No status available</div>
-                                )}
-                              </div>
-                            )}
-                          </div>
-                        )}
-
-                      <span
-                        className={`${
-                          isSkillSectionOpen && skillSection === skill.name
-                            ? "rotate-180 duration-300"
-                            : "duration-300"
-                        }`}
-                      >
-                        <IoIosArrowDown />
-                      </span>
-                    </div>
-                  </div>
-                  <div
-                    className={`transition-container ${
-                      isSkillSectionOpen && skillSection === skill.name
-                        ? "max-height-full"
-                        : "max-height-0"
-                    }`}
-                  >
-                    {isSkillSectionOpen && skillSection === skill.name && (
-                      <div className="pb-4">
-                        {heading === "Applicants" ? (
-                          <DevelopmentTable
-                            loading={loading}
-                            selectedStatus={selectedStatus}
-                            selectedOption={selectedOption.toLowerCase()}
-                            userByProgramID={userByProgramID}
-                            setStatusUpdated={setStatusUpdated}
-                            statusUpdated={statusUpdated}
-                            setModal={setModal}
-                            setSelectedUser={setSelectedUser}
-                          />
-                        ) : (
-                          <UserApprovalTable
-                            loadingUsers={loadingUsers}
-                            selectedOption={selectedOption.toLowerCase()}
-                            applications={applications}
-                            locations={locations}
-                            userPrograms={userPrograms}
-                            userSkills={userSkills}
-                            users={users}
-                            message={message}
-                            count={count}
-                            approvedProgramID={approvedProgramID}
-                            setSelectedUser={setSelectedUser}
-                            setUserID={setUserID}
-                            setModal={setModal}
-                          />
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="text-dark-300 text-center">No skills found</div>
-            )}
+                <div className="text-dark-300 text-center">No skills found</div>
+              )}
+            </div>
           </div>
         </div>
       </div>

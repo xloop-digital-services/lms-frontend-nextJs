@@ -32,7 +32,6 @@ export const handleFileUploadToS3 = async (file, category) => {
     const data = await response.json();
     //console.log("data for s3", data);
     const url = `${data.url}/${data.fileName}`;
-    console.log(url);
     return url;
   } catch (error) {
     //console.log("uploading to s3 error", error);
@@ -80,77 +79,71 @@ export default function ApplicationForm() {
 
   const handleFirstName = (e) => {
     const name = e.target.value;
-
-    // Regular expression to allow only alphabets (a-z, A-Z)
     const alphabetPattern = /^[a-zA-Z\s]*$/;
-
-    // Check if the name contains only alphabets
-    if (!alphabetPattern.test(name)) {
+    setFirstName(name); 
+    const trimmedName = name.trim();
+    if (!alphabetPattern.test(trimmedName)) {
       setNameError("Name can only contain alphabets.");
     } else {
-      setFirstName(name);
-      setNameError(""); // Clear the error if the input is valid
+      setNameError(""); 
     }
   };
 
   const handleLastName = (e) => {
     const name = e.target.value;
-
-    // Regular expression to allow only alphabets (a-z, A-Z)
     const alphabetPattern = /^[a-zA-Z\s]*$/;
+    setLastName(name);
+    const trimmedName = name.trim();
+    // //console.log(trimmedName,'name')
 
-    // Check if the name contains only alphabets
-    if (!alphabetPattern.test(name)) {
+    if (!alphabetPattern.test(trimmedName)) {
       setNameError("Name can only contain alphabets.");
     } else {
-      setLastName(name);
-      setNameError(""); // Clear the error if the input is valid
+      setNameError(""); 
     }
   };
 
+  // //console.log( firstName.trim(), lastName.trim())
+
   const formatContactInput = (value, caretPos) => {
-    const numericValue = value.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+    const numericValue = value.replace(/[^0-9]/g, ""); 
     let formattedValue = value;
 
     if (numericValue.startsWith("92") && numericValue.length <= 12) {
-      // If it starts with +92, format as +92XXXXXXXXXX
-      formattedValue = `+92${numericValue.slice(2).slice(0, 10)}`; // Keep only 10 digits after +92
+   
+      formattedValue = `+92${numericValue.slice(2).slice(0, 10)}`; 
     } else if (numericValue.startsWith("0")) {
-      // If it starts with 0, format as 0XXX-XXXXXXX
       formattedValue = numericValue
-        .slice(0, 11) // Limit to 11 digits total
-        .replace(/(\d{4})(\d{1,7})/, "$1-$2"); // Format as 0XXX-XXXXXXX
+        .slice(0, 11) 
+        .replace(/(\d{4})(\d{1,7})/, "$1-$2"); 
     } else {
-      formattedValue = numericValue.slice(0, 11); // Just return the first 11 digits for other cases
+      formattedValue = numericValue.slice(0, 11); 
     }
 
     return { formattedValue, caretPos };
   };
 
-  // Validate the contact number input
   const validateContactNumber = (value) => {
-    // Ensure valid format: +92XXXXXXXXXX or 0XXX-XXXXXXX
-    const contactPattern = /^(?:\+92[0-9]{10}|0[0-9]{3}-[0-9]{7})$/; // Match +92XXXXXXXXXX or 0XXX-XXXXXXX
-    const invalidPrefix = /^0000/; // Prevent numbers starting with 0000
+   
+    const contactPattern = /^(?:\+92[0-9]{10}|0[0-9]{3}-[0-9]{7})$/; 
+    const invalidPrefix = /^0000/; 
 
     if (invalidPrefix.test(value)) {
       setErrorMessage("Contact number cannot start with 0000.");
     } else if (!contactPattern.test(value)) {
-      // No need to check startsWith here; the regex handles the format
       setErrorMessage("Please enter a valid contact number.");
     } else {
-      setErrorMessage(""); // Clear error if the input is valid
+      setErrorMessage(""); 
     }
   };
 
-  // Handle input change and validation
   const handleInputChange = (e) => {
     const input = e.target;
-    const caretPos = input.selectionStart; // Get current caret position
+    const caretPos = input.selectionStart; 
     const { formattedValue } = formatContactInput(input.value, caretPos);
 
-    setContactNumber(formattedValue); // Set formatted value
-    validateContactNumber(formattedValue); // Validate input
+    setContactNumber(formattedValue);
+    validateContactNumber(formattedValue);
   };
 
   const handleInput = (e) => {
@@ -159,12 +152,12 @@ export default function ApplicationForm() {
     const { formattedValue } = formatContactInput(input.value, caretPos);
     const oldValue = contactNumber;
 
-    // Check if the user is deleting right before the hyphen and adjust the cursor
+   
     if (
       oldValue.length > formattedValue.length &&
       oldValue.charAt(caretPos - 1) === "-"
     ) {
-      input.setSelectionRange(caretPos - 1, caretPos - 1); // Move the caret back
+      input.setSelectionRange(caretPos - 1, caretPos - 1);
     }
   };
 
@@ -317,6 +310,9 @@ export default function ApplicationForm() {
         setAllSkills(response.data);
       } catch (error) {
         //console.log("skills error", error);
+        if (error.response.status === 401) {
+          toast.error(error.response.data.detail);
+        }
       }
     };
 
@@ -342,7 +338,7 @@ export default function ApplicationForm() {
     if (file) {
       const fileExtension = file.name.split(".").pop().toLowerCase();
       if (supportedFormats.includes(`.${fileExtension}`)) {
-        // console.log("file name", file.name);
+        //console.log("file name", file.name);
         setFile(file);
         setFileUploaded(file.name);
       } else {
@@ -402,13 +398,16 @@ export default function ApplicationForm() {
     }
 
     try {
-      const s3Data = await handleFileUploadToS3(file, 'resumes');
-      // console.log("S3 Data:", s3Data);
+      let s3Data = null;
+      if (file !== null) {
+        s3Data = await handleFileUploadToS3(file, "resumes");
+        //console.log("S3 Data:", s3Data);
+      }
 
       const formData = new FormData();
       formData.append("email", email);
-      formData.append("first_name", firstName);
-      formData.append("last_name", lastName);
+      formData.append("first_name", firstName.trim());
+      formData.append("last_name", lastName.trim());
       formData.append("contact", contactNumber);
       formData.append("city", selectedCity);
       formData.append("city_abb", cityShortName);
@@ -470,7 +469,7 @@ export default function ApplicationForm() {
                 type="email"
                 className="border border-dark-300 outline-none p-3 rounded-lg w-full "
                 placeholder="Enter your email address"
-                value={email}
+                value={email.trim()}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>

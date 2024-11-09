@@ -29,7 +29,7 @@ const BatchModal = ({
   const [cityShortName, setCityShortName] = useState("");
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("Select category");
-  const [isCategorySelected, setIsCategorySelected] = useState(false)
+  const [isCategorySelected, setIsCategorySelected] = useState(false);
   const [error, setError] = useState("");
   const categoryOptions = [
     { name: "Fall" },
@@ -42,7 +42,10 @@ const BatchModal = ({
   const modalDown = useRef(null);
   const categoryRef = useRef();
 
-  useClickOutside(cityDown, () => setIsCityOpen(false));
+  useClickOutside(cityDown, () => {
+    setIsCityOpen(false);
+    setIsCategoryOpen(false);
+  });
 
   useClickOutside(modalDown, () => setIsOpenModal(false));
 
@@ -75,13 +78,13 @@ const BatchModal = ({
         };
 
         const response = await createBatch(data);
-        console.log("batch created", response?.data.message);
+        // console.log("batch created", response?.data.message);
         toast.success("Batch created successfully!");
         setLoadingCreation(false);
         setIsOpenModal(false);
         setUpdateBatch(!updateBatch);
       } catch (error) {
-        console.log("error is occuring", error.response);
+        // console.log("error is occuring", error.response);
         if (error.response.status === 400) {
           toast.error(error.response.data.error[0]);
         }
@@ -101,7 +104,7 @@ const BatchModal = ({
   const handleCategorySelect = (category) => {
     setSelectedCategory(category.name);
     setIsCategoryOpen(false);
-    setIsCategorySelected(true)
+    setIsCategorySelected(true);
   };
 
   const handleStartDate = (event) => {
@@ -221,7 +224,7 @@ const BatchModal = ({
                   onChange={(e) => setbatchName(e.target.value)}
                 />
               </div>         */}
-              <div className="space-y-2 text-[15px] w-full">
+              <div className="relative space-y-2 text-[15px] w-full">
                 <p>City</p>
                 <button
                   onClick={toggleCityOpen}
@@ -242,7 +245,7 @@ const BatchModal = ({
                 {isCityOpen && (
                   <div
                     ref={cityDown}
-                    className="absolute z-10 min-w-[220px] max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
+                    className="absolute z-10 w-full max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
                   >
                     {cityOptions.map((option, index) => (
                       <div
@@ -321,9 +324,7 @@ const BatchModal = ({
                 <button
                   onClick={toggleCategoryOpen}
                   className={`${
-                    !isCategorySelected
-                      ? " text-dark-500"
-                      : "text-[#424b55]"
+                    !isCategorySelected ? " text-dark-500" : "text-[#424b55]"
                   } flex justify-between items-center w-full hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
                   {selectedCategory}
@@ -340,7 +341,7 @@ const BatchModal = ({
 
                 {isCategoryOpen && (
                   <div
-                    ref={categoryRef}
+                    ref={cityDown}
                     className="absolute z-10 w-full max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                   >
                     {categoryOptions.map((option, index) => (

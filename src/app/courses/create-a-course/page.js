@@ -24,6 +24,7 @@ export default function Page() {
   const router = useRouter();
   const [inputCourses, setInputCourses] = useState([]);
   const [file, setFile] = useState(null);
+  const [loader, setLoader] = useState(false);
 
   async function fetchAllSkills() {
     try {
@@ -53,8 +54,10 @@ export default function Page() {
     };
     try {
       const response = await createCourse(courseData);
+      setLoader(true)
       if (response.status === 201) {
         toast.success("Course created successfully!");
+        setLoader(false)
         setCreatingProgram(courseData);
         setAbout("");
         setCoursesNames([]);
@@ -64,9 +67,11 @@ export default function Page() {
         setChrLab("");
       } else {
         toast.error(response.data?.message);
+        setLoader(false)
       }
     } catch (error) {
       toast.error(`Error creating course: ${error.message}`);
+      setLoader(false)
     }
   };
 
@@ -119,6 +124,7 @@ export default function Page() {
         fetchAllSkills={fetchAllSkills}
         file={file}
         setFile={setFile}
+        loader={loader}
       />
     </div>
   );

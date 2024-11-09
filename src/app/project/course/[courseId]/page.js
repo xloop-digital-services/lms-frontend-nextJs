@@ -46,7 +46,7 @@ export default function Page({ params }) {
   const userId = group === "instructor" ? userData?.User?.id : adminUserId;
   const [sessionId, setSessionId] = useState(null);
   const [studentInstructorName, setStudentInstructorName] = useState(null);
-
+  const [studentInstructorID, setStudentInstructorID] = useState(null);
   async function fetchSessionForUser() {
     const response = await getUserSessions();
     setLoading(true);
@@ -71,6 +71,7 @@ export default function Page({ params }) {
           setStudentInstructorName(
             foundSession.instructor?.instructor_name || "To be Assigned"
           );
+          setStudentInstructorID(foundSession.instructor?.instructor_id);
         }
       } else {
         //console.error(
@@ -554,7 +555,7 @@ export default function Page({ params }) {
                 </form>
               </>
             )}
-            <div className="mt-10">
+          <div className="mt-4">
               {isStudent ? (
                 <StudentDataStructure
                   quizzes={assignments}
@@ -565,6 +566,7 @@ export default function Page({ params }) {
                   assessment="Projects"
                   setUpdateStatus={setUpdateStatus}
                   handleUpdateAssignment={handleUpdateAssignment}
+                  studentInstructorID={studentInstructorID}
                 />
               ) : (
                 <AdminDataStructure

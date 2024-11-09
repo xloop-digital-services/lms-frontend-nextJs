@@ -19,7 +19,7 @@ export default function Page() {
   const [selectedCity, setSelectedCity] = useState("Select city");
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [cityOptions, setCityOptions] = useState([]);
-  const [isCitySelected, setIsCitySelected] = useState(false); // Fix typo
+  const [isCitySelected, setIsCitySelected] = useState(false); 
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [openModal, setOpenModal] = useState(false);
@@ -36,7 +36,7 @@ export default function Page() {
       setCityOptions(cityAreas);
       setLoading(false);
     } catch (error) {
-      //console.log("Error fetching locations", error);
+      // console.log("Error fetching locations", error);
       if (error.response.status === 401) {
         toast.error(error.response.data.code, ": Please Log in again");
       }
@@ -78,14 +78,16 @@ export default function Page() {
     <>
       <div
         className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-22 font-inter pb-4 ${
-          isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 sm:pl-5 px-4 sm:pr-5"
+          isSidebarOpen
+            ? "translate-x-64 ml-20 "
+            : "translate-x-0 sm:pl-5 px-4 sm:pr-5"
         }`}
         style={{
           width: isSidebarOpen ? "81%" : "100%",
         }}
       >
         <div className="bg-surface-100 p-6 rounded-xl">
-          <div className="w-full mx-auto flex lsm:flex-row flex-col justify-between items-center gap-4 max-md:flex-col">
+          <div className="w-full mx-auto flex xsm:flex-row flex-col justify-between items-center gap-4 max-md:flex-col">
             <div>
               <p className="font-bold font-exo text-blue-500 text-xl">
                 Locations Details
@@ -109,7 +111,7 @@ export default function Page() {
                     </span>
                   )}
                   <span
-                    className={`${
+                    className={` ${
                       isCityOpen ? "rotate-180 duration-300" : "duration-300"
                     }`}
                   >
@@ -148,7 +150,7 @@ export default function Page() {
               </div>
               <div>
                 <button
-                   className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] sm:flex text-sm sm:p-4 px-3 py-3 md:px-6 rounded-lg hover:cursor-pointer"
+                  className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] sm:flex text-sm sm:p-4 px-3 py-3 md:px-6 rounded-lg hover:cursor-pointer"
                   onClick={handleLocationCreate}
                 >
                   Create<span className="sm:flex hidden px-1">a new </span>{" "}

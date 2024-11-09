@@ -16,6 +16,7 @@ const UploadingFile = ({
   setUploadFile,
   assignmentID,
   setUpdateStatus,
+  studentInstructorID,
 }) => {
   const [comment, setComment] = useState("");
   const [fileUploaded, setFileUploaded] = useState(null);
@@ -82,7 +83,7 @@ const UploadingFile = ({
 
     try {
       const s3Data = await handleFileUploadToS3(file, type);
-      //console.log("S3 Data:", s3Data);
+      console.log("S3 Data:", s3Data);
 
       const formData = new FormData();
       formData.append(`submitted_file`, s3Data);
@@ -102,7 +103,7 @@ const UploadingFile = ({
         throw new Error("Invalid upload type");
       }
 
-      const response = await uploadFunction(formData);
+      const response = await uploadFunction(studentInstructorID, formData);
       if (response.status === 201) {
         toast.success(`${capitalizeFirstLetter(type)} has been submitted`);
         setComment("");
@@ -111,7 +112,7 @@ const UploadingFile = ({
         setUpdateStatus(true);
       }
     } catch (error) {
-      //console.log(error);
+      console.log(error);
       toast.error(error.response?.data?.message || "An error occurred");
       setLoader(false);
       setUploadFile(false);

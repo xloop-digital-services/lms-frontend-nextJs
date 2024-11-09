@@ -19,7 +19,7 @@ export default function Page({ params }) {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
-  // //console.log("token", verifyToken);
+  // console.log("token", verifyToken);
 
   const handlePassword = async (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
@@ -30,11 +30,11 @@ export default function Page({ params }) {
       password: newPassword,
       password2: confirmPassword,
     };
-    // //console.log("form", data);
+    // console.log("form", data);
 
     try {
       const response = await VerifyEmail(data);
-      // //console.log("res", response);
+      // console.log("res", response);
       if (response.status === 200) {
         toast.success("Password Set Successfully", {
           position: "top-right",
@@ -64,7 +64,7 @@ export default function Page({ params }) {
         setloading(false);
       }
     } catch (error) {
-      // //console.error("Error during login:", error.response.data.message);
+      console.error("Error during login:", error.response.data.password);
       if (error.response.data.password) {
         toast.error(error.response.data.password[0], {
           position: "top-right",
@@ -89,17 +89,6 @@ export default function Page({ params }) {
       }
       if (error.response.data.status_code === 400) {
         toast.error(error.response.data.message, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      }
-      if (error.response.data.code === "token_not_valid") {
-        toast.error(error.response.data.messages.message, {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -188,7 +177,7 @@ export default function Page({ params }) {
                       placeholder="Password (at least 8 characters, with letters, numbers, and special characters)"
                       value={confirmPassword.trim()}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="py-3 px-4 pr-9 block w-full outline-none border border-dark-200 rounded-md text-sm focus:border-blue-300 focus:ring-blue-300 shadow-sm"
+                      className="py-3 px-4 block w-full outline-none border border-dark-200 rounded-md text-sm focus:border-blue-300 focus:ring-blue-300 shadow-sm"
                       required
                     />
                     <div
