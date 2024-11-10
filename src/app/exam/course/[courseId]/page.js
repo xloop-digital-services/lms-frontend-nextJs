@@ -20,9 +20,12 @@ import AdminDataStructure, {
   formatDateTime,
 } from "@/components/AdminDataStructure";
 import { handleFileUploadToS3 } from "@/components/ApplicationForm";
+import { FaArrowLeftLong } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
 
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
+  const router = useRouter();
   const [assignments, setAssignments] = useState([]);
   const [assignmentProgress, setAssignmentProgress] = useState({});
   const [currentAssignment, setCurrentAssignment] = useState(null);
@@ -326,6 +329,13 @@ export default function Page({ params }) {
           </div>
         ) : (
           <>
+            <div
+              className="text-dark-300 flex gap-2 items-center cursor-pointer pb-2 hover:text-blue-300 mr-4"
+              onClick={() => router.push(`/exam`)}
+            >
+              <FaArrowLeftLong size={20} />
+              <p>Back</p>
+            </div>
             <CourseHead
               id={courseId}
               program="course"

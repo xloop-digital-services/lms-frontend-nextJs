@@ -17,13 +17,13 @@ const BatchTable = ({
   setConfirmDelete,
   setSelectedBatch,
   selectedBatch,
-  confirmDelete
+  confirmDelete,
 }) => {
   const [edit, setEdit] = useState(false);
- 
+
   const [batch, setbatch] = useState(null);
   const [status, setStatus] = useState(null);
- 
+
   const [updating, setUpdating] = useState(false);
   const [editYear, setEditYear] = useState(null);
   const [editEndDate, setEditEndDate] = useState(null);
@@ -64,6 +64,7 @@ const BatchTable = ({
       setLoading(true); // Set updating to true when status is being updated
       try {
         const data = {
+          program: batch.program,
           batch: selectedBatch,
           city: batch.city,
           city_abb: batch.city_abb,
@@ -95,8 +96,6 @@ const BatchTable = ({
     setConfirmDelete(true);
   };
 
-  
-
   const handleEndDateChange = (event) => {
     setEditEndDate(event.target.value);
     // Check if end date is earlier than start date
@@ -120,7 +119,7 @@ const BatchTable = ({
         <div className="-m-1.5 overflow-x-auto">
           <div className="p-1.5 min-w-full inline-block align-middle max-h-screen overflow-auto scrollbar-webkit">
             <div className=" border border-dark-300 rounded-lg divide-y divide-dark-200 ">
-              <div className="overflow-hidden">
+              <div className="overflow-hidden rounded-lg">
                 <div
                   className={
                     pathname === "/batch" &&
@@ -132,16 +131,16 @@ const BatchTable = ({
                       <tr>
                         <th
                           scope="col"
-                          className="px-6 py-4 rounded-lg  text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
+                          className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
+                        >
+                          Program
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
                         >
                           Batch Name
                         </th>
-                        {/* <th
-                      scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
-                    >
-                      Area
-                    </th> */}
                         <th
                           scope="col"
                           className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[16%]"
@@ -174,7 +173,7 @@ const BatchTable = ({
                         </th>
                         <th
                           scope="col"
-                          className="px-12 py-4 text-start rounded-lg text-xs font-medium text-gray-500 uppercase w-[20%]"
+                          className="px-12 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[20%]"
                         >
                           Status
                         </th>
@@ -209,12 +208,12 @@ const BatchTable = ({
                           )
                           .map((batch, index) => (
                             <tr key={index} className={``}>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                                {batch.program || "-"}
+                              </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
                                 {batch.batch || "-"}
                               </td>
-                              {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                      {batch.city_id || '-'}
-                    </td> */}
                               <td
                                 className={` ${
                                   !(edit && selectedBatch === batch.batch)
@@ -419,7 +418,6 @@ const BatchTable = ({
           </div>
         </div>
       </div>
-     
     </>
   );
 };

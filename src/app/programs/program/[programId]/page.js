@@ -15,9 +15,12 @@ import { toast } from "react-toastify";
 import { FaTimes } from "react-icons/fa";
 import { useAuth } from "@/providers/AuthContext";
 import Link from "next/link";
+import { FaArrowLeftLong } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
 
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
+  const router = useRouter();
   const { userData } = useAuth();
   const isStudent = userData?.Group === "student";
   const programId = params.programId;
@@ -165,7 +168,14 @@ export default function Page({ params }) {
             width: isSidebarOpen ? "81%" : "100%",
           }}
         >
-          <div className=" bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4">
+          <div className=" bg-surface-100 mx-4 my-3 px-6 py-6 pb-8 rounded-xl p-4">
+            <div
+              className="text-dark-300 flex gap-2 items-center cursor-pointer pb-2 hover:text-blue-300"
+              onClick={() => router.push("/programs")}
+            >
+              <FaArrowLeftLong size={20} />
+              <p>Back</p>
+            </div>
             <CourseHead
               name={programData.name}
               id={programId}

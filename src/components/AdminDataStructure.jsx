@@ -350,7 +350,10 @@ const AdminDataStructure = ({
                         ))
                       ) : (
                         <tr>
-                          <td colSpan="6" className="text-center py-4">
+                          <td
+                            colSpan="8"
+                            className="text-center py-4 text-dark-300"
+                          >
                             No data found
                           </td>
                         </tr>

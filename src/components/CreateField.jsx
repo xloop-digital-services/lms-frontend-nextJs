@@ -7,6 +7,7 @@ import { FaPlus, FaTimes } from "react-icons/fa";
 import { toast } from "react-toastify";
 import SessionCreationModal from "./Modal/SessionCreationModal";
 import { useRouter } from "next/navigation";
+import { FaArrowLeftLong } from "react-icons/fa6";
 
 export default function CreateField({
   title,
@@ -192,9 +193,18 @@ export default function CreateField({
         }}
       >
         <div className="bg-surface-100 flex flex-col p-8 rounded-xl">
-          <h2 className="font-exo text-blue-500 text-xl font-bold">
-            Add a {title}
-          </h2>
+          <div className="flex justify-between items-center w-full">
+            <h2 className="font-exo text-blue-500 text-xl font-bold">
+              Add a {title}
+            </h2>
+            <div
+              className="text-dark-300 flex gap-2 items-center cursor-pointer pb-2 hover:text-blue-300 mr-4"
+              onClick={() => router.push(`/${title.toLowerCase()}s`)}
+            >
+              <FaArrowLeftLong size={20} />
+              <p>Back</p>
+            </div>
+          </div>
 
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col mt-4">

@@ -9,9 +9,12 @@ import { CircularProgress } from "@mui/material";
 import AdminAttendance from "@/components/AdminAttendance";
 import { toast } from "react-toastify";
 import InstructorAttendance from "@/components/InstructorAttendance";
+import { FaArrowLeftLong } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
 
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
+  const router = useRouter();
   const courseId = params.courseId;
   const [attendance, setAttendance] = useState([]);
   const [attendanceStudent, setAttendanceStudent] = useState([]);
@@ -79,17 +82,24 @@ export default function Page({ params }) {
         </div>
       ) : (
         <div
-          className={`flex-1 transition-transform pt-[97px] space-y-4 max-md:pt-32 font-inter ${
+          className={`flex-1 transition-transform pt-[90px] space-y-4 max-md:pt-22 font-inter ${
             isSidebarOpen
-              ? "translate-x-64 ml-20 "
-              : "translate-x-0 pl-10 pr-10 max-md:pl-2 max-md:pr-2"
+              ? "translate-x-64 pl-16 "
+              : "translate-x-0 sm:px-5 px-4"
           }`}
           style={{
             // paddingBottom: "20px",
             width: isSidebarOpen ? "81%" : "100%",
           }}
         >
-          <div className=" bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl  p-4">
+          <div className="bg-surface-100 mx-4 my-3 px-6 pb-8 pt-6 rounded-xl p-4">
+            <div
+              className="text-dark-300 flex gap-2 items-center cursor-pointer pb-2 hover:text-blue-300 mr-4"
+              onClick={() => router.push(`/attendance`)}
+            >
+              <FaArrowLeftLong size={20} />
+              <p>Back</p>
+            </div>
             {/* <CourseHead
               id={courseId}
               // rating="Top Instructor"

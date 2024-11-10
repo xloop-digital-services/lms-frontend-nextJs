@@ -18,9 +18,12 @@ import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 import AdminDataStructure from "@/components/AdminDataStructure";
 import { handleFileUploadToS3 } from "@/components/ApplicationForm";
+import { FaArrowLeftLong } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
 
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
+  const router = useRouter();
   const [assignments, setAssignments] = useState([]);
   const [assignmentProgress, setAssignmentProgress] = useState({});
   const [currentAssignment, setCurrentAssignment] = useState(null);
@@ -75,7 +78,7 @@ export default function Page({ params }) {
           setStudentInstructorName(
             foundSession.instructor?.instructor_name || "To be Assigned"
           );
-          setStudentInstructorID(foundSession.instructor?.instructor_id)
+          setStudentInstructorID(foundSession.instructor?.instructor_id);
         }
       } else {
         console.error(
@@ -315,11 +318,20 @@ export default function Page({ params }) {
   return (
     <div
       className={`flex-1 transition-transform pt-[90px] space-y-4 max-md:pt-32 font-inter ${
- isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 pl-10 pr-10 max-md:pl-2 max-md:pr-2"
+        isSidebarOpen
+          ? "translate-x-64 ml-20 "
+          : "translate-x-0 pl-10 pr-10 max-md:pl-2 max-md:pr-2"
       }`}
       style={{ width: isSidebarOpen ? "81%" : "100%" }}
     >
       <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4">
+        <div
+          className="text-dark-300 flex gap-2 items-center cursor-pointer pb-2 hover:text-blue-300 mr-4"
+          onClick={() => router.push(`/assignment`)}
+        >
+          <FaArrowLeftLong size={20} />
+          <p>Back</p>
+        </div>
         <CourseHead
           id={courseId}
           program="course"

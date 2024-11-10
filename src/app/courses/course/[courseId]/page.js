@@ -33,6 +33,8 @@ import { Upload, UploadFile } from "@mui/icons-material";
 import UploadContent from "@/components/Modal/UploadFile";
 import DeleteConfirmationPopup from "@/components/Modal/DeleteConfirmationPopUp";
 import { handleFileUploadToS3 } from "@/components/ApplicationForm";
+import { FaArrowLeftLong } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
 
 export const downloadFile = async (filePath) => {
   console.log("ye raha", filePath);
@@ -47,6 +49,7 @@ export const downloadFile = async (filePath) => {
 
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
+  const router = useRouter();
   const { userData } = useAuth();
   const courseId = params.courseId;
   const isStudent = userData?.Group === "student";
@@ -555,7 +558,14 @@ export default function Page({ params }) {
             width: isSidebarOpen ? "81%" : "100%",
           }}
         >
-          <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl max-sm:p-0 max-sm:m-0">
+          <div className="bg-surface-100 mx-4 my-3 px-6 pt-6 pb-8 rounded-xl max-sm:p-0 max-sm:m-0">
+            <div
+              className="text-dark-300 flex gap-2 items-center cursor-pointer pb-2 hover:text-blue-300 mr-6 "
+              onClick={() => router.push(`/courses`)}
+            >
+              <FaArrowLeftLong size={20} />
+              <p>Back</p>
+            </div>
             <CourseHead
               id={courseId}
               program="course"

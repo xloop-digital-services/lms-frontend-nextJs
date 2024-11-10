@@ -15,6 +15,8 @@ import CreateWeightage from "./CreateWeightage";
 import GetWeightage from "./GetWeightage";
 import { useAuth } from "@/providers/AuthContext";
 import CourseHead from "./CourseHead";
+import { FaArrowLeftLong } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
 
 const Grading = ({ courseId }) => {
   // const quiz = ["quiz1", "quiz2", "quiz3", "quiz4"];
@@ -22,6 +24,7 @@ const Grading = ({ courseId }) => {
   // const exams = ["midterm", "final"];
   // const projects = ["project1", "project2", "project3"];
   const { userData } = useAuth();
+  const router = useRouter();
   const group = userData?.Group;
   const isAdmin = userData?.Group === "admin";
   const isInstructor = userData?.Group === "instructor";
@@ -131,7 +134,14 @@ const Grading = ({ courseId }) => {
   // console.log(weightage);
   return (
     // <div className="">
-    <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4">
+    <div className="bg-surface-100 mx-4 my-3 px-6 pb-8 pt-6 rounded-xl p-4">
+      <div
+        className="text-dark-300 flex gap-2 items-center cursor-pointer pb-2 hover:text-blue-300 mr-4"
+        onClick={() => router.push(`/grading`)}
+      >
+        <FaArrowLeftLong size={20} />
+        <p>Back</p>
+      </div>
       <CourseHead
         id={courseId}
         // rating="Top Instructor"
