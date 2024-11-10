@@ -182,19 +182,19 @@ const SessionsTable = ({
         <div className="-m-1.5 overflow-x-auto">
           <div className="p-1.5 min-w-full inline-block align-middle">
             <div className="mt-4 border border-dark-300 rounded-lg divide-y divide-dark-200">
-              <div className="relative max-h-[75vh]  overflow-y-auto scrollbar-webkit">
+              <div className="relative max-h-[75vh] overflow-y-auto scrollbar-webkit rounded-lg">
                 <table className="min-w-full divide-y divide-dark-200 ">
                   <thead className="bg-surface-100 text-blue-500 sticky top-0 z-40 shadow-sm shadow-dark-200">
                     <tr>
-                      {/* <th
+                      <th
                       scope="col"
                       className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
                     >
                       Batch
-                    </th> */}
+                    </th>
                       <th
                         scope="col"
-                        className="px-6 py-4 rounded-lg text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
+                        className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
                       >
                         Course
                       </th>
@@ -237,7 +237,7 @@ const SessionsTable = ({
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-4 rounded-lg text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
+                        className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
                       >
                         Actions
                       </th>
@@ -260,9 +260,9 @@ const SessionsTable = ({
                         .map((session, index) => {
                           return (
                             <tr key={index} className={``}>
-                              {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
                               {session.batch}
-                            </td> */}
+                            </td>
                               <td
                                 className="px-6 py-4 whitespace-nowrap text-sm max-w-[250px] truncate text-gray-800 dark:text-gray-200"
                                 title={session.course.name}

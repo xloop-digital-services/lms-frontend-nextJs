@@ -22,9 +22,9 @@ const SessionCreationModal = ({
   session,
   selectedSession,
 }) => {
-  const [selectedLocation, setSelectedLocation] = useState("select Location");
+  const [selectedLocation, setSelectedLocation] = useState("Select location");
   const [selectedLocationId, setSelectedLocationId] = useState(null);
-  const [selectedBatch, setSelectedBatch] = useState("select batch");
+  const [selectedBatch, setSelectedBatch] = useState("Select batch");
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [isBatchOpen, setIsBatchOpen] = useState(false);
   const [isBatchSelected, setIsBatchSelected] = useState(false);
@@ -58,7 +58,12 @@ const SessionCreationModal = ({
   const [startDate, setstartDate] = useState(null);
   const [endDate, setendDate] = useState(null);
   const [error, setError] = useState(""); // To track error messages
-  const mouseClick = useRef(null);
+  const locationDown = useRef(null);
+  const locationButton = useRef(null);
+  const batchDown = useRef(null);
+  const batchButton = useRef(null);
+  const courseDown = useRef(null);
+  const courseButton = useRef(null);
   const modalClose = useRef(null);
 
   const WEEKDAYS = {
@@ -73,9 +78,15 @@ const SessionCreationModal = ({
 
   // console.log(session, "session for update");
 
-  useClickOutside(mouseClick, () => {
+  useClickOutside(locationDown, locationButton, () => {
     setIsLocationOpen(false);
+  });
+
+  useClickOutside(batchDown, batchButton, () => {
     setIsBatchOpen(false);
+  });
+
+  useClickOutside(courseDown, courseButton, () => {
     setIsCourseOpen(false);
   });
 
@@ -86,6 +97,7 @@ const SessionCreationModal = ({
 
   useEffect(() => {
     if (session && edit) {
+      setSelectedBatch(session.batch);
       setSelectedCourseName(session.course.name);
       setSelectedCourseId(session.course.id);
       setSelectedLocation(session.location_name);
@@ -380,8 +392,6 @@ const SessionCreationModal = ({
   const handleCourseSelect = (courseName) => {
     setSelectedCourseName(courseName.name);
     setSelectedCourseId(courseName.id);
-    // const selectedCourseObject = coursesMap[courseName]; // Get the full course object by name
-    // setSelectedCourse(selectedCourseObject);
     setIsCourseSelected(true);
     setIsCourseOpen(false);
   };
@@ -405,9 +415,6 @@ const SessionCreationModal = ({
 
       const startTime = updatedDay.startTime || ""; // Default to an empty string if not set
       const endTime = updatedDay.endTime || "";
-
-      // console.log("start time", startTime);
-      // console.log("end time", endTime);
 
       // Validate the times for this specific day
       let timeErrorMessage = "";
@@ -470,10 +477,12 @@ const SessionCreationModal = ({
               <div className="space-y-2 text-[15px] w-full">
                 <p>Batch</p>
                 <button
+                  ref={batchButton}
                   onClick={toggleBatchOpen}
                   className={`${
                     !isBatchSelected ? " text-[#92A7BE]" : "text-[#424b55]"
                   } flex justify-between items-center w-full  hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                  disabled={edit}
                 >
                   {selectedBatch || batchOptions[0]}
                   <span
@@ -487,7 +496,7 @@ const SessionCreationModal = ({
 
                 {isBatchOpen && (
                   <div
-                    ref={mouseClick}
+                    ref={batchDown}
                     className="absolute z-10 min-w-[240px] max-h-[170px] mt-1 bg-surface-100  overflow-auto scrollbar-webkit border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
                   >
                     {loadingBatch && batchOptions.length == 0 ? (
@@ -517,6 +526,7 @@ const SessionCreationModal = ({
               <div className="relative space-y-2 text-[15px] w-full">
                 <p>Course</p>
                 <button
+                  ref={courseButton}
                   onClick={toggleCourseOpen}
                   className={`${
                     !isCourseSelected || !edit
@@ -543,7 +553,7 @@ const SessionCreationModal = ({
 
                 {isCourseOpen && (
                   <div
-                    ref={mouseClick}
+                    ref={courseDown}
                     className="absolute z-10 w-full mt-1 bg-surface-100 max-h-[200px] overflow-auto scrollbar-webkit border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
                   >
                     {loadingCourses && courseNames.length === 0 ? (
@@ -575,6 +585,7 @@ const SessionCreationModal = ({
               <div className="space-y-2 text-[15px] w-full">
                 <p>Location</p>
                 <button
+                  ref={locationButton}
                   onClick={toggleLocationOpen}
                   className={`${
                     !isLocationSelected ? " text-[#92A7BE]" : "text-[#424b55]"
@@ -594,7 +605,7 @@ const SessionCreationModal = ({
 
                 {isLocationOpen && (
                   <div
-                    ref={mouseClick}
+                    ref={locationDown}
                     className="absolute z-10 min-w-[240px] max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
                   >
                     {loadingLocation ? (

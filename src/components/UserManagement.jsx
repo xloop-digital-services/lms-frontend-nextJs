@@ -57,11 +57,13 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   const [modal, setModal] = useState(false);
 
   const dropdownRef = useRef(null);
+  const dropButton = useRef(null);
   const dropProgram = useRef(null);
   const dropStatus = useRef(null);
-  useClickOutside(dropdownRef, () => setIsOpen(false));
+  const statusButton = useRef(null);
+  useClickOutside(dropdownRef, dropButton, () => setIsOpen(false));
   useClickOutside(dropProgram, () => setIsProgramSectionOpen(false));
-  useClickOutside(dropStatus, () => setStatusOpen(false));
+  useClickOutside(dropStatus, statusButton, () => setStatusOpen(false));
 
   useEffect(() => {
     const handleApprovedUsers = async () => {
@@ -223,7 +225,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   };
 
   const toggleOpen = () => {
-    setIsOpen(!isOpen);
+    setIsOpen((prev) => !prev);
   };
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
@@ -236,7 +238,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
 
   const toggleStatusOpen = (e) => {
     e.stopPropagation();
-    setStatusOpen(true);
+    setStatusOpen((prev) => !prev);
   };
 
   const handleStatusSelect = (option) => {
@@ -278,6 +280,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
             <p className="text-xl font-bold text-blue-500">{heading}</p>
             <div className="relative  ">
               <button
+                ref={dropButton}
                 onClick={toggleOpen}
                 className="flex justify-between sm:text-base text-sm z-50 items-center xsm:w-[200px] w-full gap-1 md:w-[200px] text-dark-500 hover:text-[#0e1721] px-4 py-3 text-left bg-white border  border-dark-500 rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
               >
@@ -339,8 +342,12 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                         }  space-y-2  items-center`}
                       >
                         <div
-                          className={`${isProgramSectionOpen &&
-                            programSection === program.name ? 'py-0 pt-4': 'py-4'} flex gap-3 text-[17px] text-blue-500 capitalize font-semibold font-exo w-full`}
+                          className={`${
+                            isProgramSectionOpen &&
+                            programSection === program.name
+                              ? "py-0 pt-4"
+                              : "py-4"
+                          } flex gap-3 text-[17px] text-blue-500 capitalize font-semibold font-exo w-full`}
                           onClick={() =>
                             handleToggleSection(program.name, program.id)
                           }
@@ -386,6 +393,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                             programSection === program.name && (
                               <div className="relative z-20">
                                 <button
+                                  ref={statusButton}
                                   onClick={toggleStatusOpen}
                                   className="flex justify-between z-30 items-center nsm:w-[200px] xsm:w-full w-[200px] gap-1 text-dark-500 hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-dark-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
                                 >
@@ -400,7 +408,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                                         : "duration-300"
                                     }`}
                                   >
-                                    <IoIosArrowDown   />
+                                    <IoIosArrowDown />
                                   </span>
                                 </button>
 
@@ -553,6 +561,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                           skillSection === skill.name && (
                             <div className="relative z-20">
                               <button
+                                ref={statusButton}
                                 onClick={toggleStatusOpen}
                                 className="flex justify-between z-30 items-center w-[200px] text-dark-500 hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-dark-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
                               >

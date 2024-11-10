@@ -13,6 +13,7 @@ import {
 } from "react-icons/io";
 import { toast, ToastContainer } from "react-toastify";
 import { CircularProgress } from "@mui/material";
+import { FaPlus } from "react-icons/fa";
 
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
@@ -26,8 +27,9 @@ export default function Page() {
   const [updateLocation, setUpdateLocation] = useState(false);
   const [filteredCityList, setFilteredCityList] = useState([]);
   const cityDown = useRef(null);
+  const cityButton = useRef(null);
 
-  useClickOutside(cityDown, () => setIsCityOpen(false));
+  useClickOutside(cityDown, cityButton, () => setIsCityOpen(false));
 
   const handleListingAllLocations = async () => {
     try {
@@ -67,7 +69,7 @@ export default function Page() {
       location.city.toLowerCase().includes(selectedCity.toLowerCase())
     );
     setFilteredCityList(filteredList);
-  }, [selectedCity]);
+  }, [selectedCity, locations]);
 
   const clearCityFilter = () => {
     setSelectedCity("select city");
@@ -96,6 +98,7 @@ export default function Page() {
             <div className="flex gap-3">
               <div className="relative">
                 <button
+                  ref={cityButton}
                   onClick={toggleCityOpen}
                   className={`${
                     !isCitySelected ? " text-dark-500" : "text-[#424b55]"
@@ -150,11 +153,16 @@ export default function Page() {
               </div>
               <div>
                 <button
-                  className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] sm:flex text-sm sm:p-4 px-3 py-3 md:px-6 rounded-lg hover:cursor-pointer"
+                  className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] text-sm sm:p-4 px-3 py-3 md:px-6 rounded-lg hover:cursor-pointer"
                   onClick={handleLocationCreate}
                 >
-                  Create<span className="sm:flex hidden px-1">a new </span>{" "}
-                  location
+                  <span className="flex justify-center items-center gap-2">
+                    <FaPlus />
+                    <p className="sm:flex">
+                      Create<span className="sm:flex hidden px-1">a new </span>{" "}
+                      location
+                    </p>
+                  </span>
                 </button>
               </div>
             </div>

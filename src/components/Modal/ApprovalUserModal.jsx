@@ -73,8 +73,9 @@ const ApprovalUserModal = ({
   };
 
   const click = useRef(null);
+  const button = useRef(null);
 
-  useClickOutside(click, () => setShowDropdown(false));
+  useClickOutside(click, button, () => setShowDropdown(false));
 
   useEffect(() => {
     const handleUserDetails = async () => {
@@ -445,15 +446,19 @@ const ApprovalUserModal = ({
               </div> */}
                 <div className="relative bg-surface-100 rounded-xl">
                   <button
+                    ref={button}
                     className="flex  items-center justify-between border-dark-200 border rounded-lg text-dark-400 text-center p-2  w-full "
                     onClick={handleToggle}
                   >
                     <span>Assign classes</span>
-                    <span className="flex items-center">
-                      <IoIosArrowDown
-                        size={12}
-                        style={{ marginLeft: "8px", fontWeight: "800" }}
-                      />
+                    <span
+                      className={
+                        showDropdown
+                          ? "rotate-180 duration-300"
+                          : "duration-300"
+                      }
+                    >
+                      <IoIosArrowDown />
                     </span>
                   </button>
                   {showDropdown && (

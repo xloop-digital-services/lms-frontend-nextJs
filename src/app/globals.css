@@ -45,6 +45,12 @@ body {
   font-family: "Inter", sans-serif;
 }
 
+.required:after {
+  content: " *";
+  color: red;
+}
+
+
 .backDropOverlay {
   position: fixed;
   top: 0;

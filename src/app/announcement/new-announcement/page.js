@@ -31,10 +31,16 @@ export default function Page() {
   const [isSessionSelected, setIsSessionSelected] = useState(false);
   const [loadingBroadCast, setLoadingBroadCast] = useState(false);
   const mouseClick = useRef(null);
+  const mouseButton = useRef(null);
+  const sessionDown = useRef(null);
+  const sessionButton = useRef(null);
   const router = useRouter();
 
-  useClickOutside(mouseClick, () => {
+  useClickOutside(mouseClick, mouseButton, () => {
     setIsBatchOpen(false);
+  });
+
+  useClickOutside(sessionDown, sessionButton, () => {
     setIsSessionOpen(false);
   });
 
@@ -104,7 +110,7 @@ export default function Page() {
   }, [selectedBatch]);
 
   const toggleBatchOpen = () => {
-    setIsBatchOpen(true);
+    setIsBatchOpen((prev) => !prev);
   };
 
   const handleBatchSelect = (option) => {
@@ -117,7 +123,7 @@ export default function Page() {
   };
 
   const toggleSessionOpen = () => {
-    setIsSessionOpen(true);
+    setIsSessionOpen((prev) => !prev);
   };
 
   const handleSessionSelect = (option) => {
@@ -196,9 +202,12 @@ export default function Page() {
             <p className="font-medium text-sm">Select the batch</p>
 
             <div className="border border-dark-300 rounded-xl w-full flex items-center justify-between pl-4 pr-2 py-2">
-              <p className={`${selectedBatch ? "": "text-dark-400"}`}>{selectedBatch || "Select a batch"}</p>
+              <p className={`${selectedBatch ? "" : "text-dark-400"}`}>
+                {selectedBatch || "Select a batch"}
+              </p>
               <div className="relative text-[15px] ">
                 <button
+                  ref={mouseButton}
                   onClick={toggleBatchOpen}
                   className={`${
                     !isBatchSelected ? " text-[#92A7BE]" : "text-[#424b55]"
@@ -266,6 +275,7 @@ export default function Page() {
               </div>
               <div className="relative text-[15px] ">
                 <button
+                  ref={sessionButton}
                   onClick={toggleSessionOpen}
                   className={`${
                     !isSessionSelected ? " text-[#92A7BE]" : "text-[#424b55]"
@@ -283,7 +293,7 @@ export default function Page() {
 
                 {isSessionOpen && (
                   <div
-                    ref={mouseClick}
+                    ref={sessionDown}
                     className="absolute z-10 w-full max-h-[200px] mt-1 bg-surface-100  overflow-auto scrollbar-webkit border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
                   >
                     {loadingSession ? (

@@ -66,17 +66,20 @@ const AdminDashboard = () => {
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const dropdownRef = useRef(null);
+  const dropButton = useRef(null);
   const statusDown = useRef(null);
+  const statusButton = useRef(null);
   const userDown = useRef(null);
+  const userButton = useRef(null);
 
-  useClickOutside(statusDown, () => setIsOpen(false));
+  useClickOutside(statusDown, statusButton, () => setIsOpen(false));
 
   useClickOutside(
     dropdownRef,
     () => setIsProgramOpen(false),
     () => setIsSkillOpen(false)
   );
-  useClickOutside(userDown, () => setIsUserOpen(false));
+  useClickOutside(userDown, userButton, () => setIsUserOpen(false));
 
   // Apply filtering whenever search term or dropdown status changes
   useEffect(() => {
@@ -441,6 +444,7 @@ const AdminDashboard = () => {
                 <div className="flex gap-2  justify-between items-center w-full">
                   <div className="relative w-full">
                     <button
+                      ref={userButton}
                       onClick={toggleUsers}
                       className={`${
                         !selectedUser ? "text-dark-500" : "text-[#424b55]"

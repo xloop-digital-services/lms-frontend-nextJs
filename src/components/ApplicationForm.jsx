@@ -138,7 +138,7 @@ export default function ApplicationForm() {
   // Validate the contact number input
   const validateContactNumber = (value) => {
     // Ensure valid format: +92XXXXXXXXXX or 0XXX-XXXXXXX
-    const contactPattern = /^(?:\+92[0-9]{10}|0[0-9]{3}-[0-9]{7})$/; // Match +92XXXXXXXXXX or 0XXX-XXXXXXX
+    const contactPattern = /^(?:\+923[0-9]{9}|03[0-9]{2}-[0-9]{7})$/; // Match +92XXXXXXXXXX or 0XXX-XXXXXXX
     const invalidPrefix = /^0000/; // Prevent numbers starting with 0000
 
     if (invalidPrefix.test(value)) {
@@ -177,10 +177,26 @@ export default function ApplicationForm() {
   };
 
   const cityDown = useRef(null);
-  useClickOutside(cityDown, () => {
+  const cityButton = useRef(null);
+  useClickOutside(cityDown, cityButton, () => {
     setIsCityOpen(false);
+  });
+
+  const locationDown = useRef(null);
+  const locationButton = useRef(null);
+  useClickOutside(locationDown, locationButton, () => {
     setIsLocationOpen(false);
+  });
+
+  const programDown = useRef(null);
+  const programButton = useRef(null);
+  useClickOutside(programDown, programButton, () => {
     setIsProgramOpen(false);
+  });
+
+  const skillDown = useRef(null);
+  const skillButton = useRef(null);
+  useClickOutside(skillDown, skillButton, () => {
     setIsSkillOpen(false);
   });
 
@@ -240,15 +256,15 @@ export default function ApplicationForm() {
   };
 
   const toggleCityOpen = () => {
-    setIsCityOpen(!isCityOpen);
+    setIsCityOpen((prev) => !prev);
   };
+
   const handleCitySelect = (option) => {
     setSelectedCity(option.name);
     setCityShortName(option.shortName);
     setIsCityOpen(false);
     setIsCitySelected(true);
     setLocationName([]);
-    // setAllLocations(option.areas);
   };
   const toggleLocationOpen = () => {
     setIsLocationOpen(!isLocationOpen);
@@ -400,6 +416,7 @@ export default function ApplicationForm() {
     }
 
     if (
+      !email ||
       !firstName ||
       !lastName ||
       !contactNumber ||
@@ -479,7 +496,7 @@ export default function ApplicationForm() {
         <div className="flex gap-6 lg:flex-row flex-col justify-evenly font-inter">
           <div className="flex flex-col xl:w-full lg:max-w-[700px] w-full space-y-4 px-4">
             <div className="space-y-2 text-[15px] w-full">
-              <p>Email</p>
+              <p className="required">Email</p>
               <input
                 type="email"
                 className="border border-dark-300 outline-none p-3 rounded-lg w-full "
@@ -489,7 +506,7 @@ export default function ApplicationForm() {
               />
             </div>
             <div className="space-y-2 text-[15px] w-full">
-              <p>First Name</p>
+              <p className="required">First Name</p>
               <input
                 type="text"
                 className="border border-dark-300 outline-none p-3 rounded-lg w-full "
@@ -501,7 +518,7 @@ export default function ApplicationForm() {
               />
             </div>
             <div className="space-y-2 text-[15px] w-full">
-              <p>Last Name</p>
+              <p className="required">Last Name</p>
               <input
                 type="text"
                 className="border border-dark-300 outline-none p-3 rounded-lg w-full "
@@ -514,7 +531,7 @@ export default function ApplicationForm() {
             </div>
             <div className="space-y-1 text-[15px] w-full">
               <div className="space-y-2">
-                <p>Contact</p>
+                <p className="required">Contact</p>
                 <input
                   className="border border-dark-300 outline-none p-3 rounded-lg w-full "
                   placeholder="XXXX-XXXXXXX"
@@ -532,15 +549,20 @@ export default function ApplicationForm() {
               )}
             </div>
             <div className="relative space-y-2 text-[15px] w-full">
-              <p>City</p>
+              <p className="required">City</p>
               <button
+                ref={cityButton}
                 onClick={toggleCityOpen}
                 className={`${
                   !isCitySelected ? " text-[#92A7BE]" : "text-[#424B55]"
                 } flex justify-between items-center w-full hover:text-[#0E1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#ACC5E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
               >
                 {selectedCity}
-                <span className="">
+                <span
+                  className={
+                    isCityOpen ? "rotate-180 duration-300" : "duration-300"
+                  }
+                >
                   <IoIosArrowDown />
                 </span>
               </button>
@@ -573,12 +595,13 @@ export default function ApplicationForm() {
             </div>
 
             <div className=" relative space-y-2 text-[15px] w-full">
-              <p>
+              <p className="required">
                 Location{" "}
                 <span className="text-[12px] text-dark-400">(maximum 3)</span>
               </p>
               <div>
                 <button
+                  ref={locationButton}
                   onClick={toggleLocationOpen}
                   className={`${
                     !isLocationSelected
@@ -600,7 +623,13 @@ export default function ApplicationForm() {
                         </div>
                       ))
                     : "Select your suitable locations"}
-                  <span className="">
+                  <span
+                    className={
+                      isLocationOpen
+                        ? "rotate-180 duration-300"
+                        : "duration-300"
+                    }
+                  >
                     <IoIosArrowDown />
                   </span>
                 </button>
@@ -609,7 +638,7 @@ export default function ApplicationForm() {
                 selectedCity !== "Select your city" &&
                 allLocations.length > 0 ? (
                   <div
-                    ref={cityDown}
+                    ref={locationDown}
                     className="absolute  top-full left-0 z-10 w-full mt-2 lg:max-h-[160px] max-h-[150px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                   >
                     {[
@@ -640,7 +669,7 @@ export default function ApplicationForm() {
                   !isCitySelected &&
                   selectedCity === "Select your city" && (
                     <div
-                      ref={cityDown}
+                      ref={locationDown}
                       className="absolute  top-full left-0 z-10 w-full mt-2 lg:max-h-[170px] max-h-[150px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                     >
                       <p className="text-[12px] text-dark-400 text-center p-1">
@@ -665,7 +694,7 @@ export default function ApplicationForm() {
 
           <div className="flex flex-col w-full space-y-4 mt-9  mx-4">
             <div className="flex xsm:flex-row flex-col xsm:gap-0 gap-4 w-full items-center  justify-center">
-              <p className="lg:w-[150px] w-[60%] lg:text-start text-center">
+              <p className="lg:w-[150px] w-[60%] lg:text-start text-center required">
                 Register as:{" "}
               </p>
               <div className="flex lg:justify-evenly lg:gap-0 gap-10 xsm:justify-start justify-center items-start w-full">
@@ -713,13 +742,12 @@ export default function ApplicationForm() {
 
             {selectedRole === "student" ? (
               <div className=" relative space-y-2 text-[15px] w-full">
-                <p>
-                  Programs
-                  <span className="text-[12px] text-dark-400">
-                    (maximum 3)
-                  </span>{" "}
+                <p className="required">
+                  Programs{" "}
+                  <span className="text-[12px] text-dark-400">(maximum 3)</span>{" "}
                 </p>
                 <button
+                  ref={programButton}
                   onClick={toggleProgramOpen}
                   className={`${
                     selectedProgram.length === 0
@@ -746,14 +774,18 @@ export default function ApplicationForm() {
                   ) : (
                     "Select your programs"
                   )}
-                  <span className="">
+                  <span
+                    className={
+                      isProgramOpen ? "rotate-180 duration-300" : "duration-300"
+                    }
+                  >
                     <IoIosArrowDown />
                   </span>
                 </button>
 
                 {isProgramOpen && (
                   <div
-                    ref={cityDown}
+                    ref={programDown}
                     className="absolute  top-full left-0 mt-2 z-10 w-full lg:max-h-[170px] max-h-[150px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                   >
                     {[
@@ -783,13 +815,14 @@ export default function ApplicationForm() {
             ) : selectedRole === "instructor" ? (
               <div>
                 <div className=" relative space-y-2 text-[15px] w-full">
-                  <p>
+                  <p className="required">
                     Skills{" "}
                     <span className="text-[12px] text-dark-400">
                       (maximum 3)
                     </span>
                   </p>
                   <button
+                    ref={skillButton}
                     onClick={toggleSkillOpen}
                     className={`${
                       !isSkillSelected
@@ -816,14 +849,18 @@ export default function ApplicationForm() {
                     ) : (
                       "Select your skills"
                     )}
-                    <span className="">
+                    <span
+                      className={
+                        isSkillOpen ? "rotate-180 duration-300" : "duration-300"
+                      }
+                    >
                       <IoIosArrowDown />
                     </span>
                   </button>
 
                   {isSkillOpen && (
                     <div
-                      ref={cityDown}
+                      ref={skillDown}
                       className="absolute  top-full left-0 z-10 w-full lg:max-h-[170px] max-h-[150px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
                     >
                       {[
@@ -850,8 +887,8 @@ export default function ApplicationForm() {
                     </div>
                   )}
                 </div>
-                <div className="my-4 text-[15px] w-full">
-                  <p>Years of Experience</p>
+                <div className="mt-4 text-[15px] w-full">
+                  <p className="required">Years of Experience</p>
                   <input
                     type="number"
                     className="border border-dark-300 text-[#424b55] outline-none px-3 py-3 my-2 rounded-lg w-full"
@@ -862,7 +899,7 @@ export default function ApplicationForm() {
                     onChange={(e) => setExperience(e.target.value)}
                   />
                 </div>
-                <div className="my-2 text-[15px] w-full ">
+                <div className="mt-2 text-[15px] w-full ">
                   <p>Resume</p>
                   <input
                     required
@@ -876,6 +913,9 @@ export default function ApplicationForm() {
             ) : (
               <></>
             )}
+            <div className="text-sm text-dark-400">
+              <p>Note: Fields marked with * are required.</p>
+            </div>
           </div>
         </div>
         <div className="flex w-full lg:py-0 pt-8 pb-4 justify-center items-center font-inter">

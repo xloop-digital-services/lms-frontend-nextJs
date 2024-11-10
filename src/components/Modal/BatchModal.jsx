@@ -17,7 +17,7 @@ const BatchModal = ({
   const [selectedCity, setSelectedCity] = useState("Select city");
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState("Select program");
-  const [selectedProgramId, setSelectedProgramId] = useState(null)
+  const [selectedProgramId, setSelectedProgramId] = useState(null);
   const [isProgramOpen, setIsProgramOpen] = useState(false);
   const [programs, setPrograms] = useState([]);
   const [isProgramSelected, setIsProgramSelected] = useState(false);
@@ -44,13 +44,24 @@ const BatchModal = ({
     // { name: "Annual" },
   ];
   const cityDown = useRef(null);
+  const cityButton = useRef(null);
+  const programDown = useRef(null);
+  const programButton = useRef(null);
+
   const modalDown = useRef(null);
-  const categoryRef = useRef();
+  const categoryRef = useRef(null);
+  const categoryButton = useRef(null);
 
   useClickOutside(cityDown, () => {
     setIsCityOpen(false);
-    setIsCategoryOpen(false);
+  });
+
+  useClickOutside(programDown, () => {
     setIsProgramOpen(false);
+  });
+
+  useClickOutside(categoryRef, () => {
+    setIsCategoryOpen(false);
   });
 
   useClickOutside(modalDown, () => setIsOpenModal(false));
@@ -182,18 +193,18 @@ const BatchModal = ({
   };
 
   const toggleProgramOpen = () => {
-    setIsProgramOpen(!isProgramOpen);
+    setIsProgramOpen((prev) => !prev);
   };
 
   const handleProgramSelect = (option) => {
     setSelectedProgram(option.name);
-    setSelectedProgramId(option.id)
+    setSelectedProgramId(option.id);
     setIsProgramOpen(false);
     setIsProgramSelected(true);
   };
 
   const toggleCityOpen = () => {
-    setIsCityOpen(!isCityOpen);
+    setIsCityOpen((prev) => !prev);
   };
   const handleCitySelect = (option) => {
     setSelectedCity(option.name);
@@ -248,6 +259,7 @@ const BatchModal = ({
             <div className="relative space-y-2 text-[15px] w-full">
               <p>Program</p>
               <button
+                ref={programButton}
                 onClick={toggleProgramOpen}
                 className={`${
                   !isProgramSelected ? " text-dark-500" : "text-[#424b55]"
@@ -265,7 +277,7 @@ const BatchModal = ({
 
               {isProgramOpen && (
                 <div
-                  ref={cityDown}
+                  ref={programDown}
                   className="absolute z-10 w-full max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
                 >
                   {programs.map((option, index) => (
@@ -286,6 +298,7 @@ const BatchModal = ({
               <div className="relative space-y-2 text-[15px] w-full">
                 <p>City</p>
                 <button
+                  ref={cityButton}
                   onClick={toggleCityOpen}
                   className={`${
                     !isCitySelected ? " text-dark-500" : "text-[#424b55]"
@@ -381,6 +394,7 @@ const BatchModal = ({
               <div className="space-y-2 text-[15px] w-full relative">
                 <p>Category</p>
                 <button
+                  ref={categoryButton}
                   onClick={toggleCategoryOpen}
                   className={`${
                     !isCategorySelected ? " text-dark-500" : "text-[#424b55]"
@@ -400,7 +414,7 @@ const BatchModal = ({
 
                 {isCategoryOpen && (
                   <div
-                    ref={cityDown}
+                    ref={categoryRef}
                     className="absolute z-10 w-full max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                   >
                     {categoryOptions.map((option, index) => (

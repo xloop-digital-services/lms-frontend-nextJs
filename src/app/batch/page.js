@@ -11,6 +11,7 @@ import { IoIosCloseCircleOutline } from "react-icons/io";
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 import DeleteConfirmationPopup from "@/components/Modal/DeleteConfirmationPopUp";
+import { FaPlus } from "react-icons/fa";
 
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
@@ -26,8 +27,9 @@ export default function Page() {
   const [selectedBatch, setSelectedBatch] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const mousedown = useRef(null);
+  const mouseButton = useRef(null);
 
-  useClickOutside(mousedown, () => setIsCityOpen(false));
+  useClickOutside(mousedown, mouseButton, () => setIsCityOpen(false));
 
   const handleListingAllBatches = async () => {
     try {
@@ -104,11 +106,14 @@ export default function Page() {
         <div className="bg-surface-100 p-6 rounded-xl">
           <div className="w-full mx-auto flex xsm:flex-row flex-col justify-between items-center gap-4 max-md:flex-col">
             <div>
-              <p className="font-bold text-blue-500 text-xl font-exo">Batch Details</p>
+              <p className="font-bold text-blue-500 text-xl font-exo">
+                Batch Details
+              </p>
             </div>
             <div className="flex gap-3 ">
               <div className="relative">
                 <button
+                  ref={mouseButton}
                   onClick={toggleCityOpen}
                   className={`${
                     !isCitySelected ? " text-dark-500" : "text-[#424b55]"
@@ -120,7 +125,11 @@ export default function Page() {
                       <IoIosCloseCircleOutline size={20} />
                     </span>
                   )}
-                  <span className="pl-1">
+                  <span
+                    className={`${
+                      isCityOpen ? "rotate-180 duration-300" : "duration-300"
+                    } pl-1`}
+                  >
                     <IoIosArrowDown />
                   </span>
                 </button>
@@ -210,11 +219,16 @@ export default function Page() {
             </div> */}
               <div>
                 <button
-                  className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] sm:flex text-sm sm:p-4 px-3 py-3 md:px-6 rounded-lg hover:cursor-pointer"
+                  className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] text-sm sm:p-4 px-3 py-3 md:px-6 rounded-lg hover:cursor-pointer"
                   onClick={handleBatchCreate}
                 >
-                  Create <span className="sm:flex hidden px-1">a new </span>{" "}
-                  batch
+                  <span className="flex justify-center items-center gap-2">
+                    <FaPlus />
+                    <p className=" sm:flex ">
+                      Create <span className="sm:flex hidden px-1">a new </span>{" "}
+                      batch
+                    </p>
+                  </span>
                 </button>
               </div>
             </div>

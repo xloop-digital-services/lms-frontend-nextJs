@@ -81,7 +81,7 @@ export default function StudentDashboard() {
   async function fetchPendingAssignments() {
     setLoader(true);
     try {
-    const response = await getPendingAssignments(progId, regId);
+      const response = await getPendingAssignments(progId, regId);
       if (response.status === 200) {
         setAssignments(response.data);
         setLoader(false);
@@ -182,10 +182,10 @@ export default function StudentDashboard() {
     if (assignments.length >= 0) {
       setSelectedCategory("Show All");
     }
-  }, []);
+  }, [assignments.length]);
 
   const toggleCategoryOpen = () => {
-    setIsCategoryOpen(true);
+    setIsCategoryOpen(!isCategoryOpen);
   };
 
   const handleCategorySelect = (category) => {
@@ -199,7 +199,7 @@ export default function StudentDashboard() {
   });
 
   const toggleCourseOpen = () => {
-    setIsCourseOpen(true);
+    setIsCourseOpen(!isCourseOpen);
   };
 
   const handleCourseSelect = (course) => {
