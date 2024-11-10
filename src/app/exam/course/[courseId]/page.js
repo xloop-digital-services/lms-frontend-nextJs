@@ -55,13 +55,12 @@ export default function Page({ params }) {
   const [studentInstructorID, setStudentInstructorID] = useState(null);
 
   async function fetchSessionForUser() {
-    const response = await getUserSessions();
     setLoading(true);
-
     try {
+      const response = await getUserSessions();
       if (response.status === 200) {
         const sessions = response.data?.session || [];
-        //console.log(sessions);
+        // console.log(sessions);
         const coursesData = sessions.map((session) => {
           return {
             course: session.course,
@@ -81,13 +80,13 @@ export default function Page({ params }) {
           setStudentInstructorID(foundSession.instructor?.instructor_id);
         }
       } else {
-        // //console.error(
+        // console.error(
         //   "Failed to fetch user sessions, status:",
         //   response.status
         // );
       }
     } catch (error) {
-      //console.log("Error:", error);
+      // console.log("Error:", error);
     } finally {
       setLoading(false);
     }
@@ -112,17 +111,18 @@ export default function Page({ params }) {
   };
 
   async function fetchAssignments() {
-    const response = await getExamByCourseId(courseId, sessionId);
     setLoading(true);
     try {
+      const response = await getExamByCourseId(courseId, sessionId);
       if (response.status === 200) {
         setAssignments(response?.data?.data);
-        setLoading(false);
       } else {
-        //console.error("Failed to fetch exam, status:", response.status);
+        // console.error("Failed to fetch exam, status:", response.status);
       }
     } catch (error) {
-      //console.log("error", error);
+      // console.log("error", error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -136,7 +136,7 @@ export default function Page({ params }) {
     }
 
     const s3Data = await handleFileUploadToS3(file, "Upload Exams");
-    //console.log("S3 Data:", s3Data);
+    // console.log("S3 Data:", s3Data);
 
     const formData = new FormData();
     formData.append("course", courseId);
@@ -147,9 +147,7 @@ export default function Page({ params }) {
     }
     formData.append("due_date", dueDate);
     // formData.append("no_of_resubmissions_allowed", resubmission);
-    if (!currentAssignment) {
-      formData.append("status", assignmentStatus);
-    }
+    formData.append("status", assignmentStatus);
     formData.append("start_time", startTime);
     formData.append("end_time", endTime);
     formData.append("total_grade", totalGrade);
@@ -161,7 +159,6 @@ export default function Page({ params }) {
         : await createExam(formData);
 
       if (response.status === (currentAssignment ? 200 : 201)) {
-        setLoading(false);
         toast.success(
           currentAssignment
             ? "Exam updated successfully!"
@@ -181,19 +178,19 @@ export default function Page({ params }) {
         setCurrentAssignment(null);
         fetchAssignments();
       } else {
-        setLoading(false);
         toast.error(
           `Error ${currentAssignment ? "updating" : "creating"} Exam`,
           response?.message
         );
       }
     } catch (error) {
-      setLoading(false);
       toast.error(
         `Error ${currentAssignment ? "updating" : "creating"} Exam`,
         error
       );
-      //console.log(error);
+      // console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -218,71 +215,24 @@ export default function Page({ params }) {
   };
 
   async function fetchSessions() {
-    const response = await getSessionInstructor(
-      // userId,
-      // group,
-      courseId
-    );
     setLoading(true);
     try {
+      const response = await getSessionInstructor(
+        // userId,
+        // group,
+        courseId
+      );
       if (response.status === 200) {
         setSessions(response.data.data);
-        setLoading(false);
       } else {
-        //console.error("Failed to fetch sessions, status:", response.status);
+        // console.error("Failed to fetch sessions, status:", response.status);
       }
     } catch (error) {
-      //console.log("error", error);
+      // console.log("error", error);
+    } finally {
+      setLoading(false);
     }
   }
-  const handleAssignmentStatus = async (id, newStatus) => {
-    const assignmentToUpdate = assignments.find(
-      (assignment) => assignment.id === id
-    );
-
-    if (!assignmentToUpdate) {
-      toast.error("Exam not found");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("status", newStatus);
-
-    try {
-      const response = await deleteExam(formData, assignmentToUpdate.id);
-
-      // Check response.status_code instead of response.status
-      //console.log("Response from deleteExam:", response);
-
-      if (response?.status === 200) {
-        toast.success(response.message || "Exam status updated successfully!");
-        setAssignments((prevAssignments) =>
-          prevAssignments.map((assignment) =>
-            assignment.id === id
-              ? { ...assignment, status: newStatus }
-              : assignment
-          )
-        );
-      } else {
-        toast.error(
-          `Error updating exam status: ${response?.message || "Unknown error"}`
-        );
-      }
-    } catch (error) {
-      if (error.response) {
-        toast.error(
-          `Error updating exam status: ${
-            error.response.data.message || "Unknown error"
-          }`
-        );
-        //console.error("Error response:", error.response);
-      } else {
-        toast.error("Error updating exam status");
-        //console.error("Error:", error);
-      }
-    }
-  };
-
   const handleDeleteAssignment = async (id) => {
     const assignmentToDelete = assignments.find(
       (assignment) => assignment.id === id
@@ -299,59 +249,48 @@ export default function Page({ params }) {
     try {
       const response = await deleteExam(formData, assignmentToDelete.id);
 
-      if (response?.status === 200) {
+      if (response.status === 200) {
         toast.success("Exam deleted successfully!");
         fetchAssignments();
       } else {
-        toast.error(
-          `Error deleting exam: ${response.message || "Unknown error"}`
-        );
+        toast.error("Error deleting exam", response?.message);
       }
     } catch (error) {
-      if (error.response) {
-        toast.error(
-          `Error deleting exam: ${
-            error.response.data.message || "Unknown error"
-          }`
-        );
-        //console.error("Error response:", error.response);
-      } else {
-        toast.error("Error deleting exam");
-        //console.error("Error:", error);
-      }
+      toast.error("Error deleting exam", error);
+      // console.error(error);
     }
   };
 
   async function fetchSessions() {
-    const response = await listSessionByCourseId(courseId);
     setLoading(true);
     try {
+      const response = await listSessionByCourseId(courseId);
       if (response.status === 200) {
         setSessions(response.data.data);
-        setLoading(false);
       } else {
-        //console.error("Failed to fetch sessions, status:", response.status);
+        // console.error("Failed to fetch sessions, status:", response.status);
       }
     } catch (error) {
-      //console.log("error", error);
+      // console.log("error", error);
+    } finally {
+      setLoading(false);
     }
   }
 
   async function fetchSessionsInstructor() {
-    const response = await getInstructorSessionsbyCourseId(
-      userId,
-      group,
-      courseId
-    );
-
     try {
+      const response = await getInstructorSessionsbyCourseId(
+        userId,
+        group,
+        courseId
+      );
       if (response.status === 200) {
         setSessions(response.data.data);
       } else {
-        //console.error("Failed to fetch sessions, status:", response.status);
+        // console.error("Failed to fetch sessions, status:", response.status);
       }
     } catch (error) {
-      //console.log("error", error);
+      // console.log("error", error);
     }
   }
 
@@ -654,7 +593,7 @@ export default function Page({ params }) {
                 </form>
               </>
             )}
-              <div className="mt-4">
+            <div className="mt-4">
               {isStudent ? (
                 <StudentDataStructure
                   quizzes={assignments}
