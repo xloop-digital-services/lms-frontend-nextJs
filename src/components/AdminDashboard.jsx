@@ -76,6 +76,7 @@ const AdminDashboard = () => {
 
   useClickOutside(
     dropdownRef,
+    dropButton,
     () => setIsProgramOpen(false),
     () => setIsSkillOpen(false)
   );
@@ -484,6 +485,7 @@ const AdminDashboard = () => {
                   {selectedUser.toLowerCase() === "student" ? (
                     <div className={`${loading && "hidden"} relative w-full`}>
                       <button
+                        ref={dropButton}
                         onClick={toggleProgramOpen}
                         className={`${
                           !isProgramSelected
@@ -546,6 +548,7 @@ const AdminDashboard = () => {
                   ) : (
                     <div className={`${loading && "hidden"} relative`}>
                       <button
+                        ref={dropButton}
                         onClick={toggleSkillOpen}
                         className={`${
                           !isSkillSelected ? " text-dark-500" : "text-[#424b55]"

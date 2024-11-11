@@ -474,7 +474,7 @@ const SessionCreationModal = ({
           </div>
           <div className="bg-surface-100 xsm:p-6 px-3 py-4 rounded-xl xsm:space-y-5 space-y-2 font-inter">
             <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
-              <div className="space-y-2 text-[15px] w-full">
+              <div className="relative space-y-2 text-[15px] w-full">
                 <p>Batch</p>
                 <button
                   ref={batchButton}
@@ -497,7 +497,7 @@ const SessionCreationModal = ({
                 {isBatchOpen && (
                   <div
                     ref={batchDown}
-                    className="absolute z-10 min-w-[240px] max-h-[170px] mt-1 bg-surface-100  overflow-auto scrollbar-webkit border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
+                    className="absolute z-10 w-full max-h-[170px] mt-1 bg-surface-100  overflow-auto scrollbar-webkit border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
                   >
                     {loadingBatch && batchOptions.length == 0 ? (
                       <div className="w-full flex items-center justify-center p-1">
@@ -529,10 +529,10 @@ const SessionCreationModal = ({
                   ref={courseButton}
                   onClick={toggleCourseOpen}
                   className={`${
-                    !isCourseSelected || !edit
+                    !isCourseSelected || edit
                       ? "text-[#92A7BE]"
                       : "text-[#424b55]"
-                  } flex justify-between items-center w-full truncate px-4 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                  } flex justify-between items-center w-full px-4 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                   style={{
                     // maxWidth: "220px", // Set the maximum width of the button
                     whiteSpace: "nowrap",
@@ -541,7 +541,10 @@ const SessionCreationModal = ({
                   }}
                   disabled={edit}
                 >
+                  <p className="max-w-[180px] truncate">
+
                   {selectedCourseName ? selectedCourseName : "Select a course"}
+                  </p>
                   <span
                     className={`${
                       isCourseOpen ? "rotate-180 duration-300" : "duration-300"
@@ -582,7 +585,7 @@ const SessionCreationModal = ({
               </div>
             </div>
             <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
-              <div className="space-y-2 text-[15px] w-full">
+              <div className="relative space-y-2 text-[15px] w-full">
                 <p>Location</p>
                 <button
                   ref={locationButton}
@@ -606,7 +609,7 @@ const SessionCreationModal = ({
                 {isLocationOpen && (
                   <div
                     ref={locationDown}
-                    className="absolute z-10 min-w-[240px] max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
+                    className="absolute z-10 w-full max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
                   >
                     {loadingLocation ? (
                       <div className="w-full flex items-center justify-center p-1">
