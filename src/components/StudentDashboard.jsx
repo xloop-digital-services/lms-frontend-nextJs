@@ -48,10 +48,12 @@ export default function StudentDashboard() {
   const userId = userData?.User?.id;
   const group = userData?.Group;
   const CourseDown = useRef(null);
+  const courseButton = useRef(null);
   const CategoryDown = useRef(null);
+  const categoryButton = useRef(null);
 
-  useClickOutside(CourseDown, () => setIsCourseOpen(false));
-  useClickOutside(CategoryDown, () => setIsCategoryOpen(false));
+  useClickOutside(CourseDown, courseButton, () => setIsCourseOpen(false));
+  useClickOutside(CategoryDown, categoryButton, () => setIsCategoryOpen(false));
 
   const Categories = ["Show All", "Quiz", "Assignment", "Project", "Exam"];
 
@@ -63,14 +65,14 @@ export default function StudentDashboard() {
         const sessions = response.data?.session || [];
         const coursesData = sessions.map((session) => session.course);
         setCourses(coursesData);
-        //console.log("courses set", response.data?.session);
+        console.log("courses set", response.data?.session);
 
         setLoader(false);
       } else {
-        //console.error("Failed to fetch user, status:", response.status);
+        console.error("Failed to fetch user, status:", response.status);
       }
     } catch (error) {
-      //console.log("Error:", error);
+      console.log("Error:", error);
     }
   }
 
@@ -86,20 +88,20 @@ export default function StudentDashboard() {
         setAssignments(response.data);
         setLoader(false);
       } else {
-        //console.error(
-        //   "Failed to fetch pending assignments, status:",
-        //   response.status
-        // );
+        console.error(
+          "Failed to fetch pending assignments, status:",
+          response.status
+        );
       }
     } catch (error) {
-      //console.log("error", error);
+      console.log("error", error);
     }
   }
   async function fetchCalendarSessions() {
     const response = await getCalendarData(userId);
     try {
       if (response.status === 200) {
-        // //console.log(response.data?.data);
+        // console.log(response.data?.data);
         const events = Array.isArray(response?.data?.data)
           ? response.data?.data?.flatMap((item) =>
               Array.isArray(item.sessions)
@@ -115,14 +117,14 @@ export default function StudentDashboard() {
 
         setCalendarEvents(events);
       } else {
-        //console.error("Failed to fetch calendar data", response.status);
+        console.error("Failed to fetch calendar data", response.status);
       }
     } catch (error) {
-      //console.error("Error fetching calendar data", error);
+      console.error("Error fetching calendar data", error);
     }
   }
 
-  // //console.log(calendarEvents);
+  // console.log(calendarEvents);
   useEffect(() => {
     fetchPendingAssignments();
 
@@ -136,30 +138,30 @@ export default function StudentDashboard() {
       const handleCourseProgress = async () => {
         try {
           const response = await getProgressForCourse(selectedCourseId);
-          //console.log("Course progress", response);
+          console.log("Course progress", response);
           setCourseProgress(response.data.data.progress_percentage);
         } catch (error) {
-          //console.log("Error fetching course progress", error);
+          console.log("Error fetching course progress", error);
         }
       };
 
       const handleQuizProgress = async () => {
         try {
           const response = await getProgressForQuiz(selectedCourseId);
-          //console.log("Quiz progress", response);
+          console.log("Quiz progress", response);
           setQuizProgress(response.data.data.progress_percentage);
         } catch (error) {
-          //console.log("Error fetching quiz progress", error);
+          console.log("Error fetching quiz progress", error);
         }
       };
 
       const handleAssignmentProgress = async () => {
         try {
           const response = await getProgressForAssignment(selectedCourseId);
-          //console.log("Assignment progress", response);
+          console.log("Assignment progress", response);
           setAssignmentProgress(response.data.data.progress_percentage);
         } catch (error) {
-          //console.log("Error fetching assignment progress", error);
+          console.log("Error fetching assignment progress", error);
         }
       };
 
@@ -179,13 +181,13 @@ export default function StudentDashboard() {
   }, [courses]);
 
   useEffect(() => {
-    if (assignments.length > 0) {
+    if (assignments.length >= 0) {
       setSelectedCategory("Show All");
     }
-  }, []);
+  }, [assignments.length]);
 
   const toggleCategoryOpen = () => {
-    setIsCategoryOpen(true);
+    setIsCategoryOpen(!isCategoryOpen);
   };
 
   const handleCategorySelect = (category) => {
@@ -199,7 +201,7 @@ export default function StudentDashboard() {
   });
 
   const toggleCourseOpen = () => {
-    setIsCourseOpen(true);
+    setIsCourseOpen(!isCourseOpen);
   };
 
   const handleCourseSelect = (course) => {
@@ -341,11 +343,18 @@ export default function StudentDashboard() {
               </select> */}
                 <div className=" relative space-y-2 text-[15px] w-[150px]">
                   <button
+                    ref={categoryButton}
                     onClick={toggleCategoryOpen}
                     className={` flex justify-between gap-1 items-center w-full text-[#768597]  hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                   >
                     {selectedCategory}
-                    <span className="">
+                    <span
+                      className={
+                        isCategoryOpen
+                          ? "rotate-180 duration-300"
+                          : "duration-300"
+                      }
+                    >
                       <IoIosArrowDown />
                     </span>
                   </button>
@@ -397,11 +406,16 @@ export default function StudentDashboard() {
               </h1>
               <div className=" relative space-y-2 text-[15px] w-full">
                 <button
+                  ref={courseButton}
                   onClick={toggleCourseOpen}
                   className={` flex justify-between items-center w-full text-[#424b55]  hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
                   {selectedCourse}
-                  <span className="">
+                  <span
+                    className={
+                      isCourseOpen ? "rotate-180 duration-300" : "duration-300"
+                    }
+                  >
                     <IoIosArrowDown />
                   </span>
                 </button>

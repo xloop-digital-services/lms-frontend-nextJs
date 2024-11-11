@@ -73,14 +73,15 @@ const ApprovalUserModal = ({
   };
 
   const click = useRef(null);
+  const button = useRef(null);
 
-  useClickOutside(click, () => setShowDropdown(false));
+  useClickOutside(click, button, () => setShowDropdown(false));
 
   useEffect(() => {
     const handleUserDetails = async () => {
       try {
         const response = await getApplicationUserDetails(id, selectedOption);
-        // console.log("my programs", response?.data?.data);
+        console.log("my programs", response?.data?.data);
         setUserPrograms(response?.data?.data?.programs);
         setUserLocations(response?.data?.data.locations);
         setUserSkills(response?.data.data.skills);
@@ -93,7 +94,7 @@ const ApprovalUserModal = ({
           response?.data?.data?.programs.map((program) => program.id)
         );
       } catch (error) {
-        // console.log("error fetching user details", error);
+        console.log("error fetching user details", error);
       }
     };
 
@@ -109,7 +110,7 @@ const ApprovalUserModal = ({
         // console.log("courses by program", response?.data?.data);
         setUserPorgramCourses(response?.data?.data);
       } catch (error) {
-        // console.log("error while fetching the courses by program id", error);
+        console.log("error while fetching the courses by program id", error);
       }
     };
     if (userProgramId) {
@@ -122,13 +123,13 @@ const ApprovalUserModal = ({
       setLoadingSessions(true);
       try {
         const response = await getInstructorPreferredSessions(id);
-        // console.log("instructor suggested sessions", response);
+        console.log("instructor suggested sessions", response);
         setSessions(response.data.data.sessions);
       } catch (error) {
-        // console.log(
-        //   "error while fetching the suggested sessions for isntructor",
-        //   error
-        // );
+        console.log(
+          "error while fetching the suggested sessions for isntructor",
+          error
+        );
       } finally {
         setLoadingSessions(false);
       }
@@ -183,9 +184,9 @@ const ApprovalUserModal = ({
           id
         );
         setStudentSessions(response.data.data.sessions);
-        // console.log("response of the suggested sessions", response.data);
+        console.log("response of the suggested sessions", response.data);
       } catch (error) {
-        // console.log("error while fetching suggested sessions", error.response);
+        console.log("error while fetching suggested sessions", error.response);
       }
     };
     if (selectedOption === "student" && userLocationID && userProgramId) {
@@ -211,7 +212,7 @@ const ApprovalUserModal = ({
       setSessionIds([]);
       setLoadingAssign(false);
     } catch (error) {
-      // console.log("Error in assigning", error);
+      console.log("Error in assigning", error);
       if (error.message === "Network Error") {
         toast.error(error.message);
       } else if (error.response.status === 400) {
@@ -235,7 +236,7 @@ const ApprovalUserModal = ({
         setAssignedSessions(response?.data?.data);
         setLoadingSelection(false);
       } catch (error) {
-        // console.log("error", error);
+        console.log("error", error);
         if (error.response.data.status_code === 404) {
           setAssignedSessions([]);
         }
@@ -281,11 +282,11 @@ const ApprovalUserModal = ({
         selectedOption,
         sessionId
       );
-      // console.log("session deleted", response.data);
+      console.log("session deleted", response.data);
       toast.success("Session removed succesfully!");
       setUpdateSessions(updateSession + 1);
     } catch (error) {
-      // console.log("error removing assigned session", error);
+      console.log("error removing assigned session", error);
     }
   };
 
@@ -445,23 +446,27 @@ const ApprovalUserModal = ({
               </div> */}
                 <div className="relative bg-surface-100 rounded-xl">
                   <button
-                    className="flex  items-center justify-between border-dark-200 border rounded-lg text-dark-400 text-center p-2  w-full "
+                    ref={button}
+                    className="flex items-center justify-between border-dark-200 border rounded-lg text-dark-400 text-center p-2  w-full "
                     onClick={handleToggle}
                   >
                     <span>Assign classes</span>
-                    <span className="flex items-center">
-                      <IoIosArrowDown
-                        size={12}
-                        style={{ marginLeft: "8px", fontWeight: "800" }}
-                      />
+                    <span
+                      className={
+                        showDropdown
+                          ? "rotate-180 duration-300"
+                          : "duration-300"
+                      }
+                    >
+                      <IoIosArrowDown />
                     </span>
                   </button>
                   {showDropdown && (
                     <div
                       ref={click}
-                      className="absolute z-10 min-w-[200px] mt-1 max-h-[250px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                      className="absolute z-50 w-full mt-1 max-h-[250px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                     >
-                      <div className="py-2">
+                      <div className="w-full">
                         {loadingSessions ? (
                           <div className="flex justify-center items-center">
                             <CircularProgress size={24} />
@@ -510,7 +515,7 @@ const ApprovalUserModal = ({
                             );
                           })
                         ) : (
-                          <div className="py-2 px-4 w-[250px] text-center text-sm text-dark-300">
+                          <div className="py-2 px-4 w-full text-center text-sm text-dark-300">
                             No sessions available
                           </div>
                         )}
@@ -612,7 +617,7 @@ const ApprovalUserModal = ({
                       <div className="w-full overflow-y-auto max-h-40 scrollbar-webkit">
                         <table className="w-full border-collapse">
                           <thead className="sticky top-0 bg-surface-100 z-10 shadow shadow-dark-200">
-                            <tr className="border-b  border-[#d7e4ee]">
+                            <tr className="border-b border-[#d7e4ee]">
                               <th className="text-dark-400 font-normal text-center py-2">
                                 Days
                               </th>
@@ -644,7 +649,7 @@ const ApprovalUserModal = ({
                               ))
                             ) : (
                               <tr>
-                                <td colSpan="3" className="text-center py-2">
+                                <td colSpan="3" className="text-center py-2 text-dark-400">
                                   No time is scheduled
                                 </td>
                               </tr>

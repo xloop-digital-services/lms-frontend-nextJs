@@ -57,11 +57,13 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   const [modal, setModal] = useState(false);
 
   const dropdownRef = useRef(null);
+  const dropButton = useRef(null);
   const dropProgram = useRef(null);
   const dropStatus = useRef(null);
-  useClickOutside(dropdownRef, () => setIsOpen(false));
+  const statusButton = useRef(null);
+  useClickOutside(dropdownRef, dropButton, () => setIsOpen(false));
   useClickOutside(dropProgram, () => setIsProgramSectionOpen(false));
-  useClickOutside(dropStatus, () => setStatusOpen(false));
+  useClickOutside(dropStatus, statusButton, () => setStatusOpen(false));
 
   useEffect(() => {
     const handleApprovedUsers = async () => {
@@ -223,7 +225,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
   };
 
   const toggleOpen = () => {
-    setIsOpen(!isOpen);
+    setIsOpen((prev) => !prev);
   };
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
@@ -236,7 +238,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
 
   const toggleStatusOpen = (e) => {
     e.stopPropagation();
-    setStatusOpen(true);
+    setStatusOpen((prev) => !prev);
   };
 
   const handleStatusSelect = (option) => {
@@ -278,8 +280,9 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
             <p className="text-xl font-bold text-blue-500">{heading}</p>
             <div className="relative  ">
               <button
+                ref={dropButton}
                 onClick={toggleOpen}
-                className="flex justify-between sm:text-base text-sm z-50 items-center xsm:w-[200px] w-full gap-1 md:w-[200px] text-dark-500 hover:text-[#0e1721] px-4 py-3 text-left bg-white border  border-dark-500 rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+                className="flex justify-between sm:text-base text-sm z-50 items-center xsm:w-[200px] w-full gap-1 md:w-[200px] text-dark-500 hover:text-[#0e1721] px-4 py-3 text-left bg-white border  border-dark-500 rounded-lg  focus:outline-none focus:ring-1 focus:ring-blue-300 transition duration-300 ease-in-out"
               >
                 {selectedOption || options[0]}
                 <span
@@ -294,13 +297,13 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
               {isOpen && (
                 <div
                   ref={dropdownRef}
-                  className="absolute capitalize z-50 w-full mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                  className="absolute capitalize z-50 p-2 w-full mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                 >
                   {options.map((option, index) => (
                     <div
                       key={index}
                       onClick={() => handleOptionSelect(option)}
-                      className="p-2 cursor-pointer "
+                      className=" cursor-pointer "
                     >
                       <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
                         {option}
@@ -339,8 +342,12 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                         }  space-y-2  items-center`}
                       >
                         <div
-                          className={`${isProgramSectionOpen &&
-                            programSection === program.name ? 'py-0 pt-4': 'py-4'} flex gap-3 text-[17px] text-blue-500 capitalize font-semibold font-exo w-full`}
+                          className={`${
+                            isProgramSectionOpen &&
+                            programSection === program.name
+                              ? "py-0 pt-4"
+                              : "py-4"
+                          } flex gap-3 text-[17px] text-blue-500 capitalize font-semibold font-exo w-full`}
                           onClick={() =>
                             handleToggleSection(program.name, program.id)
                           }
@@ -386,8 +393,9 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                             programSection === program.name && (
                               <div className="relative z-20">
                                 <button
+                                  ref={statusButton}
                                   onClick={toggleStatusOpen}
-                                  className="flex justify-between z-30 items-center nsm:w-[200px] xsm:w-full w-[200px] gap-1 text-dark-500 hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-dark-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+                                  className="flex justify-between z-30 items-center nsm:w-[200px] xsm:w-full w-[200px] gap-1 text-dark-500 hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-dark-500 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-300 transition duration-300 ease-in-out"
                                 >
                                   {/* {selectedStatus || status[0]} */}
                                   {selectedStatus
@@ -400,14 +408,14 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                                         : "duration-300"
                                     }`}
                                   >
-                                    <IoIosArrowDown   />
+                                    <IoIosArrowDown />
                                   </span>
                                 </button>
 
                                 {statusOpen && (
                                   <div
                                     ref={dropStatus}
-                                    className="absolute z-40 w-full mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                                    className="absolute z-40 p-2  w-full mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                                   >
                                     {Object.entries(statusDisplayMap).length >
                                     0 ? (
@@ -418,7 +426,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                                             onClick={() =>
                                               handleStatusSelect(key)
                                             }
-                                            className="p-2 cursor-pointer"
+                                            className="cursor-pointer"
                                           >
                                             <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
                                               {value}{" "}
@@ -553,8 +561,9 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                           skillSection === skill.name && (
                             <div className="relative z-20">
                               <button
+                                ref={statusButton}
                                 onClick={toggleStatusOpen}
-                                className="flex justify-between z-30 items-center w-[200px] text-dark-500 hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-dark-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
+                                className="flex justify-between z-30 items-center w-[200px] text-dark-500 hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border border-dark-500 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-300 transition duration-300 ease-in-out"
                               >
                                 {/* {selectedStatus || status[0]} */}
                                 {selectedStatus
@@ -574,7 +583,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                               {statusOpen && (
                                 <div
                                   ref={dropStatus}
-                                  className="absolute capitalize z-40 w-full mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                                  className="absolute capitalize p-2 z-40 w-full mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                                 >
                                   {Object.entries(statusDisplayMap).length >
                                   0 ? (
@@ -585,7 +594,7 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
                                           onClick={() =>
                                             handleStatusSelect(key)
                                           }
-                                          className="p-2 cursor-pointer"
+                                          className=" cursor-pointer"
                                         >
                                           <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
                                             {value}{" "}

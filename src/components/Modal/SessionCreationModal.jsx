@@ -22,9 +22,9 @@ const SessionCreationModal = ({
   session,
   selectedSession,
 }) => {
-  const [selectedLocation, setSelectedLocation] = useState("select Location");
+  const [selectedLocation, setSelectedLocation] = useState("Select location");
   const [selectedLocationId, setSelectedLocationId] = useState(null);
-  const [selectedBatch, setSelectedBatch] = useState("select batch");
+  const [selectedBatch, setSelectedBatch] = useState("Select batch");
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [isBatchOpen, setIsBatchOpen] = useState(false);
   const [isBatchSelected, setIsBatchSelected] = useState(false);
@@ -36,8 +36,8 @@ const SessionCreationModal = ({
   const [dateErrorMessage, setDateErrorMessage] = useState("");
 
   const [loadingCreation, setLoadingCreation] = useState(false);
-  const [courseNames, setCourseNames] = useState([]);
-  const [coursesMap, setCoursesMap] = useState({});
+  const [courseNames, setCourseNames] = useState([]); // Store only the names
+  const [coursesMap, setCoursesMap] = useState({}); // Store the mapping of names to full course objects
   const [selectedCourse, setSelectedCourse] = useState();
   const [selectedCourseName, setSelectedCourseName] = useState(null);
   const [selectedCourseId, setSelectedCourseId] = useState(null);
@@ -46,6 +46,7 @@ const SessionCreationModal = ({
   const [loadingCourses, setLoadingCourses] = useState(false);
   const [selectedDays, setSelectedDays] = useState([]);
   const [timeData, setTimeData] = useState({
+    // Initialize with each day having default start and end time
     0: { startTime: "", endTime: "" },
     1: { startTime: "", endTime: "" },
     2: { startTime: "", endTime: "" },
@@ -56,8 +57,13 @@ const SessionCreationModal = ({
   });
   const [startDate, setstartDate] = useState(null);
   const [endDate, setendDate] = useState(null);
-  const [error, setError] = useState("");
-  const mouseClick = useRef(null);
+  const [error, setError] = useState(""); // To track error messages
+  const locationDown = useRef(null);
+  const locationButton = useRef(null);
+  const batchDown = useRef(null);
+  const batchButton = useRef(null);
+  const courseDown = useRef(null);
+  const courseButton = useRef(null);
   const modalClose = useRef(null);
 
   const WEEKDAYS = {
@@ -72,9 +78,15 @@ const SessionCreationModal = ({
 
   // console.log(session, "session for update");
 
-  useClickOutside(mouseClick, () => {
+  useClickOutside(locationDown, locationButton, () => {
     setIsLocationOpen(false);
+  });
+
+  useClickOutside(batchDown, batchButton, () => {
     setIsBatchOpen(false);
+  });
+
+  useClickOutside(courseDown, courseButton, () => {
     setIsCourseOpen(false);
   });
 
@@ -85,6 +97,7 @@ const SessionCreationModal = ({
 
   useEffect(() => {
     if (session && edit) {
+      setSelectedBatch(session.batch);
       setSelectedCourseName(session.course.name);
       setSelectedCourseId(session.course.id);
       setSelectedLocation(session.location_name);
@@ -100,8 +113,9 @@ const SessionCreationModal = ({
         );
         return parseInt(dayIndex);
       });
-      setSelectedDays(daysArray);
+      setSelectedDays(daysArray); // Set the selected days in state
 
+      // Populate timeData based on schedules
       const updatedTimeData = { ...timeData };
       session.schedules.forEach((schedule) => {
         const dayIndex = Object.keys(WEEKDAYS).find(
@@ -114,21 +128,22 @@ const SessionCreationModal = ({
           };
         }
       });
-      setTimeData(updatedTimeData);
+      setTimeData(updatedTimeData); // Set the time data in state
     }
   }, [session, edit]);
 
   const handleUpdate = async () => {
     if (selectedDays.length > 0) {
+      // Check for time null condition
       const hasNullTime = selectedDays.some((day) => {
         const time = timeData[day];
-        return !time || !time.startTime || !time.endTime;
+        return !time || !time.startTime || !time.endTime; // Check if timeData is null or start/end times are null
       });
 
       if (hasNullTime) {
-        toast.error("Please select time for all selected days.");
+        toast.error("Please select time for all selected days."); // Display error toast
         setLoadingCreation(false);
-        return;
+        return; // Stop further execution
       }
     }
 
@@ -146,21 +161,21 @@ const SessionCreationModal = ({
           end_date: endDate,
           course_id: selectedCourseId,
           schedules: selectedDays.map((day) => ({
-            day_of_week: WEEKDAYS[day][0],
-            start_time: timeData[day].startTime,
+            day_of_week: WEEKDAYS[day][0], // Full name of the day
+            start_time: timeData[day].startTime, // Fetch start time for the day
             end_time: timeData[day].endTime,
           })),
         };
 
         const response = await UpdateSession(selectedSession, data);
-        // console.log("session updated", response);
+        console.log("session updated", response);
         setEdit(false);
         toast.success("Class schedule updated successfully");
         setUpdateSession(!updateSession);
       } catch (error) {
-        // console.log("error while updating status", error);
+        console.log("error while updating status", error);
       } finally {
-        setLoadingCreation(false);
+        setLoadingCreation(false); // Set updating to false after the update is complete
       }
     }
   };
@@ -168,21 +183,22 @@ const SessionCreationModal = ({
   const handleSessionCreation = async () => {
     setLoadingCreation(true);
     if (error) {
-      toast.error("Capacity must be a positive value");
-      setLoadingCreation(false);
-      return;
+      toast.error("Capacity must be a positive value"); // Display the error toast
+      setLoadingCreation(false); // Set loading to false
+      return; // Stop further execution
     }
 
     if (selectedDays.length > 0) {
+      // Check for time null condition
       const hasNullTime = selectedDays.some((day) => {
         const time = timeData[day];
-        return !time || !time.startTime || !time.endTime;
+        return !time || !time.startTime || !time.endTime; // Check if timeData is null or start/end times are null
       });
 
       if (hasNullTime) {
-        toast.error("Please select time for all selected days.");
+        toast.error("Please select time for all selected days."); // Display error toast
         setLoadingCreation(false);
-        return;
+        return; // Stop further execution
       }
     }
 
@@ -197,6 +213,7 @@ const SessionCreationModal = ({
         selectedDays.length > 0
       ) {
         try {
+          // Format time to "hh:mm:ss" or "hh:mm:ss.uuuuuu" (24-hour format) before sending to backend
           const data = {
             batch: selectedBatch,
             location: selectedLocationId,
@@ -205,9 +222,9 @@ const SessionCreationModal = ({
             end_date: endDate,
             course_id: selectedCourseId,
             schedules: selectedDays.map((day) => ({
-              day_of_week: WEEKDAYS[day][0],
-              start_time: timeData[day].startTime,
-              end_time: timeData[day].endTime,
+              day_of_week: WEEKDAYS[day][0], // Full name of the day
+              start_time: timeData[day].startTime, // Fetch start time for the day
+              end_time: timeData[day].endTime, // Fetch end time for the day
             })),
           };
 
@@ -218,7 +235,7 @@ const SessionCreationModal = ({
           setOpenModal(false);
           setUpdateSession(!updateSession);
         } catch (error) {
-          // console.log("error while session creation", error.response);
+          console.log("error while session creation", error.response);
           if (error.response.status === 400) {
             toast.error(error.response.data.error[0]);
           }
@@ -237,11 +254,12 @@ const SessionCreationModal = ({
 
   const handleInputChange = (e) => {
     const value = e.target.value;
+    // Check if the value contains invalid characters
     if (/[-]/.test(value)) {
       setError("Invalid value");
     } else {
-      setError("");
-      setCapacity(value);
+      setError(""); // Clear error if no invalid characters are present
+      setCapacity(value); // Update capacity only when valid
     }
   };
 
@@ -251,6 +269,8 @@ const SessionCreationModal = ({
       try {
         const response = await getAllCourses();
         // console.log("courses", response?.data?.data);
+
+        // Create an array of course names
         const namesArray = response?.data?.data.map((course) => course.name);
         // console.log("names of courses", namesArray);
 
@@ -260,11 +280,11 @@ const SessionCreationModal = ({
           return acc;
         }, {});
 
-        setCourseNames(response?.data?.data); 
-        setCoursesMap(coursesObject); 
+        setCourseNames(response?.data?.data); // Set course names array
+        setCoursesMap(coursesObject); // Set courses map
         setLoadingCourses(false);
       } catch (error) {
-        // console.log("error in courses list", error);
+        console.log("error in courses list", error);
         setLoadingCourses(false);
       }
     };
@@ -372,8 +392,6 @@ const SessionCreationModal = ({
   const handleCourseSelect = (courseName) => {
     setSelectedCourseName(courseName.name);
     setSelectedCourseId(courseName.id);
-    // const selectedCourseObject = coursesMap[courseName]; // Get the full course object by name
-    // setSelectedCourse(selectedCourseObject);
     setIsCourseSelected(true);
     setIsCourseOpen(false);
   };
@@ -397,9 +415,6 @@ const SessionCreationModal = ({
 
       const startTime = updatedDay.startTime || ""; // Default to an empty string if not set
       const endTime = updatedDay.endTime || "";
-
-      // console.log("start time", startTime);
-      // console.log("end time", endTime);
 
       // Validate the times for this specific day
       let timeErrorMessage = "";
@@ -459,13 +474,15 @@ const SessionCreationModal = ({
           </div>
           <div className="bg-surface-100 xsm:p-6 px-3 py-4 rounded-xl xsm:space-y-5 space-y-2 font-inter">
             <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
-              <div className="space-y-2 text-[15px] w-full">
+              <div className="relative space-y-2 text-[15px] w-full">
                 <p>Batch</p>
                 <button
+                  ref={batchButton}
                   onClick={toggleBatchOpen}
                   className={`${
                     !isBatchSelected ? " text-[#92A7BE]" : "text-[#424b55]"
                   } flex justify-between items-center w-full  hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                  disabled={edit}
                 >
                   {selectedBatch || batchOptions[0]}
                   <span
@@ -479,25 +496,30 @@ const SessionCreationModal = ({
 
                 {isBatchOpen && (
                   <div
-                    ref={mouseClick}
-                    className="absolute z-10 min-w-[240px] max-h-[170px] mt-1 bg-surface-100  overflow-auto scrollbar-webkit border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
+                    ref={batchDown}
+                    className="absolute z-10 w-full max-h-[170px] mt-1 bg-surface-100  overflow-auto scrollbar-webkit border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
                   >
                     {loadingBatch && batchOptions.length == 0 ? (
                       <div className="w-full flex items-center justify-center p-1">
                         <CircularProgress size={15} />
                       </div>
                     ) : batchOptions && batchOptions.length > 0 ? (
-                      batchOptions.map((option, index) => (
-                        <div
-                          key={index}
-                          onClick={() => handleBatchSelect(option)}
-                          className="p-2 cursor-pointer "
-                        >
-                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
-                            {option}
+                      batchOptions
+                        .sort(
+                          (a, b) =>
+                            new Date(b.created_at) - new Date(a.created_at)
+                        )
+                        .map((option, index) => (
+                          <div
+                            key={index}
+                            onClick={() => handleBatchSelect(option.batch)}
+                            className="p-2 cursor-pointer "
+                          >
+                            <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
+                              {option.batch}
+                            </div>
                           </div>
-                        </div>
-                      ))
+                        ))
                     ) : (
                       <div className="text-sm text-center text-dark-300">
                         no batch found
@@ -509,12 +531,13 @@ const SessionCreationModal = ({
               <div className="relative space-y-2 text-[15px] w-full">
                 <p>Course</p>
                 <button
+                  ref={courseButton}
                   onClick={toggleCourseOpen}
                   className={`${
-                    !isCourseSelected || !edit
+                    !isCourseSelected || edit
                       ? "text-[#92A7BE]"
                       : "text-[#424b55]"
-                  } flex justify-between items-center w-full truncate px-4 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                  } flex justify-between items-center w-full px-4 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                   style={{
                     // maxWidth: "220px", // Set the maximum width of the button
                     whiteSpace: "nowrap",
@@ -523,7 +546,11 @@ const SessionCreationModal = ({
                   }}
                   disabled={edit}
                 >
-                  {selectedCourseName ? selectedCourseName : "Select a course"}
+                  <p className="max-w-[180px] truncate">
+                    {selectedCourseName
+                      ? selectedCourseName
+                      : "Select a course"}
+                  </p>
                   <span
                     className={`${
                       isCourseOpen ? "rotate-180 duration-300" : "duration-300"
@@ -535,7 +562,7 @@ const SessionCreationModal = ({
 
                 {isCourseOpen && (
                   <div
-                    ref={mouseClick}
+                    ref={courseDown}
                     className="absolute z-10 w-full mt-1 bg-surface-100 max-h-[200px] overflow-auto scrollbar-webkit border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
                   >
                     {loadingCourses && courseNames.length === 0 ? (
@@ -564,9 +591,10 @@ const SessionCreationModal = ({
               </div>
             </div>
             <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
-              <div className="space-y-2 text-[15px] w-full">
+              <div className="relative space-y-2 text-[15px] w-full">
                 <p>Location</p>
                 <button
+                  ref={locationButton}
                   onClick={toggleLocationOpen}
                   className={`${
                     !isLocationSelected ? " text-[#92A7BE]" : "text-[#424b55]"
@@ -586,8 +614,8 @@ const SessionCreationModal = ({
 
                 {isLocationOpen && (
                   <div
-                    ref={mouseClick}
-                    className="absolute z-10 min-w-[240px] max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
+                    ref={locationDown}
+                    className="absolute z-10 w-full max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
                   >
                     {loadingLocation ? (
                       <div className="w-full flex items-center justify-center p-1">

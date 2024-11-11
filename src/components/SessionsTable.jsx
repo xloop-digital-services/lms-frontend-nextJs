@@ -78,12 +78,12 @@ const SessionsTable = ({
   };
 
   const handleSetStatus = (status) => {
-    // console.log(status);
+    console.log(status);
     if (status === "Active") {
       setStatus(1);
     } else {
       setStatus(0);
-      // console.log("ye zaero hogaya");
+      console.log("ye zaero hogaya");
     }
   };
 
@@ -99,7 +99,7 @@ const SessionsTable = ({
   const handleStartTimeChange = (event) => {
     const time = event.target.value;
     setEditStartTime(time);
-    // console.log("Start time:", time);
+    console.log("Start time:", time);
 
     // Validate again when the start time changes, to reset any lingering errors
     if (editEndTime && time) {
@@ -116,7 +116,7 @@ const SessionsTable = ({
   const handleEndTimeChange = (event) => {
     const time = event.target.value;
     setEditEndTime(time);
-    // console.log("End time:", time);
+    console.log("End time:", time);
 
     if (editStartTime) {
       const startTimeDate = convertTimeToDate(editStartTime);
@@ -154,12 +154,12 @@ const SessionsTable = ({
         };
 
         const response = await UpdateSession(selectedSession, data);
-        // console.log("session updated", response);
+        console.log("session updated", response);
         setEdit(false);
         toast.success("Class schedule updated successfully");
         setUpdateSession(!updateSession);
       } catch (error) {
-        // console.log("error while updating status", error);
+        console.log("error while updating status", error);
       } finally {
         setUpdating(false); // Set updating to false after the update is complete
       }
@@ -182,19 +182,19 @@ const SessionsTable = ({
         <div className="-m-1.5 overflow-x-auto">
           <div className="p-1.5 min-w-full inline-block align-middle">
             <div className="mt-4 border border-dark-300 rounded-lg divide-y divide-dark-200">
-              <div className="relative max-h-[75vh]  overflow-y-auto scrollbar-webkit">
+              <div className="relative max-h-[75vh] overflow-y-auto scrollbar-webkit rounded-lg">
                 <table className="min-w-full divide-y divide-dark-200 ">
                   <thead className="bg-surface-100 text-blue-500 sticky top-0 z-40 shadow-sm shadow-dark-200">
                     <tr>
-                      {/* <th
-                      scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
-                    >
-                      Batch
-                    </th> */}
                       <th
                         scope="col"
-                        className="px-6 py-4 rounded-lg text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
+                        className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
+                      >
+                        Batch
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
                       >
                         Course
                       </th>
@@ -237,7 +237,7 @@ const SessionsTable = ({
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-4 rounded-lg text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
+                        className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
                       >
                         Actions
                       </th>
@@ -260,9 +260,9 @@ const SessionsTable = ({
                         .map((session, index) => {
                           return (
                             <tr key={index} className={``}>
-                              {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                              {session.batch}
-                            </td> */}
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                                {session.batch}
+                              </td>
                               <td
                                 className="px-6 py-4 whitespace-nowrap text-sm max-w-[250px] truncate text-gray-800 dark:text-gray-200"
                                 title={session.course.name}

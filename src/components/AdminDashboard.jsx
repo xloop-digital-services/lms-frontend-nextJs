@@ -66,17 +66,20 @@ const AdminDashboard = () => {
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const dropdownRef = useRef(null);
+  const dropButton = useRef(null);
   const statusDown = useRef(null);
+  const statusButton = useRef(null);
   const userDown = useRef(null);
+  const userButton = useRef(null);
+  const skillDown = useRef(null);
+  const skillButton = useRef(null);
 
-  useClickOutside(statusDown, () => setIsOpen(false));
+  useClickOutside(statusDown, statusButton, () => setIsOpen(false));
 
-  useClickOutside(
-    dropdownRef,
-    () => setIsProgramOpen(false),
-    () => setIsSkillOpen(false)
-  );
-  useClickOutside(userDown, () => setIsUserOpen(false));
+  useClickOutside(dropdownRef, dropButton, () => setIsProgramOpen(false));
+
+  useClickOutside(skillDown, skillButton, () => setIsSkillOpen(false));
+  useClickOutside(userDown, userButton, () => setIsUserOpen(false));
 
   // Apply filtering whenever search term or dropdown status changes
   useEffect(() => {
@@ -130,7 +133,7 @@ const AdminDashboard = () => {
   const handleTotalUsers = async () => {
     try {
       const response = await totalUsersCount();
-      // console.log("total Counts", response?.data?.data);
+      console.log("total Counts", response?.data?.data);
       setAllUsers(response?.data?.data?.all_users_length);
       setAllIntructors(response?.data?.data?.instructor_user_length);
       setAllStudents(response?.data?.data?.student_user_length);
@@ -143,8 +146,7 @@ const AdminDashboard = () => {
       setAllActiveStudents(response?.data?.data?.active_student_length);
       setAllInActiveStudents(response?.data?.data?.inactive_student_length);
     } catch (error) {
-      throw error;
-      // console.log("error fetching the total users", error);
+      console.log("error fetching the total users", error);
     }
   };
 
@@ -155,7 +157,7 @@ const AdminDashboard = () => {
       setBatches(response?.data);
       setloadingBatch(false);
     } catch (error) {
-      // console.log("error while fetching the batches", error);
+      console.log("error while fetching the batches", error);
       setloadingBatch(false);
     }
   };
@@ -187,18 +189,18 @@ const AdminDashboard = () => {
       }
     } catch (err) {
       setLoading(false);
-      // console.error("error while fetching the programs", err);
+      console.error("error while fetching the programs", err);
     }
   };
 
   const handleGetAllSkills = async () => {
     try {
       const response = await getAllSkills();
-      // console.log("fetching skills", response.data);
+      console.log("fetching skills", response.data);
       setAllSkills(response?.data);
       setLoading(false);
     } catch (error) {
-      // console.log("error fetching the list of skills");
+      console.log("error fetching the list of skills");
       setLoading(false);
     }
   };
@@ -231,7 +233,7 @@ const AdminDashboard = () => {
       setBarData(response?.data?.data);
       setLoading(false);
     } catch (error) {
-      // console.log("error while fetching the bar data", error);
+      console.log("error while fetching the bar data", error);
       setLoading(false);
     }
   };
@@ -284,7 +286,7 @@ const AdminDashboard = () => {
 
         setLoading(false);
       } catch (error) {
-        // console.log("error while fetching number of applications", error);
+        console.log("error while fetching number of applications", error);
         setLoading(false);
       }
     };
@@ -323,12 +325,12 @@ const AdminDashboard = () => {
       setLoading(true);
       const response = await DeleteBatch(selectedBatch);
       toast.success("Batch deleted successfully!");
-      // console.log("deleting the batch", response);
+      console.log("deleting the batch", response);
       setUpdateBatch(!updateBatch);
       setConfirmDelete(false);
       setLoading(false);
     } catch (error) {
-      // console.log("error while deleting the batch", error);
+      console.log("error while deleting the batch", error);
     }
   };
 
@@ -442,6 +444,7 @@ const AdminDashboard = () => {
                 <div className="flex gap-2  justify-between items-center w-full">
                   <div className="relative w-full">
                     <button
+                      ref={userButton}
                       onClick={toggleUsers}
                       className={`${
                         !selectedUser ? "text-dark-500" : "text-[#424b55]"
@@ -481,6 +484,7 @@ const AdminDashboard = () => {
                   {selectedUser.toLowerCase() === "student" ? (
                     <div className={`${loading && "hidden"} relative w-full`}>
                       <button
+                        ref={dropButton}
                         onClick={toggleProgramOpen}
                         className={`${
                           !isProgramSelected
@@ -543,6 +547,7 @@ const AdminDashboard = () => {
                   ) : (
                     <div className={`${loading && "hidden"} relative`}>
                       <button
+                        ref={skillButton}
                         onClick={toggleSkillOpen}
                         className={`${
                           !isSkillSelected ? " text-dark-500" : "text-[#424b55]"
@@ -564,7 +569,7 @@ const AdminDashboard = () => {
 
                       {isSkillOpen && (
                         <div
-                          ref={dropdownRef}
+                          ref={skillDown}
                           className="absolute z-50 mt-1 w-full max-h-[240px] overflow-y-auto scrollbar-webkit  bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                         >
                           {allSkills && allSkills.length > 0 ? (

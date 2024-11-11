@@ -26,16 +26,22 @@ const LocationModal = ({
   const [error, setError] = useState("");
 
   const cityDown = useRef(null);
+  const cityButton = useRef(null);
+  const locationDown = useRef(null);
+  const locationButton = useRef(null);
   const modalDown = useRef(null);
 
-  useClickOutside(cityDown, () => {
+  useClickOutside(cityDown, cityButton, () => {
     setIsCityOpen(false);
+  });
+
+  useClickOutside(locationDown, locationButton, () => {
     setIsLocationOpen(false);
   });
 
   useClickOutside(modalDown, () => setOpenModal(false));
 
-  // //console.log('in the modal', cityOptions)
+  // console.log('in the modal', cityOptions)
 
   const handlLocationCreation = async () => {
     setLoading(true);
@@ -54,7 +60,7 @@ const LocationModal = ({
         };
         const response = await createLocation(data);
         if (response.data.status_code === 201) {
-          //console.log("location created", response?.data?.message);
+          console.log("location created", response?.data?.message);
           toast.success("Location created successfully!");
           setUpdateLocation(!updateLocation);
           setLoading(false);
@@ -67,10 +73,10 @@ const LocationModal = ({
           setOpenModal(false);
         }
       } catch (error) {
-        //console.log(
-        //   "error while location creation",
-        //   error?.response?.data?.message
-        // );
+        console.log(
+          "error while location creation",
+          error?.response?.data?.message
+        );
         if (error.response.status === 400) {
           toast.error(error?.response?.data?.message);
         }
@@ -151,13 +157,18 @@ const LocationModal = ({
                 <p>City</p>
                 <div>
                   <button
+                    ref={cityButton}
                     onClick={toggleCityOpen}
                     className={`${
                       !isCitySelected ? " text-[#92A7BE]" : "text-[#424b55]"
                     } flex justify-between items-center  md:w-[220px]  w-[80%]  hover:text-[#0e1721] p-4 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                   >
                     {city}
-                    <span className="">
+                    <span
+                      className={
+                        isCityOpen ? "rotate-180 duration-300" : "duration-300"
+                      }
+                    >
                       <IoIosArrowDown />
                     </span>
                   </button>
@@ -186,20 +197,27 @@ const LocationModal = ({
                 <p>Location</p>
                 <div>
                   <button
+                    ref={locationButton}
                     onClick={toggleLocationOpen}
                     className={`${
                       !isLocationSelected ? " text-[#92A7BE]" : "text-[#424b55]"
                     } flex justify-between items-center  md:w-[220px]  w-[80%]  hover:text-[#0e1721] p-4 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                   >
                     {locationName}
-                    <span className="">
+                    <span
+                      className={
+                        isLocationOpen
+                          ? "rotate-180 duration-300"
+                          : "duration-300"
+                      }
+                    >
                       <IoIosArrowDown />
                     </span>
                   </button>
 
                   {isLocationOpen && allLocations.length > 0 ? (
                     <div
-                      ref={cityDown}
+                      ref={locationDown}
                       className="absolute z-10 w-[220px] mt-1 max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                     >
                       {allLocations.map((option, index) => (
@@ -218,7 +236,7 @@ const LocationModal = ({
                     isLocationOpen &&
                     allLocations.length == 0 && (
                       <div
-                        ref={cityDown}
+                        ref={locationDown}
                         className="absolute z-10 w-[220px] mt-1 max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                       >
                         <p className="text-[12px] text-dark-400 text-center p-1">

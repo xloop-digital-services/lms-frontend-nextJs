@@ -13,21 +13,23 @@ import {
 } from "react-icons/io";
 import { toast, ToastContainer } from "react-toastify";
 import { CircularProgress } from "@mui/material";
+import { FaPlus } from "react-icons/fa";
 
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
   const [selectedCity, setSelectedCity] = useState("Select city");
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [cityOptions, setCityOptions] = useState([]);
-  const [isCitySelected, setIsCitySelected] = useState(false); 
+  const [isCitySelected, setIsCitySelected] = useState(false); // Fix typo
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [openModal, setOpenModal] = useState(false);
   const [updateLocation, setUpdateLocation] = useState(false);
   const [filteredCityList, setFilteredCityList] = useState([]);
   const cityDown = useRef(null);
+  const cityButton = useRef(null);
 
-  useClickOutside(cityDown, () => setIsCityOpen(false));
+  useClickOutside(cityDown, cityButton, () => setIsCityOpen(false));
 
   const handleListingAllLocations = async () => {
     try {
@@ -36,7 +38,7 @@ export default function Page() {
       setCityOptions(cityAreas);
       setLoading(false);
     } catch (error) {
-      // console.log("Error fetching locations", error);
+      console.log("Error fetching locations", error);
       if (error.response.status === 401) {
         toast.error(error.response.data.code, ": Please Log in again");
       }
@@ -67,7 +69,7 @@ export default function Page() {
       location.city.toLowerCase().includes(selectedCity.toLowerCase())
     );
     setFilteredCityList(filteredList);
-  }, [selectedCity]);
+  }, [selectedCity, locations]);
 
   const clearCityFilter = () => {
     setSelectedCity("select city");
@@ -96,6 +98,7 @@ export default function Page() {
             <div className="flex gap-3">
               <div className="relative">
                 <button
+                  ref={cityButton}
                   onClick={toggleCityOpen}
                   className={`${
                     !isCitySelected ? " text-dark-500" : "text-[#424b55]"
@@ -123,14 +126,6 @@ export default function Page() {
                   <div
                     ref={cityDown}
                     className={`absolute z-20 w-full mt-1 max-h-[250px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out`}
-                    // style={{
-                    //   height:
-                    //     locations.length * 40 < 300
-                    //       ? `${locations.length * 0}px`
-                    //       : "250px",
-                    //   // maxHeight: "250px",
-                    //   overflowY: locations.length * 40 > 300 ? "auto" : "unset", // Enable scrolling only if list exceeds 300px
-                    // }}
                   >
                     {[...new Set(locations.map((option) => option.city))].map(
                       (city, index) => (
@@ -150,11 +145,16 @@ export default function Page() {
               </div>
               <div>
                 <button
-                  className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] sm:flex text-sm sm:p-4 px-3 py-3 md:px-6 rounded-lg hover:cursor-pointer"
+                  className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] text-sm sm:p-4 px-3 py-3 md:px-6 rounded-lg hover:cursor-pointer"
                   onClick={handleLocationCreate}
                 >
-                  Create<span className="sm:flex hidden px-1">a new </span>{" "}
-                  location
+                  <span className="flex justify-center items-center gap-2">
+                    <FaPlus />
+                    <p className="sm:flex">
+                      Create<span className="sm:flex hidden px-1">a new </span>{" "}
+                      location
+                    </p>
+                  </span>
                 </button>
               </div>
             </div>

@@ -3,7 +3,7 @@ import { IoClose } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
 import DatePicker from "react-datepicker";
 import { FaCalendar, FaClock } from "react-icons/fa";
-import { createBatch } from "@/api/route";
+import { createBatch, getAllPrograms } from "@/api/route";
 import { CircularProgress } from "@mui/material";
 import { toast } from "react-toastify";
 import useClickOutside from "@/providers/useClickOutside";
@@ -16,6 +16,11 @@ const BatchModal = ({
 }) => {
   const [selectedCity, setSelectedCity] = useState("Select city");
   const [isCityOpen, setIsCityOpen] = useState(false);
+  const [selectedProgram, setSelectedProgram] = useState("Select program");
+  const [selectedProgramId, setSelectedProgramId] = useState(null);
+  const [isProgramOpen, setIsProgramOpen] = useState(false);
+  const [programs, setPrograms] = useState([]);
+  const [isProgramSelected, setIsProgramSelected] = useState(false);
   const [locations, setLocations] = useState([]); // State to store the list of location names
   const [currentLocation, setCurrentLocation] = useState(""); // State to store the current input value
   const inputRef = useRef(null); // Ref to focus the input field
@@ -39,11 +44,23 @@ const BatchModal = ({
     // { name: "Annual" },
   ];
   const cityDown = useRef(null);
-  const modalDown = useRef(null);
-  const categoryRef = useRef();
+  const cityButton = useRef(null);
+  const programDown = useRef(null);
+  const programButton = useRef(null);
 
-  useClickOutside(cityDown, () => {
+  const modalDown = useRef(null);
+  const categoryRef = useRef(null);
+  const categoryButton = useRef(null);
+
+  useClickOutside(cityDown, cityButton, () => {
     setIsCityOpen(false);
+  });
+
+  useClickOutside(programDown, programButton, () => {
+    setIsProgramOpen(false);
+  });
+
+  useClickOutside(categoryRef, categoryButton, () => {
     setIsCategoryOpen(false);
   });
 
@@ -58,6 +75,7 @@ const BatchModal = ({
     }
     if (
       !errorMessage &&
+      selectedProgram &&
       selectedCity &&
       cityShortName &&
       year &&
@@ -68,6 +86,7 @@ const BatchModal = ({
     ) {
       try {
         const data = {
+          program: selectedProgramId,
           city: selectedCity,
           city_abb: cityShortName,
           year: year,
@@ -78,13 +97,13 @@ const BatchModal = ({
         };
 
         const response = await createBatch(data);
-        // console.log("batch created", response?.data.message);
+        console.log("batch created", response?.data.message);
         toast.success("Batch created successfully!");
         setLoadingCreation(false);
         setIsOpenModal(false);
         setUpdateBatch(!updateBatch);
       } catch (error) {
-        // console.log("error is occuring", error.response);
+        console.log("error is occuring", error.response);
         if (error.response.status === 400) {
           toast.error(error.response.data.error[0]);
         }
@@ -96,6 +115,19 @@ const BatchModal = ({
       setLoadingCreation(false);
     }
   };
+
+  useEffect(() => {
+    const handleAllProgramList = async () => {
+      try {
+        const response = await getAllPrograms();
+        // console.log('response for programs', response.data)
+        setPrograms(response.data.data);
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+    handleAllProgramList();
+  }, []);
 
   const toggleCategoryOpen = () => {
     setIsCategoryOpen((prev) => !prev);
@@ -160,8 +192,19 @@ const BatchModal = ({
     ); // Remove location
   };
 
+  const toggleProgramOpen = () => {
+    setIsProgramOpen((prev) => !prev);
+  };
+
+  const handleProgramSelect = (option) => {
+    setSelectedProgram(option.name);
+    setSelectedProgramId(option.id);
+    setIsProgramOpen(false);
+    setIsProgramSelected(true);
+  };
+
   const toggleCityOpen = () => {
-    setIsCityOpen(!isCityOpen);
+    setIsCityOpen((prev) => !prev);
   };
   const handleCitySelect = (option) => {
     setSelectedCity(option.name);
@@ -213,20 +256,53 @@ const BatchModal = ({
           <div
             className={`bg-surface-100 xsm:p-6 px-3 py-4 rounded-xl xsm:space-y-5 space-y-2 font-inter`}
           >
+            <div className="relative space-y-2 text-[15px] w-full">
+              <p>Program</p>
+              <button
+                ref={programButton}
+                onClick={toggleProgramOpen}
+                className={`${
+                  !isProgramSelected ? " text-dark-500" : "text-[#424b55]"
+                } flex justify-between items-center w-full  hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+              >
+                {selectedProgram}
+                <span
+                  className={`${
+                    isProgramOpen ? "rotate-180 duration-300" : "duration-300"
+                  }`}
+                >
+                  <IoIosArrowDown />
+                </span>
+              </button>
+
+              {isProgramOpen && (
+                <div
+                  ref={programDown}
+                  className="absolute z-10 w-full max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
+                >
+                  {programs
+                    .sort(
+                      (a, b) => new Date(b.created_at) - new Date(a.created_at)
+                    )
+                    .map((option, index) => (
+                      <div
+                        key={index}
+                        onClick={() => handleProgramSelect(option)}
+                        className="p-2 cursor-pointer "
+                      >
+                        <div className="px-4 py-1 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
+                          {option.name}
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              )}
+            </div>
             <div className="flex  gap-3 mx-auto w-full justify-between">
-              {/* <div className="space-y-2 text-[15px] w-full">
-                <p>Batch</p>
-                <input
-                  type="text"
-                  className="border border-dark-300 outline-none p-3 rounded-lg w-full "
-                  placeholder="batch name"
-                  value={batchName}
-                  onChange={(e) => setbatchName(e.target.value)}
-                />
-              </div>         */}
               <div className="relative space-y-2 text-[15px] w-full">
                 <p>City</p>
                 <button
+                  ref={cityButton}
                   onClick={toggleCityOpen}
                   className={`${
                     !isCitySelected ? " text-dark-500" : "text-[#424b55]"
@@ -322,6 +398,7 @@ const BatchModal = ({
               <div className="space-y-2 text-[15px] w-full relative">
                 <p>Category</p>
                 <button
+                  ref={categoryButton}
                   onClick={toggleCategoryOpen}
                   className={`${
                     !isCategorySelected ? " text-dark-500" : "text-[#424b55]"
@@ -341,7 +418,7 @@ const BatchModal = ({
 
                 {isCategoryOpen && (
                   <div
-                    ref={cityDown}
+                    ref={categoryRef}
                     className="absolute z-10 w-full max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                   >
                     {categoryOptions.map((option, index) => (
