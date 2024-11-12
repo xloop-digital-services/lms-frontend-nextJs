@@ -1,6 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import Router from "next/router";
+import Router from "next/navigation";
 
 const API = process.env.NEXT_PUBLIC_BACKEND_URL;
 const refreshEndpoint = `${API}/api/token/refresh/`;

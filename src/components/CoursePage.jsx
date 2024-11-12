@@ -6,6 +6,8 @@ import courseImg from "/public/assets/img/course-image.png";
 import { useAuth } from "@/providers/AuthContext";
 import { CircularProgress } from "@mui/material";
 import { getUserSessions } from "@/api/route";
+import { useRouter } from "next/navigation";
+import { FaArrowLeft } from "react-icons/fa";
 
 export default function CoursePage({ path, heading }) {
   const { isSidebarOpen } = useSidebar();
@@ -13,6 +15,7 @@ export default function CoursePage({ path, heading }) {
   const isStudent = userData?.Group === "student";
   const [courses, setCourses] = useState([]);
   const [loader, setLoader] = useState(true);
+  const router = useRouter();
 
   async function fetchSessionForUser() {
     const response = await getUserSessions();
@@ -36,6 +39,10 @@ export default function CoursePage({ path, heading }) {
     fetchSessionForUser();
   }, []);
 
+  const goBack = () => {
+    router.back();
+  };
+
   if (loader) {
     return (
       <div className="flex h-screen justify-center items-center">
@@ -56,9 +63,18 @@ export default function CoursePage({ path, heading }) {
       <div className="bg-surface-100 p-8 rounded-xl">
         {!(heading === "program") && (
           <>
-            <h2 className="text-xl text-blue-500 font-bold pb-1 font-exo">
-              {heading}
-            </h2>
+            <div className="flex items-center">
+              <div
+                className="text-dark-400 flex gap-2 items-center cursor-pointer hover:text-blue-300 mr-4"
+                onClick={goBack}
+              >
+                <FaArrowLeft size={20} />
+                {/* <p>Back</p> */}
+              </div>
+              <h2 className="text-xl text-blue-500 font-bold font-exo">
+                {heading}
+              </h2>
+            </div>
             <p className="pb-6">Select a course to view the {heading}</p>
           </>
         )}

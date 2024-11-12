@@ -25,13 +25,27 @@ export default function Navbar() {
   const isStudent = userData?.Group === "student";
   const isAdmin = userData?.Group === "admin";
   const userID = userData?.User?.id;
+  const group = userData?.Group;
   const { messages: messages, loading: loading } = useWebSocket(
-    `ws://13.126.167.22:8000/ws/notification/?user_id=${userID}`
+    `ws://13.126.167.22:8000/ws/notification/?user_id=${userID}`,
+    group
   );
 
   const { messages: announcements, loading: load } = useWebSocket(
-    `ws://13.126.167.22:8000/ws/announcements/?user_id=${userID}`
+    `ws://13.126.167.22:8000/ws/announcements/?user_id=${userID}`,
+    group
   );
+
+  const ra = announcements.filter((message) => message.read === true).length;
+  const ura = announcements.filter((message) => message.read === false).length;
+  const rn = messages.filter((message) => message.status === "read").length;
+  const urn = messages.filter((message) => message.status === "unread").length;
+  const reads = ra + rn;
+  const unreads = ura + urn;
+  // console.log(ura, urn);
+
+  // console.log("unread", unreads);
+  // console.log("reads", reads);
 
   useClickOutside(dropdownRef, () => setShowNotifications(false));
 
@@ -41,17 +55,17 @@ export default function Navbar() {
         const response = await getUserProfile();
         setLoader(true);
         if (response.status === 200) {
-          console.log("Fetched user data:", response.data);
+          // console.log("Fetched user data:", response.data);
           setLoader(false);
           setUser(response.data.response);
-          console.log(response.data.response);
-          console.log(user, "user");
+          // console.log(response.data.response);
+          // console.log(user, "user");
           // console.log(response.data.response.city, "city")
         } else {
-          console.error("Failed to fetch user, status:", response.status);
+          // console.error("Failed to fetch user, status:", response.status);
         }
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        // console.error("Error fetching user data:", error);
       }
     }
     fetchUser();
@@ -145,6 +159,14 @@ export default function Navbar() {
                           onClick={toggleNotifications}
                         >
                           <FaBell size={24} />
+                          {unreads > 0 && (
+                            <span
+                              className="absolute -top-1 -right-1 inline-block w-[10px] h-[11px] bg-mix-200 rounded-xl text-surface-100"
+                              //  className="absolute -top-3 text-center -right-5 inline-block w-[30px] h-[21px] bg-mix-200 rounded-xl text-surface-100"
+                            >
+                              {/* {unreads}+ */}
+                            </span>
+                          )}
                         </button>
                       )}
                     </div>

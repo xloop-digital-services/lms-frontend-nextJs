@@ -45,7 +45,7 @@ export default function Page() {
         setLoading(false);
       }
     } catch (error) {
-      console.error("Error during login:", error);
+      // console.error("Error during login:", error);
       toast.error("An error occurred.", error.response.data.email[0]);
       setLoading(false);
     }

@@ -64,7 +64,7 @@ export default function Page({ params }) {
         setloading(false);
       }
     } catch (error) {
-      console.error("Error during login:", error.response.data.password);
+      // console.error("Error during login:", error.response.data.password);
       if (error.response.data.password) {
         toast.error(error.response.data.password[0], {
           position: "top-right",

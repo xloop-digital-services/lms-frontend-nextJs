@@ -11,7 +11,8 @@ import { IoIosCloseCircleOutline } from "react-icons/io";
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 import DeleteConfirmationPopup from "@/components/Modal/DeleteConfirmationPopUp";
-import { FaPlus } from "react-icons/fa";
+import { FaArrowLeft, FaPlus } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
@@ -28,6 +29,10 @@ export default function Page() {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const mousedown = useRef(null);
   const mouseButton = useRef(null);
+  const router = useRouter();
+  const goBack = () => {
+    router.back();
+  };
 
   useClickOutside(mousedown, mouseButton, () => setIsCityOpen(false));
 
@@ -105,7 +110,14 @@ export default function Page() {
       >
         <div className="bg-surface-100 p-6 rounded-xl">
           <div className="w-full mx-auto flex xsm:flex-row flex-col justify-between items-center gap-4 max-md:flex-col">
-            <div>
+            <div className="flex ">
+            <div
+                className="text-dark-400 flex gap-2 items-center cursor-pointer hover:text-blue-300 mr-4"
+                onClick={goBack}
+              >
+                <FaArrowLeft size={20} />
+                {/* <p>Back</p> */}
+              </div>
               <p className="font-bold text-blue-500 text-xl font-exo">
                 Batch Details
               </p>

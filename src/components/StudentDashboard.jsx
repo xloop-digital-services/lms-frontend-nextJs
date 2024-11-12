@@ -37,7 +37,7 @@ export default function StudentDashboard() {
   const [courseProgress, setCourseProgress] = useState(null);
   const [quizProgress, setQuizProgress] = useState(null);
   const [assignmentProgress, setAssignmentProgress] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("Show All");
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isCategorySelected, setIsCategorySelected] = useState(false);
   const [loader, setLoader] = useState(true);
@@ -174,9 +174,9 @@ export default function StudentDashboard() {
 
   useEffect(() => {
     if (courses.length > 0) {
-      const firstCourse = courses[0]; // Select the first course by default
-      setSelectedCourse(firstCourse.name); // Set the course name
-      setSelectedCourseId(firstCourse.id); // Set the course ID
+      const firstCourse = courses[0];
+      setSelectedCourse(firstCourse.name);
+      setSelectedCourseId(firstCourse.id);
     }
   }, [courses]);
 
@@ -225,9 +225,12 @@ export default function StudentDashboard() {
     <>
       <div
         className={`flex-1 transition-transform pt-[97px] space-y-4 max-md:pt-32 font-inter ${
-          isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 pl-10 "
+          isSidebarOpen
+            ? "translate-x-64 ml-20 "
+            : "translate-x-0 pl-10 pr-10 max-md:pl-2 max-md:pr-2"
         }`}
         style={{
+          // paddingBottom: "20px",
           width: isSidebarOpen ? "81%" : "100%",
         }}
       >
@@ -255,7 +258,7 @@ export default function StudentDashboard() {
                   </div>
                 </div>
 
-                <div className="flex gap-2 flex-wrap max-md:flex-nowrap max-md:flex-col">
+                <div className="flex gap-2 flex-wrap max-md:flex-nowrap max-md:flex-col ">
                   {isStudent &&
                     courses?.slice(0, courseLimit).map((session) => {
                       return (
@@ -281,7 +284,7 @@ export default function StudentDashboard() {
                 <div className="bg-surface-100 p-2 rounded-xl grow">
                   <div className="flex justify-between">
                     <div>
-                      <h1 className="text-xl text-blue-500 font-bold px-3 py-4 font-exo">
+                      <h1 className="text-xl text-blue-500 font-bold px-3 py-4 font-exo ">
                         Weeks Activity
                       </h1>
                     </div>
@@ -323,7 +326,7 @@ export default function StudentDashboard() {
               </div>
             </div>
           </div>
-          <div className="flex gap-4 flex-col  w-[30%] max-md:w-full ml-3">
+          <div className="flex gap-4 flex-col max-md:w-full ml-3">
             <div className="flex  h-[410px] flex-col overflow-y-auto bg-surface-100 px-3 py-2 rounded-xl lg:w-fit scrollbar-webkit max-md:m-4">
               <div className="flex justify-between w-full px-3 py-2 items-center mb-2">
                 <h1 className="text-xl text-blue-500 font-bold   font-exo">

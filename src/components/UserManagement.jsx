@@ -15,8 +15,9 @@ import UserApprovalTable from "./UserApprovalTable";
 import { toast } from "react-toastify";
 import ApprovalUserModal from "./Modal/ApprovalUserModal";
 import UserModal from "./Modal/UserModal";
+import { FaArrowLeft } from "react-icons/fa";
 
-const UserManagement = ({ heading, program, loadingProgram }) => {
+const UserManagement = ({ heading, program, loadingProgram, goBack }) => {
   const { isSidebarOpen } = useSidebar();
   const [selectedOption, setSelectedOption] = useState("Student");
   const [selectedStatus, setSelectedStatus] = useState("pending");
@@ -276,8 +277,17 @@ const UserManagement = ({ heading, program, loadingProgram }) => {
             flexDirection: "column",
           }}
         >
-          <div className="w-full flex justify-between mb-4 p-6 pb-0">
-            <p className="text-xl font-bold text-blue-500">{heading}</p>
+          <div className="w-full flex items-center justify-between mb-4 p-6 pb-0">
+            <div className="flex">
+              <div
+                className="text-dark-400 flex gap-2 items-center cursor-pointer hover:text-blue-300 mr-4"
+                onClick={goBack}
+              >
+                <FaArrowLeft size={20} />
+                {/* <p>Back</p> */}
+              </div>
+              <p className="text-xl font-bold text-blue-500">{heading}</p>
+            </div>
             <div className="relative  ">
               <button
                 ref={dropButton}

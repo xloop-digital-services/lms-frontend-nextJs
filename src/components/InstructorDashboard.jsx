@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useAuth } from "@/providers/AuthContext";
 import {
   getCalendarData,
+  getCalendarInstructor,
   getInstructorSessions,
   getUserSessions,
 } from "@/api/route";
@@ -73,7 +74,7 @@ export default function InstructorDashboard() {
     }
   }
   async function fetchCalendarSessions() {
-    const response = await getCalendarData(userId);
+    const response = await getCalendarInstructor(userId);
     try {
       if (response.status === 200) {
         //console.log(response.data?.data);
@@ -127,7 +128,10 @@ export default function InstructorDashboard() {
               {" "}
               <div className="bg-surface-100 p-4 rounded-xl mb-2">
                 <div className="flex justify-between items-center">
-                  <h1 className="text-xl font-bold font-exo mx-2 text-blue-500"> Courses</h1>
+                  <h1 className="text-xl font-bold font-exo mx-2 text-blue-500">
+                    {" "}
+                    Courses
+                  </h1>
                   <div className="group px-3">
                     <Link
                       href="/courses"

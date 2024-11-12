@@ -19,7 +19,8 @@ import { CircularProgress } from "@mui/material";
 import DeleteConfirmationPopup from "@/components/Modal/DeleteConfirmationPopUp";
 import { toast } from "react-toastify";
 import SessionInfoModal from "@/components/Modal/SessionInfoModal";
-import { FaPlus } from "react-icons/fa";
+import { FaArrowLeft, FaPlus } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
@@ -52,6 +53,10 @@ export default function Page() {
   const dropButton = useRef(null);
   const batchDrop = useRef(null);
   const batchButton = useRef(null);
+  const router = useRouter();
+  const goBack = () => {
+    router.back();
+  };
 
   useClickOutside(dropdownRef, dropButton, () => {
     setIsLocationOpen(false);
@@ -234,7 +239,14 @@ export default function Page() {
       >
         <div className="bg-surface-100 p-6 rounded-xl">
           <div className="w-full mx-auto flex smm:flex-row flex-col justify-between items-center gap-4 max-md:flex-col">
-            <div>
+            <div className="flex">
+              <div
+                className="text-dark-400 flex gap-2 items-center cursor-pointer hover:text-blue-300 mr-4"
+                onClick={goBack}
+              >
+                <FaArrowLeft size={20} />
+                {/* <p>Back</p> */}
+              </div>
               <p className="font-bold text-xl text-blue-500 font-exo">
                 Class Details
               </p>
@@ -384,10 +396,7 @@ export default function Page() {
                       {sessions.length > 0 ? (
                         [
                           ...new Map(
-                            sessions.map((item) => [
-                              `${item.batch}`,
-                              item,
-                            ])
+                            sessions.map((item) => [`${item.batch}`, item])
                           ).values(),
                         ].map((option, index) => (
                           <div

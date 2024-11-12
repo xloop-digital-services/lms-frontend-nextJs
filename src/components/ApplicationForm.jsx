@@ -30,11 +30,11 @@ export const handleFileUploadToS3 = async (file, category) => {
     });
 
     const data = await response.json();
-    console.log("data for s3", data);
+    // console.log("data for s3", data);
     const url = `${data.url}/${data.fileName}`;
     return url;
   } catch (error) {
-    console.log("uploading to s3 error", error);
+    // console.log("uploading to s3 error", error);
   }
 };
 
@@ -46,7 +46,7 @@ export default function ApplicationForm() {
   const [lastName, setLastName] = useState("");
   const [contactNumber, setContactNumber] = useState("");
   const [birthDate, setBirthDate] = useState("");
-  const [selectedCity, setSelectedCity] = useState("Select your city");
+  const [selectedCity, setSelectedCity] = useState("Select your city for training");
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [isCitySelected, setIsCitySelected] = useState(false);
   const [cityShortName, setCityShortName] = useState("");
@@ -313,7 +313,7 @@ export default function ApplicationForm() {
         setAllLocations(response.data);
         // console.log("all locations", response);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     };
     handleListLocation();
@@ -326,7 +326,7 @@ export default function ApplicationForm() {
         setAllPrograms(response.data.data);
         // console.log("programs", response.data.data);
       } catch (error) {
-        console.log("program error", error);
+        // console.log("program error", error);
       }
     };
 
@@ -340,7 +340,7 @@ export default function ApplicationForm() {
         // console.log("skills", response.data);
         setAllSkills(response.data);
       } catch (error) {
-        console.log("skills error", error);
+        // console.log("skills error", error);
         if (error.response.status === 401) {
           toast.error(error.response.data.detail);
         }
@@ -369,7 +369,7 @@ export default function ApplicationForm() {
     if (file) {
       const fileExtension = file.name.split(".").pop().toLowerCase();
       if (supportedFormats.includes(`.${fileExtension}`)) {
-        console.log("file name", file.name);
+        // console.log("file name", file.name);
         setFile(file);
         setFileUploaded(file.name);
       } else {
@@ -433,7 +433,7 @@ export default function ApplicationForm() {
       let s3Data = null;
       if (file !== null) {
         s3Data = await handleFileUploadToS3(file, "resumes");
-        console.log("S3 Data:", s3Data);
+        // console.log("S3 Data:", s3Data);
       }
 
       const formData = new FormData();
@@ -465,9 +465,9 @@ export default function ApplicationForm() {
       }
       const response = await submitApplication(formData);
       router.push("/application/submitted");
-      console.log("submit", response);
+      // console.log("submit", response);
     } catch (error) {
-      console.log("Error in submitting", error);
+      // console.log("Error in submitting", error);
       if (error.response && error.response.status === 400) {
         toast.error(error.response.data.email[0]);
       } else {
@@ -622,20 +622,14 @@ export default function ApplicationForm() {
                           </span>
                         </div>
                       ))
-                    : "Select your suitable locations"}
-                  <span
-                    className={
-                      isLocationOpen
-                        ? "rotate-180 duration-300"
-                        : "duration-300"
-                    }
-                  >
+                    : "Select your suitable locations for training"}
+                  <span className="">
                     <IoIosArrowDown />
                   </span>
                 </button>
 
                 {isLocationOpen &&
-                selectedCity !== "Select your city" &&
+                selectedCity !== "Select your city for training " &&
                 allLocations.length > 0 ? (
                   <div
                     ref={locationDown}
@@ -667,7 +661,7 @@ export default function ApplicationForm() {
                 ) : (
                   isLocationOpen &&
                   !isCitySelected &&
-                  selectedCity === "Select your city" && (
+                  selectedCity === "Select your city for training" && (
                     <div
                       ref={locationDown}
                       className="absolute  top-full left-0 z-10 w-full mt-2 lg:max-h-[170px] max-h-[150px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"

@@ -3,8 +3,9 @@ import React, { useEffect, useState } from "react";
 import Progress from "./Progress";
 import StatusSummary from "./StatusSummary";
 import { useAuth } from "@/providers/AuthContext";
-import { FaEdit, FaTimes } from "react-icons/fa";
+import { FaArrowLeft, FaEdit, FaTimes } from "react-icons/fa";
 import { CircularProgress } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 const CourseHead = ({
   rating,
@@ -25,6 +26,8 @@ const CourseHead = ({
   const { userData } = useAuth();
   const isStudent = userData?.Group === "student";
   const isAdmin = userData?.Group === "admin";
+
+  const router = useRouter();
   // const session = userData?.session;
   // const session = userData?.session?.find((s) => s.course.id === id);
   const session = userData?.session;
@@ -45,7 +48,7 @@ const CourseHead = ({
         setCourseData(response?.data?.data);
       }
     } catch (error) {
-      console.error("Error fetching course:", error);
+      // console.error("Error fetching course:", error);
     } finally {
       setLoader(false);
     }
@@ -60,16 +63,20 @@ const CourseHead = ({
 
         setLoader(false);
       } else {
-        console.error("Failed to fetch program, status:", response.status);
+        // console.error("Failed to fetch program, status:", response.status);
       }
     } catch (error) {
-      console.log("error", error);
+      // console.log("error", error);
     }
   }
   useEffect(() => {
     program === "course" && fetchCoursesById();
     program === "program" && fetchProgramById();
   }, [isEditing]);
+
+  const goBack = () => {
+    router.back();
+  };
 
   // console.log(progress);
 
@@ -86,6 +93,13 @@ const CourseHead = ({
             className="flex justify-between max-md:flex-col max-md:items-center"
           >
             <div className="flex my-2 justify-center items-center cursor-default ">
+              <div
+                className="text-dark-400 flex gap-2 items-center cursor-pointer hover:text-blue-300 mr-4"
+                onClick={goBack}
+              >
+                <FaArrowLeft size={20} />
+                {/* <p>Back</p> */}
+              </div>
               {program === "program" ? (
                 <h2 className="font-exo max-md:text-center text-blue-500 text-xl font-bold">
                   {`${programData.name} ${programAbb ? `(${programAbb})` : ""}`}

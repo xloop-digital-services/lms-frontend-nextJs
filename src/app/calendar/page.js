@@ -13,7 +13,7 @@ export default function Page() {
   // const isInstructor = Cookies.get("userGroup");
 
   // console.log(group);
-  console.log(isInstructor);
+  // console.log(isInstructor);
 
   return (
     <>

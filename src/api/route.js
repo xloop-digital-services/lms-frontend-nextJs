@@ -770,7 +770,7 @@ export const VerifyEmail = async (data) => {
 export const broadcastAnnouncement = async (data) => {
   try {
     const response = await axiosInstance.post(
-      "/api/announcements/create/",
+      `/api/announcements/create`,
       data
     );
     return response;
@@ -1597,7 +1597,7 @@ export const getAnnouncementById = async (announcementId) => {
 //read announcement
 export const readAnnouncement = async (data) => {
   try {
-    const response = await axiosInstance.post(
+    const response = await axiosInstance.patch(
       `api/announcements/update/`,
       data
     );

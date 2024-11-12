@@ -57,7 +57,7 @@ export default function Page() {
         message: message,
       };
       const response = await broadcastAnnouncement(data);
-      console.log("submit", response);
+      // console.log("submit", response);
       toast.success(response.data.message);
       setTitle("");
       setMessage("");
@@ -66,7 +66,7 @@ export default function Page() {
       setSelectedSessions([]);
       router.push("/dashboard");
     } catch (error) {
-      console.log(error, "error while fetching the data");
+      // console.log(error, "error while fetching the data");
     } finally {
       setLoadingBroadCast(false);
     }
@@ -80,7 +80,7 @@ export default function Page() {
         const batchOptionsArray = response?.data.map((batch) => batch.batch);
         setBatches(batchOptionsArray);
       } catch (error) {
-        console.log("error while fetching the batches", error);
+        // console.log("error while fetching the batches", error);
         if (error.message === "Network Error") {
           toast.error(error.message, "Check your internet connection");
         }
@@ -99,7 +99,7 @@ export default function Page() {
         // console.log("sessions by batch", response.data);
         setSessions(response.data);
       } catch (error) {
-        console.log(error, "error while sessions by batch");
+        // console.log(error, "error while sessions by batch");
       } finally {
         setLoadingSession(false);
       }
@@ -311,7 +311,7 @@ export default function Page() {
                             <div
                               className={`px-4 py-2 cursor-pointer rounded-lg ${
                                 selectedSessionID.includes(option.id)
-                                  ? "bg-blue-300 font-semibold text-white"
+                                  ? "bg-blue-300 font-semibold text-surface-100"
                                   : "hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold"
                               }`}
                             >

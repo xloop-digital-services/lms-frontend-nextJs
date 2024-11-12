@@ -36,7 +36,7 @@ export default function Page({ params }) {
 
     try {
       const response = await setNewPassword(data, u_id, token);
-      console.log("res", response);
+      // console.log("res", response);
       if (response.status === 200) {
         toast.success("Password Reset Successfully", {
           position: "top-right",
@@ -66,7 +66,7 @@ export default function Page({ params }) {
         setloading(false);
       }
     } catch (error) {
-      console.error("Error during login:", error);
+      // console.error("Error during login:", error);
       if (error.response.data.password) {
         toast.error(error.response.data.password[0], {
           position: "top-right",

@@ -6,12 +6,15 @@ import { useAuth } from "@/providers/AuthContext";
 import CourseCard from "@/components/CourseCard";
 import { getAllCourses, getAllPrograms, listAllSessions } from "@/api/route";
 import { useSidebar } from "@/providers/useSidebar";
-import { FaEdit, FaPlus } from "react-icons/fa";
+import { FaArrowLeft, FaEdit, FaPlus } from "react-icons/fa";
 import Link from "next/link";
 import { CircularProgress } from "@mui/material";
 import { IoIosArrowDown } from "react-icons/io";
 import GetAttendanceAdminTable from "./GetAttendanceAdminTable";
 import useClickOutside from "@/providers/useClickOutside";
+import Lottie from "lottie-react";
+import bouncing from "../../public/data/bouncing.json";
+import { useRouter } from "next/navigation";
 
 export default function AdminCoursePage({ route1, programs, title, route }) {
   const { userData } = useAuth();
@@ -24,7 +27,13 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
   const [toggleSession, setToggleSession] = useState(false);
   const [isSessionOpen, setIsSessionOpen] = useState(false);
   const [sessionId, setSessionId] = useState(null);
+  const [searchFilter, setSearchFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
   const sessionDown = useRef(null);
+  const router = useRouter();
+  const goBack = () => {
+    router.back();
+  };
   // console.log(userData?.Group);
 
   useClickOutside(sessionDown, () => setIsSessionOpen(false));
@@ -35,10 +44,10 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
       if (response.status === 200) {
         setCourses(response.data?.data);
       } else {
-        console.error("Failed to fetch courses, status:", response.status);
+        // console.error("Failed to fetch courses, status:", response.status);
       }
     } catch (error) {
-      console.error("Error fetching courses:", error);
+      // console.error("Error fetching courses:", error);
     } finally {
       setLoading(false);
     }
@@ -51,10 +60,10 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
       // console.log("session fetching", response?.data);
       setSessions(response?.data.data);
     } catch (error) {
-      console.log(
-        "error while fetching the class schedules",
-        error.response.data.message
-      );
+      // console.log(
+      //   "error while fetching the class schedules",
+      //   error.response.data.message
+      // );
       if (error.message === "Network Error") {
         toast.error(error.message, "Check your internet connection");
       } else {
@@ -76,6 +85,25 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
     setSessionId(session.id);
   };
 
+  const filteredPrograms = programs?.filter(
+    (program) =>
+      program.name.toLowerCase().includes(searchFilter.toLowerCase()) &&
+      (statusFilter === "all" ||
+        (statusFilter === "active" && program.status !== 0) ||
+        (statusFilter === "inactive" && program.status === 0))
+  );
+
+  const filteredCourses = courses?.filter(
+    (course) =>
+      course.name.toLowerCase().includes(searchFilter.toLowerCase()) &&
+      (statusFilter === "all" ||
+        (statusFilter === "active" && course.status !== 0) ||
+        (statusFilter === "inactive" && course.status === 0))
+  );
+
+  const hasResults =
+    filteredPrograms?.length > 0 || filteredCourses?.length > 0;
+
   return (
     <div
       className={`flex-1 transition-transform pt-[97px] space-y-4 max-md:pt-32 font-inter ${
@@ -91,9 +119,18 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
       <div className="bg-surface-100 p-8 rounded-xl max-md:p-4">
         <div className="flex justify-between max-md:flex-col max-md:items-center">
           <div className="flex flex-col">
-            <h2 className="font-exo text-xl max-md:text-center max-md:justify-center text-blue-500 font-bold flex pb-2 justify-start items-center">
-              {title}
-            </h2>
+            <div className="flex pb-2">
+              <div
+                className="text-dark-400 flex gap-2 items-center cursor-pointer hover:text-blue-300 mr-4"
+                onClick={goBack}
+              >
+                <FaArrowLeft size={20} />
+                {/* <p>Back</p> */}
+              </div>
+              <h2 className="font-exo text-xl max-md:text-center max-md:justify-center text-blue-500 font-bold flex justify-start items-center">
+                {title}
+              </h2>
+            </div>
             <p className="pb-4 max-md:text-center max-md:justify-center">
               Select a scheduled class to view the {title}
             </p>
@@ -108,14 +145,48 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
             </>
           ) : null}
         </div>
+        <div className="flex max-md:flex-col gap-2">
+          <div className="w-full">
+            <input
+              className="w-full block outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+              placeholder="Search here"
+              value={searchFilter}
+              onChange={(e) => setSearchFilter(e.target.value)}
+            />
+          </div>
+          <div className="w-40 mt-2 flex items-center max-md:w-full">
+            <select
+              className="w-40 max-md:w-full h-12 bg-surface-100 block p-2 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+            >
+              {" "}
+              <option value="" disabled>
+                Select status
+              </option>
+              <option className="" value="all">
+                All
+              </option>
+              <option className="" value="active">
+                Active
+              </option>
+              <option className="" value="inactive">
+                Inactive
+              </option>
+            </select>
+          </div>
+        </div>
+
         {loader ? (
           <div className="flex justify-center items-center h-[75vh]">
             <CircularProgress />
           </div>
         ) : (
           <div className="flex flex-wrap max-md:w-full max-sm:items-center max-sm:justify-center">
-            {programs?.length > 0
-              ? programs
+            {hasResults ? (
+              <>
+                {/* If both searchFilter and statusFilter are active, use filteredProgramsStatus and filteredCoursesStatus */}
+                {filteredPrograms
                   ?.sort((a, b) => a.name.localeCompare(b.name))
                   .map((program) => (
                     <CourseCard
@@ -128,9 +199,8 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
                       route1={route1}
                       status={program.status}
                     />
-                  ))
-              : courses?.length > 0 &&
-                courses
+                  ))}
+                {filteredCourses
                   ?.sort((a, b) => a.name.localeCompare(b.name))
                   .map((course) => (
                     <CourseCard
@@ -145,46 +215,15 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
                       status={course.status}
                     />
                   ))}
+              </>
+            ) : (
+              <div className="text-center w-full mt-4 text-gray-500">
+                <Lottie animationData={bouncing} className="h-[300px]" />
+                <p className="font-bold text-blue-500">No results found</p>
+              </div>
+            )}
           </div>
         )}
-        {/* <div className="">
-          { loader ? (
-            <div className="flex justify-center items-center h-[75vh]">
-              <CircularProgress />
-            </div>
-          ) :   sessions && sessions.length > 0 ? (
-            sessions.map((session, index) => (
-              <div
-                key={session.id}
-                className="border border-dark-300 w-full p-4 mb-2 rounded-lg cursor-pointer flex flex-col"
-              >
-                <div className="flex flex-col items-center">
-                  <div
-                    className="flex gap-3 text-[17px] font-semibold font-exo items-center justify-between w-full"
-                    onClick={() => handleSessionToggle(session)}
-                  >
-                    {session.location_name} - {session.course.name}
-                    <span className="">
-                      <IoIosArrowDown />
-                    </span>
-                  </div>
-                </div>
-                <div>
-                  {isSessionOpen && sessionId === session.id && (
-                    <div className="mt-3">
-
-                      <GetAttendanceAdminTable sessionId={sessionId} />
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="text-sm text-center text-dark-300 p-2">
-              no session found
-            </p>
-          )}
-        </div> */}
       </div>
     </div>
   );

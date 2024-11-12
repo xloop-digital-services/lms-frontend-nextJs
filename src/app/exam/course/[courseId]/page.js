@@ -261,6 +261,40 @@ export default function Page({ params }) {
     }
   };
 
+  const handleAssignmentStatus = async (id, newStatus) => {
+    const assignmentToUpdate = assignments.find(
+      (assignment) => assignment.id === id
+    );
+
+    if (!assignmentToUpdate) {
+      toast.error("Exam not found");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("status", newStatus);
+
+    try {
+      const response = await deleteExam(formData, assignmentToUpdate.id);
+
+      if (response.status === 200) {
+        setAssignments((prevAssignments) =>
+          prevAssignments.map((assignment) =>
+            assignment.id === id
+              ? { ...assignment, status: newStatus }
+              : assignment
+          )
+        );
+        toast.success("Exam status updated successfully!");
+      } else {
+        toast.error("Error updating assignment status");
+      }
+    } catch (error) {
+      toast.error("Error updating assignment status");
+      //console.error(error);
+    }
+  };
+
   async function fetchSessions() {
     setLoading(true);
     try {

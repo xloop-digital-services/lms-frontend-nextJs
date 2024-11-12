@@ -474,7 +474,7 @@ function Profile() {
                   </div>
                 )}
                 <div className="lg:w-[50%] w-full md:w-[50%]">
-                  <label htmlFor="city">City</label>
+                  <label htmlFor="city">City of training</label>
                   <div className="relative flex items-center mt-2">
                     <FaMapPin className="absolute left-3 text-dark-600 mt-2" />
                     <input
