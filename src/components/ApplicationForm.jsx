@@ -46,7 +46,9 @@ export default function ApplicationForm() {
   const [lastName, setLastName] = useState("");
   const [contactNumber, setContactNumber] = useState("");
   const [birthDate, setBirthDate] = useState("");
-  const [selectedCity, setSelectedCity] = useState("Select your city for training");
+  const [selectedCity, setSelectedCity] = useState(
+    "Select your city for training"
+  );
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [isCitySelected, setIsCitySelected] = useState(false);
   const [cityShortName, setCityShortName] = useState("");
@@ -76,6 +78,7 @@ export default function ApplicationForm() {
   const [programError, setPorgramError] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [nameError, setNameError] = useState("");
+  const [doneSubmit, setDoneSubmit] = useState(false);
 
   const handleFirstName = (e) => {
     const name = e.target.value;
@@ -464,6 +467,7 @@ export default function ApplicationForm() {
         });
       }
       const response = await submitApplication(formData);
+      setDoneSubmit(true);
       router.push("/application/submitted");
       // console.log("submit", response);
     } catch (error) {
@@ -629,7 +633,7 @@ export default function ApplicationForm() {
                 </button>
 
                 {isLocationOpen &&
-                selectedCity !== "Select your city for training " &&
+                selectedCity !== "Select your city for training" &&
                 allLocations.length > 0 ? (
                   <div
                     ref={locationDown}
@@ -917,6 +921,7 @@ export default function ApplicationForm() {
             type="submit"
             onClick={handleApplicationCreation}
             className="w-fit flex justify-center py-3 px-12 text-sm font-medium rounded-lg text-dark-100 bg-[#03A1D8] hover:bg-[#2799bf] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
+            disabled={loadingSubmit || doneSubmit}
           >
             {loadingSubmit && (
               <CircularProgress size={19} style={{ color: "#fffff" }} />

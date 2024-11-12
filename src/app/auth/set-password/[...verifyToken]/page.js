@@ -152,7 +152,7 @@ export default function Page({ params }) {
                       type={showPassword ? "text" : "password"}
                       id="new-password"
                       name="new-password"
-                      placeholder="Password (at least 8 characters, with letters, numbers, and special characters)"
+                      placeholder="Enter your password"
                       value={newPassword.trim()}
                       onChange={(e) => setPassword(e.target.value)}
                       className="py-3 px-4 pr-9 block w-full outline-none border border-dark-200 rounded-md text-sm focus:border-blue-300 focus:ring-blue-300 shadow-sm"
@@ -183,7 +183,7 @@ export default function Page({ params }) {
                       type={showPassword ? "text" : "password"}
                       id="confirm-password"
                       name="confirm-password"
-                      placeholder="Password (at least 8 characters, with letters, numbers, and special characters)"
+                      placeholder="Enter your password"
                       value={confirmPassword.trim()}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       className="py-3 px-4 pr-9 block w-full outline-none border border-dark-200 rounded-md text-sm focus:border-blue-300 focus:ring-blue-300 shadow-sm"
@@ -201,6 +201,12 @@ export default function Page({ params }) {
                       )}
                     </div>
                   </div>
+                </div>
+                <div className="text-[13px] text-dark-400 pb-4">
+                  <p>
+                    Note: Password (at least 8 characters, with letters,
+                    numbers, and special characters)
+                  </p>
                 </div>
                 <button
                   type="submit"

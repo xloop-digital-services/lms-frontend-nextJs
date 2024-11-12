@@ -15,6 +15,7 @@ import useClickOutside from "@/providers/useClickOutside";
 import Lottie from "lottie-react";
 import bouncing from "../../public/data/bouncing.json";
 import { useRouter } from "next/navigation";
+import { FaMagnifyingGlass } from "react-icons/fa6";
 
 export default function AdminCoursePage({ route1, programs, title, route }) {
   const { userData } = useAuth();
@@ -145,18 +146,28 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
             </>
           ) : null}
         </div>
-        <div className="flex max-md:flex-col gap-2">
+        <div className="flex max-md:mt-2 max-md:flex-col gap-2 items-center">
           <div className="w-full">
-            <input
-              className="w-full block outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
-              placeholder="Search here"
-              value={searchFilter}
-              onChange={(e) => setSearchFilter(e.target.value)}
-            />
+            <div className=" relative flex w-full">
+              {" "}
+              {/* Ensure the container is growable */}
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-dark-300">
+                <FaMagnifyingGlass size={18} />
+              </span>
+              <div className="border py-3 border-dark-300 rounded-lg w-full">
+                <input
+                  type="text"
+                  placeholder="Search here"
+                  className="pl-9 px-2  text-sm  outline-none w-full" // w-full ensures full width
+                  value={searchFilter}
+                  onChange={(e) => setSearchFilter(e.target.value)}
+                />
+              </div>
+            </div>
           </div>
-          <div className="w-40 mt-2 flex items-center max-md:w-full">
+          <div className="w-40 flex items-center max-md:w-full">
             <select
-              className="w-40 max-md:w-full h-12 bg-surface-100 block p-2 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+              className="w-40 max-md:w-full py-[14px] bg-surface-100 block px-2 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
             >

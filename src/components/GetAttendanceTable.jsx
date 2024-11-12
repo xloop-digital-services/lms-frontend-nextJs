@@ -537,7 +537,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
         <div className="flex gap-2">
           <button
             onClick={() => setEdit(false)}
-            className={` bg-surface-200 hover:bg-dark-200 text-dark-400 hover:text-[#000000] p-2 rounded-md w-20 my-2 flex items-center gap-2 justify-center`}
+            className={` border border-blue-300 text-blue-300 rounded-lg p-2 my-2 hover:bg-mix-400`}
           >
             Cancel
           </button>

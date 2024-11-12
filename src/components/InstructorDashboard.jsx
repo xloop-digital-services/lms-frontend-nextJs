@@ -233,8 +233,8 @@ export default function InstructorDashboard() {
                       type={`Course Name: ${assignment.course}`}
                       // title={assignment.question || assignment.title}
                       // content={assignment.description}
-                      priority={`Start Time: ${assignment?.start_time}\n End Time:${assignment?.end_time}`}
-                      category={`Capacity: ${assignment.no_of_student}\t\t\tLocation:${assignment.location}`}
+                      priority={assignment.schedules}
+                      category={`Capacity: ${assignment.no_of_students}\t\t\t\tLocation:${assignment.location}`}
                       // avatars={avatars}
                       // extraCount={50}
                     />
