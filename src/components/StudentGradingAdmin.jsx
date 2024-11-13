@@ -310,6 +310,14 @@ export default function StudentGradingAdmin({
           examsWeightage={progress?.exams?.weightage}
           examsScore={progress?.exams?.grades}
           examsWeightedScore={progress?.exams?.percentage}
+          attenWeightage={progress?.attendance?.weightage}
+          attenScore={progress?.attendance?.total_present_attendance}
+          attenWeightedScore={progress?.attendance?.percentage}
+          assignment_total={progress?.assignments?.total_grades}
+          quiz_total={progress?.quizzes?.total_grades}
+          project_total={progress?.projects?.total_grades}
+          exam_total={progress?.exams?.total_grades}
+          atten_total={progress?.attendance?.total_attendance}
         />
       ) : (
         <p className="text-blue-300 h-12 w-full flex justify-center items-center">

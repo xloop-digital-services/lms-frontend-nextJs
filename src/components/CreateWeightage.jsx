@@ -7,12 +7,13 @@ import {
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
-export const sum = (a, b, c, d) => {
+export const sum = (a, b, c, d, e) => {
   return (
     parseFloat(a || 0) +
     parseFloat(b || 0) +
     parseFloat(c || 0) +
-    parseFloat(d || 0)
+    parseFloat(d || 0) +
+    parseFloat(e || 0)
   );
 };
 
@@ -64,6 +65,7 @@ export default function CreateWeightage({ courseId, onCreation, sessionId }) {
         setAssignmentsWeightage("");
         setProjectsWeightage("");
         setQuizzesWeightage("");
+        setAttenWeightage("");
         if (onCreation) {
           onCreation();
         }

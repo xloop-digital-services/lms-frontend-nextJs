@@ -125,23 +125,28 @@ export default function Page() {
   const toggleSessionOpen = () => {
     setIsSessionOpen((prev) => !prev);
   };
-
   const handleSessionSelect = (option) => {
-    const isAlreadySelected = selectedSessions.some(
-      (session) => session.id === option.id
-    );
-
-    if (isAlreadySelected) {
-      setSelectedSessions(
-        selectedSessions.filter((session) => session.id !== option.id)
-      );
-      setSelectedSessionID(selectedSessionID.filter((id) => id !== option.id));
-    } else {
-      setSelectedSessions([...selectedSessions, option]);
-      setSelectedSessionID([...selectedSessionID, option.id]);
-    }
-    setIsSessionSelected(selectedSessions.length > 0);
+    setSelectedSessions([option]); 
+    setSelectedSessionID([option.id]); 
+    setIsSessionSelected(true);
   };
+
+  // const handleSessionSelect = (option) => {
+  //   const isAlreadySelected = selectedSessions.some(
+  //     (session) => session.id === option.id
+  //   );
+
+  //   if (isAlreadySelected) {
+  //     setSelectedSessions(
+  //       selectedSessions.filter((session) => session.id !== option.id)
+  //     );
+  //     setSelectedSessionID(selectedSessionID.filter((id) => id !== option.id));
+  //   } else {
+  //     setSelectedSessions([...selectedSessions, option]);
+  //     setSelectedSessionID([...selectedSessionID, option.id]);
+  //   }
+  //   setIsSessionSelected(selectedSessions.length > 0);
+  // };
 
   const removeSession = (id) => {
     setSelectedSessions(
@@ -262,14 +267,14 @@ export default function Page() {
                 {selectedSessions.map((session) => (
                   <div
                     key={session.id}
-                    className="flex items-center bg-blue-100 px-2 py-1 rounded-lg text-blue-800 mr-2"
+                    className="flex items-center px-2 py-1 rounded-lg text-blue-800 mr-2"
                   >
                     <p className="mr-2">{session.session_name}</p>
-                    <IoClose
-                      size={15}
-                      onClick={() => removeSession(session.id)}
-                      className="cursor-pointer text-blue-500"
-                    />
+                      {/* <IoClose
+                        size={15}
+                        onClick={() => removeSession(session.id)}
+                        className="cursor-pointer text-blue-500"
+                      /> */}
                   </div>
                 ))}
               </div>

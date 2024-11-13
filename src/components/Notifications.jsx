@@ -97,11 +97,12 @@ export default function Notifications() {
                       <div className="flex flex-col w-64">
                         <p className="font-md">
                           {announcement.message}.<br />
-                          {
-                            "Please ignore any contradictory scheduling in the calendar."
-                          }
+                          <p className="italic text-sm text-dark-400">
+                            Please ignore any contradictory scheduling in the
+                            calendar.
+                          </p>
                         </p>
-                        <p className="text-dark-400 font-sm">
+                        <p className="text-dark-400 font-sm mt-1">
                           {formatDateTime(announcement.created_at)}
                         </p>
                       </div>
@@ -156,7 +157,7 @@ export default function Notifications() {
 
                       <div className="flex flex-col w-64">
                         <p className="font-md">{message.message}</p>
-                        <p className="text-dark-400 font-sm">
+                        <p className="text-dark-400 font-sm mt-1">
                           {formatDateTime(message.created_at)}
                         </p>
                       </div>

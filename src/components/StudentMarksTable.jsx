@@ -13,31 +13,31 @@ const StudentMarksTable = ({ field, assessments }) => {
                     <tr>
                       <th
                         scope="col"
-                        className="px-12 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[28%]"
+                        className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[23%]"
                       >
                         {field} Name
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[28%]"
+                        className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[23%]"
                       >
                         Total Marks
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[28%]"
+                        className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[23%]"
                       >
                         Obtained Marks
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[28%]"
+                        className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[23%]"
                       >
                         Remarks
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[28%]"
+                        className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[23%]"
                       >
                         Status
                       </th>
@@ -50,28 +50,28 @@ const StudentMarksTable = ({ field, assessments }) => {
                         return (
                           <>
                             <tr key={index}>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200 text-wrap">
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
                                 {assessment?.exam_name ||
                                   assessment?.quiz_name ||
                                   assessment?.assignment_name ||
                                   assessment?.project_name}
                               </td>
-                              <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
                                 {assessment?.total_marks
                                   ? assessment.total_marks
                                   : 0}
                               </td>
 
-                              <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
                                 {assessment?.marks_obtain
                                   ? assessment.marks_obtain
                                   : 0}
                               </td>
-                              <td className="px-6 py-4 text-center whitespace-nowrap text-wrap text-sm text-gray-800 dark:text-gray-200">
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
                                 {assessment?.remarks ? assessment.remarks : "-"}
                               </td>
 
-                              <td className="px-12 py-4 text-center whitespace-nowrap flex w-full justify-center items-center text-sm text-surface-100 ">
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center text-surface-100">
                                 <p
                                   className={`w-[120px] text-center px-4 py-2 text-[12px] rounded-lg ${
                                     assessment?.status === "Submitted"
