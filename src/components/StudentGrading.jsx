@@ -357,7 +357,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
             examsWeightedScore={progress?.exams?.percentage}
             attenWeightage={progress?.attendance?.weightage}
             attenScore={progress?.attendance?.total_present_attendance}
-            attenWeightedScore={progress?.attendance?.percentage}
+            attenWeightedScore={progress?.attendance?.attendance_grace_marks}
             assignment_total={progress?.assignments?.total_grades}
             quiz_total={progress?.quizzes?.total_grades}
             project_total={progress?.projects?.total_grades}
