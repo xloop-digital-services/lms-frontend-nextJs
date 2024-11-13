@@ -148,21 +148,16 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
         </div>
         <div className="flex max-md:mt-2 max-md:flex-col gap-2 items-center">
           <div className="w-full">
-            <div className=" relative flex w-full">
-              {" "}
-              {/* Ensure the container is growable */}
-              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-dark-300">
+            <div className="relative w-full">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-dark-300">
                 <FaMagnifyingGlass size={18} />
               </span>
-              <div className="border py-3 border-dark-300 rounded-lg w-full">
-                <input
-                  type="text"
-                  placeholder="Search here"
-                  className="pl-9 px-2  text-sm  outline-none w-full" // w-full ensures full width
-                  value={searchFilter}
-                  onChange={(e) => setSearchFilter(e.target.value)}
-                />
-              </div>
+              <input
+                className="w-full block  border-dark-200 focus:outline-blue-300 font-sans rounded-md border-0 py-1.5 pl-10 placeholder-dark-300 shadow-sm ring-1 ring-dark-300 focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                placeholder="Search here"
+                value={searchFilter}
+                onChange={(e) => setSearchFilter(e.target.value)}
+              />
             </div>
           </div>
           <div className="w-40 flex items-center max-md:w-full">

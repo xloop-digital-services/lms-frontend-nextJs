@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { MdKeyboardArrowRight } from "react-icons/md";
@@ -49,9 +50,12 @@ const AssignmentCard = ({ id, category, content, title, priority, type }) => {
                     //   ? "bg-[#FBE7E9] text-[#D84848]"
                     //   : "bg-[#FEF0C7] text-[#F8A029]"
                   >
-                    {priority.length > 0 ? (
+                    {Array.isArray(priority) && priority.length > 0 ? (
                       priority.map((days) => (
-                        <div className="flex justify-evenly items-center w-full">
+                        <div
+                          className="flex justify-evenly items-center w-full"
+                          key={days.day_of_week}
+                        >
                           <div className="w-[30%]">{days.day_of_week}:</div>
                           <div>
                             {days.start_time} - {days.end_time}

@@ -10,6 +10,7 @@ export default function GetWeightage({ weigh }) {
   const [projectsWeightage, setProjectsWeightage] = useState("");
   const [examsWeightage, setExamsWeightage] = useState("");
   const [selectedWeightageId, setSelectedWeightageId] = useState(null);
+  const [attenWeightage, setAttenWeightage] = useState("");
   const [courseId, setCourseId] = useState(null);
   const [sessionId, setSessionId] = useState(null);
   const [isEditing, setIsEditing] = useState(null);
@@ -19,7 +20,8 @@ export default function GetWeightage({ weigh }) {
       quizzesWeightage,
       assignmentsWeightage,
       projectsWeightage,
-      examsWeightage
+      examsWeightage,
+      attenWeightage
     );
 
     if (totalWeightage !== 100) {
@@ -33,6 +35,7 @@ export default function GetWeightage({ weigh }) {
       quizzes_weightage: quizzesWeightage,
       projects_weightage: projectsWeightage,
       exams_weightage: examsWeightage,
+      attendance_weightage: attenWeightage,
       session: sessionId,
     };
 
@@ -66,6 +69,7 @@ export default function GetWeightage({ weigh }) {
     setQuizzesWeightage(wei.quizzes_weightage);
     setProjectsWeightage(wei.projects_weightage);
     setExamsWeightage(wei.exams_weightage);
+    setAttenWeightage(wei.attendance_weightage);
   }
 
   return (
@@ -178,6 +182,24 @@ export default function GetWeightage({ weigh }) {
                         )}
                       </td>
                     </tr>
+                    <tr>
+                      <td className="px-6 py-4 mt-2 text-center whitespace-nowrap text-sm font-medium text-gray-800">
+                        Attendance
+                      </td>
+                      <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                        {isEditing === wei.id ? (
+                          <input
+                            type="number"
+                            className="focus:outline-none border-b  border-dark-300 text-center"
+                            min={0}
+                            value={attenWeightage}
+                            onChange={(e) => setAttenWeightage(e.target.value)}
+                          />
+                        ) : (
+                          `${wei.attendance_weightage}%`
+                        )}
+                      </td>
+                    </tr>
 
                     <tr>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-800 text-center">
@@ -189,7 +211,8 @@ export default function GetWeightage({ weigh }) {
                             {Number(quizzesWeightage) +
                               Number(assignmentsWeightage) +
                               Number(projectsWeightage) +
-                              Number(examsWeightage)}{" "}
+                              Number(examsWeightage) +
+                              Number(attenWeightage)}{" "}
                             %
                           </span>
                         ) : (
@@ -197,7 +220,8 @@ export default function GetWeightage({ weigh }) {
                             (Number(wei.assignments_weightage) || 0) +
                             (Number(wei.quizzes_weightage) || 0) +
                             (Number(wei.projects_weightage) || 0) +
-                            (Number(wei.exams_weightage) || 0)
+                            (Number(wei.exams_weightage) || 0) +
+                            (Number(wei.attendance_weightage) || 0)
                           }%`
                         )}
                       </td>
