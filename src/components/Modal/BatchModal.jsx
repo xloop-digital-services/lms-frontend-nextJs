@@ -7,6 +7,7 @@ import { createBatch, getAllPrograms } from "@/api/route";
 import { CircularProgress } from "@mui/material";
 import { toast } from "react-toastify";
 import useClickOutside from "@/providers/useClickOutside";
+import { Handjet } from "next/font/google";
 
 const BatchModal = ({
   updateBatch,
@@ -36,6 +37,11 @@ const BatchModal = ({
   const [selectedCategory, setSelectedCategory] = useState("Select category");
   const [isCategorySelected, setIsCategorySelected] = useState(false);
   const [error, setError] = useState("");
+  const [applicationDate, setApplicationDate] = useState({
+    start: "",
+    end: "",
+  });
+  const [appErrorMessage, setAppErrorMessage] = useState("");
   const categoryOptions = [
     { name: "Fall" },
     { name: "Winter" },
@@ -82,7 +88,8 @@ const BatchModal = ({
       studentCapacity &&
       startDate &&
       endDate &&
-      selectedCategory
+      selectedCategory &&
+      applicationDate
     ) {
       try {
         const data = {
@@ -94,6 +101,8 @@ const BatchModal = ({
           start_date: startDate,
           end_date: endDate,
           term: selectedCategory,
+          application_start_date: applicationDate.start,
+          application_end_date: applicationDate.end,
         };
 
         const response = await createBatch(data);
@@ -164,6 +173,38 @@ const BatchModal = ({
       setErrorMessage("End date should be greater than start date");
     } else {
       setErrorMessage("");
+    }
+  };
+
+  const handleApplicationStartDate = (event) => {
+    const newStartDate = event.target.value;
+    setApplicationDate((prev) => {
+      const updatedDates = { ...prev, start: newStartDate };
+
+      // Validate dates
+      validateDates(updatedDates.start, updatedDates.end);
+
+      return updatedDates;
+    });
+  };
+
+  const handleApplicationEndDateChange = (event) => {
+    const newEndDate = event.target.value;
+    setApplicationDate((prev) => {
+      const updatedDates = { ...prev, end: newEndDate };
+
+      // Validate dates
+      validateDates(updatedDates.start, updatedDates.end);
+
+      return updatedDates;
+    });
+  };
+
+  const validateDates = (start, end) => {
+    if (start && end && new Date(start) > new Date(end)) {
+      setAppErrorMessage("End date should be greater than start date.");
+    } else {
+      setAppErrorMessage(""); // Clear the error if validation passes
     }
   };
 
@@ -451,7 +492,7 @@ const BatchModal = ({
             <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
               {/* Start Date Input */}
               <div className="space-y-2 text-[15px] w-full">
-                <p>Start Date</p>
+                <p>Batch Start Date</p>
                 <div className="relative w-full">
                   <input
                     type="date"
@@ -466,7 +507,7 @@ const BatchModal = ({
 
               {/* End Date Input */}
               <div className="space-y-2 text-[15px] w-full">
-                <p>End Date</p>
+                <p>Batch End Date</p>
                 <div className="relative w-full">
                   <input
                     type="date"
@@ -480,6 +521,43 @@ const BatchModal = ({
                 {errorMessage && (
                   <p className="text-mix-200 text-[12px] mt-2">
                     {errorMessage}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
+              {/* Start Date Input */}
+              <div className="space-y-2 text-[15px] w-full">
+                <p>Application Start Date</p>
+                <div className="relative w-full">
+                  <input
+                    type="date"
+                    value={applicationDate.start}
+                    onChange={handleApplicationStartDate}
+                    className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
+                    placeholder="Select start date"
+                  />
+                  {/* <FaCalendar className="absolute right-3 top-1/2 transform -translate-y-1/2 text-dark-400 pointer-events-none" /> */}
+                </div>
+              </div>
+
+              {/* End Date Input */}
+              <div className="space-y-2 text-[15px] w-full">
+                <p>Application End Date</p>
+                <div className="relative w-full">
+                  <input
+                    type="date"
+                    value={applicationDate.end}
+                    onChange={handleApplicationEndDateChange}
+                    className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
+                    placeholder="Select end date"
+                  />
+                  {/* <FaCalendar className="absolute right-3 top-1/2 transform -translate-y-1/2 text-dark-400 pointer-events-none" /> */}
+                </div>
+                {appErrorMessage && (
+                  <p className="text-mix-200 text-[12px] mt-2">
+                    {appErrorMessage}
                   </p>
                 )}
               </div>

@@ -640,7 +640,6 @@ const AdminDashboard = () => {
               <div className="w-full flex items-center justify-end gap-4 ">
                 <div className=" relative flex nsm:w-[50%] w-full nsm:mt-0 mt-1">
                   {" "}
-                  {/* Ensure the container is growable */}
                   <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-dark-300">
                     <FaMagnifyingGlass size={18} />
                   </span>
@@ -648,7 +647,7 @@ const AdminDashboard = () => {
                     <input
                       type="text"
                       placeholder="Search by names"
-                      className="pl-9 px-3  text-sm  outline-none w-full" // w-full ensures full width
+                      className="pl-9 px-3  text-sm  outline-none w-full" 
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />

@@ -634,7 +634,7 @@ export const resubmitExam = async (submissionId, exam) => {
 };
 
 //upload Quiz
-export const uploadQuiz = async (studentInstructorID , quiz) => {
+export const uploadQuiz = async (studentInstructorID, quiz) => {
   try {
     const response = await axiosInstance.post(
       `/api/course/quiz_submissions/?instructor_id=${studentInstructorID}`,
@@ -861,6 +861,17 @@ export const UpdateBatch = async (selectedBatch, data) => {
 export const DeleteBatch = async (selectedBatch) => {
   try {
     const response = await axiosInstance.delete(`/api/batch/${selectedBatch}/`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const batchInfo = async (selectedBatch) => {
+  try {
+    const response = await axiosInstance.get(
+      `api/batch-student/?batch_name=${selectedBatch}`
+    );
     return response;
   } catch (error) {
     throw error;
