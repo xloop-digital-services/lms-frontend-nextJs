@@ -375,54 +375,51 @@ const AdminDashboard = () => {
               </div>
             </Link>
 
-            <Link href="/user-management/users" className="w-full xmd:w-1/3">
-              <div className="bg-surface-100 flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
-                <div className="flex flex-col text-sm h-full justify-center items-center">
-                  Total Students
-                  <span className="text-xl font-semibold font-exo text-blue-500">
-                    {allStudents}
+            <div className="bg-surface-100 w-full xmd:w-1/3 flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
+              <div className="flex flex-col text-sm h-full justify-center items-center">
+                Total Students
+                <span className="text-xl font-semibold font-exo text-blue-500">
+                  {allStudents}
+                </span>
+              </div>
+              <div className="space-y-2">
+                <div className="flex flex-col text-[12px] justify-center items-center">
+                  Active Students
+                  <span className="text-base font-semibold font-exo text-blue-500">
+                    {allActiveStudents}
                   </span>
                 </div>
-                <div className="space-y-2">
-                  <div className="flex flex-col text-[12px] justify-center items-center">
-                    Active Students
-                    <span className="text-base font-semibold font-exo text-blue-500">
-                      {allActiveStudents}
-                    </span>
-                  </div>
-                  <div className="flex flex-col text-[12px] justify-center items-center">
-                    Inactive Students
-                    <span className="text-base font-semibold font-exo text-blue-500">
-                      {allInActiveStudents}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </Link>
-            <Link href="/user-management/users" className="w-full xmd:w-1/3">
-              <div className="bg-surface-100  flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
-                <div className="flex flex-col text-sm h-full justify-center items-center">
-                  Total Instructors
-                  <span className="text-xl font-semibold font-exo text-blue-500">
-                    {allInstructors}
+                <div className="flex flex-col text-[12px] justify-center items-center">
+                  Inactive Students
+                  <span className="text-base font-semibold font-exo text-blue-500">
+                    {allInActiveStudents}
                   </span>
                 </div>
-                <div className="space-y-2">
-                  <div className="flex flex-col text-[12px] justify-center items-center">
-                    Active Instructors
-                    <span className="text-base font-semibold font-exo text-blue-500">
-                      {allActiveInstructors}
-                    </span>
-                  </div>
-                  <div className="flex flex-col text-[12px] justify-center items-center">
-                    Inactive Instructors
-                    <span className="text-base font-semibold font-exo text-blue-500">
-                      {allInActiveInstructors}
-                    </span>
-                  </div>
+              </div>
+            </div>
+
+            <div className="bg-surface-100 w-full xmd:w-1/3 flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
+              <div className="flex flex-col text-sm h-full justify-center items-center">
+                Total Instructors
+                <span className="text-xl font-semibold font-exo text-blue-500">
+                  {allInstructors}
+                </span>
+              </div>
+              <div className="space-y-2">
+                <div className="flex flex-col text-[12px] justify-center items-center">
+                  Active Instructors
+                  <span className="text-base font-semibold font-exo text-blue-500">
+                    {allActiveInstructors}
+                  </span>
+                </div>
+                <div className="flex flex-col text-[12px] justify-center items-center">
+                  Inactive Instructors
+                  <span className="text-base font-semibold font-exo text-blue-500">
+                    {allInActiveInstructors}
+                  </span>
                 </div>
               </div>
-            </Link>
+            </div>
           </div>
 
           <div className="flex gap-4 xmd:flex-row flex-col">
@@ -647,7 +644,7 @@ const AdminDashboard = () => {
                     <input
                       type="text"
                       placeholder="Search by names"
-                      className="pl-9 px-3  text-sm  outline-none w-full" 
+                      className="pl-9 px-3  text-sm  outline-none w-full"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />

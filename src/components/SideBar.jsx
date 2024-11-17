@@ -149,7 +149,7 @@ function SideBar() {
                               className={`${
                                 isLinkActive("/user-management/applicants") &&
                                 "font-semibold"
-                              } `}
+                              } w-full block`}
                             >
                               Applicants
                             </Link>
@@ -165,7 +165,7 @@ function SideBar() {
                               className={`${
                                 isLinkActive("/user-management/users") &&
                                 "font-semibold"
-                              }`}
+                              } w-full block`}
                             >
                               Verified Users
                             </Link>
