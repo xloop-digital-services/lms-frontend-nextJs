@@ -133,7 +133,7 @@ const AdminDashboard = () => {
   const handleTotalUsers = async () => {
     try {
       const response = await totalUsersCount();
-      console.log("total Counts", response?.data?.data);
+      // console.log("total Counts", response?.data?.data);
       setAllUsers(response?.data?.data?.all_users_length);
       setAllIntructors(response?.data?.data?.instructor_user_length);
       setAllStudents(response?.data?.data?.student_user_length);
@@ -146,7 +146,7 @@ const AdminDashboard = () => {
       setAllActiveStudents(response?.data?.data?.active_student_length);
       setAllInActiveStudents(response?.data?.data?.inactive_student_length);
     } catch (error) {
-      console.log("error fetching the total users", error);
+      // console.log("error fetching the total users", error);
     }
   };
 
@@ -157,7 +157,7 @@ const AdminDashboard = () => {
       setBatches(response?.data);
       setloadingBatch(false);
     } catch (error) {
-      console.log("error while fetching the batches", error);
+      // console.log("error while fetching the batches", error);
       setloadingBatch(false);
     }
   };
@@ -189,18 +189,18 @@ const AdminDashboard = () => {
       }
     } catch (err) {
       setLoading(false);
-      console.error("error while fetching the programs", err);
+      // console.error("error while fetching the programs", err);
     }
   };
 
   const handleGetAllSkills = async () => {
     try {
       const response = await getAllSkills();
-      console.log("fetching skills", response.data);
+      // console.log("fetching skills", response.data);
       setAllSkills(response?.data);
       setLoading(false);
     } catch (error) {
-      console.log("error fetching the list of skills");
+      // console.log("error fetching the list of skills");
       setLoading(false);
     }
   };
@@ -233,7 +233,7 @@ const AdminDashboard = () => {
       setBarData(response?.data?.data);
       setLoading(false);
     } catch (error) {
-      console.log("error while fetching the bar data", error);
+      // console.log("error while fetching the bar data", error);
       setLoading(false);
     }
   };
@@ -286,7 +286,7 @@ const AdminDashboard = () => {
 
         setLoading(false);
       } catch (error) {
-        console.log("error while fetching number of applications", error);
+        // console.log("error while fetching number of applications", error);
         setLoading(false);
       }
     };
@@ -325,12 +325,12 @@ const AdminDashboard = () => {
       setLoading(true);
       const response = await DeleteBatch(selectedBatch);
       toast.success("Batch deleted successfully!");
-      console.log("deleting the batch", response);
+      // console.log("deleting the batch", response);
       setUpdateBatch(!updateBatch);
       setConfirmDelete(false);
       setLoading(false);
     } catch (error) {
-      console.log("error while deleting the batch", error);
+      // console.log("error while deleting the batch", error);
     }
   };
 

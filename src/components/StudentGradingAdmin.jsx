@@ -8,12 +8,16 @@ import StudentMarksTable from "@/components/StudentMarksTable";
 import CourseHead from "@/components/CourseHead";
 import {
   getAssignmentProgress,
+  getAttendanceStudentPage,
   getExamProgress,
   getOverallProgress,
   getProjectProgress,
   getQuizProgress,
+  getStudentAttendanceAdmin,
 } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
+import StudentAttendence from "./StudentAttendence";
+import StudentAttendanceTable from "./StudentAttendanceTable";
 
 export default function StudentGradingAdmin({
   courseId,
@@ -31,8 +35,10 @@ export default function StudentGradingAdmin({
   const [exam, setExam] = useState([]);
   const [loader, setLoader] = useState(true);
   const dropdownRef = useRef(null);
+  const [attendanceStudent, setAttendanceStudent] = useState([]);
   const { userData } = useAuth();
   const isStudent = userData?.Group === "student";
+  const isAdmin = userData?.Group === "admin";
   //   const courseId = params.courseId;
   // const userId = userData?.user_data?.user;
   const regId = isStudent ? userData?.user_data?.registration_id : propRegId;
@@ -64,6 +70,31 @@ export default function StudentGradingAdmin({
       //console.log("error", error);
     }
   }
+
+  async function fetchAttendance() {
+    setLoader(true);
+    try {
+      const response = await getAttendanceStudentPage(regId, courseId);
+      if (response.status === 200) {
+        //console.log("student attendence", response.data.data.attendance);
+        setAttendanceStudent(response.data.data.attendance);
+        // console.log(attendanceStudent);
+        setLoader(false);
+        //console.log(attendance);
+        //console.log(response.data);
+      } else {
+        //console.error("Failed to fetch courses", response.status);
+        setLoader(false);
+      }
+    } catch (error) {
+      //console.log("error", error);
+      setLoader(false);
+    }
+  }
+  useEffect(() => {
+    if (!regId && courseId) return;
+    fetchAttendance();
+  }, [regId, courseId]);
 
   useEffect(() => {
     if (!regId) return;
@@ -183,9 +214,39 @@ export default function StudentGradingAdmin({
         <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
           <div
             className=" flex justify-between items-center "
+            onClick={() => handleToggleSection("Assignment")}
+          >
+            <p className="text-[17px] text-blue-500 font-semibold font-exo">
+              Assignment
+            </p>
+            <span className="">
+              <IoIosArrowDown />
+            </span>
+          </div>
+          <div
+            className={`transition-container ${
+              openSection === "Assignment" ? "max-height-full" : "max-height-0"
+            }`}
+          >
+            {openSection === "Assignment" && (
+              <div className="mt-2">
+                <StudentMarksTable
+                  key={assignment.id}
+                  field={openSection}
+                  assessments={assignment?.data}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
+          <div
+            className=" flex justify-between items-center "
             onClick={() => handleToggleSection("Quiz")}
           >
-            <p className="text-[17px] font-semibold font-exo">Quiz</p>
+            <p className="text-[17px] text-blue-500 font-semibold font-exo">
+              Quiz
+            </p>
             <span className="">
               <IoIosArrowDown />
             </span>
@@ -210,36 +271,11 @@ export default function StudentGradingAdmin({
         <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
           <div
             className=" flex justify-between items-center "
-            onClick={() => handleToggleSection("Assignment")}
-          >
-            <p className="text-[17px] font-semibold font-exo">Assignment</p>
-            <span className="">
-              <IoIosArrowDown />
-            </span>
-          </div>
-          <div
-            className={`transition-container ${
-              openSection === "Assignment" ? "max-height-full" : "max-height-0"
-            }`}
-          >
-            {openSection === "Assignment" && (
-              <div className="mt-2">
-                <StudentMarksTable
-                  key={assignment.id}
-                  field={openSection}
-                  assessments={assignment?.data}
-                />
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
-          <div
-            className=" flex justify-between items-center "
             onClick={() => handleToggleSection("Project")}
           >
-            <p className="text-[17px] font-semibold font-exo">Project</p>
+            <p className="text-[17px] text-blue-500 font-semibold font-exo">
+              Project
+            </p>
             <span className="">
               <IoIosArrowDown />
             </span>
@@ -266,7 +302,9 @@ export default function StudentGradingAdmin({
             className=" flex justify-between items-center "
             onClick={() => handleToggleSection("Exam")}
           >
-            <p className="text-[17px] font-semibold font-exo">Exam</p>
+            <p className="text-[17px] text-blue-500 font-semibold font-exo">
+              Exam
+            </p>
             <span className="">
               <IoIosArrowDown />
             </span>
@@ -287,13 +325,42 @@ export default function StudentGradingAdmin({
             )}
           </div>
         </div>
+        <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
+          <div
+            className=" flex justify-between items-center "
+            onClick={() => handleToggleSection("Attendance")}
+          >
+            <p className="text-[17px] text-blue-500 font-semibold font-exo">
+              Attendance
+            </p>
+            <span className="">
+              <IoIosArrowDown />
+            </span>
+          </div>
+          <div
+            className={`transition-container ${
+              openSection === "Attendance" ? "max-height-full" : "max-height-0"
+            }`}
+          >
+            {openSection === "Attendance" && (
+              <div className="mt-2">
+                <StudentAttendanceTable
+                  isAdmin={isAdmin}
+                  attendance={attendanceStudent}
+                  loader={loader}
+                  courseId={courseId}
+                />
+              </div>
+            )}
+          </div>
+        </div>
       </div>
       {/* <div
             className={`transition-container ${
               openSection !== null ? "max-height-0" : "max-height-full"
             }`}
           > */}
-      <div className={`font-semibold font-exo py-3 `}>
+      <div className={`font-semibold font-exo py-3 text-blue-500 `}>
         Student Performance Overview
       </div>
       {progress ? (

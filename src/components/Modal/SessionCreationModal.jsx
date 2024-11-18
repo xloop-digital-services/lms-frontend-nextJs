@@ -168,12 +168,12 @@ const SessionCreationModal = ({
         };
 
         const response = await UpdateSession(selectedSession, data);
-        console.log("session updated", response);
+        // console.log("session updated", response);
         setEdit(false);
         toast.success("Class schedule updated successfully");
         setUpdateSession(!updateSession);
       } catch (error) {
-        console.log("error while updating status", error);
+        // console.log("error while updating status", error);
       } finally {
         setLoadingCreation(false); // Set updating to false after the update is complete
       }
@@ -235,7 +235,7 @@ const SessionCreationModal = ({
           setOpenModal(false);
           setUpdateSession(!updateSession);
         } catch (error) {
-          console.log("error while session creation", error.response);
+          // console.log("error while session creation", error.response);
           if (error.response.status === 400) {
             toast.error(error.response.data.error[0]);
           }
@@ -284,7 +284,7 @@ const SessionCreationModal = ({
         setCoursesMap(coursesObject); // Set courses map
         setLoadingCourses(false);
       } catch (error) {
-        console.log("error in courses list", error);
+        // console.log("error in courses list", error);
         setLoadingCourses(false);
       }
     };
@@ -460,7 +460,7 @@ const SessionCreationModal = ({
               }}
               className="text-start  px-2 xsm:py-[10px] pb-[5px] font-exo"
             >
-              Scheduling a class
+              Schedule a new class
             </h1>
             <button
               className="px-2"

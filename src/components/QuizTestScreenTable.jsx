@@ -84,11 +84,12 @@ const QuizTestScreenTable = () => {
                         <FaEdit
                           size={24}
                           className=""
+                          title="Edit"
                         />
                       </div>
                       <div
                         className="flex items-center  cursor-pointer"
-                        title="delete"
+                        title="Delete"
                       >
                         <FaTrash
                           size={20}

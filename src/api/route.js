@@ -483,17 +483,17 @@ export const editExamGrading = async (gradingId, examData) => {
   }
 };
 
-//get student attendance
-// export const getStudentAttendance = async (courseId, regId) => {
-//   try {
-//     const response = await axiosInstance.get(
-//       `/attendance/course/${courseId}/user/${regId}/`
-//     );
-//     return response;
-//   } catch (error) {
-//     throw error;
-//   }
-// };
+// get student attendance for admin
+export const getAttendanceStudentPage = async (regId, courseId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/api/attendance/${regId}/${courseId}/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 
 // attendance/student/<int:course_id>/
 export const getStudentAttendance = async (courseId) => {
@@ -1003,6 +1003,18 @@ export const getSuggestedSessionForStudent = async (
 export const assignSessionToInstructor = async (data) => {
   try {
     const response = axiosInstance.post("/api/instructor-sessions/", data);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//get students by batch
+export const lisStudentsByBatch = async (batch) => {
+  try {
+    const response = await axiosInstance.get(
+      `/api/batch-student/?batch_name=${batch}`
+    );
     return response;
   } catch (error) {
     throw error;
@@ -1598,6 +1610,17 @@ export const getAnnouncementById = async (announcementId) => {
   try {
     const response = await axiosInstance.get(
       `/api/announcements/${announcementId}/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+//get all announcements for admin
+export const getAllAnnouncements = async () => {
+  try {
+    const response = await axiosInstance.get(
+      `/api/announcements/`
     );
     return response;
   } catch (error) {

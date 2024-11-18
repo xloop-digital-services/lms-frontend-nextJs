@@ -44,7 +44,7 @@ export default function StudentCalendar() {
                     assessment.assessment_name || "No name provided"
                   }`,
                   start: `${item.date}T${assessment.due_time || "00:00"}`,
-                  className: "bg-blue-300 bg-opacity-30 ",
+                  className: "bg-blue-100 ",
                   type: assessment.type,
                   courseId: assessment.course_id, 
                 }));
@@ -54,10 +54,10 @@ export default function StudentCalendar() {
           : [];
         setCalendarEvents(events);
       } else {
-        console.error("Failed to fetch calendar data", response.status);
+        // console.error("Failed to fetch calendar data", response.status);
       }
     } catch (error) {
-      console.error("Error fetching calendar data", error);
+      // console.error("Error fetching calendar data", error);
     }
   }
 

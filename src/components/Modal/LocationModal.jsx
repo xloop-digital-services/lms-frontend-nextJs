@@ -60,7 +60,7 @@ const LocationModal = ({
         };
         const response = await createLocation(data);
         if (response.data.status_code === 201) {
-          console.log("location created", response?.data?.message);
+          // console.log("location created", response?.data?.message);
           toast.success("Location created successfully!");
           setUpdateLocation(!updateLocation);
           setLoading(false);
@@ -73,10 +73,10 @@ const LocationModal = ({
           setOpenModal(false);
         }
       } catch (error) {
-        console.log(
-          "error while location creation",
-          error?.response?.data?.message
-        );
+        // console.log(
+        //   "error while location creation",
+        //   error?.response?.data?.message
+        // );
         if (error.response.status === 400) {
           toast.error(error?.response?.data?.message);
         }
@@ -145,7 +145,7 @@ const LocationModal = ({
               }}
               className="text-start  px-2 py-[10px]"
             >
-              Location Creation
+              Create a new location
             </h1>
             <button className="px-2" onClick={() => setOpenModal(false)}>
               <IoClose size={21} />

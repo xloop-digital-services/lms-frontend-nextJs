@@ -153,7 +153,7 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
                 <FaMagnifyingGlass size={18} />
               </span>
               <input
-                className="w-full block  border-dark-200 focus:outline-blue-300 font-sans rounded-md border-0 py-1.5 pl-10 placeholder-dark-300 shadow-sm ring-1 ring-dark-300 focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                className="w-full block  border-blue-100 focus:outline-blue-300 font-sans rounded-md border-0 py-1.5 pl-10 placeholder-dark-300 shadow-sm ring-1 ring-blue-100 focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
                 placeholder="Search here"
                 value={searchFilter}
                 onChange={(e) => setSearchFilter(e.target.value)}
@@ -162,7 +162,7 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
           </div>
           <div className="w-40 flex items-center max-md:w-full">
             <select
-              className="w-40 max-md:w-full py-[14px] bg-surface-100 block px-2 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+              className="w-40 max-md:w-full py-[14px] bg-surface-100 block px-2 border border-blue-100 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
             >

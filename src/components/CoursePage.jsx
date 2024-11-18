@@ -54,13 +54,16 @@ export default function CoursePage({ path, heading }) {
   return (
     <div
       className={`flex-1 transition-transform pt-[97px] space-y-4 max-md:pt-32 font-inter ${
-        isSidebarOpen ? "translate-x-64 ml-20" : "translate-x-0 pl-10 pr-10"
+        isSidebarOpen
+          ? "translate-x-64 ml-20 "
+          : "translate-x-0 pl-10 pr-10 max-md:pl-2 max-md:pr-2"
       }`}
       style={{
+        // paddingBottom: "20px",
         width: isSidebarOpen ? "81%" : "100%",
       }}
     >
-      <div className="bg-surface-100 p-8 rounded-xl">
+      <div className="bg-surface-100 p-8 rounded-xl max-md:p-4">
         {!(heading === "program") && (
           <>
             <div className="flex items-center">
@@ -71,14 +74,14 @@ export default function CoursePage({ path, heading }) {
                 <FaArrowLeft size={20} />
                 {/* <p>Back</p> */}
               </div>
-              <h2 className="text-xl text-blue-500 font-bold font-exo">
+              <h2 className="font-exo text-xl max-md:text-center max-md:justify-center text-blue-500 font-bold flex justify-start items-center">
                 {heading}
               </h2>
             </div>
             <p className="pb-6">Select a course to view the {heading}</p>
           </>
         )}
-        <div className="flex flex-col w-full gap-4">
+             <div className="flex flex-wrap max-md:w-full max-sm:items-center max-sm:justify-center">
           {courses.map((course) => {
             // Find the session related to the current course
             const session = courses?.session?.find(

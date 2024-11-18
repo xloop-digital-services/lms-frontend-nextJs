@@ -5,7 +5,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import userIcon from "../../public/assets/img/images.png";
 import logo from "../../public/assets/img/xCelerate-Logo.png";
-import { FaBell, FaPlus, FaSignOutAlt, FaUser } from "react-icons/fa";
+import {
+  FaBell,
+  FaBullhorn,
+  FaPlus,
+  FaSignOutAlt,
+  FaUser,
+} from "react-icons/fa";
 import Notifications from "./Notifications";
 import { getUserProfile } from "@/api/route";
 import { CircularProgress } from "@mui/material";
@@ -76,7 +82,7 @@ export default function Navbar() {
   };
 
   const handleCreateAnnoucement = () => {
-    router.push("/announcement/new-announcement");
+    router.push("/announcement/");
   };
 
   const toggleDropdown = () => {
@@ -131,20 +137,20 @@ export default function Navbar() {
             ) : (
               <>
                 <div className="flex justify-end items-center w-full">
-                  <div className=" inset-y-0 right-0 flex justify-center items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                  <div className=" inset-y-0 right-0 flex justify-center items-center pr-2 sm:static sm:inset-auto sm:ml-6 max-sm:pr-0">
                     <div className="flex items-center">
                       {isAdmin ? (
-                        <div className="w-full px-4 max-sm:px-1">
+                        <div className="w-full px-4 max-sm:px-1 ">
                           <button
                             className="flex gap-2 w-full justify-center rounded-lg border border-dark-300 hover:border-blue-300 px-2 py-2 items-center hover:bg-blue-100 hover:text-blue-300"
                             onClick={handleCreateAnnoucement}
                           >
-                            <FaPlus />
+                            <FaBullhorn className="text-blue-500" />
                             <p
-                              className="max-sm:hidden "
-                              title="New Announcement"
+                              className="max-sm:hidden text-blue-500 "
+                              title="View Announcement"
                             >
-                              New announcement
+                              View announcements
                             </p>
                           </button>
                         </div>

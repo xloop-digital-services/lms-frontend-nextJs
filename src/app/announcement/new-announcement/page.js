@@ -64,7 +64,7 @@ export default function Page() {
       setSelectedBatch(null);
       setSelectedSessionID([]);
       setSelectedSessions([]);
-      router.push("/dashboard");
+      router.push("/announcement");
     } catch (error) {
       // console.log(error, "error while fetching the data");
     } finally {
@@ -76,7 +76,7 @@ export default function Page() {
     const getBatch = async () => {
       try {
         const response = await listAllBatches();
-
+        setLoadingBatch(true);
         const batchOptionsArray = response?.data.map((batch) => batch.batch);
         setBatches(batchOptionsArray);
       } catch (error) {

@@ -278,6 +278,7 @@ export default function Page({ params }) {
       const response = await deleteExam(formData, assignmentToUpdate.id);
 
       if (response.status === 200) {
+        toast.success(response.data.message);
         setAssignments((prevAssignments) =>
           prevAssignments.map((assignment) =>
             assignment.id === id
@@ -285,12 +286,11 @@ export default function Page({ params }) {
               : assignment
           )
         );
-        toast.success("Exam status updated successfully!");
       } else {
-        toast.error("Error updating assignment status");
+        toast.error(response.data.message);
       }
     } catch (error) {
-      toast.error("Error updating assignment status");
+      toast.error(error.response?.data?.message || "An error occurred");
       //console.error(error);
     }
   };

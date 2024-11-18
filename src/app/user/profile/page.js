@@ -327,12 +327,12 @@ function Profile() {
 
               <div className="flex max-lg:flex-col lg:w-[50%] w-[100%] ml-8 flex-col max-md:text-center mt-4">
                 <h2 className=" text-sm text-dark-400 cursor-default">Name</h2>
-                <p className="font-medium text-xl capitalize cursor-default">{`${firstName} ${lastName}`}</p>
+                <p className="text-xl uppercase font-exo cursor-default text-blue-500 font-semibold">{`${firstName} ${lastName}`}</p>
 
                 {isStudent && (
                   <div className="flex flex-col w-full cursor-default">
                     <h2 className=" text-sm text-dark-400">Registration ID</h2>
-                    <p className="font-medium text-xl uppercase">
+                    <p className="text-xl uppercase cursor-default font-exo text-blue-500 font-semibold">
                       {registrationID}
                     </p>
                   </div>

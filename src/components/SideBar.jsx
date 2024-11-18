@@ -10,6 +10,7 @@ import logo from "../../public/assets/img/logo.png";
 import {
   FaBars,
   FaBookOpen,
+  FaBullhorn,
   FaCalendar,
   FaClipboard,
   FaClipboardCheck,
@@ -91,6 +92,20 @@ function SideBar() {
                   <FaHome size={24} />
                   Dashboard
                 </Link>
+                {isAdmin && (
+                  <Link
+                    href="/announcement"
+                    ref={isLinkActive("/announcement") ? activeLinkRef : null}
+                    className={`p-4 mx-3 flex gap-4 mt-2 rounded-xl ${
+                      isLinkActive("/announcement")
+                        ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
+                        : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
+                    }`}
+                  >
+                    <FaBullhorn size={24} />
+                    Announcements
+                  </Link>
+                )}
                 <div className={`${!isAdmin && "hidden"}`}>
                   <div
                     className={`p-4 mx-3 flex flex-col group gap-4 mt-2 cursor-pointer rounded-xl ${
@@ -353,6 +368,7 @@ function SideBar() {
                     Students
                   </Link>
                 )}
+
                 {!isAdmin && (
                   <Link
                     href="/calendar"
@@ -399,7 +415,7 @@ function SideBar() {
           </div>
         </nav>
       </div>
-      {/* <div className="h-screen bg-surface-100 w-16"> */}
+
       <button
         className={` fixed text-blue-500 px-4 py-4 max-md:px-2 max-md:py-2 focus:outline-none mt-4  ${
           isSidebarOpen && "hidden"
@@ -408,78 +424,6 @@ function SideBar() {
       >
         <FaBars size={24} />
       </button>
-      {/*         
-        <div className="flex flex-col justify-between lg:h-[100%] h-[100%] overflow-y-auto ">
-          <div className=" pt-40 rounded bg-surface-100 flex flex-col">
-            <Link
-              href="/dashboard"
-              className={`m-1 p-4 flex gap-4 rounded-xl border-dark-300 ${
-                isLinkActive("/dashboard")
-                  ? "text-blue-300 bg-blue-600 "
-                  : "text-dark-600"
-              }`}
-            >
-              <FaHome size={24} />
-            </Link>
-
-            <Link
-              href="/courses"
-              className={`p-4 m-1 flex gap-4 mt-2 rounded-xl  ${
-                isLinkActive("/courses")
-                  ? "text-blue-300 bg-blue-600"
-                  : "text-dark-600"
-              }`}
-            >
-              <FaBookOpen size={24} />
-             
-            </Link>
-            <Link
-              href="/assignment"
-              className={`p-4 m-1 flex gap-4 mt-2 rounded-xl  ${
-                isLinkActive("/assignment")
-                  ? "text-blue-300 bg-blue-600"
-                  : "text-dark-600"
-              }`}
-            >
-              <FaTasks size={24} />
-            </Link>
-
-            <Link
-              href="/calendar"
-              className={`p-4 m-1 flex gap-4 mt-2 rounded-xl  ${
-                isLinkActive("/calendar")
-                  ? "text-blue-300 bg-blue-600"
-                  : "text-dark-600"
-              }`}
-            >
-              <FaCalendar size={24} />
-            </Link>
-          </div>
-          <div className="flex flex-col">
-            <Link
-              href="/user/profile"
-              className={`p-4 m-1 flex gap-4 rounded-xl  ${
-                isLinkActive("/user/profile")
-                  ? "text-blue-300 bg-blue-600"
-                  : "text-dark-600"
-              }`}
-            >
-              <FaUser size={24} />
-            </Link>
-
-            <Link
-              href="/auth/login"
-              className={`p-4 flex m-1 gap-4 mt-2 rounded-xl ${
-                isLinkActive("/auth/login")
-                  ? "text-blue-300 bg-blue-600"
-                  : "text-dark-600"
-              }`}
-            >
-              <FaSignOutAlt size={24} />
-            </Link>
-          </div>
-        </div>
-      </div> */}
     </>
   );
 }

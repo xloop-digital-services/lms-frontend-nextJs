@@ -43,7 +43,7 @@ export default function Page() {
       setCityOptions(cityAreas);
       setLoading(false);
     } catch (error) {
-      console.log("Error fetching locations", error);
+      // console.log("Error fetching locations", error);
       if (error.response.status === 401) {
         toast.error(error.response.data.code, ": Please Log in again");
       }

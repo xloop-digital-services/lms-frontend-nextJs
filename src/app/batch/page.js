@@ -70,12 +70,12 @@ export default function Page() {
   const handleListingAllBatches = async () => {
     try {
       const response = await listAllBatches();
-      console.log("batches", response?.data);
+      // console.log("batches", response?.data);
       setBatches(response?.data);
       setCityOptions(cityAreas);
       setLoading(false);
     } catch (error) {
-      console.log("error while fetching the batches", error);
+      // console.log("error while fetching the batches", error);
       if (error.message === "Network Error") {
         toast.error(error.message, "Check your internet connection");
       }
@@ -111,12 +111,12 @@ export default function Page() {
       setLoading(true);
       const response = await DeleteBatch(selectedBatch);
       toast.success("Batch deleted successfully!");
-      console.log("deleting the batch", response);
+      // console.log("deleting the batch", response);
       setUpdateBatch(!updateBatch);
       setConfirmDelete(false);
       setLoading(false);
     } catch (error) {
-      console.log("error while deleting the batch", error);
+      // console.log("error while deleting the batch", error);
     }
   };
 

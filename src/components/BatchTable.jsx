@@ -80,12 +80,12 @@ const BatchTable = ({
         const response = await UpdateBatch(selectedBatch, data);
         if (response.status === 200) {
           toast.success("Batch updated successfully!");
-          console.log("batch updated", response);
+          // console.log("batch updated", response);
           setEdit(false);
           setUpdateBatch(!updateBatch);
         }
       } catch (error) {
-        console.log("error while updating status", error);
+        // console.log("error while updating status", error);
       } finally {
         setLoading(false); // Set updating to false after the update is complete
       }
@@ -115,9 +115,9 @@ const BatchTable = ({
   };
 
   const handleOpenInfo = (batch) => {
-    setSelectedBatch(batch.batch)
+    setSelectedBatch(batch.batch);
     setOpenInfo(true);
-  }
+  };
 
   return (
     <>
@@ -344,7 +344,7 @@ const BatchTable = ({
                                         }
                                         onChange={(e) =>
                                           handleSetStatus(e.target.value)
-                                        } 
+                                        }
                                       >
                                         <option
                                           value="active"
@@ -376,6 +376,7 @@ const BatchTable = ({
                                       edit && selectedBatch === batch.batch
                                     ) && (
                                       <FaEye
+                                        title="Students List"
                                         size={23}
                                         className="cursor-pointer hover:opacity-30"
                                         onClick={() => handleOpenInfo(batch)}
@@ -392,7 +393,7 @@ const BatchTable = ({
                                         onClick={() =>
                                           handleUpdateStatus(batch)
                                         }
-                                        title="update"
+                                        title="Edit batch"
                                       />
                                     ) : (
                                       <div className="flex gap-2">

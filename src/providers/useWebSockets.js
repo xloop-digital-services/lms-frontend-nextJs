@@ -4,13 +4,14 @@ import { useEffect, useState } from "react";
 const useWebSocket = (url, role) => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
+  
 
   useEffect(() => {
-    if (role === "instructor" || role === "student") {
+    if (role === "instructor" || role === "student" ) {
       const socket = new WebSocket(url);
 
       socket.onopen = () => {
-        console.log("WebSocket connection established");
+        // console.log("WebSocket connection established");
         setLoading(false);
       };
 
@@ -34,16 +35,14 @@ const useWebSocket = (url, role) => {
       };
 
       socket.onerror = (error) => {
-        console.error("WebSocket error:", error);
+        // console.error("WebSocket error:", error);
         setLoading(false);
       };
 
       socket.onclose = () => {
-        console.log("WebSocket connection closed. Reconnecting...");
+        // console.log("WebSocket connection closed. Reconnecting...");
         setLoading(true);
-        setTimeout(() => {
-        
-        }, 3000);
+        setTimeout(() => {}, 3000);
       };
 
       return () => {
@@ -51,7 +50,7 @@ const useWebSocket = (url, role) => {
         setLoading(false);
       };
     } else {
-      setLoading(false); 
+      setLoading(false);
     }
   }, [url, role]);
 

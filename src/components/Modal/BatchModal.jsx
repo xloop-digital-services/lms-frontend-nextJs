@@ -106,13 +106,13 @@ const BatchModal = ({
         };
 
         const response = await createBatch(data);
-        console.log("batch created", response?.data.message);
+        // console.log("batch created", response?.data.message);
         toast.success("Batch created successfully!");
         setLoadingCreation(false);
         setIsOpenModal(false);
         setUpdateBatch(!updateBatch);
       } catch (error) {
-        console.log("error is occuring", error.response);
+        // console.log("error is occuring", error.response);
         if (error.response.status === 400) {
           toast.error(error.response.data.error[0]);
         }
@@ -132,7 +132,7 @@ const BatchModal = ({
         // console.log('response for programs', response.data)
         setPrograms(response.data.data);
       } catch (error) {
-        console.log("error", error);
+        // console.log("error", error);
       }
     };
     handleAllProgramList();
@@ -286,10 +286,11 @@ const BatchModal = ({
                 lineHeight: "24.2px",
                 color: "#022567",
               }}
-              className="text-start  px-2 xsm:py-[10px] pb-[5px] font-exo"
+              className="text-start px-2 xsm:py-[10px] pb-[5px] font-exo"
             >
-              Batch Creation
+              Create a new Batch
             </h1>
+
             <button className="px-2" onClick={() => setIsOpenModal(false)}>
               <IoClose size={21} />
             </button>
@@ -298,6 +299,14 @@ const BatchModal = ({
             className={`bg-surface-100 xsm:p-6 px-3 py-4 rounded-xl xsm:space-y-5 space-y-2 font-inter`}
           >
             <div className="relative space-y-2 text-[15px] w-full">
+              <p>
+                {" "}
+                <p className="text-center italic text-dark-400"><span className="font-semibold text-blue-500">Note:{" "}</span>
+                  Select application start date and end date
+                  carefully, as wrong selection will lead to incorrect batch
+                  assignment to students.
+                </p>
+              </p>
               <p>Program</p>
               <button
                 ref={programButton}

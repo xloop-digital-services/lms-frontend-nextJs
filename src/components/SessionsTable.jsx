@@ -78,12 +78,12 @@ const SessionsTable = ({
   };
 
   const handleSetStatus = (status) => {
-    console.log(status);
+    // console.log(status);
     if (status === "Active") {
       setStatus(1);
     } else {
       setStatus(0);
-      console.log("ye zaero hogaya");
+      // console.log("ye zaero hogaya");
     }
   };
 
@@ -99,7 +99,7 @@ const SessionsTable = ({
   const handleStartTimeChange = (event) => {
     const time = event.target.value;
     setEditStartTime(time);
-    console.log("Start time:", time);
+    // console.log("Start time:", time);
 
     // Validate again when the start time changes, to reset any lingering errors
     if (editEndTime && time) {
@@ -116,7 +116,7 @@ const SessionsTable = ({
   const handleEndTimeChange = (event) => {
     const time = event.target.value;
     setEditEndTime(time);
-    console.log("End time:", time);
+    // console.log("End time:", time);
 
     if (editStartTime) {
       const startTimeDate = convertTimeToDate(editStartTime);
@@ -126,10 +126,10 @@ const SessionsTable = ({
       if (endTimeDate <= startTimeDate) {
         setTimeErrorMessage("End time should be greater than start time");
       } else {
-        setTimeErrorMessage(""); // Clear error when valid
+        setTimeErrorMessage(""); 
       }
     } else {
-      setTimeErrorMessage(""); // Clear error if no start time
+      setTimeErrorMessage(""); 
     }
   };
 
@@ -154,12 +154,12 @@ const SessionsTable = ({
         };
 
         const response = await UpdateSession(selectedSession, data);
-        console.log("session updated", response);
+        // console.log("session updated", response);
         setEdit(false);
         toast.success("Class schedule updated successfully");
         setUpdateSession(!updateSession);
       } catch (error) {
-        console.log("error while updating status", error);
+        // console.log("error while updating status", error);
       } finally {
         setUpdating(false); // Set updating to false after the update is complete
       }
@@ -327,6 +327,7 @@ const SessionsTable = ({
                                   <div>
                                     <FaEye
                                       size={23}
+                                      title="View class details"
                                       className="cursor-pointer hover:opacity-30"
                                       onClick={() => handleOpenInfo(session)}
                                     />
@@ -338,7 +339,7 @@ const SessionsTable = ({
                                       onClick={() =>
                                         handleUpdateStatus(session)
                                       }
-                                      title="update"
+                                      title="Edit class scheduling"
                                     />
                                   </div>
                                   <div>
@@ -348,7 +349,7 @@ const SessionsTable = ({
                                       onClick={() =>
                                         handleDeleteSession(session)
                                       }
-                                      title="delete"
+                                      title="Delete class"
                                     />
                                   </div>
                                 </div>

@@ -70,7 +70,7 @@ export default function Page() {
     setLoading(true);
     try {
       const response = await listAllSessions();
-      console.log("session fetching", response?.data);
+      // console.log("session fetching", response?.data);
       setSessions(response?.data.data);
     } catch (error) {
       if (error.message === "Network Error") {
@@ -138,7 +138,7 @@ export default function Page() {
       const batchOptionsArray = response?.data.map((batch) => batch.batch);
       setBatchOptions(response?.data);
     } catch (error) {
-      console.log("error while fetching the batches", error);
+      // console.log("error while fetching the batches", error);
       if (error.message === "Network Error") {
         toast.error(error.message, "Check your internet connection");
       }
@@ -150,7 +150,7 @@ export default function Page() {
   const getLocation = async () => {
     try {
       const response = await listAllLocations();
-      console.log("locations", response?.data);
+      // console.log("locations", response?.data);
       const LocationOptionsArray = response?.data.map((location) => ({
         id: location.id,
         name: location.name,
@@ -158,7 +158,7 @@ export default function Page() {
       }));
       setLocationOptions(LocationOptionsArray);
     } catch (error) {
-      console.log("error while fetching the locations", error);
+      // console.log("error while fetching the locations", error);
       if (error.message === "Network Error") {
         toast.error(error.message, "Check your internet connection");
       }
@@ -215,13 +215,13 @@ export default function Page() {
     try {
       setLoading(true);
       const response = await DeleteSession(selectedSession);
-      console.log("deleting the session", response);
+      // console.log("deleting the session", response);
       toast.success("Class schedule deleted successfully!");
       setUpdateSession(!updateSession);
       setConfirmDelete(false);
       setLoading(false);
     } catch (error) {
-      console.log("error while deleting the lcoation", error);
+      // console.log("error while deleting the lcoation", error);
     } finally {
       setLoading(false);
     }

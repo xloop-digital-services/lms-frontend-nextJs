@@ -65,14 +65,14 @@ export default function StudentDashboard() {
         const sessions = response.data?.session || [];
         const coursesData = sessions.map((session) => session.course);
         setCourses(coursesData);
-        console.log("courses set", response.data?.session);
+        // console.log("courses set", response.data?.session);
 
         setLoader(false);
       } else {
-        console.error("Failed to fetch user, status:", response.status);
+        // console.error("Failed to fetch user, status:", response.status);
       }
     } catch (error) {
-      console.log("Error:", error);
+      // console.log("Error:", error);
     }
   }
 
@@ -88,13 +88,13 @@ export default function StudentDashboard() {
         setAssignments(response.data);
         setLoader(false);
       } else {
-        console.error(
-          "Failed to fetch pending assignments, status:",
-          response.status
-        );
+        // console.error(
+        //   "Failed to fetch pending assignments, status:",
+        //   response.status
+        // );
       }
     } catch (error) {
-      console.log("error", error);
+      // console.log("error", error);
     }
   }
   async function fetchCalendarSessions() {
@@ -117,10 +117,10 @@ export default function StudentDashboard() {
 
         setCalendarEvents(events);
       } else {
-        console.error("Failed to fetch calendar data", response.status);
+        // console.error("Failed to fetch calendar data", response.status);
       }
     } catch (error) {
-      console.error("Error fetching calendar data", error);
+      // console.error("Error fetching calendar data", error);
     }
   }
 
@@ -138,30 +138,30 @@ export default function StudentDashboard() {
       const handleCourseProgress = async () => {
         try {
           const response = await getProgressForCourse(selectedCourseId);
-          console.log("Course progress", response);
+          // console.log("Course progress", response);
           setCourseProgress(response.data.data.progress_percentage);
         } catch (error) {
-          console.log("Error fetching course progress", error);
+          // console.log("Error fetching course progress", error);
         }
       };
 
       const handleQuizProgress = async () => {
         try {
           const response = await getProgressForQuiz(selectedCourseId);
-          console.log("Quiz progress", response);
+          // console.log("Quiz progress", response);
           setQuizProgress(response.data.data.progress_percentage);
         } catch (error) {
-          console.log("Error fetching quiz progress", error);
+          // console.log("Error fetching quiz progress", error);
         }
       };
 
       const handleAssignmentProgress = async () => {
         try {
           const response = await getProgressForAssignment(selectedCourseId);
-          console.log("Assignment progress", response);
+          // console.log("Assignment progress", response);
           setAssignmentProgress(response.data.data.progress_percentage);
         } catch (error) {
-          console.log("Error fetching assignment progress", error);
+          // console.log("Error fetching assignment progress", error);
         }
       };
 
@@ -237,7 +237,7 @@ export default function StudentDashboard() {
         <div className="flex w-[100%] max-md:flex-col">
           <div className="flex-col mx-2 w-[70%] max-md:w-full flex-wrap">
             <div className="w-full">
-              <div className="bg-surface-100 p-4 rounded-xl mb-2">
+              <div className="bg-surface-100 p-4 max-md:mx-4 rounded-xl mb-2">
                 <div className="flex justify-between items-center">
                   <h1 className="text-xl font-bold font-exo mx-2 text-blue-500">
                     Courses
@@ -280,8 +280,8 @@ export default function StudentDashboard() {
               </div>
             </div>
             <div>
-              <div className="w-full mt-4 h-[410px] flex gap-4 lg:flex-row flex-col-reverse max-md:w-full">
-                <div className="bg-surface-100 p-2 rounded-xl grow">
+              <div className="w-full mt-4 h-[410px]  flex gap-4 lg:flex-row flex-col-reverse max-md:w-full">
+                <div className="bg-surface-100 ax-md:mx-4 p-2 rounded-xl grow">
                   <div className="flex justify-between">
                     <div>
                       <h1 className="text-xl text-blue-500 font-bold px-3 py-4 font-exo ">
@@ -327,9 +327,9 @@ export default function StudentDashboard() {
             </div>
           </div>
           <div className="flex gap-4 flex-col max-md:w-full ml-3">
-            <div className="flex  h-[410px] flex-col overflow-y-auto bg-surface-100 px-3 py-2 rounded-xl lg:w-fit scrollbar-webkit max-md:m-4">
+            <div className="flex max-md:mx-4 h-[410px] flex-col overflow-y-auto bg-surface-100 px-3 py-2 rounded-xl lg:w-fit scrollbar-webkit max-md:m-4">
               <div className="flex justify-between w-full px-3 py-2 items-center mb-2">
-                <h1 className="text-xl text-blue-500 font-bold   font-exo">
+                <h1 className="text-xl text-blue-500 font-bold font-exo">
                   Upcoming Activities
                 </h1>
                 {/* <select className="bg-surface-100 block w-40 my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5">

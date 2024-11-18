@@ -41,7 +41,7 @@ export default function Notifications() {
         announcement_id: id,
       };
       const response = await readAnnouncement(data);
-      console.log(response);
+      // console.log(response);
     } catch (error) {
       // console.error("Failed to read announcement:", error);
     }
@@ -173,17 +173,6 @@ export default function Notifications() {
           )}
         </div>
 
-        {/* {!isStudent && (
-          <div className="w-full px-4">
-            <button
-              className="flex gap-2 w-full justify-center rounded-xl py-2 items-center hover:bg-blue-100 hover:text-blue-300"
-              onClick={handleCreateAnnoucement}
-            >
-              <FaPlus />
-              <p>New announcement</p>
-            </button>
-          </div>
-        )} */}
       </div>
     </>
   );
