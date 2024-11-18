@@ -99,17 +99,37 @@ export function AuthProvider({ children }) {
     }
   };
 
+  // const logOutUser = () => {
+  //   // //console.log("Logging out user...");
+  //   setUserData(null);
+  //   setEmail("");
+  //   setPassword("");
+  //   Cookies.remove("userData");
+  //   Cookies.remove("userGroup");
+  //   Cookies.remove("access_token");
+  //   Cookies.remove("refresh_token");
+  //   router.push("/auth/login");
+  // };
+
   const logOutUser = () => {
-    // //console.log("Logging out user...");
-    setUserData(null);
-    setEmail("");
-    setPassword("");
+    document.cookie.split(";").forEach((cookie) => {
+      const name = cookie.split("=")[0].trim();
+      // console.log(name);
+      Cookies.remove(name);
+    });
+
     Cookies.remove("userData");
     Cookies.remove("userGroup");
     Cookies.remove("access_token");
     Cookies.remove("refresh_token");
+    
+    setUserData(null);
+    setEmail("");
+    setPassword("");
+    localStorage.clear();
     router.push("/auth/login");
   };
+
 
   return (
     <AuthContext.Provider
