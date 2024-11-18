@@ -81,6 +81,7 @@ const BatchModal = ({
     }
     if (
       !errorMessage &&
+      !appErrorMessage &&
       selectedProgram &&
       selectedCity &&
       cityShortName &&
@@ -201,10 +202,19 @@ const BatchModal = ({
   };
 
   const validateDates = (start, end) => {
-    if (start && end && new Date(start) > new Date(end)) {
-      setAppErrorMessage("End date should be greater than start date.");
+    if (start && end) {
+      const startDate = new Date(start);
+      const endDate = new Date(end);
+
+      if (startDate > endDate) {
+        setAppErrorMessage("End date should be greater than start date.");
+      } else if (startDate.getTime() === endDate.getTime()) {
+        setAppErrorMessage("Start date and end date should not be the same.");
+      } else {
+        setAppErrorMessage(""); // Clear the error if validation passes
+      }
     } else {
-      setAppErrorMessage(""); // Clear the error if validation passes
+      setAppErrorMessage(""); // Clear the error if either date is not set
     }
   };
 
@@ -301,10 +311,10 @@ const BatchModal = ({
             <div className="relative space-y-2 text-[15px] w-full">
               <p>
                 {" "}
-                <p className="text-center italic text-dark-400"><span className="font-semibold text-blue-500">Note:{" "}</span>
-                  Select application start date and end date
-                  carefully, as wrong selection will lead to incorrect batch
-                  assignment to students.
+                <p className="text-center italic text-dark-400">
+                  <span className="font-semibold text-blue-500">Note: </span>
+                  Select application start date and end date carefully, as wrong
+                  selection will lead to incorrect batch assignment to students.
                 </p>
               </p>
               <p>Program</p>

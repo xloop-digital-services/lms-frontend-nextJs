@@ -26,7 +26,7 @@ const BatchUserModal = ({ selectedBatch, setOpenInfo }) => {
 
     handleBatchInfo();
   }, [selectedBatch]);
-  console.log(info.map((item) => item[0]));
+  // console.log(info.map((item) => item[0]));
   return (
     <div className="backDropOverlay h-screen flex justify-center items-center">
       <div className="w-[600px] z-[1000] mx-auto my-20 overflow-auto scrollbar-webkit">
@@ -64,7 +64,7 @@ const BatchUserModal = ({ selectedBatch, setOpenInfo }) => {
                 {/* <p className="font-bold text-lg pb-2 text-blue-500 font-exo">
                   Student Names
                 </p> */}
-                <table className="min-w-full divide-y divide-dark-300 dark:divide-gray-700">
+                <table className="min-w-full divide-y divide-dark-300 ">
                   <thead className="bg-surface-100 text-blue-500 top-0 z-10 shadow-sm shadow-dark-200">
                     <tr>
                       <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase w-[15%]">
@@ -75,7 +75,7 @@ const BatchUserModal = ({ selectedBatch, setOpenInfo }) => {
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-dark-200 dark:divide-gray-700 overflow-y-scroll scrollbar-webkit">
+                  <tbody className="divide-y divide-dark-200 overflow-y-scroll scrollbar-webkit">
                     {info.map((student, index) => (
                       <tr key={index}>
                         <td className="px-6 py-3 text-center whitespace-nowrap text-sm text-gray-800">

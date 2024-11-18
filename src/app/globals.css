@@ -89,3 +89,91 @@ body {
 .max-height-0 {
   max-height: 0;
 }
+
+/* From Uiverse.io by zanina-yassine */
+/* Remove this container when use*/
+/* General Styles */
+.component-title {
+  width: 100%;
+  position: absolute;
+  z-index: 999;
+  top: 30px;
+  left: 0;
+  padding: 0;
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #888;
+  text-align: center;
+}
+
+.tab-container {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 260px; /* Adjusted width for two tabs */
+  padding: 2px;
+  background-color: #dadadb;
+  border-radius: 9px;
+  margin: 0 auto; /* Center the container */
+}
+
+/* Indicator Styling */
+.indicator {
+  content: "";
+  width: 125px;
+  height: 28px;
+  background: #ffffff;
+  position: absolute;
+  top: 2px;
+  left: 2px; /* Default position for the first tab */
+  z-index: 9;
+  border: 0.5px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.12), 0px 3px 1px rgba(0, 0, 0, 0.04);
+  border-radius: 7px;
+  transition: all 0.2s ease-out;
+}
+
+/* Tab Input */
+.tab {
+  display: none; /* Hide the radio buttons */
+}
+
+/* Tab Label */
+.tab_label {
+  width: 130px;
+  height: 28px;
+  position: relative;
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  font-size: 0.75rem;
+  opacity: 0.6;
+  cursor: pointer;
+  transition: opacity 0.2s ease-out;
+}
+
+.tab_label:hover {
+  opacity: 0.9;
+}
+
+/* Active Tab Styles */
+.tab--1:checked ~ .indicator {
+  left: 2px; /* Moves indicator to the first tab */
+}
+
+.tab--2:checked ~ .indicator {
+  left: 132px; /* Moves indicator to the second tab */
+}
+
+.tab--1:checked ~ .tab_label[for="tab1"],
+.tab--2:checked ~ .tab_label[for="tab2"] {
+  opacity: 1;
+  font-weight: 600;
+  color: #0074EE;
+}
+
