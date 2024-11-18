@@ -403,11 +403,11 @@ export default function StudentDashboard() {
                 )}
               </div>
             </div>
-            <div className="w-full bg-surface-100 px-5 p-2  rounded-xl mt-1 h-[404px] min-w-[440px]">
+            <div className=" min-w-full max-w-[450px] bg-surface-100 px-5 p-2  rounded-xl sm:mt-1 h-[404px] sm:mx-0 mx-4">
               <h1 className="font-bold font-exo text-blue-500 text-lg py-4">
                 Progress Chart
               </h1>
-              <div className=" relative space-y-2 text-[15px] w-full">
+              <div className=" relative space-y-2 text-[15px]">
                 <button
                   ref={courseButton}
                   onClick={toggleCourseOpen}

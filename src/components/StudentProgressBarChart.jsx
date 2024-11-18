@@ -8,7 +8,7 @@ const StudentProgressBarChart = ({
   assignmentProgress,
 }) => {
   return (
-    <div style={{ height: "260px", width: "100%" }}>
+    <div style={{ height: "260px"}}>
       <div className="h-full">
         <Bar
           data={{

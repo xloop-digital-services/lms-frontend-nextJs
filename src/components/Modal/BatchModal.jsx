@@ -116,6 +116,10 @@ const BatchModal = ({
         // console.log("error is occuring", error.response);
         if (error.response.status === 400) {
           toast.error(error.response.data.error[0]);
+        } else {
+          toast.error(
+            "Batch already exists for this city, year, category, and program"
+          );
         }
         // toast.error(error?.response?.data?.error[0])
         setLoadingCreation(false);
