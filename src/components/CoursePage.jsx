@@ -78,10 +78,10 @@ export default function CoursePage({ path, heading }) {
                 {heading}
               </h2>
             </div>
-            <p className="pb-6">Select a course to view the {heading}</p>
+            <p className="pb-6">Select a course to view </p>
           </>
         )}
-             <div className="flex flex-wrap max-md:w-full max-sm:items-center max-sm:justify-center">
+        <div className="flex flex-col max-md:flex-wrap w-full max-md:w-full max-sm:items-center max-sm:justify-center">
           {courses.map((course) => {
             // Find the session related to the current course
             const session = courses?.session?.find(
@@ -90,13 +90,14 @@ export default function CoursePage({ path, heading }) {
 
             return (
               <MainCourseCard
-                instructor={session?.instructor?.instructor_name} // Get the instructor name from the session
+                instructor={session?.instructor?.instructor_name}
                 key={course.id}
                 courseImg={courseImg}
                 courseName={course.name}
                 courseDesc={course.short_description}
                 durationOfCourse={`${course.theory_credit_hours}+${course.lab_credit_hours}`}
                 route={`${path}/course/${course.id}`}
+                picture={course.picture}
               />
             );
           })}

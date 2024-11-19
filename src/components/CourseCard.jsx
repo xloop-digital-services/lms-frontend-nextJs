@@ -23,6 +23,7 @@ const CourseCard = ({
   route,
   chr,
   route1,
+  picture,
 }) => {
   const { userData } = useAuth();
   const isAdmin = userData?.Group === "admin";
@@ -34,6 +35,7 @@ const CourseCard = ({
   //   setSelectedQuiz(id);
   //   setConfirmDelete(true);
   // };
+  console.log(picture);
 
   // const handleDelete = async () => {
   //   try {
@@ -71,13 +73,32 @@ const CourseCard = ({
   return (
     <Link href={`/${route1}/${route}/${id}`} className="mx-1">
       <div className="w-[330px] max-sm:w-[250px] bg-surface-100 rounded-xl lg:mx-0 group ">
-        <div className="mx-1 max-md:mx-0 rounded-xl h-[320px] max-sm:h-[290px] p-2 border border-blue-100 group-hover:cursor-pointer group-hover:border-2 group-hover:border-blue-300 my-4">
+        <div className="mx-1 max-md:mx-0 rounded-xl h-[320px] max-sm:h-[310px] p-2 border border-blue-100 group-hover:cursor-pointer group-hover:border-2 group-hover:border-blue-300 my-4">
           <div className="relative">
-            <Image
-              src={image}
-              alt="course-image"
-              className="p-4 w-full rounded-xl"
-            />
+            <div className="w-78 h-40">
+              <Image
+                src={
+                  picture &&
+                  picture !== "none" &&
+                  picture !== "None" &&
+                  picture !== "null" &&
+                  picture !== "undefined" &&
+                  picture !== "undefined/undefined"
+                    ? picture
+                    : image
+                }
+                alt="course-image"
+                width={300}
+                height={200}
+                style={{
+                  width: "350px",
+                  height: "165px",
+                  borderRadius: "15px",
+                }}
+                className="p-2 w-full rounded-xl"
+              />
+            </div>
+
             <p
               className={`absolute top-0 right-0 w-20 p-2 rounded-md flex items-center justify-center  ${
                 status === 0
@@ -91,46 +112,19 @@ const CourseCard = ({
           <div className="space-y-2 text-sm px-4 pt-[6px]">
             <div className="flex justify-between">
               <div className="flex bg-[#EBF6FF] w-full py-[9px] px-5 rounded-lg items-center space-x-2">
-                {/* <p className="bg-blue-300 w-2 h-2 rounded-full"></p> */}
                 <p className="text-blue-300 h-4 uppercase text-[12px] font-semibold overflow-hidden text-ellipsis whitespace-nowrap">
                   {courseName}
                 </p>{" "}
               </div>
             </div>
-            {/* {chr && (
-              // <div className="flex bg-[#EBF6FF] w-fit py-[9px] px-5 rounded-lg items-center space-x-2">
-              <p className="text-blue-300 h-4 uppercase text-xs font-semibold line-clamp-1">
-                Cr. Hr: {chr}
-              </p>
-              // </div>
-            )} */}
+
             <div>
               <p className="line-clamp-2 h-10">{courseDesc}</p>
             </div>
 
             {progress ? <Progress progress={progress} /> : null}
             <div className="flex justify-between items-center">
-              <div className="flex pb-3 pt-2">
-                {/* <div className="flex justify-end mr-2"> */}
-                {/* {avatars.map((avatar, index) => (
-                {avatars ? (
-                    <>
-                      <Image
-                        width={30}
-                        className="border-2 border-white dark:border-gray-800 rounded-full h-8 w-8 -mr-2"
-                        src={avatars}
-                        alt={`Avatar `}
-                      />
-
-                      {extraCount && (
-                        <span className="flex items-center justify-center bg-[#EBF6FF] ml-2 dark:bg-dark-800 text-[12px] text-blue-300 dark:text-white font-semibold border border-dark-200 dark:border-dark-700 rounded-full p-1">
-                          +{extraCount}
-                        </span>
-                      )}
-                    </>
-                  ) : null}  */}
-                {/* </div> */}
-              </div>
+              <div className="flex pb-3 pt-2"></div>
 
               {isStudent ? (
                 <Link

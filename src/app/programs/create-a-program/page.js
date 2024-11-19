@@ -1,5 +1,6 @@
 "use client";
 import { createProgram, getAllCourses } from "@/api/route";
+import { handleFileUploadToS3 } from "@/components/ApplicationForm";
 import CreateField from "@/components/CreateField";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -11,10 +12,11 @@ export default function Page() {
   const [programName, setProgramName] = useState("");
   const [coursesNames, setCoursesNames] = useState("");
   const [about, setAbout] = useState("");
+  const [file, setFile] = useState(null);
   const [programAbb, setProgramAbb] = useState("");
   const [shortDesc, setShortDesc] = useState("");
   const router = useRouter();
-
+  const [imagePreview, setImagePreview] = useState(null);
   const [inputCourses, setInputCourses] = useState([]);
 
   async function fetchAllCourses() {
@@ -29,40 +31,69 @@ export default function Page() {
       //console.error("Error fetching courses:", error);
     }
   }
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    setFile(file);
+    // console.log(file);
+    if (file) {
+      const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+      if (!allowedTypes.includes(file.type)) {
+        toast.warn("Only JPG, JPEG, and PNG files are allowed.");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = async (event) => {
+    console.log(event);
     event.preventDefault();
-    const program = {
-      name: programName,
-      program_abb: programAbb,
-      short_description: shortDesc,
-      about: about,
-      courses: inputCourses,
-    };
+    const s3Data = await handleFileUploadToS3(
+      file,
+      "Upload Program Thumbnails"
+    );
+
+    const formData = new FormData();
+    formData.append("name", programName);
+    formData.append("program_abb", programAbb);
+    formData.append("short_description", shortDesc);
+    formData.append("about", about);
+    const flattenedCourses = inputCourses.flat(Infinity);
+    console.log(flattenedCourses);
+    
+    flattenedCourses.forEach((id) => {
+      formData.append("courses[]", id);
+    });
+    if (file) {
+      formData.append("picture", s3Data);
+    }
+
     try {
-      const response = await createProgram(program);
+      const response = await createProgram(formData);
       if (response.status === 201) {
         toast.success("Program created successfully!");
-        setCreatingProgram(program);
+        router.back();
+        setCreatingProgram(formData);
         setAbout("");
         setCoursesNames([]);
         setProgramName("");
         setShortDesc("");
         setProgramAbb("");
+        localStorage.removeItem("programName");
+        localStorage.removeItem("programAbb");
+        localStorage.removeItem("shortDesc");
+        localStorage.removeItem("about");
       } else {
         toast.error(response.data?.message);
       }
     } catch (error) {
       toast.error(`Error creating program: ${error.message}`);
     }
-    localStorage.removeItem("programName");
-    localStorage.removeItem("programAbb");
-    localStorage.removeItem("shortDesc");
-    localStorage.removeItem("about");
-
-    setProgramName("");
-    setProgramAbb("");
-    setShortDesc("");
-    setAbout("");
   };
 
   const handleSelectChange = (event) => {
@@ -109,6 +140,11 @@ export default function Page() {
         removeCourse={removeCourse}
         programAbb={programAbb}
         setProgramAbb={setProgramAbb}
+        file={file}
+        setFile={setFile}
+        imagePreview={imagePreview}
+        setImagePreview={setImagePreview}
+        handleImageUpload={handleImageUpload}
       />
     </div>
   );

@@ -101,15 +101,14 @@ export default function StudentDashboard() {
     const response = await getCalendarData(userId);
     try {
       if (response.status === 200) {
-        // console.log(response.data?.data);
         const events = Array.isArray(response?.data?.data)
           ? response.data?.data?.flatMap((item) =>
               Array.isArray(item.sessions)
-                ? item?.sessions?.map((session) => ({
+                ? item.sessions.map((session) => ({
                     title: session.course_name,
-                    start: `${item.date}T${session.start_time}`,
-                    end: `${item.date}T${session.end_time}`,
-                    description: `Location: ${session.location}`,
+                    start: `${item.date}T${session.due_time}`, // Mapping start time
+                    end: `${item.date}T${session.due_time}`, // Optional: Adjust if there's an end_time field
+                    description: `Type: ${session.type} - Name: ${session.assessment_name}`,
                   }))
                 : []
             )
@@ -117,10 +116,10 @@ export default function StudentDashboard() {
 
         setCalendarEvents(events);
       } else {
-        // console.error("Failed to fetch calendar data", response.status);
+        console.error("Failed to fetch calendar data", response.status);
       }
     } catch (error) {
-      // console.error("Error fetching calendar data", error);
+      console.error("Error fetching calendar data", error);
     }
   }
 
@@ -134,7 +133,7 @@ export default function StudentDashboard() {
 
   useEffect(() => {
     if (selectedCourseId) {
-      // Ensure selectedCourseId exists before triggering the progress functions
+    
       const handleCourseProgress = async () => {
         try {
           const response = await getProgressForCourse(selectedCourseId);
@@ -165,7 +164,7 @@ export default function StudentDashboard() {
         }
       };
 
-      // Call all progress functions once selectedCourseId is set
+    
       handleCourseProgress();
       handleQuizProgress();
       handleAssignmentProgress();
@@ -196,8 +195,8 @@ export default function StudentDashboard() {
   };
 
   const filteredAssignments = assignments?.data?.items?.filter((assignment) => {
-    if (selectedCategory === "Show All") return true; // If 'Show All' is selected, return all assignments
-    return assignment.type.toLowerCase() === selectedCategory.toLowerCase(); // Filter based on type
+    if (selectedCategory === "Show All") return true; 
+    return assignment.type.toLowerCase() === selectedCategory.toLowerCase(); 
   });
 
   const toggleCourseOpen = () => {
@@ -266,12 +265,10 @@ export default function StudentDashboard() {
                           id={session.id}
                           key={session.id}
                           image={image1}
-                          courseName={session.name} // Accessing course name inside 'course' object
+                          courseName={session.name} 
                           route="course"
                           route1="courses"
-                          courseDesc={session.short_description} // Accessing short description
-                          // progress="50%"
-                          // avatars={avatars}
+                          courseDesc={session.short_description} 
                           extraCount={50}
                         />
                       );
@@ -280,8 +277,8 @@ export default function StudentDashboard() {
               </div>
             </div>
             <div>
-              <div className="w-full mt-4 h-[410px]  flex gap-4 lg:flex-row flex-col-reverse max-md:w-full">
-                <div className="bg-surface-100 ax-md:mx-4 p-2 rounded-xl grow">
+              <div className="w-full mt-4 max-lg:mt-8 h-[410px]  flex gap-4 lg:flex-row flex-col-reverse max-md:w-full">
+                <div className="bg-surface-100 max-md:mx-4 p-2 rounded-xl grow">
                   <div className="flex justify-between">
                     <div>
                       <h1 className="text-xl text-blue-500 font-bold px-3 py-4 font-exo ">
@@ -327,23 +324,12 @@ export default function StudentDashboard() {
             </div>
           </div>
           <div className="flex gap-4 flex-col max-md:w-full ml-3">
-            <div className="flex max-md:mx-4 h-[410px] flex-col overflow-y-auto bg-surface-100 px-3 py-2 rounded-xl lg:w-fit scrollbar-webkit max-md:m-4">
+            <div className="flex max-md:mx-4 h-[410px] flex-col bg-surface-100 px-3 py-2 rounded-xl lg:w-fit max-md:m-4">
               <div className="flex justify-between w-full px-3 py-2 items-center mb-2">
                 <h1 className="text-xl text-blue-500 font-bold font-exo">
                   Upcoming Activities
                 </h1>
-                {/* <select className="bg-surface-100 block w-40 my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5">
-                {assignments?.data?.items &&
-                assignments?.data?.items.length > 0 ? (
-                  assignments.data.items.map((assignment) => (
-                    <option key={assignment.id}>{assignment.type}</option>
-                  ))
-                ) : (
-                  <p className="flex h-96 w-[400px] justify-center items-center">
-                    No Activities
-                  </p>
-                )}
-              </select> */}
+
                 <div className=" relative space-y-2 text-[15px] w-[150px]">
                   <button
                     ref={categoryButton}
@@ -383,7 +369,7 @@ export default function StudentDashboard() {
                 </div>
               </div>
 
-              <div className="p-2 pt-0 flex lg:flex-col gap-2 lg:flex-nowrap flex-wrap max-md:flex-nowrap max-md:flex-col resize-none">
+              <div className="p-2  overflow-y-auto scrollbar-webkit pt-0 flex lg:flex-col gap-2 lg:flex-nowrap flex-wrap max-md:flex-nowrap max-md:flex-col resize-none">
                 {filteredAssignments && filteredAssignments.length > 0 ? (
                   filteredAssignments.map((assignment) => (
                     <AssignmentCard
@@ -403,11 +389,11 @@ export default function StudentDashboard() {
                 )}
               </div>
             </div>
-            <div className="w-full bg-surface-100 px-5 p-2  rounded-xl mt-1 h-[404px] min-w-[440px]">
+            <div className=" min-w-full max-w-[450px] bg-surface-100 px-5 p-2  rounded-xl sm:mt-1 h-[404px] sm:mx-0 mx-4">
               <h1 className="font-bold font-exo text-blue-500 text-lg py-4">
                 Progress Chart
               </h1>
-              <div className=" relative space-y-2 text-[15px] w-full">
+              <div className=" relative space-y-2 text-[15px]">
                 <button
                   ref={courseButton}
                   onClick={toggleCourseOpen}

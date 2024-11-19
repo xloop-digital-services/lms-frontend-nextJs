@@ -1141,6 +1141,7 @@ export const updateProgram = async (program, programId) => {
 export const createCourse = async (course) => {
   try {
     const response = await axiosInstance.post(`/api/course/courses/`, course);
+
     return response;
   } catch (error) {
     throw error;
@@ -1415,13 +1416,14 @@ export const updateExam = async (examData, examId) => {
     throw error;
   }
 };
-//selete the exam
+//select the exam
 export const deleteExam = async (examData, examId) => {
   try {
     const response = await axiosInstance.patch(
       `/api/course/exams/${examId}/`,
       examData
     );
+    return response;
   } catch (error) {
     throw error;
   }
@@ -1619,9 +1621,7 @@ export const getAnnouncementById = async (announcementId) => {
 //get all announcements for admin
 export const getAllAnnouncements = async () => {
   try {
-    const response = await axiosInstance.get(
-      `/api/announcements/`
-    );
+    const response = await axiosInstance.get(`/api/announcements/`);
     return response;
   } catch (error) {
     throw error;

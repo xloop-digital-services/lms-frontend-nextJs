@@ -115,7 +115,7 @@ export default function InstructorCoursePage({
                 {title}
               </h2>
             </div>
-            <p className="pb-4">Select a course to view the {title}</p>
+            <p className="pb-4">Select a course to view </p>
           </div>
         </div>
         {loader ? (
@@ -137,6 +137,7 @@ export default function InstructorCoursePage({
                       route={route}
                       route1={route1}
                       status={program.status}
+                      picture={program.picture}
                     />
                   ))
               : null}

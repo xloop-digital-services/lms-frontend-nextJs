@@ -25,6 +25,7 @@ export default function Page() {
   const [inputCourses, setInputCourses] = useState([]);
   const [file, setFile] = useState(null);
   const [loader, setLoader] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
 
   async function fetchAllSkills() {
     try {
@@ -39,26 +40,55 @@ export default function Page() {
     }
   }
 
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    setFile(file);
+    // console.log(file);
+    if (file) {
+      const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+      if (!allowedTypes.includes(file.type)) {
+        toast.warn("Only JPG, JPEG, and PNG files are allowed.");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const s3Data = await handleFileUploadToS3(file, "Upload Course Thumbnails");
-    //console.log("S3 Data:", s3Data);
-    const courseData = {
-      name: programName,
-      short_description: shortDesc,
-      about: about,
-      skills: inputCourses,
-      theory_credit_hours: chr || 0,
-      lab_credit_hours: chrLab || 0,
-      picture: s3Data,
-    };
+
+    const formData = new FormData();
+    formData.append("name", programName);
+    formData.append("short_description", shortDesc);
+    formData.append("about", about);
+    formData.append("theory_credit_hours", chr || 0);
+    formData.append("lab_credit_hours", chrLab || 0);
+    if (!inputCourses || inputCourses.length === 0) {
+      toast.error("Please add at least one skill.");
+      return;
+    }
+    const flattenedCourses = inputCourses.flat(Infinity);
+    console.log(flattenedCourses);
+    
+    flattenedCourses.forEach((id) => {
+      formData.append("skills[]", id);
+    });
+    if (s3Data) {
+      formData.append("picture", s3Data);
+    }
     try {
-      const response = await createCourse(courseData);
-      setLoader(true)
+      const response = await createCourse(formData);
+      setLoader(true);
       if (response.status === 201) {
         toast.success("Course created successfully!");
-        setLoader(false)
-        setCreatingProgram(courseData);
+        router.back();
+        setLoader(false);
+        setCreatingProgram(formData);
         setAbout("");
         setCoursesNames([]);
         setProgramName("");
@@ -67,11 +97,11 @@ export default function Page() {
         setChrLab("");
       } else {
         toast.error(response.data?.message);
-        setLoader(false)
+        setLoader(false);
       }
     } catch (error) {
       toast.error(`Error creating course: ${error.message}`);
-      setLoader(false)
+      setLoader(false);
     }
   };
 
@@ -125,6 +155,9 @@ export default function Page() {
         file={file}
         setFile={setFile}
         loader={loader}
+        imagePreview={imagePreview}
+        setImagePreview={setImagePreview}
+        handleImageUpload={handleImageUpload}
       />
     </div>
   );

@@ -1,13 +1,14 @@
 "use client";
-import { createSkill, listAllLocations } from "@/api/route";
+import { createSkill, listAllBatches, listAllLocations } from "@/api/route";
 import { useSidebar } from "@/providers/useSidebar";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { FaPlus, FaTimes } from "react-icons/fa";
+import { FaArrowLeft, FaPlus, FaTimes } from "react-icons/fa";
 import { toast } from "react-toastify";
 import SessionCreationModal from "./Modal/SessionCreationModal";
 import { useRouter } from "next/navigation";
 import { CircularProgress } from "@mui/material";
+import Image from "next/image";
 
 export default function CreateField({
   title,
@@ -38,6 +39,9 @@ export default function CreateField({
   programAbb,
   setProgramAbb,
   loader,
+  imagePreview,
+  setImagePreview,
+  handleImageUpload,
 }) {
   const router = useRouter();
   const { isSidebarOpen } = useSidebar();
@@ -52,8 +56,12 @@ export default function CreateField({
   const [selectedDays, setSelectedDays] = useState([]);
   const [locations, setLocations] = useState([]);
   const [selectedId, setSelectedId] = useState();
+  const [batchOptions, setBatchOptions] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [edit, setEdit] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [loadingBatch, setLoadingBatch] = useState(true);
+
   useEffect(() => {
     if (title === "Program") {
       const storedProgramName = localStorage.getItem("programName");
@@ -151,6 +159,27 @@ export default function CreateField({
     }
   };
 
+  const getBatch = async () => {
+    try {
+      const response = await listAllBatches();
+      // console.log("batches", response?.data);
+      const batchOptionsArray = response?.data.map((batch) => batch.batch);
+      setBatchOptions(response?.data);
+    } catch (error) {
+      // console.log("error while fetching the batches", error);
+      if (error.message === "Network Error") {
+        toast.error(error.message, "Check your internet connection");
+      }
+    } finally {
+      setLoadingBatch(false);
+    }
+  };
+
+  useEffect(() => {
+    getBatch();
+    // getLocation();
+  }, [openModal]);
+
   const handleCreateSkill = async (e) => {
     e.preventDefault();
     const skills = {
@@ -194,9 +223,18 @@ export default function CreateField({
         }}
       >
         <div className="bg-surface-100 flex flex-col p-8 rounded-xl">
-          <h2 className="font-exo text-blue-500 text-xl font-bold">
-            Add a {title}
-          </h2>
+          <div className="flex">
+            <div
+              className="text-dark-400 flex gap-2 items-center cursor-pointer hover:text-blue-300 mr-4"
+              onClick={goBack}
+            >
+              <FaArrowLeft size={20} />
+              {/* <p>Back</p> */}
+            </div>
+            <h2 className="font-exo text-blue-500 text-xl font-bold">
+              Add a {title}
+            </h2>
+          </div>
 
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col mt-4">
@@ -392,7 +430,7 @@ export default function CreateField({
 
               {route === "courses" && (
                 <>
-                  <div className="my-4 sm:mb-0">
+                  <div className="my-4 sm:pr-4 sm:mb-0">
                     <label
                     // className="text-lg  text-blue-500 font-exo font-bold"
                     >
@@ -433,8 +471,31 @@ export default function CreateField({
                 </>
               )}
 
+              <>
+                <div className="my-4 sm:pr-4 sm:mb-0">
+                  <label className="">{title} Image</label>
+                  <div className=" border border-dark-400 rounded-md mt-2 px-2 py-2 flex items-center">
+                    <input
+                      type="file"
+                      accept=".jpg,.jpeg,.png"
+                      onChange={(e) => handleImageUpload(e)}
+                      className=""
+                    />
+                  </div>
+                  {imagePreview && (
+                    <Image
+                      src={imagePreview}
+                      alt={`${title} image preview`}
+                      width={300}
+                      height={300}
+                      className="mt-4"
+                    />
+                  )}
+                </div>
+              </>
+
               <button
-                onClick={goBack}
+                // onClick={goBack}
                 type="submit"
                 className=" flex text-center max-sm:text-sm justify-center items-center gap-2 text-surface-100 bg-blue-300 py-2 px-4 mt-4 rounded-md mr-4 hover:bg-[#3272b6]"
               >
@@ -450,6 +511,10 @@ export default function CreateField({
           <SessionCreationModal
             setOpenModal={setOpenModal}
             LocationOptions={locations}
+            setEdit={setEdit}
+            edit={edit}
+            batchOptions={batchOptions}
+            loadingBatch={loadingBatch}
             // batchOptions={batchOptions}
             // loadingLocation={loadingLocation}
             // setUpdateSession={setUpdateSession}

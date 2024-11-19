@@ -3,6 +3,9 @@ import { batchInfo } from "@/api/route";
 import { CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import { FaDownload } from "react-icons/fa";
 
 const BatchUserModal = ({ selectedBatch, setOpenInfo }) => {
   const [loading, setLoading] = useState(true);
@@ -26,7 +29,22 @@ const BatchUserModal = ({ selectedBatch, setOpenInfo }) => {
 
     handleBatchInfo();
   }, [selectedBatch]);
-  console.log(info.map((item) => item[0]));
+
+  const downloadPDF = () => {
+    const doc = new jsPDF();
+    doc.text(`Students in ${selectedBatch}`, 14, 10);
+    const tableData = info.map((student) => [
+      student.registration_id,
+      student.name,
+    ]);
+    doc.autoTable({
+      head: [["Student ID", "Student Name"]],
+      body: tableData,
+      startY: 20,
+    });
+    doc.save(`Students_in_${selectedBatch}.pdf`);
+  };
+
   return (
     <div className="backDropOverlay h-screen flex justify-center items-center">
       <div className="w-[600px] z-[1000] mx-auto my-20 overflow-auto scrollbar-webkit">
@@ -34,22 +52,36 @@ const BatchUserModal = ({ selectedBatch, setOpenInfo }) => {
           style={{ backgroundColor: "#EBF6FF" }}
           className="xsm:p-5 p-2 m-2 rounded-xl"
         >
-          <div className="flex justify-between">
-            <h1
-              style={{
-                fontWeight: 700,
-                fontSize: "17px",
-                lineHeight: "24.2px",
-                color: "#022567",
-              }}
-              className="text-center px-2 xsm:py-[10px] pb-[5px] font-exo"
-            >
-              Students in {selectedBatch}
-            </h1>
+          <div className="flex justify-between ">
+            <div className="flex w-full justify-between items-center">
+              <h1
+                style={{
+                  fontWeight: 700,
+                  fontSize: "17px",
+                  lineHeight: "24.2px",
+                  color: "#022567",
+                }}
+                className="text-center px-2 xsm:py-[10px] pb-[5px] font-exo"
+              >
+                Students in {selectedBatch}
+              </h1>
+              {info.length > 0 && (
+                <div className="flex justify-end">
+                  <button
+                    className="bg-text-500 text-white px-4 py-2 rounded"
+                    onClick={downloadPDF}
+                    title="Download information"
+                  >
+                    <FaDownload className="text-blue-500" />
+                  </button>
+                </div>
+              )}
+            </div>
             <button className="px-2" onClick={() => setOpenInfo(false)}>
               <IoClose size={21} />
             </button>
           </div>
+
           <div className="bg-surface-100 xsm:p-6 px-3 py-4 rounded-xl xsm:space-y-5 space-y-2 font-inter h-[600px] overflow-y-scroll scrollbar-webkit">
             {loading ? (
               <div className="flex justify-center items-center w-full py-4">
@@ -61,10 +93,7 @@ const BatchUserModal = ({ selectedBatch, setOpenInfo }) => {
               </div>
             ) : (
               <div>
-                {/* <p className="font-bold text-lg pb-2 text-blue-500 font-exo">
-                  Student Names
-                </p> */}
-                <table className="min-w-full divide-y divide-dark-300 dark:divide-gray-700">
+                <table className="min-w-full divide-y divide-dark-300">
                   <thead className="bg-surface-100 text-blue-500 top-0 z-10 shadow-sm shadow-dark-200">
                     <tr>
                       <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase w-[15%]">
@@ -75,7 +104,7 @@ const BatchUserModal = ({ selectedBatch, setOpenInfo }) => {
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-dark-200 dark:divide-gray-700 overflow-y-scroll scrollbar-webkit">
+                  <tbody className="divide-y divide-dark-200 overflow-y-scroll scrollbar-webkit">
                     {info.map((student, index) => (
                       <tr key={index}>
                         <td className="px-6 py-3 text-center whitespace-nowrap text-sm text-gray-800">

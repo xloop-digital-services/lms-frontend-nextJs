@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import CoursePage from "@/components/CoursePage";
 import courseImg from "/public/assets/img/course-image.png";
 import { useAuth } from "@/providers/AuthContext";
 import CourseCard from "@/components/CourseCard";
@@ -9,8 +8,6 @@ import { useSidebar } from "@/providers/useSidebar";
 import { FaArrowLeft, FaEdit, FaPlus } from "react-icons/fa";
 import Link from "next/link";
 import { CircularProgress } from "@mui/material";
-import { IoIosArrowDown } from "react-icons/io";
-import GetAttendanceAdminTable from "./GetAttendanceAdminTable";
 import useClickOutside from "@/providers/useClickOutside";
 import Lottie from "lottie-react";
 import bouncing from "../../public/data/bouncing.json";
@@ -19,7 +16,6 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 
 export default function AdminCoursePage({ route1, programs, title, route }) {
   const { userData } = useAuth();
-
   const isAdmin = userData?.Group === "admin";
   const { isSidebarOpen } = useSidebar();
   const [sessions, setSessions] = useState(null);
@@ -139,7 +135,7 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
           {route1 === "programs" || route1 === "courses" ? (
             <>
               <Link href={`/${route1}/create-a-${route}`}>
-                <button className="flex justify-center max-sm:p-2 max-sm:rounded-md items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl mr-4  hover:bg-[#3272b6] max-sm:text-sm">
+                <button className="flex justify-center max-sm:p-2 max-sm:rounded-md items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-lg hover:bg-[#3272b6] max-sm:text-sm">
                   <FaPlus /> Create a New {route}
                 </button>
               </Link>
@@ -204,6 +200,7 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
                       route={route}
                       route1={route1}
                       status={program.status}
+                      picture={program.picture}
                     />
                   ))}
                 {filteredCourses
@@ -219,6 +216,7 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
                       route1={route1}
                       chr={`${course.theory_credit_hours}+${course.lab_credit_hours}`}
                       status={course.status}
+                      picture={course.picture}
                     />
                   ))}
               </>

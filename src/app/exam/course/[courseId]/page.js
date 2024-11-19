@@ -278,7 +278,7 @@ export default function Page({ params }) {
       const response = await deleteExam(formData, assignmentToUpdate.id);
 
       if (response.status === 200) {
-        toast.success(response.data.message);
+        toast.success(response.data.message, "Status updated successfully.");
         setAssignments((prevAssignments) =>
           prevAssignments.map((assignment) =>
             assignment.id === id
