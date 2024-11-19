@@ -73,7 +73,7 @@ export default function Page() {
       return;
     }
     const flattenedCourses = inputCourses.flat(Infinity);
-    console.log(flattenedCourses);
+    // console.log(flattenedCourses);
     
     flattenedCourses.forEach((id) => {
       formData.append("skills[]", id);

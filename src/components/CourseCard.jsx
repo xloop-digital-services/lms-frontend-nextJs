@@ -109,7 +109,7 @@ const CourseCard = ({
               {status === 0 ? "Inactive" : "Active"}
             </p>
           </div>
-          <div className="space-y-2 text-sm px-4 pt-[6px]">
+          <div className="space-y-2 text-sm px-1 pt-[6px]">
             <div className="flex justify-between">
               <div className="flex bg-[#EBF6FF] w-full py-[9px] px-5 rounded-lg items-center space-x-2">
                 <p className="text-blue-300 h-4 uppercase text-[12px] font-semibold overflow-hidden text-ellipsis whitespace-nowrap">

@@ -114,7 +114,7 @@ export function AuthProvider({ children }) {
   const logOutUser = () => {
     document.cookie.split(";").forEach((cookie) => {
       const name = cookie.split("=")[0].trim();
-      console.log(name);
+      // console.log(name);
       Cookies.remove(name);
     });
 

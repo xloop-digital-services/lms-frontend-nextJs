@@ -116,10 +116,10 @@ export default function StudentDashboard() {
 
         setCalendarEvents(events);
       } else {
-        console.error("Failed to fetch calendar data", response.status);
+        // console.error("Failed to fetch calendar data", response.status);
       }
     } catch (error) {
-      console.error("Error fetching calendar data", error);
+      // console.error("Error fetching calendar data", error);
     }
   }
 

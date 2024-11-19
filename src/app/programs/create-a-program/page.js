@@ -51,7 +51,7 @@ export default function Page() {
   };
 
   const handleSubmit = async (event) => {
-    console.log(event);
+    // console.log(event);
     event.preventDefault();
     const s3Data = await handleFileUploadToS3(
       file,
@@ -64,7 +64,7 @@ export default function Page() {
     formData.append("short_description", shortDesc);
     formData.append("about", about);
     const flattenedCourses = inputCourses.flat(Infinity);
-    console.log(flattenedCourses);
+    // console.log(flattenedCourses);
     
     flattenedCourses.forEach((id) => {
       formData.append("courses[]", id);
