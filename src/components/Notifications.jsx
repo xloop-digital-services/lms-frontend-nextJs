@@ -19,15 +19,15 @@ export default function Notifications() {
   // console.log(userID);
   const router = useRouter();
   const { messages: messages, loading: loading } = useWebSocket(
-    `ws://13.126.167.22:8000/ws/notification/?user_id=${userID}`,
+    `wss://lms-api-xloopdigital.com/ws/notification/?user_id=${userID}`,
     group
   );
 
   const { messages: announcements, loading: loader } = useWebSocket(
-    `ws://13.126.167.22:8000/ws/announcements/?user_id=${userID}`,
+    `wss://lms-api-xloopdigital.com/ws/announcements/?user_id=${userID}`,
     group
   );
-
+  
   const handleCreateAnnoucement = () => {
     router.push("/announcement/new-announcement");
   };

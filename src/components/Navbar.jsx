@@ -33,12 +33,12 @@ export default function Navbar() {
   const userID = userData?.User?.id;
   const group = userData?.Group;
   const { messages: messages, loading: loading } = useWebSocket(
-    `ws://13.126.167.22:8000/ws/notification/?user_id=${userID}`,
+    `wss://lms-api-xloopdigital.com/ws/notification/?user_id=${userID}`,
     group
   );
 
   const { messages: announcements, loading: load } = useWebSocket(
-    `ws://13.126.167.22:8000/ws/announcements/?user_id=${userID}`,
+    `wss://lms-api-xloopdigital.com/ws/announcements/?user_id=${userID}`,
     group
   );
 
