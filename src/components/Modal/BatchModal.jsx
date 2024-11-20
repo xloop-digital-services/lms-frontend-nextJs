@@ -3,10 +3,11 @@ import { IoClose } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
 import DatePicker from "react-datepicker";
 import { FaCalendar, FaClock } from "react-icons/fa";
-import { createBatch } from "@/api/route";
+import { createBatch, getAllPrograms } from "@/api/route";
 import { CircularProgress } from "@mui/material";
 import { toast } from "react-toastify";
 import useClickOutside from "@/providers/useClickOutside";
+import { Handjet } from "next/font/google";
 
 const BatchModal = ({
   updateBatch,
@@ -16,6 +17,11 @@ const BatchModal = ({
 }) => {
   const [selectedCity, setSelectedCity] = useState("Select city");
   const [isCityOpen, setIsCityOpen] = useState(false);
+  const [selectedProgram, setSelectedProgram] = useState("Select program");
+  const [selectedProgramId, setSelectedProgramId] = useState(null);
+  const [isProgramOpen, setIsProgramOpen] = useState(false);
+  const [programs, setPrograms] = useState([]);
+  const [isProgramSelected, setIsProgramSelected] = useState(false);
   const [locations, setLocations] = useState([]); // State to store the list of location names
   const [currentLocation, setCurrentLocation] = useState(""); // State to store the current input value
   const inputRef = useRef(null); // Ref to focus the input field
@@ -29,8 +35,13 @@ const BatchModal = ({
   const [cityShortName, setCityShortName] = useState("");
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("Select category");
-  const [isCategorySelected, setIsCategorySelected] = useState(false)
+  const [isCategorySelected, setIsCategorySelected] = useState(false);
   const [error, setError] = useState("");
+  const [applicationDate, setApplicationDate] = useState({
+    start: "",
+    end: "",
+  });
+  const [appErrorMessage, setAppErrorMessage] = useState("");
   const categoryOptions = [
     { name: "Fall" },
     { name: "Winter" },
@@ -39,10 +50,25 @@ const BatchModal = ({
     // { name: "Annual" },
   ];
   const cityDown = useRef(null);
-  const modalDown = useRef(null);
-  const categoryRef = useRef();
+  const cityButton = useRef(null);
+  const programDown = useRef(null);
+  const programButton = useRef(null);
 
-  useClickOutside(cityDown, () => setIsCityOpen(false));
+  const modalDown = useRef(null);
+  const categoryRef = useRef(null);
+  const categoryButton = useRef(null);
+
+  useClickOutside(cityDown, cityButton, () => {
+    setIsCityOpen(false);
+  });
+
+  useClickOutside(programDown, programButton, () => {
+    setIsProgramOpen(false);
+  });
+
+  useClickOutside(categoryRef, categoryButton, () => {
+    setIsCategoryOpen(false);
+  });
 
   useClickOutside(modalDown, () => setIsOpenModal(false));
 
@@ -55,16 +81,20 @@ const BatchModal = ({
     }
     if (
       !errorMessage &&
+      !appErrorMessage &&
+      selectedProgram &&
       selectedCity &&
       cityShortName &&
       year &&
       studentCapacity &&
       startDate &&
       endDate &&
-      selectedCategory
+      selectedCategory &&
+      applicationDate
     ) {
       try {
         const data = {
+          program: selectedProgramId,
           city: selectedCity,
           city_abb: cityShortName,
           year: year,
@@ -72,18 +102,24 @@ const BatchModal = ({
           start_date: startDate,
           end_date: endDate,
           term: selectedCategory,
+          application_start_date: applicationDate.start,
+          application_end_date: applicationDate.end,
         };
 
         const response = await createBatch(data);
-        console.log("batch created", response?.data.message);
+        // console.log("batch created", response?.data.message);
         toast.success("Batch created successfully!");
         setLoadingCreation(false);
         setIsOpenModal(false);
         setUpdateBatch(!updateBatch);
       } catch (error) {
-        console.log("error is occuring", error.response);
+        // console.log("error is occuring", error.response);
         if (error.response.status === 400) {
           toast.error(error.response.data.error[0]);
+        } else {
+          toast.error(
+            "Batch already exists for this city, year, category, and program"
+          );
         }
         // toast.error(error?.response?.data?.error[0])
         setLoadingCreation(false);
@@ -94,6 +130,19 @@ const BatchModal = ({
     }
   };
 
+  useEffect(() => {
+    const handleAllProgramList = async () => {
+      try {
+        const response = await getAllPrograms();
+        // console.log('response for programs', response.data)
+        setPrograms(response.data.data);
+      } catch (error) {
+        // console.log("error", error);
+      }
+    };
+    handleAllProgramList();
+  }, []);
+
   const toggleCategoryOpen = () => {
     setIsCategoryOpen((prev) => !prev);
   };
@@ -101,7 +150,7 @@ const BatchModal = ({
   const handleCategorySelect = (category) => {
     setSelectedCategory(category.name);
     setIsCategoryOpen(false);
-    setIsCategorySelected(true)
+    setIsCategorySelected(true);
   };
 
   const handleStartDate = (event) => {
@@ -132,6 +181,47 @@ const BatchModal = ({
     }
   };
 
+  const handleApplicationStartDate = (event) => {
+    const newStartDate = event.target.value;
+    setApplicationDate((prev) => {
+      const updatedDates = { ...prev, start: newStartDate };
+
+      // Validate dates
+      validateDates(updatedDates.start, updatedDates.end);
+
+      return updatedDates;
+    });
+  };
+
+  const handleApplicationEndDateChange = (event) => {
+    const newEndDate = event.target.value;
+    setApplicationDate((prev) => {
+      const updatedDates = { ...prev, end: newEndDate };
+
+      // Validate dates
+      validateDates(updatedDates.start, updatedDates.end);
+
+      return updatedDates;
+    });
+  };
+
+  const validateDates = (start, end) => {
+    if (start && end) {
+      const startDate = new Date(start);
+      const endDate = new Date(end);
+
+      if (startDate > endDate) {
+        setAppErrorMessage("End date should be greater than start date.");
+      } else if (startDate.getTime() === endDate.getTime()) {
+        setAppErrorMessage("Start date and end date should not be the same.");
+      } else {
+        setAppErrorMessage(""); // Clear the error if validation passes
+      }
+    } else {
+      setAppErrorMessage(""); // Clear the error if either date is not set
+    }
+  };
+
   // Handle adding a new location
   const handleAddLocation = () => {
     setIsInputActive(true); // Activate the input field
@@ -157,8 +247,19 @@ const BatchModal = ({
     ); // Remove location
   };
 
+  const toggleProgramOpen = () => {
+    setIsProgramOpen((prev) => !prev);
+  };
+
+  const handleProgramSelect = (option) => {
+    setSelectedProgram(option.name);
+    setSelectedProgramId(option.id);
+    setIsProgramOpen(false);
+    setIsProgramSelected(true);
+  };
+
   const toggleCityOpen = () => {
-    setIsCityOpen(!isCityOpen);
+    setIsCityOpen((prev) => !prev);
   };
   const handleCitySelect = (option) => {
     setSelectedCity(option.name);
@@ -199,10 +300,11 @@ const BatchModal = ({
                 lineHeight: "24.2px",
                 color: "#022567",
               }}
-              className="text-start  px-2 xsm:py-[10px] pb-[5px] font-exo"
+              className="text-start px-2 xsm:py-[10px] pb-[5px] font-exo"
             >
-              Batch Creation
+              Create a new Batch
             </h1>
+
             <button className="px-2" onClick={() => setIsOpenModal(false)}>
               <IoClose size={21} />
             </button>
@@ -210,20 +312,61 @@ const BatchModal = ({
           <div
             className={`bg-surface-100 xsm:p-6 px-3 py-4 rounded-xl xsm:space-y-5 space-y-2 font-inter`}
           >
+            <div className="relative space-y-2 text-[15px] w-full">
+              <p>
+                {" "}
+                <p className="text-center italic text-dark-400">
+                  <span className="font-semibold text-blue-500">Note: </span>
+                  Select application start date and end date carefully, as wrong
+                  selection will lead to incorrect batch assignment to students.
+                </p>
+              </p>
+              <p>Program</p>
+              <button
+                ref={programButton}
+                onClick={toggleProgramOpen}
+                className={`${
+                  !isProgramSelected ? " text-dark-500" : "text-[#424b55]"
+                } flex justify-between items-center w-full  hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+              >
+                {selectedProgram}
+                <span
+                  className={`${
+                    isProgramOpen ? "rotate-180 duration-300" : "duration-300"
+                  }`}
+                >
+                  <IoIosArrowDown />
+                </span>
+              </button>
+
+              {isProgramOpen && (
+                <div
+                  ref={programDown}
+                  className="absolute z-10 w-full max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
+                >
+                  {programs
+                    .sort(
+                      (a, b) => new Date(b.created_at) - new Date(a.created_at)
+                    )
+                    .map((option, index) => (
+                      <div
+                        key={index}
+                        onClick={() => handleProgramSelect(option)}
+                        className="p-2 cursor-pointer "
+                      >
+                        <div className="px-4 py-1 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
+                          {option.name}
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              )}
+            </div>
             <div className="flex  gap-3 mx-auto w-full justify-between">
-              {/* <div className="space-y-2 text-[15px] w-full">
-                <p>Batch</p>
-                <input
-                  type="text"
-                  className="border border-dark-300 outline-none p-3 rounded-lg w-full "
-                  placeholder="batch name"
-                  value={batchName}
-                  onChange={(e) => setbatchName(e.target.value)}
-                />
-              </div>         */}
-              <div className="space-y-2 text-[15px] w-full">
+              <div className="relative space-y-2 text-[15px] w-full">
                 <p>City</p>
                 <button
+                  ref={cityButton}
                   onClick={toggleCityOpen}
                   className={`${
                     !isCitySelected ? " text-dark-500" : "text-[#424b55]"
@@ -242,7 +385,7 @@ const BatchModal = ({
                 {isCityOpen && (
                   <div
                     ref={cityDown}
-                    className="absolute z-10 min-w-[220px] max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
+                    className="absolute z-10 w-full max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
                   >
                     {cityOptions.map((option, index) => (
                       <div
@@ -319,11 +462,10 @@ const BatchModal = ({
               <div className="space-y-2 text-[15px] w-full relative">
                 <p>Category</p>
                 <button
+                  ref={categoryButton}
                   onClick={toggleCategoryOpen}
                   className={`${
-                    !isCategorySelected
-                      ? " text-dark-500"
-                      : "text-[#424b55]"
+                    !isCategorySelected ? " text-dark-500" : "text-[#424b55]"
                   } flex justify-between items-center w-full hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
                   {selectedCategory}
@@ -373,7 +515,7 @@ const BatchModal = ({
             <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
               {/* Start Date Input */}
               <div className="space-y-2 text-[15px] w-full">
-                <p>Start Date</p>
+                <p>Batch Start Date</p>
                 <div className="relative w-full">
                   <input
                     type="date"
@@ -388,7 +530,7 @@ const BatchModal = ({
 
               {/* End Date Input */}
               <div className="space-y-2 text-[15px] w-full">
-                <p>End Date</p>
+                <p>Batch End Date</p>
                 <div className="relative w-full">
                   <input
                     type="date"
@@ -402,6 +544,43 @@ const BatchModal = ({
                 {errorMessage && (
                   <p className="text-mix-200 text-[12px] mt-2">
                     {errorMessage}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
+              {/* Start Date Input */}
+              <div className="space-y-2 text-[15px] w-full">
+                <p>Application Start Date</p>
+                <div className="relative w-full">
+                  <input
+                    type="date"
+                    value={applicationDate.start}
+                    onChange={handleApplicationStartDate}
+                    className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
+                    placeholder="Select start date"
+                  />
+                  {/* <FaCalendar className="absolute right-3 top-1/2 transform -translate-y-1/2 text-dark-400 pointer-events-none" /> */}
+                </div>
+              </div>
+
+              {/* End Date Input */}
+              <div className="space-y-2 text-[15px] w-full">
+                <p>Application End Date</p>
+                <div className="relative w-full">
+                  <input
+                    type="date"
+                    value={applicationDate.end}
+                    onChange={handleApplicationEndDateChange}
+                    className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
+                    placeholder="Select end date"
+                  />
+                  {/* <FaCalendar className="absolute right-3 top-1/2 transform -translate-y-1/2 text-dark-400 pointer-events-none" /> */}
+                </div>
+                {appErrorMessage && (
+                  <p className="text-mix-200 text-[12px] mt-2">
+                    {appErrorMessage}
                   </p>
                 )}
               </div>

@@ -5,7 +5,7 @@ import { CircularProgress } from "@mui/material";
 
 const DeleteConfirmationPopup = ({
   setConfirmDelete,
-  handleDelete, // Pass the delete function from parent
+  handleDelete, 
   field,
 }) => {
   const [loading, setLoading] = useState(false);
@@ -13,11 +13,11 @@ const DeleteConfirmationPopup = ({
   const handleDeleteAction = async () => {
     setLoading(true);
     try {
-      await handleDelete(); // Call the passed-in delete function
+      await handleDelete(); 
       setConfirmDelete(false);
       setLoading(false);
     } catch (error) {
-      //console.log("Error while deleting:", error);
+      // console.log("Error while deleting:", error);
       setLoading(false);
     }
   };
@@ -51,7 +51,7 @@ const DeleteConfirmationPopup = ({
                   Cancel
                 </button>
                 <button
-                  className="bg-mix-200 text-surface-100 rounded-lg px-5 py-2.5 hover:bg-[#be4141]"
+                  className="bg-blue-300 text-surface-100 rounded-lg px-5 py-2.5 hover:bg-[#2670be]"
                   onClick={handleDeleteAction}
                   disabled={loading}
                 >

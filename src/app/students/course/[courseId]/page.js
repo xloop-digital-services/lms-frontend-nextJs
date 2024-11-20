@@ -36,7 +36,7 @@ export default function Page({ params }) {
         }
       } catch (error) {
         //console.log("error", error);
-        setLoader(false);
+        // setLoader(false);
       }
     }
 
@@ -76,20 +76,17 @@ export default function Page({ params }) {
         <div
           className={`flex-1 transition-transform pt-[90px] space-y-4 max-md:pt-32 font-inter ${
             isSidebarOpen
-              ? "translate-x-64 pl-16 "
-              : "translate-x-0 pl-10 pr-10"
+              ? "translate-x-64 ml-20 "
+              : "translate-x-0 pl-10 pr-10 max-md:pl-2 max-md:pr-2"
           }`}
-          style={{
-            // paddingBottom: "20px",
-            width: isSidebarOpen ? "86%" : "100%",
-          }}
+          style={{ width: isSidebarOpen ? "81%" : "100%" }}
         >
           <div className=" bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl  p-4">
             <CourseHead
               id={courseId}
               // rating="Top Instructor"
               // instructorName="Maaz"
-             haveStatus={isStudent ? true : false}
+              haveStatus={isStudent ? true : false}
               program="course"
             />
             <AdminStudentGrading courseId={courseId} />

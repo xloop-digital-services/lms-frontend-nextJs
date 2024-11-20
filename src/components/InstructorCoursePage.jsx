@@ -13,6 +13,8 @@ import {
 import { useAuth } from "@/providers/AuthContext";
 import { CircularProgress } from "@mui/material";
 import CourseCard from "./CourseCard";
+import { FaArrowLeft } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 export default function InstructorCoursePage({
   route1,
@@ -30,6 +32,12 @@ export default function InstructorCoursePage({
   const insEmailId = userData?.User?.email;
   //console.log(insEmailId);
   const [loader, setLoader] = useState(true);
+
+  const router = useRouter();
+  const goBack = () => {
+    router.back();
+  };
+
   //console.log(insId);
   // const [courseId, setCourseId] = useState();
   // useEffect(() => {
@@ -95,10 +103,19 @@ export default function InstructorCoursePage({
       <div className="bg-surface-100 p-8 rounded-xl ">
         <div className="flex justify-between max-md:flex-col max-md:items-center ">
           <div className="flex flex-col">
-            <h2 className="font-exo text-xl text-blue-500 font-bold flex pb-2 justify-start items-center">
-              {title}
-            </h2>
-            <p className="pb-4">Select a course to view the {title}</p>
+            <div className="flex pb-2">
+              <div
+                className="text-dark-400 flex gap-2 items-center cursor-pointer hover:text-blue-300 mr-4"
+                onClick={goBack}
+              >
+                <FaArrowLeft size={20} />
+                {/* <p>Back</p> */}
+              </div>
+              <h2 className="font-exo text-xl text-blue-500 font-bold flex justify-start items-center">
+                {title}
+              </h2>
+            </div>
+            <p className="pb-4">Select a course to view </p>
           </div>
         </div>
         {loader ? (
@@ -120,6 +137,7 @@ export default function InstructorCoursePage({
                       route={route}
                       route1={route1}
                       status={program.status}
+                      picture={program.picture}
                     />
                   ))
               : null}

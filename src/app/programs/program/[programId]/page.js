@@ -158,14 +158,14 @@ export default function Page({ params }) {
         </div>
       ) : (
         <div
-          className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-20 font-inter ${
-            isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 pl-10 pr-4"
+          className={`flex-1 transition-transform pt-[90px] space-y-4 max-md:pt-32 font-inter ${
+            isSidebarOpen
+              ? "translate-x-64 ml-20 "
+              : "translate-x-0 pl-10 pr-10 max-md:pl-2 max-md:pr-2"
           }`}
-          style={{
-            width: isSidebarOpen ? "81%" : "100%",
-          }}
+          style={{ width: isSidebarOpen ? "81%" : "100%" }}
         >
-          <div className=" bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4">
+          <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4">
             <CourseHead
               name={programData.name}
               id={programId}
@@ -265,10 +265,10 @@ export default function Page({ params }) {
                     setProgramData({ ...programData, about: e.target.value })
                   }
                 />
-                <label className=" font-exo text-blue-500 text-lg font-bold mt-4">
+                <label className="font-exo text-blue-500 text-lg font-bold mt-4 sm:text-base">
                   Selected courses
                 </label>
-                <div className="relative flex flex-wrap items-center gap-2 bg-white outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 shadow-sm ring-1 ring-inset focus:ring-inset p-2 sm:text-sm sm:leading-6">
+                <div className="relative flex flex-wrap items-center gap-2 bg-white outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 shadow-sm ring-1 ring-inset focus:ring-inset p-2 text-sm leading-6 max-sm:flex-col">
                   {courseData?.map((course) => {
                     if (displayedCourses.has(course.id)) return null;
                     displayedCourses.add(course.id);
@@ -276,7 +276,7 @@ export default function Page({ params }) {
                     return (
                       <div
                         key={course.id}
-                        className="flex items-center space-x-2 px-3 py-1 bg-blue-600 border border-blue-300 rounded-full"
+                        className="flex items-center space-x-2 px-3 py-1 bg-blue-600 border border-blue-300 rounded-full text-white text-xs sm:text-sm max-sm:mb-2"
                       >
                         <span>{course?.name}</span>
                         <FaTimes
@@ -295,7 +295,7 @@ export default function Page({ params }) {
                     return (
                       <div
                         key={courseId}
-                        className="flex items-center space-x-2 px-3 py-1 bg-blue-600 border border-blue-300 rounded-full"
+                        className="flex items-center space-x-2 px-3 py-1 bg-blue-600 border border-blue-300 rounded-full text-white text-xs sm:text-sm max-sm:mb-2"
                       >
                         <span>{course?.name}</span>
                         <FaTimes
@@ -305,10 +305,11 @@ export default function Page({ params }) {
                       </div>
                     );
                   })}
+
                   <select
                     value=""
                     onChange={handleSelectChange}
-                    className=" flex items-center bg-surface-100 outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 py-1 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-8 p-2 sm:text-sm sm:leading-6"
+                    className="flex items-center bg-surface-100 outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 py-1 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-8 p-2 text-xs sm:text-sm sm:leading-6 max-sm:w-full"
                   >
                     <option value="" disabled>
                       Select a course
@@ -322,7 +323,7 @@ export default function Page({ params }) {
                 </div>
 
                 <button
-                  className=" flex justify-center my-2 items-center w-32 gap-2  text-surface-100 bg-blue-300 px-2 py-3 rounded-xl mr-4 hover:bg-[#4296b3]"
+                  className=" flex justify-center my-2 items-center w-32 max-sm:w-full gap-2  text-surface-100 bg-blue-300 px-2 py-3 rounded-xl mr-4 hover:bg-[#4296b3]"
                   onClick={handleSave}
                 >
                   Save Changes
@@ -349,7 +350,7 @@ export default function Page({ params }) {
               </div>
 
               {/* {isStudent ? ( */}
-              <div className="flex gap-3 flex-wrap">
+              <div className="flex flex-wrap max-md:w-full max-sm:items-center max-sm:justify-center">
                 {courseData?.map((course, index) => (
                   <CourseCard
                     key={course.id}

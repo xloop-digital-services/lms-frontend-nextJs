@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import logo from "../../../../public/assets/img/xCelerate-Logo.png";
@@ -19,6 +19,15 @@ export default function Page() {
     logInUser,
     loading,
   } = useAuth();
+  // useEffect(() => {
+  //   localStorage.clear();
+  //   document.cookie.split(";").forEach((c) => {
+  //     document.cookie = c
+  //       .trim()
+  //       .replace(/^ +/, "")
+  //       .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+  //   });
+  // }, []);
 
   return (
     <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 px-6 font-inter">
@@ -34,7 +43,7 @@ export default function Page() {
         </div>
       </div>
       <div className="mt-9 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-surface-100 py-8 px-4 shadow sm:rounded-xl sm:px-10">
+        <div className="bg-surface-100 py-8 px-4 shadow rounded-xl sm:px-10">
           <div className="space-y-2">
             <h1 className="font-exo font-bold text-xl text-center">Login</h1>
             <p className="text-[#8A8A95] text-sm text-center">

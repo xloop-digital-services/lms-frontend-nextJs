@@ -22,6 +22,7 @@ const StudentDataStructure = ({
   remarks,
   setQuizzes,
   setUpdateStatus,
+  studentInstructorID,
 }) => {
   const [uploadFile, setUploadFile] = useState(false);
   const [resubmitFile, setResubmitFile] = useState(false);
@@ -73,7 +74,7 @@ const StudentDataStructure = ({
       <div className="flex flex-col ">
         <div className="-m-1.5 overflow-x-auto">
           <div className="p-1.5 min-w-full inline-block align-middle">
-            <div className="border border-dark-300 rounded-lg divide-y divide-dark-200 dark:border-gray-700 dark:divide-gray-700">
+            <div className="border border-dark-300 rounded-lg divide-y divide-dark-200 ">
               {/* <div className="py-3 px-4">
               <div className="relative max-w-xs">
                 <label className="sr-only">Search</label>
@@ -85,7 +86,7 @@ const StudentDataStructure = ({
             </div> */}
               <div className="overflow-hidden rounded-lg">
                 <div className="relative max-h-[56vh] overflow-y-auto scrollbar-webkit">
-                  <table className="min-w-full divide-y divide-dark-300 dark:divide-gray-700">
+                  <table className="min-w-full divide-y divide-dark-300 ">
                     <thead className=" bg-surface-100 text-blue-500 sticky top-0 z-10 shadow-sm shadow-dark-200">
                       <tr>
                         <th
@@ -466,6 +467,7 @@ const StudentDataStructure = ({
           setUploadFile={setUploadFile}
           assignmentID={iD}
           setUpdateStatus={setUpdateStatus}
+          studentInstructorID={studentInstructorID}
         />
       )}
 

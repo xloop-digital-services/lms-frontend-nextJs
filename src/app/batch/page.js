@@ -11,12 +11,18 @@ import { IoIosCloseCircleOutline } from "react-icons/io";
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 import DeleteConfirmationPopup from "@/components/Modal/DeleteConfirmationPopUp";
+import { FaArrowLeft, FaPlus } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import { FaMagnifyingGlass } from "react-icons/fa6";
+import { Search } from "@mui/icons-material";
+import BatchUserModal from "@/components/Modal/BatchUserModal";
 
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
   const [selectedCity, setSelectedCity] = useState("Select city");
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const [batches, setBatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [updateBatch, setUpdateBatch] = useState(false);
@@ -25,19 +31,51 @@ export default function Page() {
   const [filterCity, setFilterCity] = useState([]);
   const [selectedBatch, setSelectedBatch] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [openInfoModal, setOpenInfoModal] = useState(false);
   const mousedown = useRef(null);
+  const mouseButton = useRef(null);
+  const router = useRouter();
+  const goBack = () => {
+    router.back();
+  };
 
-  useClickOutside(mousedown, () => setIsCityOpen(false));
+  useClickOutside(mousedown, mouseButton, () => setIsCityOpen(false));
+
+  useEffect(() => {
+    let filterList = batches;
+
+    if (searchTerm.length > 0 && (!selectedCity || !isCitySelected)) {
+      filterList = batches.filter((batch) =>
+        batch.batch.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    if (selectedCity && isCitySelected && searchTerm.length === 0) {
+      filterList = batches.filter((batch) =>
+        batch.city.toLowerCase().includes(selectedCity.toLowerCase())
+      );
+    }
+
+    if (selectedCity && isCitySelected && searchTerm.length > 0) {
+      filterList = batches.filter(
+        (batch) =>
+          batch.city.toLowerCase().includes(selectedCity.toLowerCase()) &&
+          batch.batch.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    setFilterCity(filterList);
+  }, [batches, searchTerm, selectedCity, isCitySelected]);
 
   const handleListingAllBatches = async () => {
     try {
       const response = await listAllBatches();
-      //console.log("batches", response?.data);
+      // console.log("batches", response?.data);
       setBatches(response?.data);
       setCityOptions(cityAreas);
       setLoading(false);
     } catch (error) {
-      //console.log("error while fetching the batches", error);
+      // console.log("error while fetching the batches", error);
       if (error.message === "Network Error") {
         toast.error(error.message, "Check your internet connection");
       }
@@ -47,13 +85,6 @@ export default function Page() {
   useEffect(() => {
     handleListingAllBatches();
   }, [updateBatch]);
-
-  useEffect(() => {
-    const filteredList = batches.filter((batch) =>
-      batch.city.toLowerCase().includes(selectedCity.toLowerCase())
-    );
-    setFilterCity(filteredList);
-  }, [selectedCity, batches]);
 
   const handleResetFilter = () => {
     setSelectedCity("Select city");
@@ -80,12 +111,12 @@ export default function Page() {
       setLoading(true);
       const response = await DeleteBatch(selectedBatch);
       toast.success("Batch deleted successfully!");
-      //console.log("deleting the batch", response);
+      // console.log("deleting the batch", response);
       setUpdateBatch(!updateBatch);
       setConfirmDelete(false);
       setLoading(false);
     } catch (error) {
-      //console.log("error while deleting the batch", error);
+      // console.log("error while deleting the batch", error);
     }
   };
 
@@ -103,12 +134,36 @@ export default function Page() {
       >
         <div className="bg-surface-100 p-6 rounded-xl">
           <div className="w-full mx-auto flex xsm:flex-row flex-col justify-between items-center gap-4 max-md:flex-col">
-            <div>
-              <p className="font-bold text-blue-500 text-xl font-exo">Batch Details</p>
+            <div className="flex ">
+              <div
+                className="text-dark-400 flex gap-2 items-center cursor-pointer hover:text-blue-300 mr-4"
+                onClick={goBack}
+              >
+                <FaArrowLeft size={20} />
+                {/* <p>Back</p> */}
+              </div>
+              <p className="font-bold text-blue-500 text-xl font-exo">
+                Batch Details
+              </p>
             </div>
-            <div className="flex gap-3 ">
+            <div className="flex gap-3 items-center">
+              <div className="relative flex items-center grow">
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-dark-300">
+                  <FaMagnifyingGlass size={18} />
+                </span>
+                <div className="flex-1 border border-[#acc5e0] text-[#424b55] rounded-lg transition duration-300 ease-in-out focus-within:ring-2 focus-within:ring-blue-300">
+                  <input
+                    type="text"
+                    placeholder="Search by names"
+                    className=" ml-6 sm:p-4 px-2 py-3 text-sm outline-none rounded-lg"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+              </div>
               <div className="relative">
                 <button
+                  ref={mouseButton}
                   onClick={toggleCityOpen}
                   className={`${
                     !isCitySelected ? " text-dark-500" : "text-[#424b55]"
@@ -120,7 +175,11 @@ export default function Page() {
                       <IoIosCloseCircleOutline size={20} />
                     </span>
                   )}
-                  <span className="pl-1">
+                  <span
+                    className={`${
+                      isCityOpen ? "rotate-180 duration-300" : "duration-300"
+                    } pl-1`}
+                  >
                     <IoIosArrowDown />
                   </span>
                 </button>
@@ -129,14 +188,6 @@ export default function Page() {
                   <div
                     ref={mousedown}
                     className={`absolute z-20 w-full mt-1 max-h-[250px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out`}
-                    // style={{
-                    //   height:
-                    //     batches.length * 40 < 300
-                    //       ? `${batches.length * 40}px`
-                    //       : "300px",
-                    //   maxHeight: "300px",
-                    //   overflowY: batches.length * 40 > 300 ? "auto" : "unset", // Enable scrolling only if list exceeds 300px
-                    // }}
                   >
                     {[...new Set(batches.map((option) => option.city))].map(
                       (city, index) => (
@@ -210,17 +261,27 @@ export default function Page() {
             </div> */}
               <div>
                 <button
-                  className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] sm:flex text-sm sm:p-4 px-3 py-3 md:px-6 rounded-lg hover:cursor-pointer"
+                  className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] text-sm sm:p-4 px-3 py-3 md:px-6 rounded-lg hover:cursor-pointer"
                   onClick={handleBatchCreate}
                 >
-                  Create <span className="sm:flex hidden px-1">a new </span>{" "}
-                  batch
+                  <span className="flex justify-center items-center gap-2">
+                    <FaPlus />
+                    <p className=" sm:flex ">
+                      Create <span className="sm:flex hidden px-1">a new </span>{" "}
+                      batch
+                    </p>
+                  </span>
                 </button>
               </div>
             </div>
           </div>
           <div>
-            {isCitySelected && filterCity.length > 0 ? (
+            {loading ? (
+              <div className="flex justify-center items-center w-full p-4">
+                <CircularProgress size={20} />
+              </div>
+            ) : isCitySelected ||
+              (searchTerm.length > 0 && filterCity.length > 0) ? (
               <div className="mt-4">
                 <BatchTable
                   batches={filterCity}
@@ -232,9 +293,12 @@ export default function Page() {
                   setConfirmDelete={setConfirmDelete}
                   selectedBatch={selectedBatch}
                   confirmDelete={confirmDelete}
+                  setOpenInfo={setOpenInfoModal}
                 />
               </div>
-            ) : !isCitySelected && batches.length > 0 ? (
+            ) : !isCitySelected &&
+              searchTerm.length === 0 &&
+              batches.length > 0 ? (
               <div className="mt-4">
                 <BatchTable
                   batches={batches}
@@ -246,11 +310,8 @@ export default function Page() {
                   setConfirmDelete={setConfirmDelete}
                   selectedBatch={selectedBatch}
                   confirmDelete={confirmDelete}
+                  setOpenInfo={setOpenInfoModal}
                 />
-              </div>
-            ) : loading ? (
-              <div className="flex justify-center items-center w-full p-4">
-                <CircularProgress size={20} />
               </div>
             ) : (
               <p>No Batch found in this city</p>
@@ -265,6 +326,14 @@ export default function Page() {
             setUpdateBatch={setUpdateBatch}
             cityOptions={city0ptions}
             updateBatch={updateBatch}
+          />
+        )}
+      </div>
+      <div>
+        {openInfoModal && (
+          <BatchUserModal
+            selectedBatch={selectedBatch}
+            setOpenInfo={setOpenInfoModal}
           />
         )}
       </div>

@@ -108,9 +108,9 @@ export function AuthProvider({ children }) {
   //   Cookies.remove("userGroup");
   //   Cookies.remove("access_token");
   //   Cookies.remove("refresh_token");
+  //   localStorage.clear();
   //   router.push("/auth/login");
   // };
-
   const logOutUser = () => {
     document.cookie.split(";").forEach((cookie) => {
       const name = cookie.split("=")[0].trim();

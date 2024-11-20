@@ -1,7 +1,7 @@
 import { CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { FaEdit, FaRegEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaEye, FaRegEdit, FaTrash } from "react-icons/fa";
 import { createBatch, DeleteBatch, UpdateBatch } from "@/api/route";
 import DeleteConfirmationPopup from "./Modal/DeleteConfirmationPopUp";
 import { IoCheckmark, IoClose } from "react-icons/io5";
@@ -17,13 +17,14 @@ const BatchTable = ({
   setConfirmDelete,
   setSelectedBatch,
   selectedBatch,
-  confirmDelete
+  setOpenInfo,
+  confirmDelete,
 }) => {
   const [edit, setEdit] = useState(false);
- 
+
   const [batch, setbatch] = useState(null);
   const [status, setStatus] = useState(null);
- 
+
   const [updating, setUpdating] = useState(false);
   const [editYear, setEditYear] = useState(null);
   const [editEndDate, setEditEndDate] = useState(null);
@@ -40,7 +41,7 @@ const BatchTable = ({
     setEditCapacity(batch.no_of_students);
     setStatus(batch.status);
     setbatch(batch);
-    // //console.log("fhsfldddeeeeeeeeeeeewwwwww", batch.batch);
+    // console.log("fhsfldddeeeeeeeeeeeewwwwww", batch.batch);
     setEdit(!edit);
   };
 
@@ -64,6 +65,7 @@ const BatchTable = ({
       setLoading(true); // Set updating to true when status is being updated
       try {
         const data = {
+          program: batch.program,
           batch: selectedBatch,
           city: batch.city,
           city_abb: batch.city_abb,
@@ -78,12 +80,12 @@ const BatchTable = ({
         const response = await UpdateBatch(selectedBatch, data);
         if (response.status === 200) {
           toast.success("Batch updated successfully!");
-          //console.log("batch updated", response);
+          // console.log("batch updated", response);
           setEdit(false);
           setUpdateBatch(!updateBatch);
         }
       } catch (error) {
-        //console.log("error while updating status", error);
+        // console.log("error while updating status", error);
       } finally {
         setLoading(false); // Set updating to false after the update is complete
       }
@@ -94,8 +96,6 @@ const BatchTable = ({
     setSelectedBatch(batch.batch);
     setConfirmDelete(true);
   };
-
-  
 
   const handleEndDateChange = (event) => {
     setEditEndDate(event.target.value);
@@ -114,13 +114,18 @@ const BatchTable = ({
     }
   };
 
+  const handleOpenInfo = (batch) => {
+    setSelectedBatch(batch.batch);
+    setOpenInfo(true);
+  };
+
   return (
     <>
       <div className="flex flex-col ">
         <div className="-m-1.5 overflow-x-auto">
           <div className="p-1.5 min-w-full inline-block align-middle max-h-screen overflow-auto scrollbar-webkit">
             <div className=" border border-dark-300 rounded-lg divide-y divide-dark-200 ">
-              <div className="overflow-hidden">
+              <div className="overflow-hidden rounded-lg">
                 <div
                   className={
                     pathname === "/batch" &&
@@ -132,16 +137,16 @@ const BatchTable = ({
                       <tr>
                         <th
                           scope="col"
-                          className="px-6 py-4 rounded-lg  text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
+                          className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[15%]"
                         >
                           Batch Name
                         </th>
-                        {/* <th
-                      scope="col"
-                      className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
-                    >
-                      Area
-                    </th> */}
+                        <th
+                          scope="col"
+                          className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
+                        >
+                          Program
+                        </th>
                         <th
                           scope="col"
                           className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[16%]"
@@ -174,16 +179,16 @@ const BatchTable = ({
                         </th>
                         <th
                           scope="col"
-                          className="px-12 py-4 rounded-lg text-start text-xs font-medium text-gray-500 uppercase w-[20%]"
+                          className="px-12 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[20%]"
                         >
                           Status
                         </th>
-                        {/* <th
+                        <th
                           scope="col"
                           className="px-6 py-4 rounded-lg text-start text-xs font-medium text-gray-500 uppercase w-[18%]"
                         >
                           Actions
-                        </th> */}
+                        </th>
                       </tr>
                     </thead>
                     {/* {updating && (
@@ -209,31 +214,17 @@ const BatchTable = ({
                           )
                           .map((batch, index) => (
                             <tr key={index} className={``}>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
+                              <td
+                                className="px-6 py-4 whitespace-nowrap max-w-[230px] truncate text-sm font-medium text-gray-800"
+                                title={batch.batch}
+                              >
                                 {batch.batch || "-"}
                               </td>
-                              {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                      {batch.city_id || '-'}
-                    </td> */}
                               <td
-                                className={` ${
-                                  !(edit && selectedBatch === batch.batch)
-                                    ? "py-4 px-6"
-                                    : "py-1 px-4"
-                                } whitespace-nowrap text-sm text-gray-800 dark:text-gray-200`}
+                                className="px-6 py-4 whitespace-nowrap max-w-[250px] truncate text-sm text-gray-800"
+                                title={batch.program_name}
                               >
-                                {!(edit && selectedBatch === batch.batch) ? (
-                                  batch.no_of_students || "-"
-                                ) : (
-                                  <input
-                                    type="number"
-                                    value={editCapacity}
-                                    onChange={handleInputChange}
-                                    className=" px-2 py-3 border border-dark-300 outline-none rounded-lg w-full"
-                                    placeholder={batch.no_of_students}
-                                    min={0}
-                                  />
-                                )}
+                                {batch.program_name || "-"}
                               </td>
                               <td
                                 className={` ${
@@ -242,69 +233,90 @@ const BatchTable = ({
                                     : "py-1 px-4"
                                 } whitespace-nowrap text-sm text-gray-800 dark:text-gray-200`}
                               >
-                                {!(edit && selectedBatch === batch.batch) ? (
-                                  batch.start_date || "-"
-                                ) : (
-                                  <input
-                                    type="date"
-                                    value={editStartDate}
-                                    onChange={(e) =>
-                                      setEditStartDate(e.target.value)
-                                    }
-                                    className=" px-2 py-3 border border-dark-300 outline-none  rounded-lg w-full"
-                                    placeholder={batch.start_date}
-                                  />
-                                )}
-                              </td>
-                              <td
-                                className={` ${
-                                  !(edit && selectedBatch === batch.batch)
-                                    ? "py-4 px-6"
-                                    : "py-1 px-4"
-                                } whitespace-nowrap text-sm text-gray-800 dark:text-gray-200`}
-                              >
-                                {!(edit && selectedBatch === batch.batch) ? (
-                                  batch.end_date || "-"
-                                ) : (
-                                  <input
-                                    type="date"
-                                    value={editEndDate}
-                                    onChange={handleEndDateChange}
-                                    className="border border-dark-300  outline-none  px-2 py-3  rounded-lg w-full"
-                                    placeholder={batch.end_date}
-                                  />
-                                )}
-                              </td>
-                              <td
-                                className={` ${
-                                  !(edit && selectedBatch === batch.batch)
-                                    ? "py-4 px-6"
-                                    : "py-1 px-4"
-                                } whitespace-nowrap text-sm text-gray-800 dark:text-gray-200`}
-                              >
-                                {!(edit && selectedBatch === batch.batch) ? (
-                                  batch.year || "-"
-                                ) : (
-                                  <input
-                                    type="text"
-                                    className=" border border-dark-300 px-2 py-3 outline-none rounded-lg w-full"
-                                    value={editYear}
-                                    onChange={(e) =>
-                                      setEditYear(e.target.value)
-                                    }
-                                    placeholder={batch.year}
-                                  />
-                                )}
-                              </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
                                 {
                                   // !(edit && selectedBatch === batch.batch) ? (
-                                  batch.term || "-"
+                                  batch.no_of_students || "-"
                                   // ) : (
                                   //   <input
+                                  //     type="number"
+                                  //     value={editCapacity}
+                                  //     onChange={handleInputChange}
+                                  //     className=" px-2 py-3 border border-dark-300 outline-none rounded-lg w-full"
+                                  //     placeholder={batch.no_of_students}
+                                  //     min={0}
                                   //   />
                                   // )
                                 }
+                              </td>
+                              <td
+                                className={` ${
+                                  !(edit && selectedBatch === batch.batch)
+                                    ? "py-4 px-6"
+                                    : "py-1 px-4"
+                                } whitespace-nowrap text-sm text-gray-800 dark:text-gray-200`}
+                              >
+                                {
+                                  // !(edit && selectedBatch === batch.batch) ? (
+                                  batch.start_date || "-"
+                                  // ) : (
+                                  //   <input
+                                  //     type="date"
+                                  //     value={editStartDate}
+                                  //     onChange={(e) =>
+                                  //       setEditStartDate(e.target.value)
+                                  //     }
+                                  //     className=" px-2 py-3 border border-dark-300 outline-none  rounded-lg w-full"
+                                  //     placeholder={batch.start_date}
+                                  //   />
+                                  // )
+                                }
+                              </td>
+                              <td
+                                className={` ${
+                                  !(edit && selectedBatch === batch.batch)
+                                    ? "py-4 px-6"
+                                    : "py-1 px-4"
+                                } whitespace-nowrap text-sm text-gray-800 dark:text-gray-200`}
+                              >
+                                {
+                                  // !(edit && selectedBatch === batch.batch) ? (
+                                  batch.end_date || "-"
+                                  // ) : (
+                                  //   <input
+                                  //     type="date"
+                                  //     value={editEndDate}
+                                  //     onChange={handleEndDateChange}
+                                  //     className="border border-dark-300  outline-none  px-2 py-3  rounded-lg w-full"
+                                  //     placeholder={batch.end_date}
+                                  //   />
+                                  // )
+                                }
+                              </td>
+                              <td
+                                className={` ${
+                                  !(edit && selectedBatch === batch.batch)
+                                    ? "py-4 px-6"
+                                    : "py-1 px-4"
+                                } whitespace-nowrap text-sm text-gray-800 dark:text-gray-200`}
+                              >
+                                {
+                                  // !(edit && selectedBatch === batch.batch) ? (
+                                  batch.year || "-"
+                                  // ) : (
+                                  //   <input
+                                  //     type="text"
+                                  //     className=" border border-dark-300 px-2 py-3 outline-none rounded-lg w-full"
+                                  //     value={editYear}
+                                  //     onChange={(e) =>
+                                  //       setEditYear(e.target.value)
+                                  //     }
+                                  //     placeholder={batch.year}
+                                  //   />
+                                  // )
+                                }
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                                {batch.term || "-"}
                               </td>
                               <td className="px-6 py-2 whitespace-nowrap flex w-full justify-start items-center text-sm text-surface-100">
                                 <p
@@ -335,7 +347,7 @@ const BatchTable = ({
                                         }
                                         onChange={(e) =>
                                           handleSetStatus(e.target.value)
-                                        } // Handle status change here
+                                        }
                                       >
                                         <option
                                           value="active"
@@ -354,8 +366,26 @@ const BatchTable = ({
                                   )}
                                 </p>
                               </td>
-                              {/* <td className="px-8 py-2 whitespace-nowrap text-blue-300 ">
-                                <div className="flex gap-4">
+                              <td className="px-8 py-2 whitespace-nowrap text-blue-300 ">
+                                <div
+                                  className={
+                                    !(edit && selectedBatch === batch.batch)
+                                      ? "flex gap-2"
+                                      : "flex"
+                                  }
+                                >
+                                  <div>
+                                    {!(
+                                      edit && selectedBatch === batch.batch
+                                    ) && (
+                                      <FaEye
+                                        title="Students List"
+                                        size={23}
+                                        className="cursor-pointer hover:opacity-30"
+                                        onClick={() => handleOpenInfo(batch)}
+                                      />
+                                    )}
+                                  </div>
                                   <div>
                                     {!(
                                       edit && selectedBatch === batch.batch
@@ -366,10 +396,10 @@ const BatchTable = ({
                                         onClick={() =>
                                           handleUpdateStatus(batch)
                                         }
-                                        title="update"
+                                        title="Edit batch"
                                       />
                                     ) : (
-                                      <div className="flex gap-4">
+                                      <div className="flex gap-2">
                                         <IoCheckmark
                                           size={20}
                                           title="confirm update"
@@ -379,13 +409,13 @@ const BatchTable = ({
                                         <IoClose
                                           size={19}
                                           title="cancel"
-                                          onClick={(e) => setEdit(false)}
+                                          onClick={() => setEdit(false)}
                                           className="cursor-pointer hover:border-2 border-mix-200 hover:text-mix-200 font-bold rounded-full"
                                         />
                                       </div>
                                     )}
                                   </div>
-                                  <div>
+                                  {/* <div>
                                     {!(
                                       edit && selectedBatch === batch.batch
                                     ) && (
@@ -396,16 +426,16 @@ const BatchTable = ({
                                         title="delete"
                                       />
                                     )}
-                                  </div>
+                                  </div> */}
                                 </div>
-                              </td> */}
+                              </td>
                             </tr>
                           ))
                       ) : (
                         <tr>
                           <td
                             colSpan="8"
-                            className="px-6 py-4 whitespace-nowrap text-sm text-dark-400 dark:text-gray-200 text-center"
+                            className="px-6 py-4 whitespace-nowrap text-sm text-dark-400 text-center"
                           >
                             No batch found
                           </td>
@@ -419,7 +449,6 @@ const BatchTable = ({
           </div>
         </div>
       </div>
-     
     </>
   );
 };

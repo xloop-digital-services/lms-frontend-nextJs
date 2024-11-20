@@ -150,7 +150,7 @@ const Grading = ({ courseId }) => {
           <select
             value={selectedSession || ""}
             onChange={handleChange}
-            className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+            className="bg-surface-100 cursor-pointer block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
           >
             <option value="" disabled>
               Select a session
@@ -185,7 +185,7 @@ const Grading = ({ courseId }) => {
           <select
             value={selectedSession || ""}
             onChange={handleChangeInstructor}
-            className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+            className="bg-surface-100 block cursor-pointer w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
           >
             <option value="" disabled>
               Select a session
@@ -211,13 +211,6 @@ const Grading = ({ courseId }) => {
         </div>
       )}
       <GradingSection
-        title="Quiz"
-        options={quizzes}
-        courseId={courseId}
-        sessionId={sessionId}
-        selectedSessionId={selectedSessionId}
-      />
-      <GradingSection
         title="Assignment"
         options={assignments}
         courseId={courseId}
@@ -225,8 +218,8 @@ const Grading = ({ courseId }) => {
         selectedSessionId={selectedSessionId}
       />
       <GradingSection
-        title="Exam"
-        options={exams}
+        title="Quiz"
+        options={quizzes}
         courseId={courseId}
         sessionId={sessionId}
         selectedSessionId={selectedSessionId}
@@ -234,6 +227,13 @@ const Grading = ({ courseId }) => {
       <GradingSection
         title="Project"
         options={projects}
+        courseId={courseId}
+        sessionId={sessionId}
+        selectedSessionId={selectedSessionId}
+      />
+      <GradingSection
+        title="Exam"
+        options={exams}
         courseId={courseId}
         sessionId={sessionId}
         selectedSessionId={selectedSessionId}

@@ -12,6 +12,8 @@ import {
 } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
 import { CircularProgress } from "@mui/material";
+import { FaArrowLeft } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 export default function StudentProgram({ path, progress, heading, role }) {
   const { isSidebarOpen } = useSidebar();
@@ -21,6 +23,11 @@ export default function StudentProgram({ path, progress, heading, role }) {
   const [program, setProgram] = useState([]);
   const progId = userData?.User?.program?.id;
   const [loader, setLoader] = useState(true);
+  const router = useRouter();
+
+  const goBack = () => {
+    router.back();
+  };
 
   useEffect(() => {
     if (!regId) return;
@@ -40,7 +47,6 @@ export default function StudentProgram({ path, progress, heading, role }) {
         //console.log("error", error);
       }
     }
-
     fetchStudentProgram();
   }, [regId]);
 
@@ -65,25 +71,30 @@ export default function StudentProgram({ path, progress, heading, role }) {
           </div>
         ) : (
           <>
-            <div className="bg-surface-100 p-8 rounded-xl ">
-              <h2 className="text-xl text-blue-500 font-bold pb-1">
-                {heading}
-              </h2>
-              <p className="pb-6">Select a course to view the {heading}</p>
-              <div className="flex flex-col w-full gap-4">
-                {/* {program?.map(([program]) => { */}
-                {/* // return ( */}
+            <div className="bg-surface-100 p-8 rounded-xl max-md:p-4">
+              <>
+                <div className="flex items-center">
+                  <div
+                    className="text-dark-400 flex gap-2 items-center cursor-pointer hover:text-blue-300 mr-4"
+                    onClick={goBack}
+                  >
+                    <FaArrowLeft size={20} />
+                    {/* <p>Back</p> */}
+                  </div>
+                  <h2 className="font-exo text-xl max-md:text-center max-md:justify-center text-blue-500 font-bold flex justify-start items-center">
+                    {heading}
+                  </h2>
+                </div>
+                <p className="pb-6">Select a program to view</p>
+              </>
+              <div className="flex flex-col max-md:flex-wrap w-full max-md:w-full max-sm:items-center max-sm:justify-center">
                 <MainCourseCard
-                  //   key={program.id}
                   courseImg={courseImg}
                   courseName={program.name}
                   courseDesc={program.short_description}
-                  // progress={courseProgress?.progress_percentage}
-                  //   durationOfCourse={program.credit_hours}
                   route={`${path}/program/${program.id}`}
+                  picture={program.picture}
                 />
-                {/* ); */}
-                {/* })} */}
               </div>
             </div>
           </>

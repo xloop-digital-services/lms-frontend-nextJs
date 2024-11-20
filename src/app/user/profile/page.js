@@ -305,15 +305,12 @@ function Profile() {
         </div>
       ) : ( */}
       <div
-        className={`flex-1 transition-transform pt-28 max-md:pt-44 max-lg:pt-44 font-inter ${
+        className={`flex-1 transition-transform pt-[90px] space-y-4 max-md:pt-32 font-inter ${
           isSidebarOpen
-            ? "translate-x-64 pr-4 pl-20"
-            : "translate-x-0 pl-10 pr-4"
+            ? "translate-x-64 ml-20 "
+            : "translate-x-0 pl-10 pr-10 max-md:pl-2 max-md:pr-2"
         }`}
-        style={{
-          paddingBottom: "20px",
-          width: isSidebarOpen ? "83%" : "100%",
-        }}
+        style={{ width: isSidebarOpen ? "81%" : "100%" }}
       >
         <div
           className={`lg:pt-12 pb-8 lg:pl-12 lg:pr-12 rounded-xl bg-surface-100 w-full  ${
@@ -323,20 +320,19 @@ function Profile() {
           <div className="flex flex-col lg:flex-row lg:px-8 px-4 lg:h-48 h-50">
             <div className="flex flex-col lg:flex-row w-full justify-center items-center lg:justify-start">
               <div className="ml-2 mb-1 mt-4 relative block w-48 h-48 rounded-full bg-blue-300 border-0 ">
-                <p className="flex uppercase font-extrabold h-full text-5xl text-surface-100 justify-center items-center">
+                <p className="flex cursor-pointer uppercase font-extrabold h-full text-5xl text-surface-100 justify-center items-center">
                   {getFirstWord(user?.first_name)}
                 </p>
               </div>
 
-              <div className="flex lg:flex-col flex-row lg:w-[50%] w-[100%] lg:ml-8 lg:justify-center lg:items-center mt-4">
-                <div className="flex flex-col w-full mb-8">
-                  <h2 className=" text-sm text-dark-400">Name</h2>
-                  <p className="font-medium text-xl capitalize">{`${firstName} ${lastName}`}</p>
-                </div>
+              <div className="flex max-lg:flex-col lg:w-[50%] w-[100%] ml-8 flex-col max-md:text-center mt-4">
+                <h2 className=" text-sm text-dark-400 cursor-default">Name</h2>
+                <p className="text-xl uppercase font-exo cursor-default text-blue-500 font-semibold">{`${firstName} ${lastName}`}</p>
+
                 {isStudent && (
-                  <div className="flex flex-col w-full">
+                  <div className="flex flex-col w-full cursor-default">
                     <h2 className=" text-sm text-dark-400">Registration ID</h2>
-                    <p className="font-medium text-xl uppercase">
+                    <p className="text-xl uppercase cursor-default font-exo text-blue-500 font-semibold">
                       {registrationID}
                     </p>
                   </div>
@@ -356,7 +352,7 @@ function Profile() {
               </button>
               <button
                 onClick={handleEnabledPass}
-                className="flex w-full h-14 items-center justify-center rounded-lg bg-blue-300 py-1.5 font-semibold leading-6 text-base text-surface-100 shadow-sm outline-blue-300 focus:outline-blue-300 focus-visible:outline mb-4"
+                className="flex w-full px-1 text-md h-14 items-center justify-center rounded-lg bg-blue-300 py-1.5 font-semibold leading-6 text-base text-surface-100 shadow-sm outline-blue-300 focus:outline-blue-300 focus-visible:outline mb-4"
               >
                 Change Password
               </button>
@@ -365,7 +361,9 @@ function Profile() {
 
           <div className="lg:px-16 px-4 pt-8 pb-0 mt-4 rounded-xl">
             <form onSubmit={handleSubmit} className="space-y-6">
-              <h2 className="text-lg font-bold block leading-6">Basic Info</h2>
+              <h2 className="text-lg font-bold block leading-6 cursor-default font-exo text-blue-500">
+                Basic Info
+              </h2>
               <div className="flex sm:flex-row flex-col lg:w-[100%]">
                 <div className="w-full mb-4 sm:mb-0 lg:w-[50%] md:w-[50%]">
                   <label htmlFor="first-name">First Name</label>
@@ -476,7 +474,7 @@ function Profile() {
                   </div>
                 )}
                 <div className="lg:w-[50%] w-full md:w-[50%]">
-                  <label htmlFor="city">City</label>
+                  <label htmlFor="city">City of training</label>
                   <div className="relative flex items-center mt-2">
                     <FaMapPin className="absolute left-3 text-dark-600 mt-2" />
                     <input
@@ -525,7 +523,7 @@ function Profile() {
                 onSubmit={handlePasswordSubmit}
                 className="space-y-6 mt-8 pt-8 pb-0 rounded-xl bg-gray-100"
               >
-                <h2 className="text-lg font-bold block leading-6">
+                <h2 className="text-lg font-bold block leading-6 font-exo text-blue-500">
                   Change Password
                 </h2>
                 <div className="flex sm:flex-row flex-col lg:w-[100%]">

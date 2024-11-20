@@ -13,6 +13,8 @@ import {
 } from "react-icons/io";
 import { toast, ToastContainer } from "react-toastify";
 import { CircularProgress } from "@mui/material";
+import { FaArrowLeft, FaPlus } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
@@ -26,8 +28,13 @@ export default function Page() {
   const [updateLocation, setUpdateLocation] = useState(false);
   const [filteredCityList, setFilteredCityList] = useState([]);
   const cityDown = useRef(null);
+  const cityButton = useRef(null);
+  const router = useRouter();
+  const goBack = () => {
+    router.back();
+  };
 
-  useClickOutside(cityDown, () => setIsCityOpen(false));
+  useClickOutside(cityDown, cityButton, () => setIsCityOpen(false));
 
   const handleListingAllLocations = async () => {
     try {
@@ -36,7 +43,7 @@ export default function Page() {
       setCityOptions(cityAreas);
       setLoading(false);
     } catch (error) {
-      //console.log("Error fetching locations", error);
+      // console.log("Error fetching locations", error);
       if (error.response.status === 401) {
         toast.error(error.response.data.code, ": Please Log in again");
       }
@@ -67,7 +74,7 @@ export default function Page() {
       location.city.toLowerCase().includes(selectedCity.toLowerCase())
     );
     setFilteredCityList(filteredList);
-  }, [selectedCity]);
+  }, [selectedCity, locations]);
 
   const clearCityFilter = () => {
     setSelectedCity("select city");
@@ -78,15 +85,24 @@ export default function Page() {
     <>
       <div
         className={`flex-1 transition-transform pt-[110px] space-y-4 max-md:pt-22 font-inter pb-4 ${
-          isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 sm:pl-5 px-4 sm:pr-5"
+          isSidebarOpen
+            ? "translate-x-64 ml-20 "
+            : "translate-x-0 sm:pl-5 px-4 sm:pr-5"
         }`}
         style={{
           width: isSidebarOpen ? "81%" : "100%",
         }}
       >
         <div className="bg-surface-100 p-6 rounded-xl">
-          <div className="w-full mx-auto flex lsm:flex-row flex-col justify-between items-center gap-4 max-md:flex-col">
-            <div>
+          <div className="w-full mx-auto flex xsm:flex-row flex-col justify-between items-center gap-4 max-md:flex-col">
+            <div className="flex">
+              <div
+                className="text-dark-400 flex gap-2 items-center cursor-pointer hover:text-blue-300 mr-4"
+                onClick={goBack}
+              >
+                <FaArrowLeft size={20} />
+                {/* <p>Back</p> */}
+              </div>
               <p className="font-bold font-exo text-blue-500 text-xl">
                 Locations Details
               </p>
@@ -94,6 +110,7 @@ export default function Page() {
             <div className="flex gap-3">
               <div className="relative">
                 <button
+                  ref={cityButton}
                   onClick={toggleCityOpen}
                   className={`${
                     !isCitySelected ? " text-dark-500" : "text-[#424b55]"
@@ -109,7 +126,7 @@ export default function Page() {
                     </span>
                   )}
                   <span
-                    className={`${
+                    className={` ${
                       isCityOpen ? "rotate-180 duration-300" : "duration-300"
                     }`}
                   >
@@ -121,14 +138,6 @@ export default function Page() {
                   <div
                     ref={cityDown}
                     className={`absolute z-20 w-full mt-1 max-h-[250px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out`}
-                    // style={{
-                    //   height:
-                    //     locations.length * 40 < 300
-                    //       ? `${locations.length * 0}px`
-                    //       : "250px",
-                    //   // maxHeight: "250px",
-                    //   overflowY: locations.length * 40 > 300 ? "auto" : "unset", // Enable scrolling only if list exceeds 300px
-                    // }}
                   >
                     {[...new Set(locations.map((option) => option.city))].map(
                       (city, index) => (
@@ -148,11 +157,16 @@ export default function Page() {
               </div>
               <div>
                 <button
-                   className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] sm:flex text-sm sm:p-4 px-3 py-3 md:px-6 rounded-lg hover:cursor-pointer"
+                  className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] text-sm sm:p-4 px-3 py-3 md:px-6 rounded-lg hover:cursor-pointer"
                   onClick={handleLocationCreate}
                 >
-                  Create<span className="sm:flex hidden px-1">a new </span>{" "}
-                  location
+                  <span className="flex justify-center items-center gap-2">
+                    <FaPlus />
+                    <p className="sm:flex">
+                      Create<span className="sm:flex hidden px-1">a new </span>{" "}
+                      location
+                    </p>
+                  </span>
                 </button>
               </div>
             </div>

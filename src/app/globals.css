@@ -1,11 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Exo:ital,wght@0,100..900;1,100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Exo:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body{
-    background: #EBF2FB;
+body {
+  background: #ebf2fb;
 }
 
 /* css for the subpages with respect to siddebar */
@@ -14,7 +14,7 @@ body{
   flex: 1;
   transition: transform 0.3s ease;
   padding-top: 90px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .container.max-md {
@@ -34,13 +34,17 @@ body{
   width: 100%;
 }
 
+.font-exo {
+  font-family: "Exo", sans-serif;
+}
 
-.font-exo{
-    font-family: "Exo", sans-serif;
-  }
-  
-.font-inter{
-    font-family: "Inter", sans-serif;
+.font-inter {
+  font-family: "Inter", sans-serif;
+}
+
+.required:after {
+  content: " *";
+  color: red;
 }
 
 .backDropOverlay {
@@ -49,43 +53,126 @@ body{
   left: 0;
   width: 100%;
   /* height: 100%; */
-  background: linear-gradient(to right, #bad5faa5,#b5d0f38c) ;
+  background: linear-gradient(to right, #bad5faa5, #b5d0f38c);
   /* background-color: #; */
   backdrop-filter: blur(2px);
   z-index: 999;
 }
 
-  
-  :root {
-    --fc-page-bg-color: #fff;
-    --fc-small-font-size: .85em;
-    --fc-border-color:#C0C0CF;
-    --fc-daygrid-event-dot-width: 5px;
-    --fc-small-font-size: .85em;
-    --fc-page-bg-color: #fff;
-    --fc-neutral-text-color: #03A1D8;
-    --fc-button-bg-color: #03A1D8;
-    --fc-button-border-color: #fcfcfc;
-    --fc-button-active-bg-color: #03A1D8;
-    --fc-button-active-border-color: #fff;
-    --fc-button-hover-bg-color: #03A1D8;
-    --fc-button-hover-border-color: #ffff;
-  }
+:root {
+  --fc-page-bg-color: #fff;
+  --fc-small-font-size: 0.85em;
+  --fc-border-color: #c0c0cf;
+  --fc-daygrid-event-dot-width: 5px;
+  --fc-small-font-size: 0.85em;
+  --fc-page-bg-color: #fff;
+  --fc-neutral-text-color: #03a1d8;
+  --fc-button-bg-color: #03a1d8;
+  --fc-button-border-color: #fcfcfc;
+  --fc-button-active-bg-color: #03a1d8;
+  --fc-button-active-border-color: #fff;
+  --fc-button-hover-bg-color: #03a1d8;
+  --fc-button-hover-border-color: #ffff;
+}
 
-  
 /* transition for grading */
-  .transition-container {
-    overflow: hidden;
-    max-height: 0;
-    transition: max-height 0.3s ease-out, padding 0.3s ease-out;
-  }
-  
-  .max-height-full {
-    max-height: 1000px; /* Arbitrary large value to allow for full expansion */
-  }
-  
-  .max-height-0 {
-    max-height: 0;
-  }
+.transition-container {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+}
 
+.max-height-full {
+  max-height: 1000px; /* Arbitrary large value to allow for full expansion */
+}
 
+.max-height-0 {
+  max-height: 0;
+}
+
+/* From Uiverse.io by zanina-yassine */
+/* Remove this container when use*/
+/* General Styles */
+.component-title {
+  width: 100%;
+  position: absolute;
+  z-index: 999;
+  top: 30px;
+  left: 0;
+  padding: 0;
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #888;
+  text-align: center;
+}
+
+.tab-container {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 260px; /* Adjusted width for two tabs */
+  padding: 2px;
+  background-color: #dadadb;
+  border-radius: 9px;
+  margin: 0 auto; /* Center the container */
+}
+
+/* Indicator Styling */
+.indicator {
+  content: "";
+  width: 125px;
+  height: 28px;
+  background: #ffffff;
+  position: absolute;
+  top: 2px;
+  left: 2px; /* Default position for the first tab */
+  z-index: 9;
+  border: 0.5px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.12), 0px 3px 1px rgba(0, 0, 0, 0.04);
+  border-radius: 7px;
+  transition: all 0.2s ease-out;
+}
+
+/* Tab Input */
+.tab {
+  display: none; /* Hide the radio buttons */
+}
+
+/* Tab Label */
+.tab_label {
+  width: 130px;
+  height: 28px;
+  position: relative;
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  font-size: 0.75rem;
+  opacity: 0.6;
+  cursor: pointer;
+  transition: opacity 0.2s ease-out;
+}
+
+.tab_label:hover {
+  opacity: 0.9;
+}
+
+/* Active Tab Styles */
+.tab--1:checked ~ .indicator {
+  left: 2px; /* Moves indicator to the first tab */
+}
+
+.tab--2:checked ~ .indicator {
+  left: 132px; /* Moves indicator to the second tab */
+}
+
+.tab--1:checked ~ .tab_label[for="tab1"],
+.tab--2:checked ~ .tab_label[for="tab2"] {
+  opacity: 1;
+  font-weight: 600;
+  color: #0074EE;
+}

@@ -19,6 +19,7 @@ export default function MainCourseCard({
   instructor,
   durationOfCourse,
   route,
+  picture,
 }) {
   return (
     <>
@@ -27,12 +28,33 @@ export default function MainCourseCard({
           <div className="border border-dark-300 rounded-xl p-6 flex max-md:flex-col hover:border-blue-300">
             <div className=" mr-4">
               <Image
+                src={
+                  picture &&
+                  picture !== "none" &&
+                  picture !== "None" &&
+                  picture !== "null" &&
+                  picture !== "undefined" &&
+                  picture !== "undefined/undefined"
+                    ? picture
+                    : courseImg
+                }
+                alt={altText}
+                width={600}
+                height={200}
+                style={{
+                  width: "700px",
+                  height: "230px",
+                  borderRadius: "10px",
+                }}
+                // className="p-4 w-full rounded-xl"
+              />
+              {/* <Image
                 src={courseImg}
                 alt={altText}
                 className="rounded-xl "
                 width={600}
                 style={{ height: "210px" }}
-              />
+              /> */}
             </div>
 
             <div className="w-full flex flex-col justify-between ">
@@ -59,7 +81,7 @@ export default function MainCourseCard({
               </div>
 
               <div className="flex max-md:mt-3 sm:justify-between sm:flex-row flex-col sm:gap-0 gap-3">
-                <div className="flex text-sm sm:text-base">
+                <div className="flex text-sm sm:text-base max-sm:flex-col">
                   {durationOfCourse && (
                     <>
                       <p className=""> Duration: &nbsp; </p>

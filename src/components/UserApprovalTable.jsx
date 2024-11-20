@@ -15,8 +15,6 @@ const UserApprovalTable = ({
   setUserID,
   setModal,
 }) => {
-
- 
   const handleModal = (user, userApplication) => {
     setUserID(userApplication.id);
     setSelectedUser(user);
@@ -103,34 +101,39 @@ const UserApprovalTable = ({
                           </td>
                         </tr>
                       ) : applications && users && locations ? (
-                        applications.map((user, index) => {
-                          const userApplication = getUserApplication(
-                            user.email
-                          );
-                          return (
-                            <tr key={index}>
-                              <td className="px-6 whitespace-nowrap text-sm text-gray-800">
-                                <div className="flex items-center gap-3">
-                                  <div className="data">
-                                    <p className="font-normal text-sm text-dark-900 capitalize">
-                                      {user?.first_name} {user?.last_name}
-                                    </p>
+                        applications
+                          .sort(
+                            (a, b) =>
+                              new Date(b.created_at) - new Date(a.created_at)
+                          )
+                          .map((user, index) => {
+                            const userApplication = getUserApplication(
+                              user.email
+                            );
+                            return (
+                              <tr key={index}>
+                                <td className="px-6 whitespace-nowrap text-sm text-gray-800">
+                                  <div className="flex items-center gap-3">
+                                    <div className="data">
+                                      <p className="font-normal text-sm text-dark-900 capitalize">
+                                        {user?.first_name} {user?.last_name}
+                                      </p>
+                                    </div>
                                   </div>
-                                </div>
-                              </td>
-                              <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800">
-                                {user?.email || "-"}
-                              </td>
-                              <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800">
-                                {user?.city || "-"}
-                              </td>
-                              <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800">
-                                {user?.contact || "-"}
-                              </td>
-                              {/* <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800">
+                                </td>
+                                <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800">
+                                  {user?.email || "-"}
+                                </td>
+                                <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800">
+                                  {user?.city || "-"}
+                                </td>
+                                <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800">
+                                  {user?.contact || "-"}
+                                </td>
+                                {/* <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-800">
                             16 years
                           </td> */}
-                              {/* <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
+                                {/* <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
                               <div className="whitespace-nowrap flex w-full justify-start text-sm text-surface-100">
                                 <p
                                   className={`${
@@ -143,8 +146,8 @@ const UserApprovalTable = ({
                                 </p>
                               </div>
                             </td> */}
-                              <td className="px-6 py-4 whitespace-nowrap w-full text-sm flex items-center justify-center gap-3">
-                                {/* <div
+                                <td className="px-6 py-4 whitespace-nowrap w-full text-sm flex items-center justify-center gap-3">
+                                  {/* <div
                               className="flex items-center justify-center  group text-blue-300"
                               title="info"
                             >
@@ -155,23 +158,23 @@ const UserApprovalTable = ({
                               />
                               {/* </Link> *
                             </div> */}
-                                <div
-                                  className="flex items-center justify-center group text-blue-300"
-                                  title="Assign classes"
-                                  onClick={() =>
-                                    handleModal(user, userApplication)
-                                  }
-                                >
-                                  Assign a class
-                                  <TiArrowForward
-                                    size={23}
-                                    className="pl-1 group-hover:text-[#3c8ca7]"
-                                  />
-                                </div>
-                              </td>
-                            </tr>
-                          );
-                        })
+                                  <div
+                                    className="flex items-center justify-center group text-blue-300"
+                                    title="Assign classes"
+                                    onClick={() =>
+                                      handleModal(user, userApplication)
+                                    }
+                                  >
+                                    Assign a class
+                                    <TiArrowForward
+                                      size={23}
+                                      className="pl-1 group-hover:text-[#3c8ca7]"
+                                    />
+                                  </div>
+                                </td>
+                              </tr>
+                            );
+                          })
                       ) : (
                         <tr>
                           <td
@@ -190,7 +193,6 @@ const UserApprovalTable = ({
           </div>
         </div>
       </div>
-      
     </>
   );
 };
