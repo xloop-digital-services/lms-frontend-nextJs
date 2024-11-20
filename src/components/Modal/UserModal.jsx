@@ -42,6 +42,8 @@ const UserModal = ({
   const [skillID, setSkillID] = useState([]);
   const [loading, setLoading] = useState(false);
   let data = null;
+  console.log("location", location);
+
   // Use the custom hook for the modal
   const handleEnableApprove = (id) => {
     setPorgramID(id);
@@ -310,20 +312,25 @@ const UserModal = ({
                             <div key={index} className="flex gap-2">
                               <label
                                 htmlFor={`radio-${index}`}
-                                className={`${
-                                  status === "approved" ? "hidden" : "flex"
-                                } items-center group cursor-pointer`} // Added cursor-pointer for better UX
+                                className={`flex items-center group cursor-pointer`}
                               >
-                                {/* Radio Button for Program Selection */}
-                                <input
-                                  id={`radio-${index}`}
-                                  type="radio"
-                                  name="programSelection"
-                                  onChange={() => handleEnableApprove(prog.id)}
-                                  className="border-gray-200 mt-1 rounded text-blue-600 focus:ring-blue-500"
-                                />
+                                {status === "approved" ? (
+                                  <span className="list-disc text-gray-700 ml-2">
+                                    •
+                                  </span>
+                                ) : (
+                                  <input
+                                    id={`radio-${index}`}
+                                    type="radio"
+                                    name="programSelection"
+                                    onChange={() =>
+                                      handleEnableApprove(prog.id)
+                                    }
+                                    className="border-gray-200 mt-1 rounded text-blue-600 focus:ring-blue-500"
+                                  />
+                                )}
                                 <span className="ml-2">{prog.name}</span>{" "}
-                                {/* Clicking on this selects the input */}
+                                {/* Program Name */}
                               </label>
                             </div>
                           ))
@@ -336,18 +343,23 @@ const UserModal = ({
                           <div key={index} className="flex gap-2">
                             <label
                               htmlFor={`checkbox-${index}`}
-                              className={`${
-                                status === "approved" ? "hidden" : "flex"
-                              } items-center cursor-pointer`} // Added cursor-pointer for better UX
+                              className={`flex items-center cursor-pointer`}
                             >
-                              {/* Checkbox for Skill Selection */}
-                              <input
-                                id={`checkbox-${index}`}
-                                type="checkbox"
-                                name="skillSelection"
-                                onChange={() => handleSkillSelection(skill.id)}
-                                className="border-gray-200 rounded mt-1 text-blue-600 focus:ring-blue-500"
-                              />
+                              {status === "approved" ? (
+                                <span className="list-disc text-gray-700 ml-2">
+                                  •
+                                </span>
+                              ) : (
+                                <input
+                                  id={`radio-${index}`}
+                                  type="radio"
+                                  name="programSelection"
+                                  onChange={() =>
+                                    handleSkillSelection(skill.id)
+                                  }
+                                  className="border-gray-200 mt-1 rounded text-blue-600 focus:ring-blue-500"
+                                />
+                              )}
                               <span className="ml-2">{skill.name}</span>{" "}
                               {/* Clicking on this selects the input */}
                             </label>
@@ -368,23 +380,34 @@ const UserModal = ({
                         <div key={index} className="flex gap-2">
                           <label
                             htmlFor={`input-${index}`}
-                            className={`${
-                              status === "approved" ? "hidden" : "flex"
-                            } items-center cursor-pointer`} // Add cursor-pointer here for better UX
+                            className={` ${
+                              status === "approved" && "list-disc"
+                            } flex items-center cursor-pointer`} // Add cursor-pointer here for better UX
                           >
-                            <input
-                              id={`input-${index}`}
-                              type={
-                                selectedOption === "student"
-                                  ? "radio"
-                                  : "checkbox"
-                              }
-                              name="locationSelection" // Same name for all radio buttons
-                              onChange={(e) =>
-                                handleLocationSelect(prog.id, e.target.checked)
-                              } // Function to handle selection
-                              className="border-gray-200 mt-1 rounded text-blue-600 focus:ring-blue-500"
-                            />
+                            {status === "approved" ? (
+                              <span className="list-disc text-gray-700 ml-2">
+                                •
+                              </span>
+                            ) : (
+                              <input
+                                id={`input-${index}`}
+                                type={
+                                  selectedOption === "student"
+                                    ? "radio"
+                                    : "checkbox"
+                                }
+                                name="locationSelection" // Same name for all radio buttons
+                                onChange={(e) =>
+                                  handleLocationSelect(
+                                    prog.id,
+                                    e.target.checked
+                                  )
+                                } // Function to handle selection
+                                className={`${
+                                  status === "approved" ? "hidden" : "flex"
+                                } border-gray-200 rounded mt-1 text-blue-600 focus:ring-blue-500`}
+                              />
+                            )}
                             <span className="ml-2">{prog.name}</span>{" "}
                             {/* Clicking on this will now select the input */}
                           </label>
