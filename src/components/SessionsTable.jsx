@@ -126,10 +126,10 @@ const SessionsTable = ({
       if (endTimeDate <= startTimeDate) {
         setTimeErrorMessage("End time should be greater than start time");
       } else {
-        setTimeErrorMessage(""); 
+        setTimeErrorMessage("");
       }
     } else {
-      setTimeErrorMessage(""); 
+      setTimeErrorMessage("");
     }
   };
 
@@ -260,7 +260,10 @@ const SessionsTable = ({
                         .map((session, index) => {
                           return (
                             <tr key={index} className={``}>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                              <td
+                                className="px-6 py-4 whitespace-nowrap max-w-[230px] truncate text-sm text-gray-800 dark:text-gray-200"
+                                title={session.batch}
+                              >
                                 {session.batch}
                               </td>
                               <td

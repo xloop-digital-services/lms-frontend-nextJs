@@ -308,15 +308,20 @@ export default function Page() {
                       !isLocationSelected ? " text-dark-500" : "text-[#424b55]"
                     } flex justify-between items-center lg:w-[200px]  w-full  gap-2 hover:text-[#0e1721] sm:p-4 px-2 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                   >
-                    {selectedLocation}
-                    {isLocationSelected && (
-                      <span
-                        onClick={clearLocationFilter}
-                        className="ml-2 text-red-500 cursor-pointer"
-                      >
-                        <IoIosCloseCircleOutline size={20} />
+                    <span className="flex gap-1">
+                      <span className="max-w-[120px] truncate">
+                        {selectedLocation}
                       </span>
-                    )}
+                      {isLocationSelected && (
+                        <span
+                          onClick={clearLocationFilter}
+                          className="ml-2 text-red-500 cursor-pointer"
+                        >
+                          <IoIosCloseCircleOutline size={20} />
+                        </span>
+                      )}
+                    </span>
+
                     <span
                       className={
                         isLocationOpen
@@ -369,16 +374,22 @@ export default function Page() {
                     className={`${
                       !isBatchSelected ? " text-dark-500" : "text-[#424b55]"
                     } flex justify-between items-center lg:w-[200px] w-full gap-1 hover:text-[#0e1721] sm:p-4 px-2 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                    title={selectedBatch}
                   >
-                    {selectedBatch}
-                    {isBatchSelected && (
-                      <span
-                        onClick={clearBatchFilter}
-                        className="ml-2 text-red-500 cursor-pointer"
-                      >
-                        <IoIosCloseCircleOutline size={20} />
+                    <span className="flex gap-1">
+                      <span className="max-w-[120px] truncate">
+                        {selectedBatch}
                       </span>
-                    )}
+
+                      {isBatchSelected && (
+                        <span
+                          onClick={clearBatchFilter}
+                          className="ml-2 text-red-500 cursor-pointer"
+                        >
+                          <IoIosCloseCircleOutline size={20} />
+                        </span>
+                      )}
+                    </span>
                     <span
                       className={
                         isBatchOpen ? "rotate-180 duration" : "duration-300"
