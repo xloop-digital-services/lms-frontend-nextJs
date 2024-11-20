@@ -15,7 +15,7 @@ const LocationsTable = ({
 }) => {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [location, setLocation] = useState(null);
-  const [updating, setUpdating] = useState(false); // Controls the update loading state
+  const [updating, setUpdating] = useState(false);
   const [edit, setEdit] = useState(false);
   const [status, setStatus] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -113,22 +113,40 @@ const LocationsTable = ({
                 <table className="min-w-full divide-y divide-dark-200">
                   <thead className="bg-surface-100 text-blue-500 sticky top-0 z-10 shadow-sm shadow-dark-200">
                     <tr>
-                      <th className="px-6 py-4 rounded-lg text-start text-xs font-medium text-gray-500 uppercase w-[25%] bg-gray-50 dark:bg-gray-700">
+                      <th
+                        scope="col"
+                        className="rounded-lg px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[20%]"
+                      >
                         City
                       </th>
-                      <th className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[20%] bg-gray-50 dark:bg-gray-700">
+                      <th
+                        scope="col"
+                        className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[20%]"
+                      >
                         Location
                       </th>
-                      <th className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[20%] bg-gray-50 dark:bg-gray-700">
+                      <th
+                        scope="col"
+                        className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[20%]"
+                      >
                         Location Code
                       </th>
-                      <th className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[20%] bg-gray-50 dark:bg-gray-700">
+                      <th
+                        scope="col"
+                        className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[20%]"
+                      >
                         Capacity
                       </th>
-                      <th className="px-6 py-4 text-start text-xs font-medium text-gray-500 uppercase w-[20%] bg-gray-50 dark:bg-gray-700">
+                      <th
+                        scope="col"
+                        className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase"
+                      >
                         Status
                       </th>
-                      <th className="px-6 py-4 rounded-lg text-start text-xs font-medium text-gray-500 uppercase w-[18%] bg-gray-50 dark:bg-gray-700">
+                      <th
+                        scope="col"
+                        className="rounded-lg px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[17%]"
+                      >
                         Actions
                       </th>
                     </tr>
@@ -152,21 +170,22 @@ const LocationsTable = ({
                         )
                         .map((location, index) => (
                           <tr key={index} className={``}>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
+                            <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
                               {location.city}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                            <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
                               {location.name}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                            <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
                               {location.shortname}
                             </td>
+
                             <td
                               className={`${
                                 !(edit && selectedLocation === location.id)
                                   ? "py-4 px-6"
                                   : "py-1 px-4"
-                              }  whitespace-nowrap text-sm text-gray-800 dark:text-gray-200`}
+                              }  px-6 py-2 whitespace-nowrap text-sm text-gray-100 text-center ">`}
                             >
                               {!(edit && selectedLocation === location.id) ? (
                                 location.capacity
@@ -181,20 +200,19 @@ const LocationsTable = ({
                                 />
                               )}
                             </td>
-                            <td className="px-6 py-2 whitespace-nowrap flex w-full justify-start items-center text-sm text-surface-100">
+                            <td className="px-12 py-2 whitespace-nowrap text-sm text-surface-100">
                               <p
                                 className={`
-                                 
                                 ${
                                   location.status === 1
                                     ? "bg-mix-300"
                                     : "bg-mix-200"
-                                }  w-[100px] text-center py-2 text-[12px] rounded-lg`}
+                                }  w-[110px] text-center px-4 py-2 text-[12px] rounded-lg`}
                               >
                                 {
                                   // !(edit && selectedLocation === location.id) && // Check if the current index is selected for editing
-                                    ((location.status === 1 && "Active") ||
-                                      (location.status === 0 && "Inactive"))
+                                  (location.status === 1 && "Active") ||
+                                    (location.status === 0 && "Inactive")
                                   // : (
                                   //   <th
                                   //     scope="col"

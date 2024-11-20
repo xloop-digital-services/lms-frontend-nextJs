@@ -37,7 +37,7 @@ export default function StudentDashboard() {
   const [courseProgress, setCourseProgress] = useState(null);
   const [quizProgress, setQuizProgress] = useState(null);
   const [assignmentProgress, setAssignmentProgress] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("Show All");
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isCategorySelected, setIsCategorySelected] = useState(false);
   const [loader, setLoader] = useState(true);
@@ -48,10 +48,12 @@ export default function StudentDashboard() {
   const userId = userData?.User?.id;
   const group = userData?.Group;
   const CourseDown = useRef(null);
+  const courseButton = useRef(null);
   const CategoryDown = useRef(null);
+  const categoryButton = useRef(null);
 
-  useClickOutside(CourseDown, () => setIsCourseOpen(false));
-  useClickOutside(CategoryDown, () => setIsCategoryOpen(false));
+  useClickOutside(CourseDown, courseButton, () => setIsCourseOpen(false));
+  useClickOutside(CategoryDown, categoryButton, () => setIsCategoryOpen(false));
 
   const Categories = ["Show All", "Quiz", "Assignment", "Project", "Exam"];
 
@@ -63,14 +65,14 @@ export default function StudentDashboard() {
         const sessions = response.data?.session || [];
         const coursesData = sessions.map((session) => session.course);
         setCourses(coursesData);
-        //console.log("courses set", response.data?.session);
+        // console.log("courses set", response.data?.session);
 
         setLoader(false);
       } else {
-        //console.error("Failed to fetch user, status:", response.status);
+        // console.error("Failed to fetch user, status:", response.status);
       }
     } catch (error) {
-      //console.log("Error:", error);
+      // console.log("Error:", error);
     }
   }
 
@@ -81,33 +83,32 @@ export default function StudentDashboard() {
   async function fetchPendingAssignments() {
     setLoader(true);
     try {
-    const response = await getPendingAssignments(progId, regId);
+      const response = await getPendingAssignments(progId, regId);
       if (response.status === 200) {
         setAssignments(response.data);
         setLoader(false);
       } else {
-        //console.error(
+        // console.error(
         //   "Failed to fetch pending assignments, status:",
         //   response.status
         // );
       }
     } catch (error) {
-      //console.log("error", error);
+      // console.log("error", error);
     }
   }
   async function fetchCalendarSessions() {
     const response = await getCalendarData(userId);
     try {
       if (response.status === 200) {
-        // //console.log(response.data?.data);
         const events = Array.isArray(response?.data?.data)
           ? response.data?.data?.flatMap((item) =>
               Array.isArray(item.sessions)
-                ? item?.sessions?.map((session) => ({
+                ? item.sessions.map((session) => ({
                     title: session.course_name,
-                    start: `${item.date}T${session.start_time}`,
-                    end: `${item.date}T${session.end_time}`,
-                    description: `Location: ${session.location}`,
+                    start: `${item.date}T${session.due_time}`, // Mapping start time
+                    end: `${item.date}T${session.due_time}`, // Optional: Adjust if there's an end_time field
+                    description: `Type: ${session.type} - Name: ${session.assessment_name}`,
                   }))
                 : []
             )
@@ -115,14 +116,14 @@ export default function StudentDashboard() {
 
         setCalendarEvents(events);
       } else {
-        //console.error("Failed to fetch calendar data", response.status);
+        // console.error("Failed to fetch calendar data", response.status);
       }
     } catch (error) {
-      //console.error("Error fetching calendar data", error);
+      // console.error("Error fetching calendar data", error);
     }
   }
 
-  // //console.log(calendarEvents);
+  // console.log(calendarEvents);
   useEffect(() => {
     fetchPendingAssignments();
 
@@ -132,38 +133,38 @@ export default function StudentDashboard() {
 
   useEffect(() => {
     if (selectedCourseId) {
-      // Ensure selectedCourseId exists before triggering the progress functions
+    
       const handleCourseProgress = async () => {
         try {
           const response = await getProgressForCourse(selectedCourseId);
-          //console.log("Course progress", response);
+          // console.log("Course progress", response);
           setCourseProgress(response.data.data.progress_percentage);
         } catch (error) {
-          //console.log("Error fetching course progress", error);
+          // console.log("Error fetching course progress", error);
         }
       };
 
       const handleQuizProgress = async () => {
         try {
           const response = await getProgressForQuiz(selectedCourseId);
-          //console.log("Quiz progress", response);
+          // console.log("Quiz progress", response);
           setQuizProgress(response.data.data.progress_percentage);
         } catch (error) {
-          //console.log("Error fetching quiz progress", error);
+          // console.log("Error fetching quiz progress", error);
         }
       };
 
       const handleAssignmentProgress = async () => {
         try {
           const response = await getProgressForAssignment(selectedCourseId);
-          //console.log("Assignment progress", response);
+          // console.log("Assignment progress", response);
           setAssignmentProgress(response.data.data.progress_percentage);
         } catch (error) {
-          //console.log("Error fetching assignment progress", error);
+          // console.log("Error fetching assignment progress", error);
         }
       };
 
-      // Call all progress functions once selectedCourseId is set
+    
       handleCourseProgress();
       handleQuizProgress();
       handleAssignmentProgress();
@@ -172,9 +173,9 @@ export default function StudentDashboard() {
 
   useEffect(() => {
     if (courses.length > 0) {
-      const firstCourse = courses[0]; // Select the first course by default
-      setSelectedCourse(firstCourse.name); // Set the course name
-      setSelectedCourseId(firstCourse.id); // Set the course ID
+      const firstCourse = courses[0];
+      setSelectedCourse(firstCourse.name);
+      setSelectedCourseId(firstCourse.id);
     }
   }, [courses]);
 
@@ -182,10 +183,10 @@ export default function StudentDashboard() {
     if (assignments.length >= 0) {
       setSelectedCategory("Show All");
     }
-  }, []);
+  }, [assignments.length]);
 
   const toggleCategoryOpen = () => {
-    setIsCategoryOpen(true);
+    setIsCategoryOpen(!isCategoryOpen);
   };
 
   const handleCategorySelect = (category) => {
@@ -194,12 +195,12 @@ export default function StudentDashboard() {
   };
 
   const filteredAssignments = assignments?.data?.items?.filter((assignment) => {
-    if (selectedCategory === "Show All") return true; // If 'Show All' is selected, return all assignments
-    return assignment.type.toLowerCase() === selectedCategory.toLowerCase(); // Filter based on type
+    if (selectedCategory === "Show All") return true; 
+    return assignment.type.toLowerCase() === selectedCategory.toLowerCase(); 
   });
 
   const toggleCourseOpen = () => {
-    setIsCourseOpen(true);
+    setIsCourseOpen(!isCourseOpen);
   };
 
   const handleCourseSelect = (course) => {
@@ -223,16 +224,19 @@ export default function StudentDashboard() {
     <>
       <div
         className={`flex-1 transition-transform pt-[97px] space-y-4 max-md:pt-32 font-inter ${
-          isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 pl-10 "
+          isSidebarOpen
+            ? "translate-x-64 ml-20 "
+            : "translate-x-0 pl-10 pr-10 max-md:pl-2 max-md:pr-2"
         }`}
         style={{
+          // paddingBottom: "20px",
           width: isSidebarOpen ? "81%" : "100%",
         }}
       >
         <div className="flex w-[100%] max-md:flex-col">
           <div className="flex-col mx-2 w-[70%] max-md:w-full flex-wrap">
             <div className="w-full">
-              <div className="bg-surface-100 p-4 rounded-xl mb-2">
+              <div className="bg-surface-100 p-4 max-md:mx-4 rounded-xl mb-2">
                 <div className="flex justify-between items-center">
                   <h1 className="text-xl font-bold font-exo mx-2 text-blue-500">
                     Courses
@@ -253,7 +257,7 @@ export default function StudentDashboard() {
                   </div>
                 </div>
 
-                <div className="flex gap-2 flex-wrap max-md:flex-nowrap max-md:flex-col">
+                <div className="flex gap-2 flex-wrap max-md:flex-nowrap max-md:flex-col ">
                   {isStudent &&
                     courses?.slice(0, courseLimit).map((session) => {
                       return (
@@ -261,12 +265,10 @@ export default function StudentDashboard() {
                           id={session.id}
                           key={session.id}
                           image={image1}
-                          courseName={session.name} // Accessing course name inside 'course' object
+                          courseName={session.name} 
                           route="course"
                           route1="courses"
-                          courseDesc={session.short_description} // Accessing short description
-                          // progress="50%"
-                          // avatars={avatars}
+                          courseDesc={session.short_description} 
                           extraCount={50}
                         />
                       );
@@ -275,11 +277,11 @@ export default function StudentDashboard() {
               </div>
             </div>
             <div>
-              <div className="w-full mt-4 h-[410px] flex gap-4 lg:flex-row flex-col-reverse max-md:w-full">
-                <div className="bg-surface-100 p-2 rounded-xl grow">
+              <div className="w-full mt-4 max-lg:mt-8 h-[410px]  flex gap-4 lg:flex-row flex-col-reverse max-md:w-full">
+                <div className="bg-surface-100 max-md:mx-4 p-2 rounded-xl grow">
                   <div className="flex justify-between">
                     <div>
-                      <h1 className="text-xl text-blue-500 font-bold px-3 py-4 font-exo">
+                      <h1 className="text-xl text-blue-500 font-bold px-3 py-4 font-exo ">
                         Weeks Activity
                       </h1>
                     </div>
@@ -321,31 +323,27 @@ export default function StudentDashboard() {
               </div>
             </div>
           </div>
-          <div className="flex gap-4 flex-col  w-[30%] max-md:w-full mx-2 ">
-            <div className="flex  h-[410px] flex-col overflow-y-auto bg-surface-100 p-2 rounded-xl lg:w-fit scrollbar-webkit max-md:m-4">
-              <div className="flex max-md:flex-col justify-between w-full px-3 py-2 items-center mb-2">
-                <h1 className="text-xl text-blue-500 font-bold   font-exo">
+          <div className="flex gap-4 flex-col max-md:w-full ml-3">
+            <div className="flex max-md:mx-4 h-[410px] flex-col bg-surface-100 px-3 py-2 rounded-xl lg:w-fit max-md:m-4">
+              <div className="flex justify-between w-full px-3 py-2 items-center mb-2">
+                <h1 className="text-xl text-blue-500 font-bold font-exo">
                   Upcoming Activities
                 </h1>
-                {/* <select className="bg-surface-100 block w-40 my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5">
-                {assignments?.data?.items &&
-                assignments?.data?.items.length > 0 ? (
-                  assignments.data.items.map((assignment) => (
-                    <option key={assignment.id}>{assignment.type}</option>
-                  ))
-                ) : (
-                  <p className="flex h-96 w-[400px] justify-center items-center">
-                    No Activities
-                  </p>
-                )}
-              </select> */}
+
                 <div className=" relative space-y-2 text-[15px] w-[150px]">
                   <button
+                    ref={categoryButton}
                     onClick={toggleCategoryOpen}
                     className={` flex justify-between gap-1 items-center w-full text-[#768597]  hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                   >
                     {selectedCategory}
-                    <span className="">
+                    <span
+                      className={
+                        isCategoryOpen
+                          ? "rotate-180 duration-300"
+                          : "duration-300"
+                      }
+                    >
                       <IoIosArrowDown />
                     </span>
                   </button>
@@ -371,7 +369,7 @@ export default function StudentDashboard() {
                 </div>
               </div>
 
-              <div className="p-2 pt-0 flex lg:flex-col gap-2 lg:flex-nowrap flex-wrap max-md:flex-nowrap max-md:flex-col resize-none">
+              <div className="p-2  overflow-y-auto scrollbar-webkit pt-0 flex lg:flex-col gap-2 lg:flex-nowrap flex-wrap max-md:flex-nowrap max-md:flex-col resize-none">
                 {filteredAssignments && filteredAssignments.length > 0 ? (
                   filteredAssignments.map((assignment) => (
                     <AssignmentCard
@@ -391,17 +389,22 @@ export default function StudentDashboard() {
                 )}
               </div>
             </div>
-            <div className="w-full bg-surface-100 px-5 p-2  rounded-xl mt-1 h-[404px] min-w-[440px]">
+            <div className=" min-w-full max-w-[450px] bg-surface-100 px-5 p-2  rounded-xl sm:mt-1 h-[404px] sm:mx-0 mx-4">
               <h1 className="font-bold font-exo text-blue-500 text-lg py-4">
                 Progress Chart
               </h1>
-              <div className=" relative space-y-2 text-[15px] w-full">
+              <div className=" relative space-y-2 text-[15px]">
                 <button
+                  ref={courseButton}
                   onClick={toggleCourseOpen}
                   className={` flex justify-between items-center w-full text-[#424b55]  hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
                   {selectedCourse}
-                  <span className="">
+                  <span
+                    className={
+                      isCourseOpen ? "rotate-180 duration-300" : "duration-300"
+                    }
+                  >
                     <IoIosArrowDown />
                   </span>
                 </button>

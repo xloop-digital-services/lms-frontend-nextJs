@@ -48,6 +48,7 @@ export default function Page({ params }) {
   const isAdmin = userData?.Group === "admin";
   const isInstructor = userData?.Group === "instructor";
   const [studentInstructorName, setStudentInstructorName] = useState(null);
+  const [studentInstructorID, setStudentInstructorID] = useState(null);
   const userId = group === "instructor" ? userData?.User?.id : adminUserId;
 
   async function fetchSessionForUser() {
@@ -74,6 +75,7 @@ export default function Page({ params }) {
           setStudentInstructorName(
             foundSession.instructor?.instructor_name || "To be Assigned"
           );
+          setStudentInstructorID(foundSession.instructor?.instructor_id);
         }
       } else {
         // //console.error(
@@ -349,9 +351,9 @@ export default function Page({ params }) {
   return (
     <div
       className={`flex-1 transition-transform pt-[90px] space-y-4 max-md:pt-32 font-inter ${
-        isSidebarOpen ? "translate-x-64 pl-16 " : "translate-x-0 pl-10 pr-10"
+        isSidebarOpen ? "translate-x-64 ml-20 " : "translate-x-0 pl-10 pr-10 max-md:pl-2 max-md:pr-2"
       }`}
-      style={{ width: isSidebarOpen ? "86%" : "100%" }}
+      style={{ width: isSidebarOpen ? "81%" : "100%" }}
     >
       <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4">
         <CourseHead
@@ -451,7 +453,7 @@ export default function Page({ params }) {
 
                   {!currentAssignment && (
                     <div className="flex items-center my-4">
-                      <span className="mr-4 text-md">Assignment Status</span>
+                      <span className="mr-4 text-md cursor-default">Assignment Status</span>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
                           type="checkbox"
@@ -557,7 +559,7 @@ export default function Page({ params }) {
                     type="submit"
                     onClick={handleAssignmentCreation}
                     disabled={loading}
-                    className={`w-44 my-4 flex justify-center py-3 px-4 text-sm font-medium rounded-lg text-surface-100 
+                    className={`w-44 max-sm:w-full my-4 flex justify-center py-3 px-4 text-sm font-medium rounded-lg text-surface-100 
     ${
       loading
         ? "bg-blue-300 text-surface-100"
@@ -579,7 +581,7 @@ export default function Page({ params }) {
                 </form>
               </>
             )}
-            <div className="mt-10">
+            <div className="mt-4">
               {isStudent ? (
                 <StudentDataStructure
                   quizzes={assignments}
@@ -590,6 +592,7 @@ export default function Page({ params }) {
                   assessment="Assignments"
                   setUpdateStatus={setUpdateStatus}
                   handleUpdateAssignment={handleUpdateAssignment}
+                  studentInstructorID={studentInstructorID}
                 />
               ) : (
                 <AdminDataStructure

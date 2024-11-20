@@ -19,7 +19,7 @@ export default function Page() {
 
   const handleResetPassword = async (event) => {
     setLoading(true);
-    // //console.log(email);
+    // console.log(email);
     event.preventDefault();
     const formData = new FormData();
     formData.append("email", email);
@@ -45,7 +45,7 @@ export default function Page() {
         setLoading(false);
       }
     } catch (error) {
-      //console.error("Error during login:", error);
+      // console.error("Error during login:", error);
       toast.error("An error occurred.", error.response.data.email[0]);
       setLoading(false);
     }

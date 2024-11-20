@@ -106,10 +106,10 @@ const ApprovedTable = ({ selectedOption }) => {
                       </div>
                     </td>
                     <td className="px-6 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
-                      <div class=" flex items-center gap-3">
+                      <div className=" flex items-center gap-3">
                         {/* <img src={Image} alt="Floyd image" className='w-9' /> */}
-                        <div class="data">
-                          <p class="font-normal text-sm text-gray-900">
+                        <div className="data">
+                          <p className="font-normal text-sm text-gray-900">
                             Floyd Miles
                           </p>
                         </div>
@@ -182,10 +182,10 @@ const ApprovedTable = ({ selectedOption }) => {
                       </div>
                     </td>
                     <td className="px-6 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
-                      <div class=" flex items-center gap-3">
+                      <div className=" flex items-center gap-3">
                         {/* <img src={Image} alt="Floyd image" className='w-9' /> */}
-                        <div class="data">
-                          <p class="font-normal text-sm text-gray-900">
+                        <div className="data">
+                          <p className="font-normal text-sm text-gray-900">
                             Floyd Miles
                           </p>
                         </div>
@@ -257,10 +257,10 @@ const ApprovedTable = ({ selectedOption }) => {
                       </div>
                     </td>
                     <td className="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
-                      <div class=" flex items-center gap-3">
+                      <div className=" flex items-center gap-3">
                         {/* <img src={Image} alt="Floyd image" className='w-9' /> */}
-                        <div class="data">
-                          <p class="font-normal text-sm text-gray-900">
+                        <div className="data">
+                          <p className="font-normal text-sm text-gray-900">
                             Floyd Miles
                           </p>
                         </div>

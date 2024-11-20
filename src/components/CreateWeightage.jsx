@@ -7,12 +7,13 @@ import {
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
-export const sum = (a, b, c, d) => {
+export const sum = (a, b, c, d, e) => {
   return (
     parseFloat(a || 0) +
     parseFloat(b || 0) +
     parseFloat(c || 0) +
-    parseFloat(d || 0)
+    parseFloat(d || 0) +
+    parseFloat(e || 0)
   );
 };
 
@@ -21,6 +22,7 @@ export default function CreateWeightage({ courseId, onCreation, sessionId }) {
   const [quizzesWeightage, setQuizzesWeightage] = useState("");
   const [projectsWeightage, setProjectsWeightage] = useState("");
   const [examsWeightage, setExamsWeightage] = useState("");
+  const [attenWeightage, setAttenWeightage] = useState("");
   const [loader, setLoader] = useState(false);
 
   async function handleSubmitWeightage() {
@@ -28,7 +30,8 @@ export default function CreateWeightage({ courseId, onCreation, sessionId }) {
       quizzesWeightage,
       assignmentsWeightage,
       projectsWeightage,
-      examsWeightage
+      examsWeightage,
+      attenWeightage
     );
 
     if (totalWeightage !== 100) {
@@ -42,6 +45,7 @@ export default function CreateWeightage({ courseId, onCreation, sessionId }) {
       quizzes_weightage: quizzesWeightage,
       projects_weightage: projectsWeightage,
       exams_weightage: examsWeightage,
+      attendance_weightage: attenWeightage,
       session: sessionId,
     };
 
@@ -61,6 +65,7 @@ export default function CreateWeightage({ courseId, onCreation, sessionId }) {
         setAssignmentsWeightage("");
         setProjectsWeightage("");
         setQuizzesWeightage("");
+        setAttenWeightage("");
         if (onCreation) {
           onCreation();
         }
@@ -123,6 +128,18 @@ export default function CreateWeightage({ courseId, onCreation, sessionId }) {
           className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
         />
       </div>
+
+      <div className="my-3">
+        <label>Attendance Weightage</label>
+        <input
+          type="number"
+          min={0}
+          value={attenWeightage}
+          onChange={(e) => setAttenWeightage(e.target.value)}
+          placeholder="Enter weightage for attendance"
+          className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+        />
+      </div>
       <div>
         <p>
           TOTAL WEIGHTAGE:{" "}
@@ -130,7 +147,8 @@ export default function CreateWeightage({ courseId, onCreation, sessionId }) {
             quizzesWeightage,
             assignmentsWeightage,
             projectsWeightage,
-            examsWeightage
+            examsWeightage,
+            attenWeightage
           )}
           %
         </p>

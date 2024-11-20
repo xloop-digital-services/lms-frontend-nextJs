@@ -219,6 +219,36 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
           <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
             <div
               className=" flex justify-between items-center "
+              onClick={() => handleToggleSection("Assignment")}
+            >
+              <p className="text-[17px] font-semibold text-blue-500 font-exo">
+                Assignment
+              </p>
+              <span className="">
+                <IoIosArrowDown />
+              </span>
+            </div>
+            <div
+              className={`transition-container ${
+                openSection === "Assignment"
+                  ? "max-height-full"
+                  : "max-height-0"
+              }`}
+            >
+              {openSection === "Assignment" && (
+                <div className="mt-2">
+                  <StudentMarksTable
+                    key={assignment.id}
+                    field={openSection}
+                    assessments={assignment?.data}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
+            <div
+              className=" flex justify-between items-center "
               onClick={() => handleToggleSection("Quiz")}
             >
               <p className="text-[17px] font-semibold text-blue-500 font-exo">
@@ -248,40 +278,9 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
           <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
             <div
               className=" flex justify-between items-center "
-              onClick={() => handleToggleSection("Assignment")}
-            >
-              <p className="text-[17px] font-semibold text-blue-500 font-exo">
-                Assignment
-              </p>
-              <span className="">
-                <IoIosArrowDown />
-              </span>
-            </div>
-            <div
-              className={`transition-container ${
-                openSection === "Assignment"
-                  ? "max-height-full"
-                  : "max-height-0"
-              }`}
-            >
-              {openSection === "Assignment" && (
-                <div className="mt-2">
-                  <StudentMarksTable
-                    key={assignment.id}
-                    field={openSection}
-                    assessments={assignment?.data}
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
-            <div
-              className=" flex justify-between items-center "
               onClick={() => handleToggleSection("Project")}
             >
-             <p className="text-[17px] font-semibold text-blue-500 font-exo">
+              <p className="text-[17px] font-semibold text-blue-500 font-exo">
                 Project
               </p>
               <span className="">
@@ -310,7 +309,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
               className=" flex justify-between items-center "
               onClick={() => handleToggleSection("Exam")}
             >
-               <p className="text-[17px] font-semibold text-blue-500 font-exo">
+              <p className="text-[17px] font-semibold text-blue-500 font-exo">
                 Exam
               </p>
               <span className="">
@@ -356,6 +355,14 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
             examsWeightage={progress?.exams?.weightage}
             examsScore={progress?.exams?.grades}
             examsWeightedScore={progress?.exams?.percentage}
+            attenWeightage={progress?.attendance?.weightage}
+            attenScore={progress?.attendance?.total_present_attendance}
+            attenWeightedScore={progress?.attendance?.attendance_grace_marks}
+            assignment_total={progress?.assignments?.total_grades}
+            quiz_total={progress?.quizzes?.total_grades}
+            project_total={progress?.projects?.total_grades}
+            exam_total={progress?.exams?.total_grades}
+            atten_total={progress?.attendance?.total_attendance}
           />
         ) : (
           <p className="text-blue-300 h-12 w-full flex justify-center items-center">

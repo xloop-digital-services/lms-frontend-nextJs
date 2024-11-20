@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
-import { createSession, getAllCourses } from "@/api/route";
+import { createSession, getAllCourses, UpdateSession } from "@/api/route";
 import { CircularProgress } from "@mui/material";
 import DatePicker from "react-datepicker";
 import { FaClock } from "react-icons/fa";
@@ -17,15 +17,19 @@ const SessionCreationModal = ({
   loadingBatch,
   setUpdateSession,
   updateSession,
+  setEdit,
+  edit,
+  session,
+  selectedSession,
 }) => {
-  const [selectedLocation, setSelectedLocation] = useState("select Location");
+  const [selectedLocation, setSelectedLocation] = useState("Select location");
   const [selectedLocationId, setSelectedLocationId] = useState(null);
-  const [selectedBatch, setSelectedBatch] = useState("select batch");
+  const [selectedBatch, setSelectedBatch] = useState("Select batch");
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [isBatchOpen, setIsBatchOpen] = useState(false);
   const [isBatchSelected, setIsBatchSelected] = useState(false);
   const [isLocationSelected, setIsLocationSelected] = useState(false);
-  const [capacity, setCapacity] = useState();
+  const [capacity, setCapacity] = useState(null);
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
   const [timeErrorMessage, setTimeErrorMessage] = useState("");
@@ -41,19 +45,140 @@ const SessionCreationModal = ({
   const [isCourseSelected, setIsCourseSelected] = useState(false);
   const [loadingCourses, setLoadingCourses] = useState(false);
   const [selectedDays, setSelectedDays] = useState([]);
+  const [timeData, setTimeData] = useState({
+    // Initialize with each day having default start and end time
+    0: { startTime: "", endTime: "" },
+    1: { startTime: "", endTime: "" },
+    2: { startTime: "", endTime: "" },
+    3: { startTime: "", endTime: "" },
+    4: { startTime: "", endTime: "" },
+    5: { startTime: "", endTime: "" },
+    6: { startTime: "", endTime: "" },
+  });
   const [startDate, setstartDate] = useState(null);
   const [endDate, setendDate] = useState(null);
   const [error, setError] = useState(""); // To track error messages
-  const mouseClick = useRef(null);
+  const locationDown = useRef(null);
+  const locationButton = useRef(null);
+  const batchDown = useRef(null);
+  const batchButton = useRef(null);
+  const courseDown = useRef(null);
+  const courseButton = useRef(null);
   const modalClose = useRef(null);
 
-  useClickOutside(mouseClick, () => {
+  const WEEKDAYS = {
+    0: ["Monday", "Mon"],
+    1: ["Tuesday", "Tue"],
+    2: ["Wednesday", "Wed"],
+    3: ["Thursday", "Thu"],
+    4: ["Friday", "Fri"],
+    5: ["Saturday", "Sat"],
+    6: ["Sunday", "Sun"],
+  };
+
+  // console.log(session, "session for update");
+
+  useClickOutside(locationDown, locationButton, () => {
     setIsLocationOpen(false);
+  });
+
+  useClickOutside(batchDown, batchButton, () => {
     setIsBatchOpen(false);
+  });
+
+  useClickOutside(courseDown, courseButton, () => {
     setIsCourseOpen(false);
   });
 
-  useClickOutside(modalClose, () => setOpenModal(false));
+  useClickOutside(modalClose, () => {
+    setOpenModal(false);
+    setEdit(false);
+  });
+
+  useEffect(() => {
+    if (session && edit) {
+      setSelectedBatch(session.batch);
+      setSelectedCourseName(session.course.name);
+      setSelectedCourseId(session.course.id);
+      setSelectedLocation(session.location_name);
+      setSelectedLocationId(session.location);
+      setCapacity(session.no_of_students);
+      setstartDate(session.start_date);
+      setendDate(session.end_date);
+      setIsLocationSelected(true);
+
+      const daysArray = session.schedules.map((schedule) => {
+        const dayIndex = Object.keys(WEEKDAYS).find(
+          (key) => WEEKDAYS[key][0] === schedule.day_of_week
+        );
+        return parseInt(dayIndex);
+      });
+      setSelectedDays(daysArray); // Set the selected days in state
+
+      // Populate timeData based on schedules
+      const updatedTimeData = { ...timeData };
+      session.schedules.forEach((schedule) => {
+        const dayIndex = Object.keys(WEEKDAYS).find(
+          (key) => WEEKDAYS[key][0] === schedule.day_of_week
+        );
+        if (dayIndex) {
+          updatedTimeData[dayIndex] = {
+            startTime: schedule.start_time,
+            endTime: schedule.end_time,
+          };
+        }
+      });
+      setTimeData(updatedTimeData); // Set the time data in state
+    }
+  }, [session, edit]);
+
+  const handleUpdate = async () => {
+    if (selectedDays.length > 0) {
+      // Check for time null condition
+      const hasNullTime = selectedDays.some((day) => {
+        const time = timeData[day];
+        return !time || !time.startTime || !time.endTime; // Check if timeData is null or start/end times are null
+      });
+
+      if (hasNullTime) {
+        toast.error("Please select time for all selected days."); // Display error toast
+        setLoadingCreation(false);
+        return; // Stop further execution
+      }
+    }
+
+    if (timeErrorMessage) {
+      toast.error(timeErrorMessage);
+    } else if (dateErrorMessage) {
+      toast.error(dateErrorMessage);
+    } else {
+      setLoadingCreation(true);
+      try {
+        const data = {
+          location: selectedLocationId,
+          no_of_students: capacity,
+          start_date: startDate,
+          end_date: endDate,
+          course_id: selectedCourseId,
+          schedules: selectedDays.map((day) => ({
+            day_of_week: WEEKDAYS[day][0], // Full name of the day
+            start_time: timeData[day].startTime, // Fetch start time for the day
+            end_time: timeData[day].endTime,
+          })),
+        };
+
+        const response = await UpdateSession(selectedSession, data);
+        // console.log("session updated", response);
+        setEdit(false);
+        toast.success("Class schedule updated successfully");
+        setUpdateSession(!updateSession);
+      } catch (error) {
+        // console.log("error while updating status", error);
+      } finally {
+        setLoadingCreation(false); // Set updating to false after the update is complete
+      }
+    }
+  };
 
   const handleSessionCreation = async () => {
     setLoadingCreation(true);
@@ -63,17 +188,28 @@ const SessionCreationModal = ({
       return; // Stop further execution
     }
 
+    if (selectedDays.length > 0) {
+      // Check for time null condition
+      const hasNullTime = selectedDays.some((day) => {
+        const time = timeData[day];
+        return !time || !time.startTime || !time.endTime; // Check if timeData is null or start/end times are null
+      });
+
+      if (hasNullTime) {
+        toast.error("Please select time for all selected days."); // Display error toast
+        setLoadingCreation(false);
+        return; // Stop further execution
+      }
+    }
+
     if (!timeErrorMessage && !dateErrorMessage) {
       if (
         selectedLocation &&
         selectedBatch &&
-        // selectedBatch &&
         startDate &&
         endDate &&
         selectedCourseName &&
         capacity &&
-        startTime &&
-        endTime &&
         selectedDays.length > 0
       ) {
         try {
@@ -84,20 +220,22 @@ const SessionCreationModal = ({
             no_of_students: capacity,
             start_date: startDate,
             end_date: endDate,
-            start_time: startTime,
-            end_time: endTime,
             course_id: selectedCourseId,
-            days_of_week: selectedDays,
+            schedules: selectedDays.map((day) => ({
+              day_of_week: WEEKDAYS[day][0], // Full name of the day
+              start_time: timeData[day].startTime, // Fetch start time for the day
+              end_time: timeData[day].endTime, // Fetch end time for the day
+            })),
           };
 
           const response = await createSession(data);
-          // //console.log("session created", response.data.message);
+          // console.log("session created", response.data.message);
           toast.success(response.data.message);
           setLoadingCreation(false);
           setOpenModal(false);
           setUpdateSession(!updateSession);
         } catch (error) {
-          //console.log("error while session creation", error.response);
+          // console.log("error while session creation", error.response);
           if (error.response.status === 400) {
             toast.error(error.response.data.error[0]);
           }
@@ -130,11 +268,11 @@ const SessionCreationModal = ({
       setLoadingCourses(true);
       try {
         const response = await getAllCourses();
-        //console.log("courses", response?.data?.data);
+        // console.log("courses", response?.data?.data);
 
         // Create an array of course names
         const namesArray = response?.data?.data.map((course) => course.name);
-        // //console.log("names of courses", namesArray);
+        // console.log("names of courses", namesArray);
 
         // Create a map of course names to full course objects
         const coursesObject = response?.data?.data.reduce((acc, course) => {
@@ -146,7 +284,7 @@ const SessionCreationModal = ({
         setCoursesMap(coursesObject); // Set courses map
         setLoadingCourses(false);
       } catch (error) {
-        //console.log("error in courses list", error);
+        // console.log("error in courses list", error);
         setLoadingCourses(false);
       }
     };
@@ -159,8 +297,8 @@ const SessionCreationModal = ({
     // if (date instanceof Date && !isNaN(date)) {
     //   const formattedDate = date.toISOString().split("T")[0]; // Extract the date part
     //   setstartDate(formattedDate); // Set the start date
-    //   // //console.log("start date,", date);
-    //   //console.log("formated start date", formattedDate);
+    //   // console.log("start date,", date);
+    //   console.log("formated start date", formattedDate);
     // } else {
     //   toast.error("Invalid date selected");
     setstartDate(event.target.value);
@@ -171,8 +309,8 @@ const SessionCreationModal = ({
     // if (date instanceof Date && !isNaN(date)) {
     //   const formattedDate = date.toISOString().split("T")[0]; // Extract the date part
     //   setendDate(formattedDate); // Set the end date
-    //   // //console.log('end date,', date)
-    //   //console.log("formated end date", formattedDate);
+    //   // console.log('end date,', date)
+    //   console.log("formated end date", formattedDate);
     setendDate(event.target.value);
     // Check if end date is earlier than start date
     if (startDate && event.target.value <= startDate) {
@@ -194,7 +332,7 @@ const SessionCreationModal = ({
   const handleStartTimeChange = (event) => {
     const time = event.target.value;
     setStartTime(time);
-    //console.log("Start time:", time);
+    // console.log("Start time:", time);
 
     // Validate again when the start time changes, to reset any lingering errors
     if (endTime && time) {
@@ -211,7 +349,7 @@ const SessionCreationModal = ({
   const handleEndTimeChange = (event) => {
     const time = event.target.value;
     setEndTime(time);
-    //console.log("End time:", time);
+    // console.log("End time:", time);
 
     if (startTime) {
       const startTimeDate = convertTimeToDate(startTime);
@@ -254,53 +392,54 @@ const SessionCreationModal = ({
   const handleCourseSelect = (courseName) => {
     setSelectedCourseName(courseName.name);
     setSelectedCourseId(courseName.id);
-    // const selectedCourseObject = coursesMap[courseName]; // Get the full course object by name
-    // setSelectedCourse(selectedCourseObject);
     setIsCourseSelected(true);
     setIsCourseOpen(false);
   };
 
-  const WEEKDAYS = {
-    0: ["Monday", "Mon"],
-    1: ["Tuesday", "Tue"],
-    2: ["Wednesday", "Wed"],
-    3: ["Thursday", "Thu"],
-    4: ["Friday", "Fri"],
-    5: ["Saturday", "Sat"],
-    6: ["Sunday", "Sun"],
-  };
-
-  const handleCheckboxChange = (event) => {
-    const { value, checked } = event.target;
-    const dayValue = parseInt(value, 10); // Convert the value to an integer
-
-    setSelectedDays((prev) => {
-      if (checked) {
-        return [...prev, dayValue]; // Add day if checked
-      } else {
-        return prev.filter((day) => day !== dayValue); // Remove day if unchecked
-      }
-    });
-  };
-
-  const handleSelectAllWeekdays = (e) => {
-    const { checked } = e.target;
-
-    if (checked) {
-      // Select all weekdays except Sunday (key "6")
-      const weekdaysExceptSunday = Object.keys(WEEKDAYS).filter(
-        (key) => key !== "6"
-      );
-      setSelectedDays(weekdaysExceptSunday);
+  const handleCheckboxChange = (e) => {
+    const day = parseInt(e.target.value, 10);
+    if (selectedDays.includes(day)) {
+      setSelectedDays(selectedDays.filter((d) => d !== day));
     } else {
-      // Uncheck all weekdays except Sunday
-      setSelectedDays([]);
+      setSelectedDays([...selectedDays, day]);
     }
+  };
+
+  const handleTimeChange = (day, timeType, value) => {
+    // Update the timeData for the specific day and time type (start or end)
+    setTimeData((prev) => {
+      const updatedDay = {
+        ...prev[day],
+        [timeType]: value,
+      };
+
+      const startTime = updatedDay.startTime || ""; // Default to an empty string if not set
+      const endTime = updatedDay.endTime || "";
+
+      // Validate the times for this specific day
+      let timeErrorMessage = "";
+      if (startTime && endTime) {
+        const startTimeDate = convertTimeToDate(startTime);
+        const endTimeDate = convertTimeToDate(endTime);
+        if (endTimeDate <= startTimeDate) {
+          timeErrorMessage = "End time should be greater than start time";
+        }
+      }
+
+      // Update the timeData with the new time and possible error message
+      return {
+        ...prev,
+        [day]: {
+          ...updatedDay,
+          errorMessage: timeErrorMessage, // Store the error message for this day
+        },
+      };
+    });
   };
 
   return (
     <div className="backDropOverlay h-screen flex justify-center items-center">
-      <div className=" w-[550px] z-[1000] mx-auto my-20 overflow-auto scrollbar-webkit">
+      <div className=" w-[600px] z-[1000] mx-auto my-20 overflow-auto scrollbar-webkit">
         {loadingCreation && (
           <div className="absolute inset-0 w-full p-2 flex items-center justify-center bg-surface-100 bg-opacity-30 z-[1100]">
             <CircularProgress size={30} />
@@ -321,21 +460,29 @@ const SessionCreationModal = ({
               }}
               className="text-start  px-2 xsm:py-[10px] pb-[5px] font-exo"
             >
-              Scheduling a class
+              Schedule a new class
             </h1>
-            <button className="px-2" onClick={() => setOpenModal(false)}>
+            <button
+              className="px-2"
+              onClick={() => {
+                setOpenModal(false);
+                setEdit(false);
+              }}
+            >
               <IoClose size={21} />
             </button>
           </div>
           <div className="bg-surface-100 xsm:p-6 px-3 py-4 rounded-xl xsm:space-y-5 space-y-2 font-inter">
             <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
-              {/* <div className="space-y-2 text-[15px] w-full">
+              <div className="relative space-y-2 text-[15px] w-full">
                 <p>Batch</p>
                 <button
+                  ref={batchButton}
                   onClick={toggleBatchOpen}
                   className={`${
-                    !isBatchSelected ? " text-[#92A7BE]" : "text-[#424b55]"
-                  } flex justify-between items-center w-full  hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                    !isBatchSelected || edit ? " text-[#92A7BE]" : "text-[#424b55]"
+                  } flex justify-between items-center w-full px-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                  disabled={edit}
                 >
                   {selectedBatch || batchOptions[0]}
                   <span
@@ -349,25 +496,30 @@ const SessionCreationModal = ({
 
                 {isBatchOpen && (
                   <div
-                    ref={mouseClick}
-                    className="absolute z-10 min-w-[240px] max-h-[170px] mt-1 bg-surface-100  overflow-auto scrollbar-webkit border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
+                    ref={batchDown}
+                    className="absolute z-10 w-full max-h-[170px] mt-1 bg-surface-100  overflow-auto scrollbar-webkit border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
                   >
                     {loadingBatch && batchOptions.length == 0 ? (
                       <div className="w-full flex items-center justify-center p-1">
                         <CircularProgress size={15} />
                       </div>
                     ) : batchOptions && batchOptions.length > 0 ? (
-                      batchOptions.map((option, index) => (
-                        <div
-                          key={index}
-                          onClick={() => handleBatchSelect(option)}
-                          className="p-2 cursor-pointer "
-                        >
-                          <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
-                            {option}
+                      batchOptions
+                        .sort(
+                          (a, b) =>
+                            new Date(b.created_at) - new Date(a.created_at)
+                        )
+                        .map((option, index) => (
+                          <div
+                            key={index}
+                            onClick={() => handleBatchSelect(option.batch)}
+                            className="p-2 cursor-pointer "
+                          >
+                            <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
+                              {option.batch}
+                            </div>
                           </div>
-                        </div>
-                      ))
+                        ))
                     ) : (
                       <div className="text-sm text-center text-dark-300">
                         no batch found
@@ -375,22 +527,30 @@ const SessionCreationModal = ({
                     )}
                   </div>
                 )}
-              </div> */}
-              <div className="space-y-2 text-[15px] w-full">
+              </div>
+              <div className="relative space-y-2 text-[15px] w-full">
                 <p>Course</p>
                 <button
+                  ref={courseButton}
                   onClick={toggleCourseOpen}
                   className={`${
-                    !isCourseSelected ? "text-[#92A7BE]" : "text-[#424b55]"
-                  } flex justify-between items-center w-full truncate px-4 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                    !isCourseSelected || edit
+                      ? "text-[#92A7BE]"
+                      : "text-[#424b55]"
+                  } flex justify-between items-center w-full px-4 py-3 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                   style={{
                     // maxWidth: "220px", // Set the maximum width of the button
                     whiteSpace: "nowrap",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                   }}
+                  disabled={edit}
                 >
-                  {selectedCourseName ? selectedCourseName : "Select a course"}
+                  <p className="max-w-[180px] truncate">
+                    {selectedCourseName
+                      ? selectedCourseName
+                      : "Select a course"}
+                  </p>
                   <span
                     className={`${
                       isCourseOpen ? "rotate-180 duration-300" : "duration-300"
@@ -402,19 +562,19 @@ const SessionCreationModal = ({
 
                 {isCourseOpen && (
                   <div
-                    ref={mouseClick}
-                    className="absolute z-10 w-[450px] mt-1 bg-surface-100 max-h-[200px] overflow-auto scrollbar-webkit border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
+                    ref={courseDown}
+                    className="absolute z-10 w-full mt-1 bg-surface-100 max-h-[200px] overflow-auto scrollbar-webkit border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
                   >
                     {loadingCourses && courseNames.length === 0 ? (
                       <div className="w-full flex items-center justify-center p-1">
                         <CircularProgress size={15} />
                       </div>
                     ) : courseNames && courseNames.length > 0 ? (
-                      courseNames.map((name) => (
+                      courseNames.map((name, index) => (
                         <div
-                          key={name}
+                          key={index}
                           onClick={() => handleCourseSelect(name)}
-                          className="p-2 cursor-pointer"
+                          className="py-1 px-2  cursor-pointer"
                         >
                           <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
                             {name.name}
@@ -431,9 +591,10 @@ const SessionCreationModal = ({
               </div>
             </div>
             <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
-              <div className="space-y-2 text-[15px] w-full">
+              <div className="relative space-y-2 text-[15px] w-full">
                 <p>Location</p>
                 <button
+                  ref={locationButton}
                   onClick={toggleLocationOpen}
                   className={`${
                     !isLocationSelected ? " text-[#92A7BE]" : "text-[#424b55]"
@@ -453,8 +614,8 @@ const SessionCreationModal = ({
 
                 {isLocationOpen && (
                   <div
-                    ref={mouseClick}
-                    className="absolute z-10 min-w-[240px] max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
+                    ref={locationDown}
+                    className="absolute z-10 w-full max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaLocation duration-300 ease-in-out"
                   >
                     {loadingLocation ? (
                       <div className="w-full flex items-center justify-center p-1">
@@ -533,56 +694,27 @@ const SessionCreationModal = ({
                 )}
               </div>
             </div>
-            <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
-              {/* Start Time Input */}
+            <div className="flex flex-col gap-3 mx-auto mt-1 w-full">
               <div className="space-y-2 text-[15px] w-full">
-                <p>Start Time</p>
-                <div className="relative">
-                  <input
-                    type="time"
-                    value={startTime}
-                    onChange={handleStartTimeChange}
-                    className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
-                    placeholder="Select start time"
-                  />
+                <div className="flex justify-between w-[85%]">
+                  <p>Week Days</p>
+                  <div className="flex gap-[75px]">
+                    <p>Start Time</p>
+                    <p>End Time</p>
+                  </div>
                 </div>
-              </div>
-
-              {/* End Time Input */}
-              <div className="space-y-2 text-[15px] w-full">
-                <p>End Time</p>
-                <div className="relative">
-                  <input
-                    type="time"
-                    value={endTime}
-                    onChange={handleEndTimeChange}
-                    className="border border-dark-300 text-[#424b55] outline-none p-3 rounded-lg w-full"
-                    placeholder="Select end time"
-                  />
-                </div>
-                {timeErrorMessage && (
-                  <p className="text-mix-200 text-[12px] mt-2">
-                    {timeErrorMessage}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-3 mx-auto  w-full">
-              <div className="space-y-2 text-[15px] w-full">
-                <p>Week Days</p>
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-col gap-3">
                   {/* Individual checkboxes for each day */}
-                  {Object.entries(WEEKDAYS).map(
-                    ([key, [fullName, shortName]]) => (
-                      <label
-                        key={key}
-                        className={`flex items-center ${
-                          selectedDays.includes(parseInt(key, 10))
-                            ? "text-[#424b55]"
-                            : "text-[#92A7BE]"
-                        }`}
-                      >
+                  {Object.entries(WEEKDAYS).map(([key, [fullName]]) => (
+                    <div
+                      key={key}
+                      className={`flex items-start justify-between gap-2 ${
+                        selectedDays.includes(parseInt(key, 10))
+                          ? "text-[#424b55]"
+                          : "text-[#92A7BE]"
+                      }`}
+                    >
+                      <label className="flex w-[70%] mt-3">
                         <input
                           type="checkbox"
                           value={key}
@@ -590,38 +722,72 @@ const SessionCreationModal = ({
                           checked={selectedDays.includes(parseInt(key, 10))}
                           className="mr-2"
                         />
-                        {fullName} ({shortName})
+                        {fullName}
                       </label>
-                    )
-                  )}
+                      <div className="flex flex-col items-center w-full">
+                        <div className="flex xsm:flex-row flex-col gap-2 mx-auto w-full justify-between">
+                          {/* Start Time Input */}
+                          <div className="space-y-2 text-[15px] w-full">
+                            <div className="relative">
+                              <input
+                                type="time"
+                                value={timeData[key]?.startTime || ""}
+                                onChange={(e) =>
+                                  handleTimeChange(
+                                    key,
+                                    "startTime",
+                                    e.target.value
+                                  )
+                                }
+                                className="border border-dark-300 text-[#424b55] outline-none p-2 rounded-lg w-full"
+                                placeholder="Select start time"
+                                disabled={
+                                  !selectedDays.includes(parseInt(key, 10))
+                                }
+                              />
+                            </div>
+                          </div>
 
-                  {/* <label
-                    className={`flex items-center ${
-                      selectedDays.length === Object.keys(WEEKDAYS).length - 1
-                        ? "text-[#424b55]"
-                        : "text-[#92A7BE]"
-                    }`}
-                  >
-                    <input
-                      type="checkbox"
-                      onChange={handleSelectAllWeekdays}
-                      checked={
-                        selectedDays.length === Object.keys(WEEKDAYS).length - 1
-                      } // Check if all weekdays except Sunday are selected
-                      className="mr-2"
-                    />
-                    Select All Weekdays (Mon-Sat)
-                  </label> */}
+                          {/* End Time Input */}
+                          <div className="space-y-2 text-[15px] w-full">
+                            <div className="relative">
+                              <input
+                                type="time"
+                                value={timeData[key]?.endTime || ""}
+                                onChange={(e) =>
+                                  handleTimeChange(
+                                    key,
+                                    "endTime",
+                                    e.target.value
+                                  )
+                                }
+                                className="border border-dark-300 text-[#424b55] outline-none p-2 rounded-lg w-full"
+                                placeholder="Select end time"
+                                disabled={
+                                  !selectedDays.includes(parseInt(key, 10))
+                                }
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        {/* Error Message */}
+                        {timeData[key]?.errorMessage && (
+                          <p className="text-mix-200 text-[12px] mt-2">
+                            {timeData[key]?.errorMessage}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-
               <div className="flex items-center justify-center w-full mt-2">
                 <button
                   type="submit"
-                  onClick={handleSessionCreation}
-                  className="w-fit flex justify-center py-3 px-12 text-sm font-medium rounded-lg text-dark-100 bg-blue-300 hover:bg-[#3272b6] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
+                  onClick={!edit ? handleSessionCreation : handleUpdate}
+                  className="w-fit flex justify-center py-3 px-12 text-sm font-medium rounded-lg text-dark-100 bg-blue-300 hover:bg-[#3272b6] focus:outline-none"
                 >
-                  Schedule
+                  {!edit ? `Schedule` : "Update"}
                 </button>
               </div>
             </div>

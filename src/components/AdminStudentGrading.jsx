@@ -5,6 +5,8 @@ import {
   getInstructorSessions,
   getInstructorSessionsbyCourseId,
   getStudentsByCourseId,
+  lisStudentsByBatch,
+  listAllBatches,
   listAllSessions,
   listSessionByCourseId,
   markAttendanceByCourseId,
@@ -18,12 +20,15 @@ import React, { useEffect, useState } from "react";
 const AdminStudentGrading = ({ courseId }) => {
   const { userData } = useAuth();
   const [attendance, setAttendance] = useState([]);
+
   const [getAttendance, setGetAttendance] = useState([]);
   const [selectedAttendance, setSelectedAttendance] = useState({});
   const [loader, setLoader] = useState(false);
   const [instructorSessions, setInstructorSessions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [adminSessions, setAdminSessions] = useState([]);
+  const [batches, setBatches] = useState([]);
+  const [loadingBatch, setLoadingBatch] = useState(false);
   const [id, setId] = useState();
   const group = userData?.Group;
   const isAdmin = userData?.Group === "admin";
@@ -31,9 +36,15 @@ const AdminStudentGrading = ({ courseId }) => {
   const userId = userData?.user_data?.id;
 
   const [selectedSessionId, setSelectedSessionId] = useState("");
+  const [selectedBatchId, setSelectedBatchId] = useState("");
   const handleChange = (e) => {
     //console.log("chal rahi he", e.target.value);
     setSelectedSessionId(e.target.value);
+  };
+
+  const handleBatchSelection = (e) => {
+    //console.log("chal rahi he", e.target.value);
+    setSelectedBatchId(e.target.value);
   };
 
   async function fetchSessions() {
@@ -72,25 +83,20 @@ const AdminStudentGrading = ({ courseId }) => {
       setLoading(false);
     }
   }
-
-  // async function fetchStudentsbySession() {
+  // async function fetchStudentsByBatch() {
+  //   setLoading(true);
   //   try {
-  //     const response = await listSessionByCourseId(selectedSessionId);
+  //     const response = await lisStudentsByBatch(selectedBatchId);
   //     if (response.status === 200) {
-  //       // const initialAttendance = response.data.reduce((acc, student) => {
-  //       //   acc[student.registration_id] = 0;
-  //       //   return acc;
-  //       // }, {});
-
-  //       setAttendance(response?.data?.data);
-  //       //console.log(response.data.data);
-  //       // setSelectedAttendance(initialAttendance);
-  //       // //console.log(response.data);
+  //       // //console.log("attendence in students", response.data.data.students);
+  //       setAttendance(response.data.data);
   //     } else {
   //       //console.error("Failed to fetch attendance, status:", response.status);
   //     }
   //   } catch (error) {
-  //     //console.error("Error fetching attendance:", error);
+  //     //console.log("error", error);
+  //   } finally {
+  //     setLoading(false);
   //   }
   // }
 
@@ -105,6 +111,29 @@ const AdminStudentGrading = ({ courseId }) => {
   };
 
   useEffect(() => {
+    const getBatch = async () => {
+      try {
+        const response = await listAllBatches();
+        setLoadingBatch(true);
+        const batchOptionsArray = response?.data.map((batch) => batch.batch);
+        setBatches(batchOptionsArray);
+      } catch (error) {
+        // console.log("error while fetching the batches", error);
+        if (error.message === "Network Error") {
+          toast.error(error.message, "Check your internet connection");
+        }
+      } finally {
+        setLoadingBatch(false);
+      }
+    };
+    getBatch();
+  }, []);
+
+  // useEffect(() => {
+  //   fetchStudentsByBatch();
+  // }, [selectedBatchId]);
+
+  useEffect(() => {
     fetchAttendanceAdmin();
     // fetchStudentsbySession();
     if (isInstructor) {
@@ -116,45 +145,84 @@ const AdminStudentGrading = ({ courseId }) => {
 
   return (
     <div className="flex flex-col">
-      <div>
-        <label className="text-blue-500 font-semibold">Select Session</label>
+      <div className="flex w-full gap-2">
+        {/* <div className="w-full">
+          <label className="text-blue-500 font-semibold">Select batch</label>
 
-        <select
-          value={selectedSessionId}
-          onChange={handleChange}
-          className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-        >
-          <option
+          <select
+            value={selectedBatchId}
+            onChange={handleBatchSelection}
             className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-            value=""
-            disabled
-            selected
           >
-            Select a session
-          </option>
-
-          {Array.isArray(instructorSessions.data) &&
-          instructorSessions.data.length > 0 ? (
-            instructorSessions.data.map((session) => (
-              <option key={session.session_id} value={session.session_id}>
-                {session.location} - {session.course} - {session.no_of_student}{" "}
-                - {session.start_time} - {session.end_time}
-              </option>
-            ))
-          ) : adminSessions && adminSessions.length > 0 ? (
-            adminSessions.map((session) => (
-              <option key={session.id} value={session.id}>
-                {session.location_name} - {session.course.name} -{" "}
-                {session.no_of_student} - {session.start_time} -{" "}
-                {session.end_time}
-              </option>
-            ))
-          ) : (
-            <option value="" disabled>
-              No session found
+            <option
+              className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+              value=""
+              disabled
+              // selected
+            >
+              Select a batch
             </option>
-          )}
-        </select>
+
+            {batches && batches.length > 0 ? (
+              batches.map((option, index) => (
+                <option key={index}>{option}</option>
+              ))
+            ) : (
+              // ) : adminSessions && adminSessions.length > 0 ? (
+              //   adminSessions.map((session) => (
+              //     <option key={session.id} value={session.id}>
+              //       {session.location_name} - {session.course.name} -{" "}
+              //       {session.no_of_student} - {session.start_time} -{" "}
+              //       {session.end_time}
+              //     </option>
+              //   ))
+              <option value="" disabled>
+                No Batches found
+              </option>
+            )}
+          </select>
+        </div> */}
+        <div className="w-full">
+          <label className="text-blue-500 font-semibold">Select Session</label>
+
+          <select
+            value={selectedSessionId}
+            onChange={handleChange}
+            className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+          >
+            <option
+              className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+              value=""
+              disabled
+              // selected
+            >
+              Select a session
+            </option>
+
+            {Array.isArray(instructorSessions.data) &&
+            instructorSessions.data.length > 0 ? (
+              instructorSessions.data.map((session) => (
+                <option key={session.session_id} value={session.session_id}>
+                  {session.location} - {session.course} -{" "}
+                  {session.no_of_student} - {session.start_time} -{" "}
+                  {session.end_time}
+                </option>
+              ))
+            ) : adminSessions && adminSessions.length > 0 ? (
+              adminSessions.map((session) => (
+                <option key={session.id} value={session.id}>
+                  {session.location_name} - {session.course.name} -{" "}
+                  {session.no_of_student} - {session.start_time} -{" "}
+                  {session.end_time}
+                </option>
+              ))
+            ) : (
+              <option value="" disabled>
+                No session found
+              </option>
+            )}
+          </select>
+        </div>
       </div>
 
       <div className="-m-1.5 overflow-x-auto">
@@ -193,7 +261,7 @@ const AdminStudentGrading = ({ courseId }) => {
                               <Link
                                 href={`/students/course/${courseId}/student/${selectedSessionId}/${att.registration_id}/`}
                               >
-                                {att.user}
+                                {att.user || att.name}
                               </Link>
                             </td>
                           </tr>

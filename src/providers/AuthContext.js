@@ -111,6 +111,7 @@ export function AuthProvider({ children }) {
   //   router.push("/auth/login");
   // };
 
+
   const logOutUser = () => {
     document.cookie.split(";").forEach((cookie) => {
       const name = cookie.split("=")[0].trim();
