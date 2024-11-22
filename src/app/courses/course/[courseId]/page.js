@@ -35,7 +35,6 @@ import DeleteConfirmationPopup from "@/components/Modal/DeleteConfirmationPopUp"
 import { handleFileUploadToS3 } from "@/components/ApplicationForm";
 import { IoIosArrowDown } from "react-icons/io";
 import useClickOutside from "@/providers/useClickOutside";
-import { useRouter } from "next/router";
 import { FaArrowLeftLong } from "react-icons/fa6";
 
 export const downloadFile = async (filePath) => {
@@ -55,7 +54,6 @@ export default function Page({ params }) {
   const [selectedSession, setSelectedSession] = useState(null);
   const sessionButton = useRef(null);
   const sessionDropdown = useRef(null);
-  const router = useRouter();
   const { userData } = useAuth();
   const courseId = params.courseId;
   const isStudent = userData?.Group === "student";
@@ -611,13 +609,13 @@ export default function Page({ params }) {
           style={{ width: isSidebarOpen ? "81%" : "100%" }}
         >
           <div className="bg-surface-100 mx-4 my-3 px-6 pt-6 pb-8 rounded-xl max-sm:p-0 max-sm:m-0">
-            <div
+            {/* <div
               className="text-dark-300 flex gap-2 items-center cursor-pointer pb-2 hover:text-blue-300 mr-6 "
               onClick={() => router.push(`/courses`)}
             >
               <FaArrowLeftLong size={20} />
               <p>Back</p>
-            </div>
+            </div> */}
             <CourseHead
               id={courseId}
               program="course"

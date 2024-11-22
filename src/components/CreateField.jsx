@@ -250,7 +250,7 @@ export default function CreateField({
                         onChange={(e) => setProgramName(e.target.value)}
                         name="program-name"
                         type="text"
-                        placeholder="Enter the program name"
+                        placeholder={`Enter the ${title} name`}
                         className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
                       />
                     </div>

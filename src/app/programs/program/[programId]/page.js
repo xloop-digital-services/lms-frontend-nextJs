@@ -181,13 +181,13 @@ export default function Page({ params }) {
           style={{ width: isSidebarOpen ? "81%" : "100%" }}
         >
           <div className=" bg-surface-100 mx-4 my-3 px-6 py-6 pb-8 rounded-xl p-4">
-            <div
+            {/* <div
               className="text-dark-300 flex gap-2 items-center cursor-pointer pb-2 hover:text-blue-300"
               onClick={() => router.push("/programs")}
             >
               <FaArrowLeftLong size={20} />
               <p>Back</p>
-            </div>
+            </div> */}
             <CourseHead
               name={programData.name}
               id={programId}

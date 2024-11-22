@@ -2,7 +2,7 @@
 import { useSidebar } from "@/providers/useSidebar";
 import React, { useEffect, useRef, useState } from "react";
 import BatchTable from "@/components/BatchTable";
-import BarChart from "@/components/BarChart";
+import BarChart from "@/components/BarChartProgram";
 import PieChart from "@/components/PieChart";
 import { IoIosArrowDown } from "react-icons/io";
 import useClickOutside from "@/providers/useClickOutside";
@@ -12,6 +12,7 @@ import {
   getAllSkills,
   getApplicationsTotalNumber,
   getCityStatistics,
+  getProgressForSession,
   listAllBatches,
   totalUsersCount,
 } from "@/api/route";
@@ -19,6 +20,7 @@ import { CircularProgress } from "@mui/material";
 import Link from "next/link";
 import DeleteConfirmationPopup from "./Modal/DeleteConfirmationPopUp";
 import { FaMagnifyingGlass } from "react-icons/fa6";
+import BatchUserModal from "./Modal/BatchUserModal";
 
 const AdminDashboard = () => {
   const { isSidebarOpen } = useSidebar();
@@ -28,9 +30,13 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [allPrograms, setAllPrograms] = useState([]);
   const [selectedProgram, setSelectedProgram] = useState("");
+  const [selectedBarProgram, setSelectedBarProgram] = useState("");
   const [programId, setProgramId] = useState(null);
+  const [barProgramId, setBarProgramId] = useState(null);
   const [isProgramOpen, setIsProgramOpen] = useState(false);
   const [isProgramSelected, setIsProgramSelected] = useState(false);
+  const [isBarProgramOpen, setIsBarProgramOpen] = useState(false);
+  const [isBarProgramSelected, setIsBarProgramSelected] = useState(false);
   const [allSkills, setAllSkills] = useState([]);
   const [selectedSkill, setSelectedSkill] = useState("");
   const [skillId, setSkillId] = useState(null);
@@ -48,6 +54,7 @@ const AdminDashboard = () => {
   const [selectedStatus, setSelectedStatus] = useState("");
   const options = ["Show All", "Active", "Inactive"];
   const [barData, setBarData] = useState([]);
+  const [loadingBar, setBarLoading] = useState(false);
   const [allUsers, setAllUsers] = useState(0);
   const [allStudents, setAllStudents] = useState(0);
   const [allInstructors, setAllIntructors] = useState(0);
@@ -64,9 +71,13 @@ const AdminDashboard = () => {
   const [filterStatus, setFilterStatus] = useState(false);
   const [selectedBatch, setSelectedBatch] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [sessionProgress, setSessionProgress] = useState([]);
+  const [openInfoModal, setOpenInfoModal] = useState(false);
 
   const dropdownRef = useRef(null);
   const dropButton = useRef(null);
+  const barRef = useRef(null);
+  const barButton = useRef(null);
   const statusDown = useRef(null);
   const statusButton = useRef(null);
   const userDown = useRef(null);
@@ -75,9 +86,8 @@ const AdminDashboard = () => {
   const skillButton = useRef(null);
 
   useClickOutside(statusDown, statusButton, () => setIsOpen(false));
-
   useClickOutside(dropdownRef, dropButton, () => setIsProgramOpen(false));
-
+  useClickOutside(barRef, barButton, () => setIsBarProgramOpen(false));
   useClickOutside(skillDown, skillButton, () => setIsSkillOpen(false));
   useClickOutside(userDown, userButton, () => setIsUserOpen(false));
 
@@ -163,6 +173,27 @@ const AdminDashboard = () => {
   };
 
   useEffect(() => {
+    const handleBarChartForProgram = async () => {
+      setBarLoading(true);
+      try {
+        const response = await getProgressForSession(barProgramId);
+        if (response?.data) {
+          setSessionProgress(response.data.data); // Adjust based on actual response structure
+        } else {
+          console.error("Unexpected response format:", response);
+        }
+      } catch (error) {
+        console.log("error", error);
+      } finally {
+        setBarLoading(false);
+      }
+    };
+    if (barProgramId) {
+      handleBarChartForProgram();
+    }
+  }, [barProgramId]);
+
+  useEffect(() => {
     handleListingAllBatches();
   }, [updateBatch]);
 
@@ -208,6 +239,9 @@ const AdminDashboard = () => {
   const toggleProgramOpen = () => {
     setIsProgramOpen((prev) => !prev);
   };
+  const toggleBarProgramOpen = () => {
+    setIsBarProgramOpen((prev) => !prev);
+  };
   const toggleSkillOpen = () => {
     setIsSkillOpen((prev) => !prev);
   };
@@ -224,6 +258,12 @@ const AdminDashboard = () => {
     setProgramId(option.id);
     setIsProgramSelected(true);
     setIsProgramOpen(false);
+  };
+  const handleBarProgramSelect = (option) => {
+    setSelectedBarProgram(option.name);
+    setBarProgramId(option.id);
+    setIsBarProgramSelected(true);
+    setIsBarProgramOpen(false);
   };
 
   const handleBarChartData = async () => {
@@ -247,8 +287,11 @@ const AdminDashboard = () => {
   useEffect(() => {
     if (allPrograms && allPrograms.length > 0) {
       setSelectedProgram(allPrograms[0].name);
+      setSelectedBarProgram(allPrograms[0].name);
+      setBarProgramId(allPrograms[0].id);
       setProgramId(allPrograms[0].id);
-      setIsProgramSelected(true); // Set the first program's name as default
+      setIsProgramSelected(true);
+      setIsBarProgramSelected(true); // Set the first program's name as default
     }
     if (allSkills && allSkills.length > 0) {
       setSelectedSkill(allSkills[0].name);
@@ -422,12 +465,73 @@ const AdminDashboard = () => {
 
           <div className="flex gap-4 xmd:flex-row flex-col">
             <div className="bg-surface-100 xmd:w-[66.5%] w-full overflow-x-auto scrollbar-webkit p-5 rounded-xl  h-[450px]">
-              <div className="border border-dark-300 rounded-xl p-3 h-full w-full">
-                <div className="font-bold font-exo text-blue-500 text-lg pb-2">
+              <div className="border border-dark-300 rounded-xl p-3 h-full ">
+                {/* <div className="font-bold font-exo text-blue-500 text-lg pb-2">
                   Capacity in Different Cities
                 </div>
                 <div>
                   <BarChart barData={barData} />
+                </div> */}
+                <div className="w-full flex justify-between">
+                  <div className="font-bold font-exo text-blue-500 text-lg pb-2">
+                    Course Progress
+                  </div>
+                  <div>
+                    <div className="relative space-y-2 text-[15px] w-full">
+                      {/* <p>Program</p> */}
+                      <button
+                        ref={barButton}
+                        onClick={toggleBarProgramOpen}
+                        className={`${
+                          !isBarProgramSelected
+                            ? " text-dark-500"
+                            : "text-[#424b55]"
+                        } flex justify-between items-center w-[300px]  hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                      >
+                        <span className="  max-w-full truncate capitalize">
+                          {selectedBarProgram}
+                        </span>
+                        <span
+                          className={`${
+                            isBarProgramOpen
+                              ? "rotate-180 duration-300"
+                              : "duration-300"
+                          }`}
+                        >
+                          <IoIosArrowDown />
+                        </span>
+                      </button>
+
+                      {isBarProgramOpen && (
+                        <div
+                          ref={barRef}
+                          className="absolute z-10 w-full max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
+                        >
+                          {allPrograms.map((option, index) => (
+                            <div
+                              key={index}
+                              onClick={() => handleBarProgramSelect(option)}
+                              className="p-2 cursor-pointer"
+                              title={option.name}
+                            >
+                              <div className="xlg:px-4 px-2 py-2 capitalize hover:bg-[#03a3d838] truncate hover:text-blue-300 hover:font-semibold rounded-lg">
+                                {option.name}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  {loadingBar ? (
+                    <div className="flex justify-center items-center py-4 w-full">
+                      <CircularProgress />
+                    </div>
+                  ) : (
+                    <BarChart barData={sessionProgress} />
+                  )}
                 </div>
               </div>
             </div>
@@ -707,6 +811,7 @@ const AdminDashboard = () => {
                   setConfirmDelete={setConfirmDelete}
                   selectedBatch={selectedBatch}
                   confirmDelete={confirmDelete}
+                  setOpenInfo={setOpenInfoModal}
                 />
               ) : (
                 <BatchTable
@@ -719,11 +824,20 @@ const AdminDashboard = () => {
                   setConfirmDelete={setConfirmDelete}
                   selectedBatch={selectedBatch}
                   confirmDelete={confirmDelete}
+                  setOpenInfo={setOpenInfoModal}
                 />
               )}
             </div>
           </div>
         </div>
+      </div>
+      <div>
+        {openInfoModal && (
+          <BatchUserModal
+            selectedBatch={selectedBatch}
+            setOpenInfo={setOpenInfoModal}
+          />
+        )}
       </div>
       <div>
         {confirmDelete && (

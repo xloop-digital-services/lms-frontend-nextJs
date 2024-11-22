@@ -723,6 +723,17 @@ export const getUserDataByProgramIdnSkillId = async (id, selectedOption) => {
   }
 };
 
+export const getProgressForSession = async (programId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/api/course/program_progress/${programId}/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getApplicationUserDetails = async (userId, selectedOption) => {
   try {
     const response = await axiosInstance.get(

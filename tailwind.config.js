@@ -13,7 +13,7 @@ module.exports = {
         xxlg: "845px",
         ssm: "680px",
         nsm: "560px",
-        smm: '500px',
+        smm: "500px",
         xsm: "450px",
         // Define custom breakpoint `xsm` with min-width of 450px
       },
@@ -67,17 +67,18 @@ module.exports = {
         },
         ".scrollbar-webkit": {
           "&::-webkit-scrollbar": {
-            width: "5px",
+            width: "5px", // Width for vertical scrollbars
+            height: "5px", // Height for horizontal scrollbars
           },
           "&::-webkit-scrollbar-track": {
-            background: "#fffff",
-            margin: "0px",
-            marginInline: "5px",
+            background: "#fffff", // Scrollbar track color
+            margin: "0px", // Ensure no margin for smooth scrolling
+            marginInline: "5px", // Spacing within the scrollbar track
           },
           "&::-webkit-scrollbar-thumb": {
-            backgroundColor: "#D4E0EA",
-            borderRadius: "20px",
-            marginInline: "10px",
+            backgroundColor: "#D4E0EA", // Thumb color
+            borderRadius: "20px", // Rounded corners for the scrollbar thumb
+            marginInline: "10px", // Padding within the thumb
           },
         },
       };
