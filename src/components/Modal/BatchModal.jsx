@@ -68,6 +68,7 @@ const BatchModal = ({
 
   useClickOutside(categoryRef, categoryButton, () => {
     setIsCategoryOpen(false);
+    setIsProgramOpen(false);
   });
 
   useClickOutside(modalDown, () => setIsOpenModal(false));

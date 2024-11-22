@@ -9,6 +9,7 @@ import SessionCreationModal from "./Modal/SessionCreationModal";
 import { useRouter } from "next/navigation";
 import { CircularProgress } from "@mui/material";
 import Image from "next/image";
+import { FaArrowLeftLong } from "react-icons/fa6";
 
 export default function CreateField({
   title,

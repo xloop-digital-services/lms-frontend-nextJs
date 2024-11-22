@@ -20,6 +20,7 @@ import AdminDataStructure from "@/components/AdminDataStructure";
 import { handleFileUploadToS3 } from "@/components/ApplicationForm";
 import { IoIosArrowDown } from "react-icons/io";
 import useClickOutside from "@/providers/useClickOutside";
+import { FaArrowLeftLong } from "react-icons/fa6";
 
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
@@ -368,6 +369,13 @@ export default function Page({ params }) {
       style={{ width: isSidebarOpen ? "81%" : "100%" }}
     >
       <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4">
+        <div
+          className="text-dark-300 flex gap-2 items-center cursor-pointer pb-2 hover:text-blue-300 mr-4"
+          onClick={() => router.push(`/assignment`)}
+        >
+          <FaArrowLeftLong size={20} />
+          <p>Back</p>
+        </div>
         <CourseHead
           id={courseId}
           program="course"

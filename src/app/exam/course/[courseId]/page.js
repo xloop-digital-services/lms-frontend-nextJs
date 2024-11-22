@@ -22,6 +22,8 @@ import AdminDataStructure, {
 import { handleFileUploadToS3 } from "@/components/ApplicationForm";
 import { IoIosArrowDown } from "react-icons/io";
 import useClickOutside from "@/providers/useClickOutside";
+import { FaArrowLeftLong } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
 
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
@@ -29,6 +31,7 @@ export default function Page({ params }) {
   const [selectedSession, setSelectedSession] = useState(null);
   const sessionButton = useRef(null);
   const sessionDropdown = useRef(null);
+  const router = useRouter();
   const [assignments, setAssignments] = useState([]);
   const [assignmentProgress, setAssignmentProgress] = useState({});
   const [currentAssignment, setCurrentAssignment] = useState(null);
@@ -380,6 +383,24 @@ export default function Page({ params }) {
           </div>
         ) : (
           <>
+            <div
+              className="text-dark-300 flex gap-2 items-center cursor-pointer pb-2 hover:text-blue-300 mr-4"
+              onClick={() => router.push(`/exam`)}
+            >
+              <FaArrowLeftLong size={20} />
+              <p>Back</p>
+            </div>
+            <CourseHead
+              id={courseId}
+              program="course"
+              haveStatus={isStudent ? true : false}
+              title="Create Exam"
+              isEditing={isCreatingQuiz}
+              setIsEditing={setCreatingQuiz}
+              instructorName={
+                studentInstructorName ? studentInstructorName : ""
+              }
+            />{" "}
             {isAdmin && (
               <div className="relative space-y-2 text-[15px] w-full mb-4">
                 <p className="font-exo text-blue-500 text-lg font-bold">

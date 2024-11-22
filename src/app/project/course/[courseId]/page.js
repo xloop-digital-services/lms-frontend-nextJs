@@ -20,6 +20,8 @@ import AdminDataStructure from "@/components/AdminDataStructure";
 import { handleFileUploadToS3 } from "@/components/ApplicationForm";
 import useClickOutside from "@/providers/useClickOutside";
 import { IoIosArrowDown } from "react-icons/io";
+import { FaArrowLeftLong } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
 
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
@@ -27,6 +29,7 @@ export default function Page({ params }) {
   const [selectedSession, setSelectedSession] = useState(null);
   const sessionButton = useRef(null);
   const sessionDropdown = useRef(null);
+  const router = useRouter();
   const [assignments, setAssignments] = useState([]);
   const [currentAssignment, setCurrentAssignment] = useState(null);
   const courseId = params.courseId;
@@ -341,6 +344,13 @@ export default function Page({ params }) {
       style={{ width: isSidebarOpen ? "81%" : "100%" }}
     >
       <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4">
+        <div
+          className="text-dark-300 flex gap-2 items-center cursor-pointer pb-2 hover:text-blue-300 mr-4"
+          onClick={() => router.push(`/project`)}
+        >
+          <FaArrowLeftLong size={20} />
+          <p>Back</p>
+        </div>
         <CourseHead
           id={courseId}
           program="course"

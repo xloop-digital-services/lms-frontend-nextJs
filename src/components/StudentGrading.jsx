@@ -15,6 +15,7 @@ import {
   getUserSessions,
 } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
+import { FaArrowLeftLong } from "react-icons/fa6";
 
 export default function StudentGrading({ courseId, regId: propRegId }) {
   const { width } = useWindowSize();
@@ -206,7 +207,14 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
 
   return (
     <>
-      <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4">
+      <div className="bg-surface-100 mx-4 my-3 px-6 pb-8 pt-6 rounded-xl p-4">
+        <div
+          className="text-dark-300 flex gap-2 items-center cursor-pointer pb-2 hover:text-blue-300 mr-4"
+          onClick={() => router.push(`/grading`)}
+        >
+          <FaArrowLeftLong size={20} />
+          <p>Back</p>
+        </div>
         <CourseHead
           id={courseId}
           // rating="Top Instructor"
