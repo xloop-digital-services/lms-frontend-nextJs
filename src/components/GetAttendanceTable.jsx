@@ -12,6 +12,7 @@ import {
   postAttendanceBySessionId,
 } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
+import useClickOutside from "@/providers/useClickOutside";
 import { CircularProgress } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
@@ -48,6 +49,10 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   const sessionDropdown = useRef(null);
   const [date, setDate] = useState(null);
   const [toggle, setToggle] = useState(false);
+
+  useClickOutside(sessionDropdown, sessionButton, () =>
+    setIsSessionOpen(false)
+  );
   // console.log(group, userId);
   async function fetchSessions() {
     const response = await getInstructorSessionsbyCourseId(
@@ -345,7 +350,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                           onClick={() => handleSessionSelect(session)}
                           className="px-2 py-2 hover:bg-blue-100 hover:text-blue-300 rounded-lg"
                         >
-                          {session.session_name} 
+                          {session.session_name}
                         </div>
                       ))
                     : sessions.map((session) => (
