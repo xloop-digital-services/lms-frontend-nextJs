@@ -26,6 +26,7 @@ export default function Navbar() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showNotification, setShowNotifications] = useState(false);
   const dropdownRef = useRef(null);
+  const dropbutton = useRef(null);
   const [user, setUser] = useState({});
   const { logOutUser, userData } = useAuth();
   const isStudent = userData?.Group === "student";
@@ -53,7 +54,10 @@ export default function Navbar() {
   // console.log("unread", unreads);
   // console.log("reads", reads);
 
-  useClickOutside(dropdownRef, () => setShowNotifications(false));
+  useClickOutside(dropdownRef, dropbutton, () => {
+    setShowNotifications(false);
+    setShowDropdown(false);
+  });
 
   useEffect(() => {
     async function fetchUser() {
@@ -86,7 +90,7 @@ export default function Navbar() {
   };
 
   const toggleDropdown = () => {
-    setShowDropdown(!showDropdown);
+    setShowDropdown((prev) => !prev);
   };
 
   const closeDropdown = () => {
@@ -190,110 +194,71 @@ export default function Navbar() {
                     </div>
                   )}
 
-                  <button
-                    type="button"
-                    className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                    id="user-menu-button"
-                    aria-expanded="false"
-                    aria-haspopup="true"
-                  >
-                    <span className="absolute -inset-1.5"></span>
-                    <span className="sr-only">Open user menu</span>
-                  </button>
-
-                  <div className="relative ml-3 flex ">
+                  <div className="relative flex items-center" ref={dropdownRef}>
+                    {/* Profile Icon */}
                     <div
-                      className="flex items-center"
+                      className="w-[50px] h-[50px] uppercase rounded-full mr-2 cursor-pointer flex justify-center items-center text-surface-100 bg-blue-300"
                       onClick={toggleDropdown}
-                      ref={dropdownRef}
                     >
-                      <div className="w-[50px] h-[50px] uppercase rounded-full mr-2 cursor-pointer flex justify-center items-center text-surface-100 bg-blue-300">
-                        {firstWord}
-                        {/* <Image
-                        src={userIcon}
-                        alt="Profile"
-                        width={100}
-                        height={100}
-                        className={w-full h-full rounded-3xl }
-                        style={{ objectFit: "cover" }}
-                      /> */}
-                      </div>
-                      <div>
-                        <div className="flex justify-end items-center cursor-pointer hover:font-medium text-blue-500">
-                          <div className="text-blue-500">
-                            <p className="text-md capitalize">{`${user?.first_name} ${user?.last_name}`}</p>
-                            <p className="text-xs uppercase">
-                              {user?.registration_id}
-                            </p>
-                          </div>
-                          <div
-                            className={`ml-1 ${
-                              showDropdown
-                                ? "rotate-180 duration-300"
-                                : "duration-300"
-                            }`}
-                            onClick={toggleDropdown}
+                      {firstWord}
+                    </div>
+
+                    {/* User Details */}
+                    <div className="flex flex-col">
+                      <div
+                        ref={dropbutton}
+                        className="flex justify-end items-center cursor-pointer hover:font-medium text-blue-500"
+                        onClick={toggleDropdown}
+                      >
+                        <div>
+                          <p className="text-md capitalize">{`${user?.first_name} ${user?.last_name}`}</p>
+                          <p className="text-xs uppercase">
+                            {user?.registration_id}
+                          </p>
+                        </div>
+                        <div
+                          className={`ml-1 transition-transform ${
+                            showDropdown ? "rotate-180" : ""
+                          }`}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            className={`h-4 w-4`}
                           >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              className={`h-4 w-4 cursor-pointer`}
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M19 9l-7 7-7-7"
-                              />
-                            </svg>
-                          </div>
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 9l-7 7-7-7"
+                            />
+                          </svg>
                         </div>
                       </div>
-                      <button
-                        type="button"
-                        className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                        id="user-menu-button"
-                        aria-expanded="false"
-                        aria-haspopup="true"
-                      >
-                        <span className="absolute -inset-1.5"></span>
-                        <span className="sr-only">Open user menu</span>
-                      </button>
                     </div>
+
+                    {/* Dropdown Menu */}
                     {showDropdown && (
                       <div
-                        className="absolute right-0 mt-[66px] z-10 w-48 origin-top-right rounded-md bg-surface-100 py-1 shadow-lg ring-opacity-5 focus:outline-none"
+                        ref={dropdownRef}
+                        className="absolute right-0 mt-40 z-10 w-48 origin-top-right rounded-lg bg-surface-100 py-2 shadow-lg focus:outline-none"
                         role="menu"
-                        aria-orientation="vertical"
-                        aria-labelledby="user-menu-button"
-                        tabIndex="-1"
                       >
                         <Link
                           href="/user/profile"
                           passHref
-                          className="flex items-center px-4 py-2 text-blue-500 hover:font-semibold"
+                          className="flex items-center px-4 py-2 text-blue-500 hover:bg-blue-50 hover:font-semibold"
                           onClick={toggleDropdown}
                         >
                           <FaUser size={17} className="mr-2" />
                           Your Profile
                         </Link>
-
-                        {/* <Link
-                        href="/user/management"
-                        passHref
-                        className="flex items-center px-4 py-2 text-[#07224D] hover:bg-gray-200"
-                        onClick={toggleDropdown}
-                      >
-                        <FaUsers size={17} className="mr-2" />
-                        Manage Users
-                      </Link> */}
-
                         <Link
                           href="/auth/login"
                           passHref
-                          className="flex items-center px-4 py-2 text-blue-500 hover:font-semibold"
+                          className="flex items-center px-4 py-2 text-blue-500 hover:bg-blue-50 hover:font-semibold"
                           onClick={logOutUser}
                         >
                           <FaSignOutAlt size={17} className="mr-2" />

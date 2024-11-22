@@ -9,15 +9,21 @@ import CourseCard from "@/components/CourseCard";
 import CourseHead from "@/components/CourseHead";
 import { useSidebar } from "@/providers/useSidebar";
 import { CircularProgress } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import courseImg from "/public/assets/img/course-image.png";
 import { toast } from "react-toastify";
 import { FaTimes } from "react-icons/fa";
 import { useAuth } from "@/providers/AuthContext";
 import Link from "next/link";
+import { IoIosArrowDown } from "react-icons/io";
+import useClickOutside from "@/providers/useClickOutside";
 
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
+  const [isCourseOpen, setIsCourseOpen] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState([]);
+  const courseButtonRef = useRef(null);
+  const courseDropdownRef = useRef(null);
   const { userData } = useAuth();
   const isStudent = userData?.Group === "student";
   const programId = params.programId;
@@ -30,6 +36,10 @@ export default function Page({ params }) {
   const [fetch, setFetch] = useState(false);
   const [programStatus, setProgramStatus] = useState(0);
   const displayedCourses = new Set();
+
+  useClickOutside(courseDropdownRef, courseButtonRef, () =>
+    setIsCourseOpen(false)
+  );
 
   async function fetchProgramById() {
     try {
@@ -98,15 +108,17 @@ export default function Page({ params }) {
     }
   }
 
-  const handleSelectChange = (event) => {
-    const selectedName = event.target.value;
-    const selectedCourse = courses.find(
-      (course) => course.name === selectedName
-    );
+  const toggleCourseOpen = () => {
+    setIsCourseOpen(!isCourseOpen);
+  };
 
-    if (selectedCourse) {
-      if (!inputCourses.includes(selectedCourse.id)) {
-        setInputCourses((prevCourses) => [...prevCourses, selectedCourse.id]);
+  const handleSelectChange = (course) => {
+    const selectedName = course.name;
+    const Course = courses.find((course) => course.name === selectedName);
+
+    if (Course) {
+      if (!selectedCourse.includes(selectedCourse.id)) {
+        setSelectedCourse((prevCourses) => [...prevCourses, Course.id]);
       } else {
         toast.error("This course is already selected.");
       }
@@ -129,7 +141,7 @@ export default function Page({ params }) {
   }
 
   const removeCourse = (courseToRemove) => {
-    setInputCourses((prevCourses) =>
+    setSelectedCourse((prevCourses) =>
       prevCourses.filter((courseId) => courseId !== courseToRemove)
     );
     setCourseData((prevCourses) =>
@@ -287,7 +299,7 @@ export default function Page({ params }) {
                     );
                   })}
 
-                  {inputCourses?.map((courseId) => {
+                  {selectedCourse?.map((courseId) => {
                     if (displayedCourses.has(courseId)) return null;
                     displayedCourses.add(courseId);
 
@@ -306,20 +318,49 @@ export default function Page({ params }) {
                     );
                   })}
 
-                  <select
-                    value=""
-                    onChange={handleSelectChange}
-                    className="flex items-center bg-surface-100 outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 py-1 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-8 p-2 text-xs sm:text-sm sm:leading-6 max-sm:w-full"
-                  >
-                    <option value="" disabled>
-                      Select a course
-                    </option>
-                    {courses.map((course) => (
-                      <option key={course.id} value={course.name}>
-                        {course.name}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="relative w-full">
+                    <button
+                      ref={courseButtonRef}
+                      onClick={toggleCourseOpen}
+                      className={`${
+                        !selectedCourse ? "text-[#92A7BE]" : "text-[#424B55]"
+                      } flex justify-between items-center w-full hover:text-[#0E1721] px-4 py-2 text-sm text-left bg-surface-100 border border-[#ACC5E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                    >
+                      {"Select a course"}
+                      <span
+                        className={
+                          isCourseOpen
+                            ? "rotate-180 transition-transform"
+                            : "transition-transform"
+                        }
+                      >
+                        <IoIosArrowDown />
+                      </span>
+                    </button>
+
+                    {isCourseOpen && (
+                      <div
+                        ref={courseDropdownRef}
+                        className="absolute top-full mt-1 left-0 z-20 w-full lg:max-h-[170px] max-h-[150px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                      >
+                        {courses && courses.length > 0 ? (
+                          courses.map((course) => (
+                            <div
+                              key={course.id}
+                              onClick={() => handleSelectChange(course)}
+                              className="px-4 py-2 hover:bg-blue-100 cursor-pointer text-gray-700 text-sm"
+                            >
+                              {course.name}
+                            </div>
+                          ))
+                        ) : (
+                          <div className="p-4 text-gray-500 text-center text-sm">
+                            No courses available
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 <button

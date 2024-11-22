@@ -292,7 +292,7 @@ export const GradingSection = ({
             //   }`}
             // >
             openSection === title && (
-              <div className="z-50">
+              <div className="">
                 <button
                   onClick={toggleOpen}
                   className="flex justify-between z-30 items-center sm:w-[200px] max-h-[250px] text-[#92A7BE] hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border  border-[#92A7BE] rounded-lg  focus:outline-none  transition duration-300 ease-in-out"

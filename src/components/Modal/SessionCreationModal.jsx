@@ -235,8 +235,8 @@ const SessionCreationModal = ({
           setOpenModal(false);
           setUpdateSession(!updateSession);
         } catch (error) {
-          // console.log("error while session creation", error.response);
-          if (error.response.status === 400) {
+          // console.log("error while session creation", error);
+          if (error.response && error.response.status === 400) {
             toast.error(error.response.data.error[0]);
           }
           // toast.error("error in class scheduling");

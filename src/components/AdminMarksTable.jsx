@@ -192,214 +192,218 @@ const AdminMarksTable = ({
                   <CircularProgress />
                 </div>
               ) : (
-                <table className="min-w-full divide-y divide-dark-300 dark:divide-gray-700">
-                  <thead className="bg-surface-100 text-blue-500 shadow-sm shadow-dark-200">
-                    <tr>
-                      <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
-                        Registration Id
-                      </th>
-                      <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
-                        Student Name
-                      </th>
-                      <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
-                        Obtained Marks
-                      </th>
-                      <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
-                        Remarks
-                      </th>
-                      <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
-                        Submitted file
-                      </th>
-                      <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
-                        Status
-                      </th>
-                      <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-dark-200 dark:divide-gray-700">
-                    {assessments && assessments.length > 0 ? (
-                      assessments.map((assessment, index) => (
-                        <tr key={index}>
-                          <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
-                            {assessment?.registration_id}
-                          </td>
-                          <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
-                            {assessment?.student_name}
-                          </td>
-                          <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
-                            {(isEditing === assessment.submission_id ||
-                              (updatingGrade &&
-                                assessment.grading_id === isUpdatingId)) &&
-                            assessment?.status === "Submitted" &&
-                            (!assessment?.marks_obtain ||
-                              assessment?.marks_obtain === 0) ? (
-                              <input
-                                type="number"
-                                min={0}
-                                name="marks_obtain"
-                                value={editData.marks_obtain}
-                                onChange={handleChange}
-                                className="py-3 block text-center w-full outline-none border-b border-dark-500 text-sm focus:border-blue-300 focus:ring-blue-300"
-                              />
-                            ) : (
-                              assessment?.grade || 0
-                            )}
-                          </td>
-                          <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
-                            {(isEditing === assessment.submission_id ||
-                              (updatingGrade &&
-                                assessment.grading_id === isUpdatingId)) &&
-                            assessment?.status === "Submitted" &&
-                            (!assessment?.marks_obtain ||
-                              assessment?.marks_obtain === 0) ? (
-                              <input
-                                type="text"
-                                name="remarks"
-                                value={editData.remarks}
-                                onChange={handleChange}
-                                className="py-3 text-center block w-full outline-none border-b border-dark-500 text-sm focus:border-blue-300 focus:ring-blue-300"
-                              />
-                            ) : (
-                              assessment?.remarks || "-"
-                            )}
-                          </td>
-                          <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800 ">
-                            {assessment.submitted_file === null ? (
-                              "-"
-                            ) : (
-                              <a
-                                href="#"
-                                className="cursor-pointer flex justify-center items-center text-black hover:text-[#2563eb] hover:underline"
-                                title="download"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  downloadFile(assessment.submitted_file);
-                                }}
-                              >
-                                {assessment.submitted_file.split("/").pop()}
-                              </a>
-                            )}
-                          </td>
-                          <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
-                            <p
-                              className={`w-[130px] text-surface-100 text-center px-4 py-2 text-[12px] rounded-lg ${
-                                assessment?.status === "Submitted"
-                                  ? "bg-mix-300 "
-                                  : assessment?.status === "Pending"
-                                  ? "bg-mix-500 "
-                                  : assessment?.status === "Late Submission"
-                                  ? "bg-mix-600 "
-                                  : "bg-mix-200 "
-                              }`}
-                            >
-                              {assessment?.status}
-                            </p>
-                          </td>
-
-                          <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
-                            <div className="flex">
-                              {assessment.submitted_file &&
-                              assessment.grading_id !== null &&
-                              assessment.grading_id > 0 ? (
-                                <button className="w-[110px] text-center px-4 py-2 text-[12px] rounded-lg text-sm bg-mix-300 text-surface-200">
-                                  Graded
-                                </button>
-                              ) : assessment?.status !== "Submitted" ? (
-                                <button className=" text-center text-[12px] rounded-lg text-sm bg-gray-300 text-blue-300">
-                                  You cant grade right now
-                                </button>
-                              ) : isEditing === assessment.submission_id ? (
-                                <button
-                                  className="w-[110px] hover:bg-blue-700 text-center px-4 py-2 text-[12px] rounded-lg text-sm bg-blue-300 text-surface-200"
-                                  onClick={() =>
-                                    handleSave(
-                                      assessment.submission_id,
-                                      // ||
-                                      //   (assessment.assignment &&
-                                      //   assessment.registration_id
-
-                                      //     ? assessment.assignment
-                                      //     : null),
-                                      assessment.status
-                                    )
-                                  }
-                                >
-                                  Grade
-                                </button>
+                <div className="relative max-h-[75vh] overflow-y-auto scrollbar-webkit">
+                  <table cclassName="min-w-full divide-y divide-dark-200">
+                    <thead className="bg-surface-100 text-blue-500 sticky top-0 z-10 shadow-sm shadow-dark-200">
+                      <tr>
+                        <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
+                          Registration Id
+                        </th>
+                        <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
+                          Student Name
+                        </th>
+                        <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
+                          Obtained Marks
+                        </th>
+                        <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
+                          Remarks
+                        </th>
+                        <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
+                          Submitted file
+                        </th>
+                        <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
+                          Status
+                        </th>
+                        <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-dark-200 dark:divide-gray-700">
+                      {assessments && assessments.length > 0 ? (
+                        assessments.map((assessment, index) => (
+                          <tr key={index}>
+                            <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
+                              {assessment?.registration_id}
+                            </td>
+                            <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
+                              {assessment?.student_name}
+                            </td>
+                            <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
+                              {(isEditing === assessment.submission_id ||
+                                (updatingGrade &&
+                                  assessment.grading_id === isUpdatingId)) &&
+                              assessment?.status === "Submitted" &&
+                              (!assessment?.marks_obtain ||
+                                assessment?.marks_obtain === 0) ? (
+                                <input
+                                  type="number"
+                                  min={0}
+                                  name="marks_obtain"
+                                  value={editData.marks_obtain}
+                                  onChange={handleChange}
+                                  className="py-3 block text-center w-full outline-none border-b border-dark-500 text-sm focus:border-blue-300 focus:ring-blue-300"
+                                />
                               ) : (
-                                <button
-                                  onClick={() =>
-                                    handleEditClick(
-                                      assessment.submission_id,
-                                      assessment
-                                    )
-                                  }
-                                  className="w-[110px] text-center px-4 py-2 text-[12px] rounded-lg text-sm bg-blue-300 text-surface-200"
-                                >
-                                  Grade
-                                </button>
+                                assessment?.grade || 0
                               )}
-                              <div>
-                                {assessment.grading_id && !updatingGrade && (
+                            </td>
+                            <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
+                              {(isEditing === assessment.submission_id ||
+                                (updatingGrade &&
+                                  assessment.grading_id === isUpdatingId)) &&
+                              assessment?.status === "Submitted" &&
+                              (!assessment?.marks_obtain ||
+                                assessment?.marks_obtain === 0) ? (
+                                <input
+                                  type="text"
+                                  name="remarks"
+                                  value={editData.remarks}
+                                  onChange={handleChange}
+                                  className="py-3 text-center block w-full outline-none border-b border-dark-500 text-sm focus:border-blue-300 focus:ring-blue-300"
+                                />
+                              ) : (
+                                assessment?.remarks || "-"
+                              )}
+                            </td>
+                            <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800 ">
+                              {assessment.submitted_file === null ? (
+                                "-"
+                              ) : (
+                                <a
+                                  href="#"
+                                  className="cursor-pointer flex justify-center items-center text-black hover:text-[#2563eb] hover:underline"
+                                  title="download"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    downloadFile(assessment.submitted_file);
+                                  }}
+                                >
+                                  {assessment.submitted_file.split("/").pop()}
+                                </a>
+                              )}
+                            </td>
+                            <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
+                              <p
+                                className={`w-[130px] text-surface-100 text-center px-4 py-2 text-[12px] rounded-lg ${
+                                  assessment?.status === "Submitted"
+                                    ? "bg-mix-300 "
+                                    : assessment?.status === "Pending"
+                                    ? "bg-mix-500 "
+                                    : assessment?.status === "Late Submission"
+                                    ? "bg-mix-600 "
+                                    : "bg-mix-200 "
+                                }`}
+                              >
+                                {assessment?.status}
+                              </p>
+                            </td>
+
+                            <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
+                              <div className="flex">
+                                {assessment.submitted_file &&
+                                assessment.grading_id !== null &&
+                                assessment.grading_id > 0 ? (
+                                  <button className="w-[110px] text-center px-4 py-2 text-[12px] rounded-lg text-sm bg-mix-300 text-surface-200">
+                                    Graded
+                                  </button>
+                                ) : assessment?.status !== "Submitted" ? (
+                                  <button className=" text-center text-[12px] rounded-lg text-sm bg-gray-300 text-blue-300">
+                                    You cant grade right now
+                                  </button>
+                                ) : isEditing === assessment.submission_id ? (
                                   <button
-                                    title="Edit Grading"
+                                    className="w-[110px] hover:bg-blue-700 text-center px-4 py-2 text-[12px] rounded-lg text-sm bg-blue-300 text-surface-200"
                                     onClick={() =>
-                                      handleEditGrading(
-                                        assessment.grading_id,
+                                      handleSave(
+                                        assessment.submission_id,
+                                        // ||
+                                        //   (assessment.assignment &&
+                                        //   assessment.registration_id
+
+                                        //     ? assessment.assignment
+                                        //     : null),
+                                        assessment.status
+                                      )
+                                    }
+                                  >
+                                    Grade
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={() =>
+                                      handleEditClick(
+                                        assessment.submission_id,
                                         assessment
                                       )
                                     }
-                                    className="ml-2 text-center flex items-center justify-center px-4 py-2 text-[12px] rounded-lg text-blue-300"
+                                    className="w-[110px] text-center px-4 py-2 text-[12px] rounded-lg text-sm bg-blue-300 text-surface-200"
                                   >
-                                    <FaEdit size={18} />
+                                    Grade
                                   </button>
                                 )}
-
-                                {updatingGrade &&
-                                  assessment.grading_id === isUpdatingId && (
-                                    <div className="flex">
-                                      <button
-                                        onClick={() =>
-                                          handleUpdateGrade(
-                                            assessment.grading_id
-                                          )
-                                        }
-                                        className="m-2 flex items-center group text-dark-600"
-                                      >
-                                        <IoCheckmark
-                                          size={20}
-                                          title="Confirm update"
-                                          className="cursor-pointer hover:border-2 border-mix-300 hover:text-mix-300 font-bold rounded-full"
-                                        />
-                                      </button>
-                                      <button
-                                        onClick={() => setUpdatingGrade(false)}
-                                        className="m-2 flex items-center group text-dark-600"
-                                      >
-                                        <IoClose
-                                          size={19}
-                                          title="Cancel"
-                                          className="cursor-pointer hover:border-2 border-mix-200 hover:text-mix-200 font-bold rounded-full"
-                                        />
-                                      </button>
-                                    </div>
+                                <div>
+                                  {assessment.grading_id && !updatingGrade && (
+                                    <button
+                                      title="Edit Grading"
+                                      onClick={() =>
+                                        handleEditGrading(
+                                          assessment.grading_id,
+                                          assessment
+                                        )
+                                      }
+                                      className="ml-2 text-center flex items-center justify-center px-4 py-2 text-[12px] rounded-lg text-blue-300"
+                                    >
+                                      <FaEdit size={18} />
+                                    </button>
                                   )}
+
+                                  {updatingGrade &&
+                                    assessment.grading_id === isUpdatingId && (
+                                      <div className="flex">
+                                        <button
+                                          onClick={() =>
+                                            handleUpdateGrade(
+                                              assessment.grading_id
+                                            )
+                                          }
+                                          className="m-2 flex items-center group text-dark-600"
+                                        >
+                                          <IoCheckmark
+                                            size={20}
+                                            title="Confirm update"
+                                            className="cursor-pointer hover:border-2 border-mix-300 hover:text-mix-300 font-bold rounded-full"
+                                          />
+                                        </button>
+                                        <button
+                                          onClick={() =>
+                                            setUpdatingGrade(false)
+                                          }
+                                          className="m-2 flex items-center group text-dark-600"
+                                        >
+                                          <IoClose
+                                            size={19}
+                                            title="Cancel"
+                                            className="cursor-pointer hover:border-2 border-mix-200 hover:text-mix-200 font-bold rounded-full"
+                                          />
+                                        </button>
+                                      </div>
+                                    )}
+                                </div>
                               </div>
-                            </div>
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan="8" className="text-center w-full py-4">
+                            No data found
                           </td>
                         </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="8" className="text-center w-full py-4">
-                          No data found
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               )}
             </div>
           </div>

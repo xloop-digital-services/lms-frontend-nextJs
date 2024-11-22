@@ -4,6 +4,7 @@ import { CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import jsPDF from "jspdf";
+import * as XLSX from "xlsx";
 import "jspdf-autotable";
 import { FaDownload } from "react-icons/fa";
 
@@ -31,18 +32,18 @@ const BatchUserModal = ({ selectedBatch, setOpenInfo }) => {
   }, [selectedBatch]);
 
   const downloadPDF = () => {
-    const doc = new jsPDF();
-    doc.text(`Students in ${selectedBatch}`, 14, 10);
-    const tableData = info.map((student) => [
-      student.registration_id,
-      student.name,
-    ]);
-    doc.autoTable({
-      head: [["Student ID", "Student Name"]],
-      body: tableData,
-      startY: 20,
-    });
-    doc.save(`Students_in_${selectedBatch}.pdf`);
+    const worksheetData = [
+      ["Student ID", "Student Name"], // Header row
+      ...info.map((student) => [student.registration_id, student.name]), // Data rows
+    ];
+
+    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Students");
+
+    const fileName = `Students_in_${selectedBatch}.xlsx`;
+    XLSX.writeFile(workbook, fileName);
   };
 
   return (
