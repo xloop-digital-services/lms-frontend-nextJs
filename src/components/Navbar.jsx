@@ -26,20 +26,20 @@ export default function Navbar() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showNotification, setShowNotifications] = useState(false);
   const dropdownRef = useRef(null);
+  const dropbutton = useRef(null);
   const [user, setUser] = useState({});
   const { logOutUser, userData } = useAuth();
   const isStudent = userData?.Group === "student";
   const isAdmin = userData?.Group === "admin";
   const userID = userData?.User?.id;
   const group = userData?.Group;
-  const dropbutton = useRef(null);
   const { messages: messages, loading: loading } = useWebSocket(
-    `wss://lms-api-xloopdigital.com/ws/notification/?user_id=${userID}`,
+    `ws://13.126.167.22:8000/ws/notification/?user_id=${userID}`,
     group
   );
 
   const { messages: announcements, loading: load } = useWebSocket(
-    `wss://lms-api-xloopdigital.com/ws/announcements/?user_id=${userID}`,
+    `ws://13.126.167.22:8000/ws/announcements/?user_id=${userID}`,
     group
   );
 
@@ -58,6 +58,7 @@ export default function Navbar() {
     setShowNotifications(false);
     setShowDropdown(false);
   });
+
   useEffect(() => {
     async function fetchUser() {
       try {
@@ -78,7 +79,7 @@ export default function Navbar() {
       }
     }
     fetchUser();
-  }, [userID]);
+  }, [group]);
 
   const isLinkActive = (path) => {
     return pathname === path;
@@ -193,103 +194,71 @@ export default function Navbar() {
                     </div>
                   )}
 
-                  <button
-                    type="button"
-                    className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                    id="user-menu-button"
-                    aria-expanded="false"
-                    aria-haspopup="true"
-                  >
-                    <span className="sr-only">Open user menu</span>
-                  </button>
-
                   <div className="relative flex items-center" ref={dropdownRef}>
+                    {/* Profile Icon */}
                     <div
                       className="w-[50px] h-[50px] uppercase rounded-full mr-2 cursor-pointer flex justify-center items-center text-surface-100 bg-blue-300"
                       onClick={toggleDropdown}
-                      ref={dropdownRef}
                     >
-                      <div className="w-[50px] h-[50px] uppercase rounded-full mr-2 cursor-pointer flex justify-center items-center text-surface-100 bg-blue-300">
-                        {firstWord}
-                      </div>
-                      {/* User Details */}
-                      <div className="flex flex-col">
+                      {firstWord}
+                    </div>
+
+                    {/* User Details */}
+                    <div className="flex flex-col">
+                      <div
+                        ref={dropbutton}
+                        className="flex justify-end items-center cursor-pointer hover:font-medium text-blue-500"
+                        onClick={toggleDropdown}
+                      >
+                        <div>
+                          <p className="text-md capitalize">{`${user?.first_name} ${user?.last_name}`}</p>
+                          <p className="text-xs uppercase">
+                            {user?.registration_id}
+                          </p>
+                        </div>
                         <div
-                          ref={dropbutton}
-                          className="flex justify-end items-center cursor-pointer hover:font-medium text-blue-500"
-                          onClick={toggleDropdown}
+                          className={`ml-1 transition-transform ${
+                            showDropdown ? "rotate-180" : ""
+                          }`}
                         >
-                          <div>
-                            <p className="text-md capitalize">{`${user?.first_name} ${user?.last_name}`}</p>
-                            <p className="text-xs uppercase">
-                              {user?.registration_id}
-                            </p>
-                          </div>
-                          <div
-                            className={`ml-1 transition-transform ${
-                              showDropdown ? "rotate-180" : ""
-                            }`}
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            className={`h-4 w-4`}
                           >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              className={`h-4 w-4`}
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M19 9l-7 7-7-7"
-                              />
-                            </svg>
-                          </div>
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 9l-7 7-7-7"
+                            />
+                          </svg>
                         </div>
                       </div>
-                      <button
-                        type="button"
-                        className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                        id="user-menu-button"
-                        aria-expanded="false"
-                        aria-haspopup="true"
-                      >
-                        <span className="sr-only">Open user menu</span>
-                      </button>
                     </div>
+
+                    {/* Dropdown Menu */}
                     {showDropdown && (
                       <div
-                      ref={dropdownRef}
+                        ref={dropdownRef}
                         className="absolute right-0 mt-40 z-10 w-48 origin-top-right rounded-lg bg-surface-100 py-2 shadow-lg focus:outline-none"
                         role="menu"
-                        aria-orientation="vertical"
-                        aria-labelledby="user-menu-button"
-                        tabIndex="-1"
                       >
                         <Link
                           href="/user/profile"
                           passHref
-                            className="flex items-center px-4 py-2 text-blue-500 hover:bg-blue-50 hover:font-semibold"
+                          className="flex items-center px-4 py-2 text-blue-500 hover:bg-blue-50 hover:font-semibold"
                           onClick={toggleDropdown}
                         >
                           <FaUser size={17} className="mr-2" />
                           Your Profile
                         </Link>
-
-                        {/* <Link
-                        href="/user/management"
-                        passHref
-                        className="flex items-center px-4 py-2 text-[#07224D] hover:bg-gray-200"
-                        onClick={toggleDropdown}
-                      >
-                        <FaUsers size={17} className="mr-2" />
-                        Manage Users
-                      </Link> */}
-
                         <Link
                           href="/auth/login"
                           passHref
-                         className="flex items-center px-4 py-2 text-blue-500 hover:bg-blue-50 hover:font-semibold"
+                          className="flex items-center px-4 py-2 text-blue-500 hover:bg-blue-50 hover:font-semibold"
                           onClick={logOutUser}
                         >
                           <FaSignOutAlt size={17} className="mr-2" />
