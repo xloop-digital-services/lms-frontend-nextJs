@@ -495,7 +495,7 @@ export default function CreateField({
               </>
 
               <button
-                // onClick={goBack}
+                onClick={goBack}
                 type="submit"
                 className=" flex text-center max-sm:text-sm justify-center items-center gap-2 text-surface-100 bg-blue-300 py-2 px-4 mt-4 rounded-md mr-4 hover:bg-[#3272b6]"
               >

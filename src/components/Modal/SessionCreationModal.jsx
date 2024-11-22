@@ -236,7 +236,7 @@ const SessionCreationModal = ({
           setUpdateSession(!updateSession);
         } catch (error) {
           // console.log("error while session creation", error.response);
-          if (error.response.status === 400) {
+          if (error.response && error.response.status === 400) {
             toast.error(error.response.data.error[0]);
           }
           // toast.error("error in class scheduling");
@@ -480,7 +480,9 @@ const SessionCreationModal = ({
                   ref={batchButton}
                   onClick={toggleBatchOpen}
                   className={`${
-                    !isBatchSelected || edit ? " text-[#92A7BE]" : "text-[#424b55]"
+                    !isBatchSelected || edit
+                      ? " text-[#92A7BE]"
+                      : "text-[#424b55]"
                   } flex justify-between items-center w-full px-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                   disabled={edit}
                 >

@@ -1,7 +1,5 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import Router from "next/router";
-
 const API = process.env.NEXT_PUBLIC_BACKEND_URL;
 const refreshEndpoint = `${API}/api/token/refresh/`;
 
@@ -50,7 +48,7 @@ axiosInstance.interceptors.response.use(
       } catch (refreshError) {
         Cookies.remove("access_token");
         Cookies.remove("refresh_token");
-        Router.push("/auth/login");
+        window.location.href = '/auth/login';
         return Promise.reject(refreshError);
       }
     }
@@ -59,7 +57,7 @@ axiosInstance.interceptors.response.use(
     if (errorResponse && errorResponse.status === 401) {
       Cookies.remove("access_token");
       Cookies.remove("refresh_token");
-      Router.push("/auth/login");
+      window.location.href = '/auth/login';
     }
 
     return Promise.reject(error);

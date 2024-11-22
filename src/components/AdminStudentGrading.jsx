@@ -203,17 +203,13 @@ const AdminStudentGrading = ({ courseId }) => {
             instructorSessions.data.length > 0 ? (
               instructorSessions.data.map((session) => (
                 <option key={session.session_id} value={session.session_id}>
-                  {session.location} - {session.course} -{" "}
-                  {session.no_of_student} - {session.start_time} -{" "}
-                  {session.end_time}
+                  {session?.session_name}
                 </option>
               ))
             ) : adminSessions && adminSessions.length > 0 ? (
               adminSessions.map((session) => (
                 <option key={session.id} value={session.id}>
-                  {session.location_name} - {session.course.name} -{" "}
-                  {session.no_of_student} - {session.start_time} -{" "}
-                  {session.end_time}
+                  {session?.session_name}
                 </option>
               ))
             ) : (

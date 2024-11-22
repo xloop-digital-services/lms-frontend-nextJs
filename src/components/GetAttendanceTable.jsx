@@ -327,14 +327,12 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                         key={session.session_id}
                         value={session.session_id}
                       >
-                        {session.location} - {session.course} -{" "}
-                        {session.start_time} - {session.end_time}
+                        {session.session_name}
                       </option>
                     ))
                   : sessions.map((session) => (
                       <option key={session.id} value={session.id}>
-                        {session.location_name} - {session.course.name} -{" "}
-                        {session.start_time} - {session.end_time}
+                        {session.session_name}
                       </option>
                     ))}
               </select>

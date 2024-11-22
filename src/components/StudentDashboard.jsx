@@ -78,7 +78,7 @@ export default function StudentDashboard() {
 
   useEffect(() => {
     fetchSessionForUser();
-  }, []);
+  }, [group]);
 
   async function fetchPendingAssignments() {
     setLoader(true);

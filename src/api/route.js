@@ -496,16 +496,16 @@ export const getAttendanceStudentPage = async (regId, courseId) => {
 };
 
 // attendance/student/<int:course_id>/
-export const getStudentAttendance = async (courseId) => {
-  try {
-    const response = await axiosInstance.get(
-      `/api/attendance/student/${courseId}/`
-    );
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
+// export const getStudentAttendance = async (courseId) => {
+//   try {
+//     const response = await axiosInstance.get(
+//       `/api/attendance/student/${courseId}/`
+//     );
+//     return response;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
 
 //get overall course progress percentage
 export const getProgressForCourse = async (courseId) => {

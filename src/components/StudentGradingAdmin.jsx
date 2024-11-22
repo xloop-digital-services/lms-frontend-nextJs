@@ -378,7 +378,7 @@ export default function StudentGradingAdmin({
           examsScore={progress?.exams?.grades}
           examsWeightedScore={progress?.exams?.percentage}
           attenWeightage={progress?.attendance?.weightage}
-          attenScore={progress?.attendance?.total_present_attendance}
+          attenScore={progress?.attendance?.attendance_grace_marks}
           attenWeightedScore={progress?.attendance?.attendance_grace_marks}
           assignment_total={progress?.assignments?.total_grades}
           quiz_total={progress?.quizzes?.total_grades}

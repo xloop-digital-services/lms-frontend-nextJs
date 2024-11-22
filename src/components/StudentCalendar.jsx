@@ -29,7 +29,7 @@ export default function StudentCalendar() {
                   title: `${session.course_name} - Class`,
                   start: `${item.date}T${session.start_time}`,
                   end: `${item.date}T${session.end_time}`,
-                  className: "bg-blue-100 p-1 ",
+                  className: "bg-blue-100 p-1 hover:bg-blue-100",
                   type: "Class",
                 }));
 
@@ -44,9 +44,9 @@ export default function StudentCalendar() {
                     assessment.assessment_name || "No name provided"
                   }`,
                   start: `${item.date}T${assessment.due_time || "00:00"}`,
-                  className: "bg-blue-100 ",
+                  className: "bg-blue-200 hover:bg-blue-200 ",
                   type: assessment.type,
-                  courseId: assessment.course_id, 
+                  courseId: assessment.course_id,
                 }));
 
               return [...sessionEvents, ...assessmentEvents];
@@ -108,8 +108,8 @@ export default function StudentCalendar() {
               end: event.end,
               description: event.description,
               className: event.className,
-              type: event.type, 
-              courseId: event.courseId, 
+              type: event.type,
+              courseId: event.courseId,
             }))}
             eventClick={handleEventClick}
             eventContent={(arg) => {
@@ -134,6 +134,17 @@ export default function StudentCalendar() {
               );
             }}
           />
+          <div className="flex min-w-48  py-2 rounded-xl text-dark-400  justify-between my-2 max-md:flex-col">
+        <p>Calendar Summary</p>
+        <div className="flex items-center">
+          <p className="bg-blue-100 w-2 h-2 rounded-full "></p>
+          <p className="mx-2">Class timings</p>
+        </div>
+        <div className="flex items-center">
+          <p className="bg-blue-200 w-2 h-2 rounded-full"></p>
+          <p className="mx-2 ">Assessments Due Date</p>
+        </div>
+      </div>
         </div>
       </div>
     </div>

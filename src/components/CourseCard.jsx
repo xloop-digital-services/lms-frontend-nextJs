@@ -35,7 +35,7 @@ const CourseCard = ({
   //   setSelectedQuiz(id);
   //   setConfirmDelete(true);
   // };
-  console.log(picture);
+  // console.log(picture);
 
   // const handleDelete = async () => {
   //   try {

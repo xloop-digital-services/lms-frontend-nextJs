@@ -7,6 +7,8 @@ import { FaArrowLeft, FaBullhorn, FaPlus } from "react-icons/fa";
 import { formatDateTime } from "@/components/AdminDataStructure";
 import { useAuth } from "@/providers/AuthContext";
 import { getAllAnnouncements } from "@/api/route";
+import Lottie from "lottie-react";
+import bouncing from "../../../public/data/bouncing.json";
 
 export default function Page({}) {
   const { isSidebarOpen } = useSidebar();
@@ -94,7 +96,7 @@ export default function Page({}) {
             <div className="flex h-[700px] bg-surface-100 items-center justify-center">
               <CircularProgress />
             </div>
-          ) : (
+          ) : announcement?.length > 0 ? (
             announcement
               ?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
               .map((ann) => (
@@ -109,7 +111,7 @@ export default function Page({}) {
                     {ann?.sessions?.map((session, index) => (
                       <p
                         key={index}
-                        className=" text-sm bg-blue-600 border border-blue-300 px-2 py-1 rounded-md text-blue-300 mt-2 max-md:mt-1 max-md:mb-2"
+                        className="text-sm bg-blue-600 border border-blue-300 px-2 py-1 rounded-md text-blue-300 mt-2 max-md:mt-1 max-md:mb-2"
                       >
                         {session.name}
                       </p>
@@ -117,16 +119,17 @@ export default function Page({}) {
                   </div>
                   <div className="my-2">
                     <p>{ann.message}</p>
-                    {/* <p className="italic mt-4 font-light">
-                      Please ignore any contradictory scheduling in the
-                      calendar.
-                    </p> */}
                   </div>
                   <p className="text-dark-400 text-sm">
                     {formatDateTime(ann.created_at)}
                   </p>
                 </div>
               ))
+          ) : (
+            <div className="text-center h-[700px] flex flex-col items-center justify-center w-full mt-4 text-gray-500">
+              <Lottie animationData={bouncing} className="h-[300px]" />
+              <p className="font-bold text-blue-500">No announcements found</p>
+            </div>
           )}
         </div>
       </div>

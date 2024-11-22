@@ -3,17 +3,17 @@ import React, { useEffect, useState } from "react";
 import { CircularProgress } from "@mui/material";
 import CourseHead from "./CourseHead";
 import { useAuth } from "@/providers/AuthContext";
-import { getUserSessions } from "@/api/route";
+import { getAttendanceStudentPage, getUserSessions } from "@/api/route";
 import StudentAttendanceTable from "./StudentAttendanceTable";
 
-const StudentAttendence = ({ attendance, loader, isAdmin, courseId }) => {
+const StudentAttendence = ({ loader, attendance, courseId }) => {
   const { userData } = useAuth();
   // const courseId = params.courseId;
   const isStudent = userData?.Group === "student";
   const [loading, setLoading] = useState(false);
   const [sessionId, setSessionId] = useState(null);
   const [studentInstructorName, setStudentInstructorName] = useState(null);
-
+  // console.log(attendance);
   async function fetchSessionForUser() {
     const response = await getUserSessions();
     setLoading(true);
@@ -51,11 +51,6 @@ const StudentAttendence = ({ attendance, loader, isAdmin, courseId }) => {
       setLoading(false);
     }
   }
-
-  useEffect(() => {
-    fetchSessionForUser();
-  }, [isStudent]);
-
   return (
     <>
       <CourseHead

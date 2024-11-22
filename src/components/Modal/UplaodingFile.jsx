@@ -232,6 +232,7 @@ const UploadingFile = ({
               <button
                 type="submit"
                 onClick={handleUploadation}
+                disabled={loader}
                 className="w-fit flex justify-center py-3 px-12 text-sm font-medium rounded-lg text-dark-100 bg-blue-300 hover:bg-[#3272b6] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
               >
                 {loader ? (

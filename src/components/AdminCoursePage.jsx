@@ -21,7 +21,7 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
   const [sessions, setSessions] = useState(null);
   const [courses, setCourses] = useState([]);
   const [loader, setLoading] = useState(false);
-  const [toggleSession, setToggleSession] = useState(false);
+  // const [toggleSession, setToggleSession] = useState(false);
   const [isSessionOpen, setIsSessionOpen] = useState(false);
   const [sessionId, setSessionId] = useState(null);
   const [searchFilter, setSearchFilter] = useState("");
@@ -76,11 +76,11 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
     fetchAllCourses();
   }, [isAdmin, title]);
 
-  const handleSessionToggle = (session) => {
-    setIsSessionOpen(true);
-    setToggleSession(true);
-    setSessionId(session.id);
-  };
+  // const handleSessionToggle = (session) => {
+  //   setIsSessionOpen(true);
+  //   setToggleSession(true);
+  //   setSessionId(session.id);
+  // };
 
   const filteredPrograms = programs?.filter(
     (program) =>

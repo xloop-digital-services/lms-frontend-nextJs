@@ -142,14 +142,14 @@ const PerformanceTable = ({
                       {Number(attenWeightage || 0).toFixed(2)}%
                     </td>
                     <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
-                      {Number(atten_total || 0).toFixed(2)}
+                      {Number(attenWeightage || 0).toFixed(2)}
                     </td>
 
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
                       {Number(attenScore || 0).toFixed(2)}
                     </td>
                     <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-100 text-center ">
-                      {Number(attenWeightedScore || 0).toFixed(2)}
+                      {Number(attenScore || 0).toFixed(2)}
                     </td>
                   </tr>
 
@@ -172,9 +172,8 @@ const PerformanceTable = ({
                         assignment_total +
                           quiz_total +
                           project_total +
-                          exam_total ||
-                        // + attenScore
-                        0
+                          exam_total +
+                          +attenWeightage || 0
                       ).toFixed(2)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-800 text-center">
@@ -182,9 +181,8 @@ const PerformanceTable = ({
                         assignmentScore +
                           quizScore +
                           examsScore +
-                          projectScore ||
-                        // + attenScore
-                        0
+                          projectScore +
+                          attenScore || 0
                       ).toFixed(2)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-100 text-center ">
@@ -193,7 +191,7 @@ const PerformanceTable = ({
                           quizWeightedScore +
                           examsWeightedScore +
                           projectWeightedScore +
-                          attenWeightedScore || 0
+                          attenScore || 0
                       ).toFixed(2)}
                       %
                     </td>

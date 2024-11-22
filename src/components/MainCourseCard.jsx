@@ -38,7 +38,7 @@ export default function MainCourseCard({
                     ? picture
                     : courseImg
                 }
-                alt={altText}
+                alt="course-img"
                 width={600}
                 height={200}
                 style={{

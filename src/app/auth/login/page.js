@@ -19,15 +19,17 @@ export default function Page() {
     logInUser,
     loading,
   } = useAuth();
-  // useEffect(() => {
-  //   localStorage.clear();
-  //   document.cookie.split(";").forEach((c) => {
-  //     document.cookie = c
-  //       .trim()
-  //       .replace(/^ +/, "")
-  //       .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
-  //   });
-  // }, []);
+
+  
+  useEffect(() => {
+    localStorage.clear();
+    document.cookie.split(";").forEach((c) => {
+      document.cookie = c
+        .trim()
+        .replace(/^ +/, "")
+        .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+    });
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 px-6 font-inter">
@@ -38,7 +40,7 @@ export default function Page() {
             alt="logo"
             width={300}
             height={50}
-            className=" object-contain"
+            className="object-contain"
           />
         </div>
       </div>
@@ -64,6 +66,7 @@ export default function Page() {
                   name="email"
                   placeholder="Enter your email"
                   type="email"
+                  autoComplete="email"
                   required
                   value={email.trim()}
                   onChange={(e) => setEmail(e.target.value)}
@@ -98,6 +101,7 @@ export default function Page() {
                   title="Password (at least 8 characters, with letters, numbers, and special characters)"
                   required
                   value={password.trim()}
+                  autocomplete="current-password"
                   onChange={(e) => setPassword(e.target.value)}
                   className="appearance-none block w-full p-3 pr-9 border border-dark-300 rounded-lg placeholder-dark-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                 />
