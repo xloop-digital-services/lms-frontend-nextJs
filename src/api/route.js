@@ -1651,3 +1651,14 @@ export const readNotification = async (userId, notificationId) => {
     throw error;
   }
 };
+
+export const getProgressForSession = async (programId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/api/course/program_progress/${programId}/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

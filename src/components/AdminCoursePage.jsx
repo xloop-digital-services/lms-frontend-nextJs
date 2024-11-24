@@ -13,6 +13,7 @@ import Lottie from "lottie-react";
 import bouncing from "../../public/data/bouncing.json";
 import { useRouter } from "next/navigation";
 import { FaMagnifyingGlass } from "react-icons/fa6";
+import { IoIosArrowDown } from "react-icons/io";
 
 export default function AdminCoursePage({ route1, programs, title, route }) {
   const { userData } = useAuth();
@@ -27,13 +28,27 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
   const [searchFilter, setSearchFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const sessionDown = useRef(null);
+  const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
+  const statusOptions = [
+    { value: "all", label: "All" },
+    { value: "active", label: "Active" },
+    { value: "inactive", label: "Inactive" },
+  ];
+  const sessionButton = useRef(null);
   const router = useRouter();
   const goBack = () => {
     router.back();
   };
   // console.log(userData?.Group);
+  const buttonRef = useRef(null);
+  const downRef = useRef(null);
+  useClickOutside(downRef, buttonRef, () => setIsStatusDropdownOpen(false));
+  useClickOutside(sessionDown, sessionButton, () => setIsSessionOpen(false));
 
-  useClickOutside(sessionDown, () => setIsSessionOpen(false));
+  const handleStatusSelect = (selectedValue) => {
+    setStatusFilter(selectedValue);
+    setIsStatusDropdownOpen(false);
+  };
   async function fetchAllCourses() {
     setLoading(true);
     try {
@@ -75,12 +90,6 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
     if (isAdmin && title === "Programs") return;
     fetchAllCourses();
   }, [isAdmin, title]);
-
-  // const handleSessionToggle = (session) => {
-  //   setIsSessionOpen(true);
-  //   setToggleSession(true);
-  //   setSessionId(session.id);
-  // };
 
   const filteredPrograms = programs?.filter(
     (program) =>
@@ -157,25 +166,40 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
             </div>
           </div>
           <div className="w-40 flex items-center max-md:w-full">
-            <select
-              className="w-40 max-md:w-full py-[14px] bg-surface-100 block px-2 border border-blue-100 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-            >
-              {" "}
-              <option value="" disabled>
-                Select status
-              </option>
-              <option className="" value="all">
-                All
-              </option>
-              <option className="" value="active">
-                Active
-              </option>
-              <option className="" value="inactive">
-                Inactive
-              </option>
-            </select>
+            <div className="relative space-y-2 text-sm w-40 max-md:w-full">
+              <button
+                ref={buttonRef}
+                onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
+                className={`${
+                  !statusFilter ? "text-[#92A7BE]" : "text-[#424B55]"
+                } flex justify-between items-center capitalize w-full px-4 py-[14px] bg-surface-100 border border-blue-100 rounded-lg placeholder-surface-100 focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-150 ease-in-out`}
+              >
+                {statusFilter || "Select status"}
+                <span
+                  className={`transition-transform duration-300 ${
+                    isStatusDropdownOpen ? "rotate-180" : ""
+                  }`}
+                >
+                  <IoIosArrowDown />
+                </span>
+              </button>
+              {isStatusDropdownOpen && (
+                <div
+                  ref={downRef}
+                  className="absolute top-full left-0 z-10 w-full bg-surface-100 border border-blue-100 rounded-lg shadow-lg max-h-[150px] overflow-auto scrollbar-webkit"
+                >
+                  {statusOptions.map((option, index) => (
+                    <div
+                      key={index}
+                      onClick={() => handleStatusSelect(option.value)}
+                      className="cursor-pointer hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold px-4 py-2 rounded-lg"
+                    >
+                      {option.label}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 

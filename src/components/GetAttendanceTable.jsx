@@ -1,20 +1,18 @@
 "use client";
 import {
-  getAttendanceByCourseIdDate,
   getAttendanceBySessionId,
   getAttendanceBySessionIdnCourseId,
-  getInstructorSessions,
   getInstructorSessionsbyCourseId,
-  getStudentsByCourseId,
   listSessionByCourseId,
-  markAttendanceByCourseId,
   patchAttendanceBySessionId,
   postAttendanceBySessionId,
 } from "@/api/route";
+import useClickOutside from "@/providers/useClickOutside";
 import { useAuth } from "@/providers/AuthContext";
 import { CircularProgress } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify"; // Ensure you have react-toastify installed
+import React, { useEffect, useRef, useState } from "react";
+import { IoIosArrowDown } from "react-icons/io";
+import { toast } from "react-toastify"; 
 
 export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   const { userData } = useAuth();
@@ -41,8 +39,16 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
 
   const [selectedSession, setSelectedSession] = useState("");
   const [isSelected, setIsSelected] = useState(false);
+  const [selectedSessionId, setSelectedSessionId] = useState("");
+  const [isSessionOpen, setIsSessionOpen] = useState(false);
+  const sessionButton = useRef(null);
+  const sessionDropdown = useRef(null);
   const [date, setDate] = useState(null);
   const [toggle, setToggle] = useState(false);
+
+  useClickOutside(sessionDropdown, sessionButton, () =>
+    setIsSessionOpen(false)
+  );
   // console.log(group, userId);
   async function fetchSessions() {
     const response = await getInstructorSessionsbyCourseId(
@@ -75,7 +81,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   async function fetchAttendance() {
     setGetting(true);
     try {
-      const response = await getAttendanceBySessionId(selectedSession);
+      const response = await getAttendanceBySessionId(selectedSessionId);
       if (response.status === 200) {
         const initialAttendance = response.data.data.students.reduce(
           (acc, student) => {
@@ -243,10 +249,14 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
     }
   };
 
-  const handleChange = (e) => {
-    const session_id = e.target.value;
-    // console.log("session id", session_id);
-    setSelectedSession(session_id); // Update the selected session ID
+  const toggleSessionOpen = () => {
+    setIsSessionOpen(!isSessionOpen);
+  };
+
+  const handleSessionSelect = (session) => {
+    setSelectedSession(session.session_name);
+    setSelectedSessionId(session.id);
+    setIsSessionOpen(false);
   };
 
   // useEffect(() => {
@@ -289,15 +299,17 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
         fetchAttendanceIns();
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedSession, date, toggle]); // Only run when selectedSession or courseId changes
+
+  }, [selectedSession, date, toggle]); 
 
   const handleDateChange = (e) => {
     const selectedDate = e.target.value;
     // console.log(selectedDate);
     setDate(selectedDate);
   };
-
+  useClickOutside(sessionDropdown, sessionButton, () =>
+    setIsSessionOpen(false)
+  )
   // console.log(selectedSessionId);
 
   return (
@@ -305,37 +317,51 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
       {
         <>
           <div className="flex items-center gap-3 w-full max-md:flex-col">
-            <div className="w-full">
-              <label>
-                {" "}
-                <label className="text-blue-500 font-semibold">
-                  Select Session
-                </label>
-              </label>
-
-              <select
-                value={selectedSession}
-                onChange={(e) => handleChange(e)}
-                className={` bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5`}
+            <div className="relative space-y-2 text-[15px] w-full mb-2">
+              <p className="text-blue-500 font-semibold">Select Session</p>
+              <button
+                ref={sessionButton}
+                onClick={toggleSessionOpen}
+                className={`${
+                  !selectedSession ? "text-[#92A7BE]" : "text-[#424B55]"
+                } flex justify-between items-center w-full hover:text-[#0E1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#ACC5E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
               >
-                <option value="" disabled>
-                  Select a session
-                </option>
-                {Array.isArray(sessions) && isInstructor
-                  ? sessions.map((session) => (
-                      <option
-                        key={session.session_id}
-                        value={session.session_id}
-                      >
-                        {session.session_name}
-                      </option>
-                    ))
-                  : sessions.map((session) => (
-                      <option key={session.id} value={session.id}>
-                        {session.session_name}
-                      </option>
-                    ))}
-              </select>
+                {selectedSession || "Select a session"}
+                <span
+                  className={
+                    isSessionOpen ? "rotate-180 duration-300" : "duration-300"
+                  }
+                >
+                  <IoIosArrowDown />
+                </span>
+              </button>
+
+              {isSessionOpen && (
+                <div
+                  ref={sessionDropdown}
+                  className="absolute top-full left-0 z-20 p-2  w-full lg:max-h-[170px] max-h-[150px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                >
+                  {Array.isArray(sessions) && isInstructor
+                    ? sessions.map((session) => (
+                        <div
+                          key={session.session_id}
+                          onClick={() => handleSessionSelect(session)}
+                          className="px-2 py-2 hover:bg-blue-100 hover:text-blue-300 rounded-lg"
+                        >
+                          {session.session_name}
+                        </div>
+                      ))
+                    : sessions.map((session) => (
+                        <div
+                          key={session.id}
+                          onClick={() => handleSessionSelect(session)}
+                          className="px-2 py-2 hover:bg-blue-100 hover:text-blue-300 rounded-lg"
+                        >
+                          {session.session_name}
+                        </div>
+                      ))}
+                </div>
+              )}
             </div>
             <div className="w-full">
               <label className="text-blue-500 font-semibold">Select Date</label>
@@ -390,15 +416,13 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                       attendance.map((att, index) => (
                         <tr key={index}>
                           <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
-                            {att.student} {/* Adjusted to match API response */}
+                            {att.student}
                           </td>
                           <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
                             {att.student_name}{" "}
-                            {/* Adjusted to match API response */}
                           </td>
                           <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
-                            {att.date || "-"}{" "}
-                            {/* Adjusted to match API response */}
+                            {att.date || "-"}
                           </td>
                           <td className="px-6 py-4 gap-3 flex text-center justify-center items-center whitespace-nowrap text-sm text-gray-800">
                             {["0", "1", "2"].map((status) => (

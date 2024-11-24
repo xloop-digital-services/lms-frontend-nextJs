@@ -60,47 +60,75 @@ export default function Page() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const s3Data = await handleFileUploadToS3(file, "Upload Course Thumbnails");
 
-    const formData = new FormData();
-    formData.append("name", programName);
-    formData.append("short_description", shortDesc);
-    formData.append("about", about);
-    formData.append("theory_credit_hours", chr || 0);
-    formData.append("lab_credit_hours", chrLab || 0);
+    if (!programName.trim()) {
+      toast.error("Course name is required.");
+      return;
+    }
+    if (!shortDesc.trim()) {
+      toast.error("Short description is required.");
+      return;
+    }
+    if (!about.trim()) {
+      toast.error("About field is required.");
+      return;
+    }
+
     if (!inputCourses || inputCourses.length === 0) {
       toast.error("Please add at least one skill.");
       return;
     }
-    const flattenedCourses = inputCourses.flat(Infinity);
-    // console.log(flattenedCourses);
-    
-    flattenedCourses.forEach((id) => {
-      formData.append("skills[]", id);
-    });
-    if (s3Data) {
-      formData.append("picture", s3Data);
+    if (!chr && !chrLab) {
+      toast.error("Please provide at least one credit hour.");
+      return;
     }
+    if (!file) {
+      toast.error("Please upload a course thumbnail.");
+      return;
+    }
+
+    setLoader(true); 
+
     try {
+      const s3Data = await handleFileUploadToS3(
+        file,
+        "Upload Course Thumbnails"
+      );
+
+      const formData = new FormData();
+      formData.append("name", programName);
+      formData.append("short_description", shortDesc);
+      formData.append("about", about);
+      formData.append("theory_credit_hours", chr || 0);
+      formData.append("lab_credit_hours", chrLab || 0);
+
+      const flattenedCourses = inputCourses.flat(Infinity);
+      flattenedCourses.forEach((id) => {
+        formData.append("skills[]", id);
+      });
+
+      if (s3Data) {
+        formData.append("picture", s3Data);
+      }
+
       const response = await createCourse(formData);
-      setLoader(true);
+
       if (response.status === 201) {
         toast.success("Course created successfully!");
-        router.back();
-        setLoader(false);
-        setCreatingProgram(formData);
+        setCreatingProgram(formData); 
         setAbout("");
         setCoursesNames([]);
         setProgramName("");
         setShortDesc("");
         setChr("");
         setChrLab("");
+        router.back();
       } else {
-        toast.error(response.data?.message);
-        setLoader(false);
+        toast.error(response.data?.message || "Failed to create course.");
       }
     } catch (error) {
       toast.error(`Error creating course: ${error.message}`);
+    } finally {
       setLoader(false);
     }
   };

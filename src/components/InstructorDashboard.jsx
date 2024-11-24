@@ -97,7 +97,7 @@ export default function InstructorDashboard() {
 
   return (
     <>
-  <div
+      <div
         className={`flex-1 transition-transform pt-[97px] space-y-4 max-md:pt-32 font-inter ${
           isSidebarOpen
             ? "translate-x-64 ml-20 "
@@ -107,7 +107,9 @@ export default function InstructorDashboard() {
           // paddingBottom: "20px",
           width: isSidebarOpen ? "81%" : "100%",
         }}
-      >        <div className="flex w-[100%] max-md:flex-col">
+      >
+        {" "}
+        <div className="flex w-[100%] max-md:flex-col">
           <div className="flex-col mx-2 w-[70%] max-md:w-full flex-wrap">
             <div className="w-full">
               <div className="bg-surface-100 p-4 rounded-xl mb-2">
@@ -135,7 +137,7 @@ export default function InstructorDashboard() {
                     <CircularProgress />
                   </div>
                 ) : (
-                  <div className="flex gap-2 flex-wrap max-md:flex-nowrap max-md:flex-col">
+                  <div className="flex gap-2 flex-wrap max-md:flex-nowrap max-md:flex-col max-md:items-center">
                     {courses?.slice(0, courseLimit).map((session) => (
                       <CourseCard
                         id={session.id}
@@ -208,7 +210,7 @@ export default function InstructorDashboard() {
               </div>
             </div>
           </div>
-          <div className="flex mx-2 h-[840px] w-[30%] max-md:w-full flex-col overflow-y-auto bg-surface-100 p-2 rounded-xl lg:w-fit scrollbar-webkit max-md:m-4">
+          <div className="flex mx-2 h-[840px] w-[30%] max-md:h-[420px] max-md:overflow-y-scroll max-md:scrollbar-webkit max-md:w-full flex-col overflow-y-auto bg-surface-100 p-2 rounded-xl lg:w-fit scrollbar-webkit max-md:m-4">
             <div>
               <h1 className="text-xl font-bold px-3 py-4 font-exo text-blue-500">
                 Your Current sessions
@@ -226,7 +228,8 @@ export default function InstructorDashboard() {
                     id={assignment.course_id}
                     type={`Course Name: ${assignment.course}`}
                     priority={assignment.schedules}
-                    category={`Capacity: ${assignment.no_of_students}\t\t\t\tLocation:${assignment.location}`}
+                    capacity={assignment.no_of_students}
+                    location={assignment.location}
                   />
                 ))
               ) : (

@@ -436,7 +436,6 @@ export default function Page({ params }) {
                 )}
               </div>
             )}
-
             {isInstructor && (
               <div className="relative space-y-2 text-[15px] w-full">
                 <p className="text-blue-500 font-semibold">Select Session</p>
@@ -448,11 +447,7 @@ export default function Page({ params }) {
                   } flex justify-between items-center w-full hover:text-[#0E1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#ACC5E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
                   {selectedSession
-                    ? `${selectedSession.location} - ${
-                        selectedSession.session_name || selectedSession.course
-                      } - ${selectedSession.start_time} - ${
-                        selectedSession.end_time
-                      }`
+                    ? `${selectedSession.session_name}`
                     : "Select a session"}
                   <span
                     className={
@@ -475,9 +470,7 @@ export default function Page({ params }) {
                           className="p-2 cursor-pointer"
                         >
                           <div className="px-4 py-1 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
-                            {session.location} -{" "}
-                            {session.session_name || session.course} -{" "}
-                            {session.start_time} - {session.end_time}
+                            {session.session_name}
                           </div>
                         </div>
                       ))

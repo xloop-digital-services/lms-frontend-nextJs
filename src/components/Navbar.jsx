@@ -43,7 +43,6 @@ export default function Navbar() {
     group
   );
 
-
   const ra = announcements.filter((message) => message.read === true).length;
   const ura = announcements.filter((message) => message.read === false).length;
   const rn = messages.filter((message) => message.status === "read").length;
@@ -80,7 +79,7 @@ export default function Navbar() {
       }
     }
     fetchUser();
-  }, [group]);
+  }, [userID]);
 
   const isLinkActive = (path) => {
     return pathname === path;
@@ -162,7 +161,7 @@ export default function Navbar() {
                       ) : (
                         <button
                           type="button"
-                          className="relative flex text-sm text-blue-500 focus:outline-none hover:text-blue-400 "
+                          className="relative max-sm:mr-3 flex text-sm text-blue-500 focus:outline-none hover:text-blue-400 "
                           id="user-menu-button"
                           aria-expanded="false"
                           aria-haspopup="true"

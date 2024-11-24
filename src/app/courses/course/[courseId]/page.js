@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   createModule,
   createSkill,
@@ -17,7 +17,8 @@ import {
 import CourseHead from "@/components/CourseHead";
 import { useSidebar } from "@/providers/useSidebar";
 import { CircularProgress } from "@mui/material";
-import axios from "axios";
+import { IoIosArrowDown } from "react-icons/io";
+import useClickOutside from "@/providers/useClickOutside";
 import {
   FaCheck,
   FaEdit,
@@ -29,7 +30,6 @@ import {
 } from "react-icons/fa";
 import { useAuth } from "@/providers/AuthContext";
 import { toast } from "react-toastify";
-import { Upload, UploadFile } from "@mui/icons-material";
 import UploadContent from "@/components/Modal/UploadFile";
 import DeleteConfirmationPopup from "@/components/Modal/DeleteConfirmationPopUp";
 import { handleFileUploadToS3 } from "@/components/ApplicationForm";
@@ -90,6 +90,9 @@ export default function Page({ params }) {
   const [skill, setSkill] = useState();
   const [moduleStatus, setModuleStatus] = useState(0);
   // //console.log(isAdmin)
+  const [isSessionOpen, setIsSessionOpen] = useState(false);
+  const sessionButton = useRef(null);
+  const sessionDropdown = useRef(null);
   const [skillName, setSkillName] = useState("");
 
   async function fetchCoursesById() {
@@ -119,7 +122,23 @@ export default function Page({ params }) {
       //console.log("error", error);
     }
   }
+  useClickOutside(sessionDropdown, sessionButton, () =>
+    setIsSessionOpen(false)
+  );
+  const toggleSessionOpen = () => {
+    setIsSessionOpen(!isSessionOpen);
+  };
 
+  const handleSessionSelect = (session) => {
+    setSelectedSession(session.session_name);
+    setSessionId(session.id);
+    setIsSessionOpen(false);
+  };
+  const handleChangeInstructor = (session) => {
+    setSelectedSession(session);
+    setSessionId(session.session_id);
+    setIsSessionOpen(false);
+  };
   async function fetchSessionForUser() {
     const response = await getUserSessions();
     setLoader(true);
@@ -534,12 +553,6 @@ export default function Page({ params }) {
     setSessionId(internalSessionId);
   };
 
-  const handleChangeInstructor = (e) => {
-    const value = e.target.value;
-    setSelectedSession(value);
-    setSessionId(value);
-  };
-
   async function fetchSessions() {
     const response = await listSessionByCourseId(courseId);
     setLoader(true);
@@ -867,70 +880,95 @@ export default function Page({ params }) {
               </>
             )}
             {isAdmin && (
-              <div className="w-full mt-4">
-                {" "}
-                <label className="text-blue-500 font-semibold">
-                  Select Session
-                </label>
-                <select
-                  value={selectedSession || ""}
-                  onChange={handleChange}
-                  className="bg-surface-100 cursor-pointer block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+              <div className="relative space-y-2 text-[15px] w-full">
+                <p className="text-blue-500 font-semibold">Select Session</p>
+                <button
+                  ref={sessionButton}
+                  onClick={toggleSessionOpen}
+                  className={`${
+                    !selectedSession ? "text-[#92A7BE]" : "text-[#424B55]"
+                  } flex justify-between items-center w-full hover:text-[#0E1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#ACC5E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
-                  <option value="" disabled>
-                    Select a session
-                  </option>
-                  {Array.isArray(sessions) && sessions.length > 0 ? (
-                    sessions.map((session) => {
-                      // //console.log("Mapping session:", session);
-                      // Combine session_id and instructor_id in value
-                      const optionValue = `${session?.session_name}|${session?.id}`;
-                      return (
-                        <option key={session?.id} value={optionValue}>
-                          {session.session_name}
-                        </option>
-                      );
-                    })
-                  ) : (
-                    <option value="" disabled>
-                      No sessions available
-                    </option>
-                  )}
-                </select>
+                  {selectedSession || "Select a session"}
+                  <span
+                    className={
+                      isSessionOpen ? "rotate-180 duration-300" : "duration-300"
+                    }
+                  >
+                    <IoIosArrowDown />
+                  </span>
+                </button>
+                {isSessionOpen && (
+                  <div
+                    ref={sessionDropdown}
+                    className="absolute top-full left-0 z-20 w-full lg:max-h-[170px] max-h-[150px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                  >
+                    {Array.isArray(sessions) && sessions.length > 0 ? (
+                      sessions.map((session, index) => (
+                        <div
+                          key={index}
+                          onClick={() => handleSessionSelect(session)}
+                          className="p-2 cursor-pointer"
+                        >
+                          <div className="px-4 py-1 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                            {session.session_name}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="p-4 text-center text-gray-500">
+                        No sessions available
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
             {isInstructor && (
-              <div className="w-full mt-4">
-                {" "}
-                <label className="text-blue-500 font-semibold">
-                  Select Session
-                </label>
-                <select
-                  value={selectedSession || ""}
-                  onChange={handleChangeInstructor}
-                  className="bg-surface-100 cursor-pointer block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+              <div className="relative space-y-2 text-[15px] w-full">
+                <p className="text-blue-500 font-semibold">Select Session</p>
+                <button
+                  ref={sessionButton}
+                  onClick={toggleSessionOpen}
+                  className={`${
+                    !selectedSession ? "text-[#92A7BE]" : "text-[#424B55]"
+                  } flex justify-between items-center w-full hover:text-[#0E1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#ACC5E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
-                  <option value="" disabled>
-                    Select a session
-                  </option>
-                  {Array.isArray(sessions) && sessions.length > 0 ? (
-                    sessions.map((session) => {
-                      // //console.log("Mapping session:", session);
-                      const optionValue = `${session.session_id}`;
-                      return (
-                        <option key={session.session_id} value={optionValue}>
-                          {session.location} -{" "}
-                          {session.session_name || session.course} -{" "}
-                          {session.start_time} - {session.end_time}
-                        </option>
-                      );
-                    })
-                  ) : (
-                    <option value="" disabled>
-                      No sessions available
-                    </option>
-                  )}
-                </select>
+                  {selectedSession
+                    ? `${selectedSession.session_name}`
+                    : "Select a session"}
+                  <span
+                    className={
+                      isSessionOpen ? "rotate-180 duration-300" : "duration-300"
+                    }
+                  >
+                    <IoIosArrowDown />
+                  </span>
+                </button>
+                {isSessionOpen && (
+                  <div
+                    ref={sessionDropdown}
+                    className="absolute top-full left-0 z-20 w-full lg:max-h-[170px] max-h-[150px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                  >
+                    {Array.isArray(sessions) && sessions.length > 0 ? (
+                      sessions.map((session) => (
+                        <div
+                          key={session.session_id}
+                          onClick={() => handleChangeInstructor(session)}
+                          className="p-2 cursor-pointer"
+                        >
+                          <div className="px-4 py-1 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                            {session.session_name}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="p-4 text-center text-gray-500">
+                        No sessions available
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
             <div className="flex flex-col gap-4">
@@ -1057,207 +1095,216 @@ export default function Page({ params }) {
               )}
 
               {modules?.length > 0 ? (
-                modules.map((module, index) => (
-                  <div
-                    key={module.id}
-                    className="border border-dark-300 rounded-xl px-4 max-sm:flex max-sm:flex-col max-sm:items-center"
-                  >
-                    <div className="flex justify-between max-sm:items-center max-sm:flex-col  ">
-                      <p className="text-dark-300 my-4"> Module {index + 1}</p>
-                      {!isStudent && (
-                        <div className="flex max-sm:flex-col">
-                          {moduleId !== module.id && (
-                            <div className="flex max-sm:justify-center text-center gap-1 items-center mx-4 mt-4 max-sm:mx-1">
-                              <span className="mr-4 text-md">
-                                Module Status
-                              </span>
-                              <label
-                                className={`relative inline-flex items-center ${
-                                  module.status === 1
-                                    ? "cursor-not-allowed"
-                                    : "cursor-pointer"
-                                }`}
-                              >
-                                <input
-                                  type="checkbox"
-                                  checked={module.status === 1}
-                                  disabled={module.status === 1}
-                                  onChange={() =>
-                                    handleModuleStatus(module.id, module.status)
-                                  }
-                                  className="sr-only"
-                                />
-                                <div
-                                  className={`w-11 h-6 rounded-full ${
+                modules
+                  .slice()
+                  .reverse()
+                  .map((module, index) => (
+                    <div
+                      key={module.id}
+                      className="border border-dark-300 rounded-xl px-4 max-sm:flex max-sm:flex-col max-sm:items-center"
+                    >
+                      <div className="flex justify-between max-sm:items-center max-sm:flex-col  ">
+                        <p className="text-dark-300 my-4">
+                          {" "}
+                          Module {modules.length - index}
+                        </p>
+                        {!isStudent && (
+                          <div className="flex max-sm:flex-col">
+                            {moduleId !== module.id && (
+                              <div className="flex max-sm:justify-center text-center gap-1 items-center mx-4 mt-4 max-sm:mx-1">
+                                <span className="mr-4 text-md">
+                                  Module Status
+                                </span>
+                                <label
+                                  className={`relative inline-flex items-center ${
                                     module.status === 1
-                                      ? "bg-dark-100"
-                                      : "bg-blue-600"
+                                      ? "cursor-not-allowed"
+                                      : "cursor-pointer"
                                   }`}
-                                ></div>
-                                <div
-                                  className={`absolute w-4 h-4 rounded-full shadow-md transform transition-transform ${
-                                    module.status === 1
-                                      ? "translate-x-5 bg-dark-200"
-                                      : "translate-x-1 bg-blue-300"
-                                  }`}
-                                ></div>
-                              </label>
-                              <span className="ml-4 text-md">
-                                {module.status === 1 ? "Active" : "Inactive"}
-                              </span>
-                            </div>
-                          )}
-
-                          <button
-                            className=" flex justify-center mt-4 items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-blue-700"
-                            onClick={() => {
-                              if (moduleId === module.id) {
-                                setIsEditingModule(false);
-                                handleModuleID(null);
-                              } else {
-                                setIsEditingModule(true);
-                                handleModuleID(module.id);
-                              }
-                            }}
-                          >
-                            {moduleId === module.id ? (
-                              <p className="flex justify-center items-center gap-2">
-                                <FaTimes />
-                              </p>
-                            ) : (
-                              <p className="flex justify-center items-center gap-2">
-                                <FaEdit />
-                              </p>
-                            )}
-                          </button>
-                          <button
-                            onClick={() => handleDeleteClick(module.id)}
-                            title="Delete Module"
-                            className={`flex justify-center mt-4 items-center gap-2 text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-blue-700 ${
-                              moduleId === module.id ? "hidden" : ""
-                            }`}
-                          >
-                            <p className="flex justify-center items-center gap-2">
-                              <FaTrash />
-                            </p>
-                          </button>
-
-                          {moduleId === module.id && (
-                            <>
-                              <button
-                                className={`flex justify-center items-center gap-2 mt-4 p-4 rounded-xl mr-4 ${
-                                  loaderModule
-                                    ? "bg-blue-300 cursor-not-allowed"
-                                    : "bg-blue-300 hover:bg-blue-700"
-                                } text-surface-100`}
-                                onClick={handleSaveModule}
-                                disabled={loaderModule}
-                              >
-                                {loaderModule ? (
-                                  <CircularProgress
-                                    size={20}
-                                    style={{ color: "white" }}
+                                >
+                                  <input
+                                    type="checkbox"
+                                    checked={module.status === 1}
+                                    disabled={module.status === 1}
+                                    onChange={() =>
+                                      handleModuleStatus(
+                                        module.id,
+                                        module.status
+                                      )
+                                    }
+                                    className="sr-only"
                                   />
-                                ) : (
-                                  <>
-                                    <FaCheck />
-                                  </>
-                                )}
-                              </button>
+                                  <div
+                                    className={`w-11 h-6 rounded-full ${
+                                      module.status === 1
+                                        ? "bg-dark-100"
+                                        : "bg-blue-600"
+                                    }`}
+                                  ></div>
+                                  <div
+                                    className={`absolute w-4 h-4 rounded-full shadow-md transform transition-transform ${
+                                      module.status === 1
+                                        ? "translate-x-5 bg-dark-200"
+                                        : "translate-x-1 bg-blue-300"
+                                    }`}
+                                  ></div>
+                                </label>
+                                <span className="ml-4 text-md">
+                                  {module.status === 1 ? "Active" : "Inactive"}
+                                </span>
+                              </div>
+                            )}
 
-                              <input
-                                type="file"
-                                onChange={handleFileUpload}
-                                className="hidden"
-                              />
-                              <button
-                                className="flex justify-center items-center gap-2 mt-4 text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-blue-700"
-                                onClick={() =>
-                                  document
-                                    .querySelector('input[type="file"]')
-                                    .click()
+                            <button
+                              className=" flex justify-center mt-4 items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-blue-700"
+                              onClick={() => {
+                                if (moduleId === module.id) {
+                                  setIsEditingModule(false);
+                                  handleModuleID(null);
+                                } else {
+                                  setIsEditingModule(true);
+                                  handleModuleID(module.id);
                                 }
-                              >
-                                <FaUpload />
-                                Upload File
-                              </button>
-                            </>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                    {moduleId === module.id ? (
-                      <input
-                        className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
-                        value={module.name}
-                        onChange={(e) =>
-                          setModules((prev) =>
-                            prev.map((m) =>
-                              m.id === module.id
-                                ? { ...m, name: e.target.value }
-                                : m
-                            )
-                          )
-                        }
-                      />
-                    ) : (
-                      <p className="font-bold text-blue-500 my-2">
-                        {module.name}
-                      </p>
-                    )}
+                              }}
+                            >
+                              {moduleId === module.id ? (
+                                <p className="flex justify-center items-center gap-2">
+                                  <FaTimes />
+                                </p>
+                              ) : (
+                                <p className="flex justify-center items-center gap-2">
+                                  <FaEdit />
+                                </p>
+                              )}
+                            </button>
+                            <button
+                              onClick={() => handleDeleteClick(module.id)}
+                              title="Delete Module"
+                              className={`flex justify-center mt-4 items-center gap-2 text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-blue-700 ${
+                                moduleId === module.id ? "hidden" : ""
+                              }`}
+                            >
+                              <p className="flex justify-center items-center gap-2">
+                                <FaTrash />
+                              </p>
+                            </button>
 
-                    <p className="text-dark-400 my-2">
+                            {moduleId === module.id && (
+                              <>
+                                <button
+                                  className={`flex justify-center items-center gap-2 mt-4 p-4 rounded-xl mr-4 ${
+                                    loaderModule
+                                      ? "bg-blue-300 cursor-not-allowed"
+                                      : "bg-blue-300 hover:bg-blue-700"
+                                  } text-surface-100`}
+                                  onClick={handleSaveModule}
+                                  disabled={loaderModule}
+                                >
+                                  {loaderModule ? (
+                                    <CircularProgress
+                                      size={20}
+                                      style={{ color: "white" }}
+                                    />
+                                  ) : (
+                                    <>
+                                      <FaCheck />
+                                    </>
+                                  )}
+                                </button>
+
+                                <input
+                                  type="file"
+                                  onChange={handleFileUpload}
+                                  className="hidden"
+                                />
+                                <button
+                                  className="flex justify-center items-center gap-2 mt-4 text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-blue-700"
+                                  onClick={() =>
+                                    document
+                                      .querySelector('input[type="file"]')
+                                      .click()
+                                  }
+                                >
+                                  <FaUpload />
+                                  Upload File
+                                </button>
+                              </>
+                            )}
+                          </div>
+                        )}
+                      </div>
                       {moduleId === module.id ? (
-                        <textarea
-                          rows="3"
-                          className="px-2 block w-full text-dark-900 outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset sm:text-sm sm:leading-6"
-                          value={module.description}
+                        <input
+                          className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                          value={module.name}
                           onChange={(e) =>
                             setModules((prev) =>
                               prev.map((m) =>
                                 m.id === module.id
-                                  ? { ...m, description: e.target.value }
+                                  ? { ...m, name: e.target.value }
                                   : m
                               )
                             )
                           }
                         />
                       ) : (
-                        module.description
+                        <p className="font-bold text-blue-500 my-2">
+                          {module.name}
+                        </p>
                       )}
-                    </p>
-                    {moduleId === module.id && fileUploaded && (
-                      <p className="flex items-center text-blue-300 my-4 hover:cursor-pointer">
-                        Uploaded File: {fileUploaded}
-                      </p>
-                    )}
-                    {module?.files?.map((file) => (
-                      <div
-                        className="flex items-center gap-2 group"
-                        key={file.id}
-                      >
-                        <a
-                          href={file.file}
-                          className="group-hover:cursor-pointer flex justify-center items-center space-x-2"
-                          download
-                        >
-                          <FaFileDownload
-                            size={20}
-                            fill="#03A1D8"
-                            className="group-hover:cursor-pointer"
+
+                      <p className="text-dark-400 my-2">
+                        {moduleId === module.id ? (
+                          <textarea
+                            rows="3"
+                            className="px-2 block w-full text-dark-900 outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset sm:text-sm sm:leading-6"
+                            value={module.description}
+                            onChange={(e) =>
+                              setModules((prev) =>
+                                prev.map((m) =>
+                                  m.id === module.id
+                                    ? { ...m, description: e.target.value }
+                                    : m
+                                )
+                              )
+                            }
                           />
-                          <button
-                            onClick={() => downloadFile(file.file)}
-                            className="flex items-center text-blue-300 my-4 group-hover:cursor-pointer"
+                        ) : (
+                          module.description
+                        )}
+                      </p>
+                      {moduleId === module.id && fileUploaded && (
+                        <p className="flex items-center text-blue-300 my-4 hover:cursor-pointer">
+                          Uploaded File: {fileUploaded}
+                        </p>
+                      )}
+                      {module?.files?.map((file) => (
+                        <div
+                          className="flex items-center gap-2 group"
+                          key={file.id}
+                        >
+                          <a
+                            href={file.file}
+                            className="group-hover:cursor-pointer flex justify-center items-center space-x-2"
+                            download
                           >
-                            {file.file.split("/").pop()}
-                          </button>
-                        </a>
-                        <p>{downloadStatus}</p>
-                      </div>
-                    ))}
-                  </div>
-                ))
+                            <FaFileDownload
+                              size={20}
+                              fill="#03A1D8"
+                              className="group-hover:cursor-pointer"
+                            />
+                            <button
+                              onClick={() => downloadFile(file.file)}
+                              className="flex items-center text-blue-300 my-4 group-hover:cursor-pointer"
+                            >
+                              {file.file.split("/").pop()}
+                            </button>
+                          </a>
+                          <p>{downloadStatus}</p>
+                        </div>
+                      ))}
+                    </div>
+                  ))
               ) : (
                 <p>No modules available.</p>
               )}

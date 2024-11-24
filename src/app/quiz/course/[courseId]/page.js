@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSidebar } from "@/providers/useSidebar";
 import StudentDataStructure from "@/components/StudentDataStructure";
 import CourseHead from "@/components/CourseHead";
@@ -9,13 +9,14 @@ import {
   getInstructorSessionsbyCourseId,
   getProgressForQuiz,
   getQuizByCourseId,
-  getSessionInstructor,
   getUserSessions,
   listSessionByCourseId,
   updateQuiz,
 } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
 import { toast } from "react-toastify";
+import { IoIosArrowDown } from "react-icons/io";
+import useClickOutside from "@/providers/useClickOutside";
 import { CircularProgress } from "@mui/material";
 import AdminDataStructure from "@/components/AdminDataStructure";
 import { handleFileUploadToS3 } from "@/components/ApplicationForm";
@@ -49,6 +50,9 @@ export default function Page({ params }) {
   const [sessionId, setSessionId] = useState(null);
   const [studentInstructorName, setStudentInstructorName] = useState(null);
   const [studentInstructorID, setStudentInstructorID] = useState(null);
+  const [isSessionOpen, setIsSessionOpen] = useState(false);
+  const sessionButton = useRef(null);
+  const sessionDropdown = useRef(null);
   async function fetchSessionForUser() {
     const response = await getUserSessions();
     setLoading(true);
@@ -87,24 +91,35 @@ export default function Page({ params }) {
       setLoading(false);
     }
   }
+  useClickOutside(sessionDropdown, sessionButton, () =>
+    setIsSessionOpen(false)
+  );
+  const toggleSessionOpen = () => {
+    setIsSessionOpen(!isSessionOpen);
+  };
 
   useEffect(() => {
     fetchSessionForUser();
   }, [isStudent]);
 
-  const handleChange = (e) => {
-    const [selectedSessionId, internalSessionId] = e.target.value.split("|");
-    const selectedSession = sessions.find(
-      (session) => session?.session_id === selectedSessionId
-    );
-    setSelectedSession(e.target.value);
-    setSessionId(internalSessionId);
-  };
+  // const handleChange = (e) => {
+  //   const [selectedSessionId, internalSessionId] = e.target.value.split("|");
+  //   const selectedSession = sessions.find(
+  //     (session) => session?.session_id === selectedSessionId
+  //   );
+  //   setSelectedSession(e.target.value);
+  //   setSessionId(internalSessionId);
+  // };
 
-  const handleChangeInstructor = (e) => {
-    const value = e.target.value;
-    setSelectedSession(value);
-    setSessionId(value);
+  const handleSessionSelect = (session) => {
+    setSelectedSession(session.session_name);
+    setSessionId(session.id);
+    setIsSessionOpen(false);
+  };
+  const handleChangeInstructor = (session) => {
+    setSelectedSession(session);
+    setSessionId(session.session_id);
+    setIsSessionOpen(false);
   };
 
   async function fetchAssignments() {
@@ -373,74 +388,95 @@ export default function Page({ params }) {
         ) : (
           <>
             {isAdmin && (
-              <div className="w-full">
-                <label className="text-blue-500">
-                  {" "}
-                  <label className="text-blue-500 font-semibold">
-                    Select Session
-                  </label>
-                </label>
-                <select
-                  value={selectedSession || ""}
-                  onChange={handleChange}
-                  className="bg-surface-100 cursor-pointer block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+              <div className="relative space-y-2 text-[15px] w-full">
+                <p className="text-blue-500 font-semibold">Select Session</p>
+                <button
+                  ref={sessionButton}
+                  onClick={toggleSessionOpen}
+                  className={`${
+                    !selectedSession ? "text-[#92A7BE]" : "text-[#424B55]"
+                  } flex justify-between items-center w-full hover:text-[#0E1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#ACC5E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
-                  <option value="" disabled>
-                    Select a session
-                  </option>
-                  {Array.isArray(sessions) && sessions.length > 0 ? (
-                    sessions.map((session) => {
-                      // //console.log("Mapping session:", session);
-                      // Combine session_id and instructor_id in value
-                      const optionValue = `${session?.session_name}|${session?.id}`;
-                      return (
-                        <option key={session?.id} value={optionValue}>
-                          {session.session_name}
-                        </option>
-                      );
-                    })
-                  ) : (
-                    <option value="" disabled>
-                      No sessions available
-                    </option>
-                  )}
-                </select>
+                  {selectedSession || "Select a session"}
+                  <span
+                    className={
+                      isSessionOpen ? "rotate-180 duration-300" : "duration-300"
+                    }
+                  >
+                    <IoIosArrowDown />
+                  </span>
+                </button>
+                {isSessionOpen && (
+                  <div
+                    ref={sessionDropdown}
+                    className="absolute top-full left-0 z-20 w-full lg:max-h-[170px] max-h-[150px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                  >
+                    {Array.isArray(sessions) && sessions.length > 0 ? (
+                      sessions.map((session, index) => (
+                        <div
+                          key={index}
+                          onClick={() => handleSessionSelect(session)}
+                          className="p-2 cursor-pointer"
+                        >
+                          <div className="px-4 py-1 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                            {session.session_name}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="p-4 text-center text-gray-500">
+                        No sessions available
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
             {isInstructor && (
-              <div className="w-full">
-                <label className="text-blue-500">
-                  {" "}
-                  <label className="text-blue-500 font-semibold">
-                    Select Session
-                  </label>
-                </label>
-                <select
-                  value={selectedSession || ""}
-                  onChange={handleChangeInstructor}
-                  className="bg-surface-100 cursor-pointer block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+              <div className="relative space-y-2 text-[15px] w-full">
+                <p className="text-blue-500 font-semibold">Select Session</p>
+                <button
+                  ref={sessionButton}
+                  onClick={toggleSessionOpen}
+                  className={`${
+                    !selectedSession ? "text-[#92A7BE]" : "text-[#424B55]"
+                  } flex justify-between items-center w-full hover:text-[#0E1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#ACC5E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
-                  <option value="" disabled>
-                    Select a session
-                  </option>
-                  {Array.isArray(sessions) && sessions.length > 0 ? (
-                    sessions.map((session) => {
-                      // //console.log("Mapping session:", session);
-                      const optionValue = `${session.session_id}`;
-                      return (
-                        <option key={session.session_id} value={optionValue}>
-                          {session.location} -{" "}
-                          {session.session_name || session.course} -{" "}
-                          {session.start_time} - {session.end_time}
-                        </option>
-                      );
-                    })
-                  ) : (
-                    <option value="" disabled>
-                      No sessions available
-                    </option>
-                  )}
-                </select>
+                  {selectedSession
+                    ? `${selectedSession.session_name}`
+                    : "Select a session"}
+                  <span
+                    className={
+                      isSessionOpen ? "rotate-180 duration-300" : "duration-300"
+                    }
+                  >
+                    <IoIosArrowDown />
+                  </span>
+                </button>
+                {isSessionOpen && (
+                  <div
+                    ref={sessionDropdown}
+                    className="absolute top-full left-0 z-20 w-full lg:max-h-[170px] max-h-[150px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                  >
+                    {Array.isArray(sessions) && sessions.length > 0 ? (
+                      sessions.map((session) => (
+                        <div
+                          key={session.session_id}
+                          onClick={() => handleChangeInstructor(session)}
+                          className="p-2 cursor-pointer"
+                        >
+                          <div className="px-4 py-1 hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg">
+                            {session.session_name}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="p-4 text-center text-gray-500">
+                        No sessions available
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
             {isCreatingQuiz && (

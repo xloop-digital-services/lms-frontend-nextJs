@@ -42,6 +42,7 @@ export default function CreateField({
   imagePreview,
   setImagePreview,
   handleImageUpload,
+  setLoader,
 }) {
   const router = useRouter();
   const { isSidebarOpen } = useSidebar();
@@ -182,24 +183,35 @@ export default function CreateField({
 
   const handleCreateSkill = async (e) => {
     e.preventDefault();
+
+    if (!skillName.trim()) {
+      toast.error("Skill name is required.");
+      return;
+    }
+    setLoading(true);
+
     const skills = {
       skill_name: skillName,
     };
     try {
       const response = await createSkill(skills);
       if (response.status === 201) {
-        toast.success("Skill created Successfully!");
+        toast.success("Skill created successfully!");
         setSkillName("");
         setSkill(false);
         fetchAllSkills();
       } else {
-        toast.error(response.data?.message);
+        toast.error(response.data?.message || "Failed to create skill.");
       }
     } catch (error) {
-      toast.error(`Error creating skill: ${error?.message}`);
-      // //console.log(error?.data?.data?.skill_name?.[0])
+      toast.error(
+        `Error creating skill: ${error?.message || "An error occurred."}`
+      );
+    } finally {
+      setLoading(false);
     }
   };
+
   const handleSkills = () => {
     setSkill(!skill);
   };
@@ -249,7 +261,7 @@ export default function CreateField({
                         onChange={(e) => setProgramName(e.target.value)}
                         name="program-name"
                         type="text"
-                        placeholder="Enter the program name"
+                        placeholder={`Enter the ${title} name`}
                         className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
                       />
                     </div>
@@ -403,7 +415,14 @@ export default function CreateField({
                           className="text-surface-100 px-2 py-1.5 rounded-md bg-blue-300 w-full sm:w-auto"
                           onClick={handleCreateSkill}
                         >
-                          Create skill
+                          {loading ? (
+                            <CircularProgress
+                              size={20}
+                              style={{ color: "white" }}
+                            />
+                          ) : (
+                            "Create Skill"
+                          )}
                         </button>
                       </div>
                     </div>
@@ -473,7 +492,7 @@ export default function CreateField({
 
               <>
                 <div className="my-4 sm:pr-4 sm:mb-0">
-                  <label className="">{title} Image</label>
+                  <label className="">{title} Thumbnail</label>
                   <div className=" border border-dark-400 rounded-md mt-2 px-2 py-2 flex items-center">
                     <input
                       type="file"
@@ -495,11 +514,16 @@ export default function CreateField({
               </>
 
               <button
-                onClick={goBack}
+                // onClick={goBack}
                 type="submit"
+                disabled={loader}
                 className=" flex text-center max-sm:text-sm justify-center items-center gap-2 text-surface-100 bg-blue-300 py-2 px-4 mt-4 rounded-md mr-4 hover:bg-[#3272b6]"
               >
-                {loader ? <CircularProgress /> : `Create a ${title}`}
+                {loader ? (
+                  <CircularProgress style={{ color: "white" }} />
+                ) : (
+                  `Create a ${title}`
+                )}
               </button>
             </div>
           </form>

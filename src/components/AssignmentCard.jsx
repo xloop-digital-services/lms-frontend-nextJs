@@ -5,13 +5,21 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import Image from "next/image";
 import Link from "next/link";
 
-const AssignmentCard = ({ id, category, content, title, priority, type }) => {
+const AssignmentCard = ({
+  id,
+  capacity,
+  location,
+  content,
+  title,
+  priority,
+  type,
+}) => {
   return (
     <Link
       href={content ? `/${type}/course/${id}` : "#"}
       className={` ${content ? "" : "cursor-auto"}`}
     >
-      <div className="w-[400px]  max-md:w-full mx-auto group bg-transparent pb-4 ">
+      <div className="w-[400px] max-md:w-full mx-auto group bg-transparent pb-4 ">
         <div
           className={`rounded-xl border border-blue-100 group-hover:shadow-lg group-hover:shadow-dark-300 ${
             content ? "group-hover:cursor-pointer" : ""
@@ -24,14 +32,15 @@ const AssignmentCard = ({ id, category, content, title, priority, type }) => {
               >
                 {type}
               </p>
-              <div className="flex w-full bg-[#EBF6FF] w-w-fit py-[9px] px-5 rounded-lg items-center space-x-2">
-                <p className="bg-blue-300 w-2 h-2 rounded-full"></p>
-                <p
-                  className="text-blue-300 uppercase text-[12px] font-bold"
-                  style={{ whiteSpace: "pre" }}
-                >
-                  {category}
-                </p>
+              <div className="flex w-full bg-[#EBF6FF] py-[9px] px-5 rounded-lg items-center">
+                <div className="flex justify-evenly w-full">
+                  <div className="text-blue-300 uppercase text-[12px] font-bold">
+                    Capacity: {capacity}
+                  </div>
+                  <div className="text-blue-300 uppercase text-[12px] font-bold">
+                    Location: {location}
+                  </div>
+                </div>
               </div>
             </div>
             <div className="font-bold space-x-2 px-2">

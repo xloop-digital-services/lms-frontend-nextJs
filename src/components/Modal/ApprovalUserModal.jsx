@@ -491,7 +491,7 @@ const ApprovalUserModal = ({
                              }
                     hover:bg-dark-200 transition-colors duration-200 ease-in-out`}
                               >
-                                {session.location_name} - {session.course.name}
+                                {session.session_name}
                               </div>
                             );
                           })
@@ -510,7 +510,7 @@ const ApprovalUserModal = ({
                        }
               hover:bg-dark-200 transition-colors duration-200 ease-in-out`}
                               >
-                                {session.location_name} - {session.course.name}
+                                {session.session_name}
                               </div>
                             );
                           })

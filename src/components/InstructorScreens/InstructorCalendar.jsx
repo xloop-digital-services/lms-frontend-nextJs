@@ -27,7 +27,6 @@ export default function InstructorCalendar() {
                     start: `${item.date}T${session.start_time}`,
                     end: `${item.date}T${session.end_time}`,
                     description: `Location: ${session.location}`,
-                    
                   }))
                 : []
             )
@@ -72,6 +71,7 @@ export default function InstructorCalendar() {
               start: event.start,
               end: event.end,
               description: event.description,
+              className: "bg-blue-100 hover:bg-blue-100",
             };
           })}
           eventContent={(arg) => {

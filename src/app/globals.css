@@ -174,5 +174,12 @@ body {
 .tab--2:checked ~ .tab_label[for="tab2"] {
   opacity: 1;
   font-weight: 600;
-  color: #0074EE;
+  color: #0074ee;
+}
+
+.fc-toolbar-chunk{
+  display: flex;
+  /* flex-direction: column;
+  justify-content: center; */
+  /* align-items: center; */
 }

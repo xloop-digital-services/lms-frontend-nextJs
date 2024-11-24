@@ -18,6 +18,7 @@ export default function Page() {
   const router = useRouter();
   const [imagePreview, setImagePreview] = useState(null);
   const [inputCourses, setInputCourses] = useState([]);
+  const [loader, setLoader] = useState(false);
 
   async function fetchAllCourses() {
     try {
@@ -51,33 +52,60 @@ export default function Page() {
   };
 
   const handleSubmit = async (event) => {
-    // console.log(event);
     event.preventDefault();
-    const s3Data = await handleFileUploadToS3(
-      file,
-      "Upload Program Thumbnails"
-    );
-
-    const formData = new FormData();
-    formData.append("name", programName);
-    formData.append("program_abb", programAbb);
-    formData.append("short_description", shortDesc);
-    formData.append("about", about);
-    const flattenedCourses = inputCourses.flat(Infinity);
-    // console.log(flattenedCourses);
-    
-    flattenedCourses.forEach((id) => {
-      formData.append("courses[]", id);
-    });
-    if (file) {
-      formData.append("picture", s3Data);
+  
+    if (!programName.trim()) {
+      toast.error("Program name is required.");
+      return;
     }
-
+    if (!programAbb.trim()) {
+      toast.error("Program abbreviation is required.");
+      return;
+    }
+    if (!shortDesc.trim()) {
+      toast.error("Short description is required.");
+      return;
+    }
+    if (!about.trim()) {
+      toast.error("About field is required.");
+      return;
+    }
+    if (inputCourses.length === 0) {
+      toast.error("At least one course must be selected.");
+      return;
+    }
+    if (!file) {
+      toast.error("Please upload a program thumbnail.");
+      return;
+    }
+  
+    setLoader(true);
+  
     try {
+      const s3Data = await handleFileUploadToS3(
+        file,
+        "Upload Program Thumbnails"
+      );
+  
+      const formData = new FormData();
+      formData.append("name", programName);
+      formData.append("program_abb", programAbb);
+      formData.append("short_description", shortDesc);
+      formData.append("about", about);
+  
+      const flattenedCourses = inputCourses.flat(Infinity);
+      flattenedCourses.forEach((id) => {
+        formData.append("courses[]", id);
+      });
+  
+      if (file) {
+        formData.append("picture", s3Data);
+      }
+  
       const response = await createProgram(formData);
+  
       if (response.status === 201) {
         toast.success("Program created successfully!");
-        router.back();
         setCreatingProgram(formData);
         setAbout("");
         setCoursesNames([]);
@@ -88,14 +116,17 @@ export default function Page() {
         localStorage.removeItem("programAbb");
         localStorage.removeItem("shortDesc");
         localStorage.removeItem("about");
+        router.back();
       } else {
-        toast.error(response.data?.message);
+        toast.error(response.data?.message || "Failed to create program.");
       }
     } catch (error) {
       toast.error(`Error creating program: ${error.message}`);
+    } finally {
+      setLoader(false);
     }
   };
-
+  
   const handleSelectChange = (event) => {
     const selectedName = event.target.value;
     const selectedCourse = courses.find(
@@ -145,6 +176,8 @@ export default function Page() {
         imagePreview={imagePreview}
         setImagePreview={setImagePreview}
         handleImageUpload={handleImageUpload}
+        loader={loader}
+        setLoader={setLoader}
       />
     </div>
   );

@@ -77,7 +77,7 @@ export default function Page() {
   }, [selectedCity, locations]);
 
   const clearCityFilter = () => {
-    setSelectedCity("select city");
+    setSelectedCity("Select city");
     setIsCitySelected(false);
   };
 

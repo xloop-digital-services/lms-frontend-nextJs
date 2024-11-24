@@ -133,7 +133,6 @@ export default function StudentDashboard() {
 
   useEffect(() => {
     if (selectedCourseId) {
-    
       const handleCourseProgress = async () => {
         try {
           const response = await getProgressForCourse(selectedCourseId);
@@ -164,7 +163,6 @@ export default function StudentDashboard() {
         }
       };
 
-    
       handleCourseProgress();
       handleQuizProgress();
       handleAssignmentProgress();
@@ -180,10 +178,10 @@ export default function StudentDashboard() {
   }, [courses]);
 
   useEffect(() => {
-    if (assignments.length >= 0) {
+    if (Array.isArray(assignments) && assignments.length > 0) {
       setSelectedCategory("Show All");
     }
-  }, [assignments.length]);
+  }, [assignments]);
 
   const toggleCategoryOpen = () => {
     setIsCategoryOpen(!isCategoryOpen);
@@ -195,8 +193,8 @@ export default function StudentDashboard() {
   };
 
   const filteredAssignments = assignments?.data?.items?.filter((assignment) => {
-    if (selectedCategory === "Show All") return true; 
-    return assignment.type.toLowerCase() === selectedCategory.toLowerCase(); 
+    if (selectedCategory === "Show All") return true;
+    return assignment.type.toLowerCase() === selectedCategory.toLowerCase();
   });
 
   const toggleCourseOpen = () => {
@@ -226,7 +224,7 @@ export default function StudentDashboard() {
         className={`flex-1 transition-transform pt-[97px] space-y-4 max-md:pt-32 font-inter ${
           isSidebarOpen
             ? "translate-x-64 ml-20 "
-            : "translate-x-0 pl-10 pr-10 max-md:pl-2 max-md:pr-2"
+            : "translate-x-0 pl-10 max-md:pl-2 max-md:pr-2"
         }`}
         style={{
           // paddingBottom: "20px",
@@ -257,7 +255,7 @@ export default function StudentDashboard() {
                   </div>
                 </div>
 
-                <div className="flex gap-2 flex-wrap max-md:flex-nowrap max-md:flex-col ">
+                <div className="flex gap-2 flex-wrap max-md:flex-nowrap max-md:flex-col max-md:items-center">
                   {isStudent &&
                     courses?.slice(0, courseLimit).map((session) => {
                       return (
@@ -265,10 +263,10 @@ export default function StudentDashboard() {
                           id={session.id}
                           key={session.id}
                           image={image1}
-                          courseName={session.name} 
+                          courseName={session.name}
                           route="course"
                           route1="courses"
-                          courseDesc={session.short_description} 
+                          courseDesc={session.short_description}
                           extraCount={50}
                         />
                       );
@@ -389,7 +387,7 @@ export default function StudentDashboard() {
                 )}
               </div>
             </div>
-            <div className=" min-w-full max-w-[450px] bg-surface-100 px-5 p-2  rounded-xl sm:mt-1 h-[404px] sm:mx-0 mx-4">
+            <div className="min-w-[90%] max-w-[450px] bg-surface-100 px-5 p-2  rounded-xl sm:mt-1 h-[404px] sm:mx-0 mx-4">
               <h1 className="font-bold font-exo text-blue-500 text-lg py-4">
                 Progress Chart
               </h1>

@@ -214,14 +214,11 @@ const BatchTable = ({
                           )
                           .map((batch, index) => (
                             <tr key={index} className={``}>
-                              <td
-                                className="px-6 py-4 whitespace-nowrap max-w-[230px] truncate text-sm font-medium text-gray-800"
-                                title={batch.batch}
-                              >
+                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
                                 {batch.batch || "-"}
                               </td>
                               <td
-                                className="px-6 py-4 whitespace-nowrap max-w-[250px] truncate text-sm text-gray-800"
+                                className="px-6 py-4 whitespace-nowrap max-w-[250px] truncate text-sm text-gray-800 dark:text-gray-200"
                                 title={batch.program_name}
                               >
                                 {batch.program_name || "-"}

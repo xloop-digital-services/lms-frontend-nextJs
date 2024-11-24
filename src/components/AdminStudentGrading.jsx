@@ -1,21 +1,17 @@
 "use client";
 import {
-  getAttendanceByCourseId,
   getAttendanceBySessionId,
-  getInstructorSessions,
   getInstructorSessionsbyCourseId,
-  getStudentsByCourseId,
-  lisStudentsByBatch,
   listAllBatches,
-  listAllSessions,
   listSessionByCourseId,
-  markAttendanceByCourseId,
 } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
 import { Try } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { IoIosArrowDown } from "react-icons/io";
+import useClickOutside from "@/providers/useClickOutside";
 
 const AdminStudentGrading = ({ courseId }) => {
   const { userData } = useAuth();
@@ -34,14 +30,24 @@ const AdminStudentGrading = ({ courseId }) => {
   const isAdmin = userData?.Group === "admin";
   const isInstructor = userData?.Group === "instructor";
   const userId = userData?.user_data?.id;
+  const [isSessionOpen, setIsSessionOpen] = useState(false);
+  const [selectedSession, setSelectedSession] = useState("");
+  const sessionButton = useRef(null);
+  const sessionDropdown = useRef(null);
 
   const [selectedSessionId, setSelectedSessionId] = useState("");
   const [selectedBatchId, setSelectedBatchId] = useState("");
-  const handleChange = (e) => {
-    //console.log("chal rahi he", e.target.value);
-    setSelectedSessionId(e.target.value);
+  useClickOutside(sessionDropdown, sessionButton, () =>
+    setIsSessionOpen(false)
+  );
+  const toggleSessionOpen = () => {
+    setIsSessionOpen(!isSessionOpen);
   };
-
+  const handleSessionSelect = (session) => {
+    setSelectedSession(session.session_name);
+    setSelectedSessionId(session.id);
+    setIsSessionOpen(false);
+  };
   const handleBatchSelection = (e) => {
     //console.log("chal rahi he", e.target.value);
     setSelectedBatchId(e.target.value);
@@ -83,22 +89,6 @@ const AdminStudentGrading = ({ courseId }) => {
       setLoading(false);
     }
   }
-  // async function fetchStudentsByBatch() {
-  //   setLoading(true);
-  //   try {
-  //     const response = await lisStudentsByBatch(selectedBatchId);
-  //     if (response.status === 200) {
-  //       // //console.log("attendence in students", response.data.data.students);
-  //       setAttendance(response.data.data);
-  //     } else {
-  //       //console.error("Failed to fetch attendance, status:", response.status);
-  //     }
-  //   } catch (error) {
-  //     //console.log("error", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }
 
   const fetchAllSessions = async () => {
     try {
@@ -129,13 +119,8 @@ const AdminStudentGrading = ({ courseId }) => {
     getBatch();
   }, []);
 
-  // useEffect(() => {
-  //   fetchStudentsByBatch();
-  // }, [selectedBatchId]);
-
   useEffect(() => {
     fetchAttendanceAdmin();
-    // fetchStudentsbySession();
     if (isInstructor) {
       fetchSessions();
     } else {
@@ -146,81 +131,59 @@ const AdminStudentGrading = ({ courseId }) => {
   return (
     <div className="flex flex-col">
       <div className="flex w-full gap-2">
-        {/* <div className="w-full">
-          <label className="text-blue-500 font-semibold">Select batch</label>
-
-          <select
-            value={selectedBatchId}
-            onChange={handleBatchSelection}
-            className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+        <div className="relative space-y-2 text-[15px] w-full mb-2">
+          <p className="text-blue-500 font-semibold">Select Session</p>
+          <button
+            ref={sessionButton}
+            onClick={toggleSessionOpen}
+            className={`${
+              !selectedSession ? "text-[#92A7BE]" : "text-[#424B55]"
+            } flex justify-between items-center w-full hover:text-[#0E1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#ACC5E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
           >
-            <option
-              className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-              value=""
-              disabled
-              // selected
+            {selectedSession || "Select a session"}
+            <span
+              className={
+                isSessionOpen ? "rotate-180 duration-300" : "duration-300"
+              }
             >
-              Select a batch
-            </option>
-
-            {batches && batches.length > 0 ? (
-              batches.map((option, index) => (
-                <option key={index}>{option}</option>
-              ))
-            ) : (
-              // ) : adminSessions && adminSessions.length > 0 ? (
-              //   adminSessions.map((session) => (
-              //     <option key={session.id} value={session.id}>
-              //       {session.location_name} - {session.course.name} -{" "}
-              //       {session.no_of_student} - {session.start_time} -{" "}
-              //       {session.end_time}
-              //     </option>
-              //   ))
-              <option value="" disabled>
-                No Batches found
-              </option>
-            )}
-          </select>
-        </div> */}
-        <div className="w-full">
-          <label className="text-blue-500 font-semibold">Select Session</label>
-
-          <select
-            value={selectedSessionId}
-            onChange={handleChange}
-            className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-          >
-            <option
-              className="bg-surface-100 block w-full my-2 p-3 border border-dark-300 rounded-lg placeholder-surface-100 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-              value=""
-              disabled
-              // selected
+              <IoIosArrowDown />
+            </span>
+          </button>{" "}
+          {isSessionOpen && (
+            <div
+              ref={sessionDropdown}
+              className="absolute top-full left-0 z-20 w-full lg:max-h-[170px] max-h-[150px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
             >
-              Select a session
-            </option>
-
-            {Array.isArray(instructorSessions.data) &&
-            instructorSessions.data.length > 0 ? (
-              instructorSessions.data.map((session) => (
-                <option key={session.session_id} value={session.session_id}>
-                  {session?.session_name}
-                </option>
-              ))
-            ) : adminSessions && adminSessions.length > 0 ? (
-              adminSessions.map((session) => (
-                <option key={session.id} value={session.id}>
-                  {session?.session_name}
-                </option>
-              ))
-            ) : (
-              <option value="" disabled>
-                No session found
-              </option>
-            )}
-          </select>
+              {Array.isArray(instructorSessions.data) &&
+              instructorSessions.data.length > 0 ? (
+                instructorSessions.data.map((session, index) => (
+                  <div
+                    key={index}
+                    onClick={() => handleSessionSelect(session)}
+                    className="px-4 py-2 cursor-pointer hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg"
+                  >
+                    {session?.session_name}
+                  </div>
+                ))
+              ) : adminSessions && adminSessions.length > 0 ? (
+                adminSessions.map((session, index) => (
+                  <div
+                    key={index}
+                    onClick={() => handleSessionSelect(session)}
+                    className="px-4 py-2 cursor-pointer hover:bg-[#03a3d838] hover:text-[#03A1D8] hover:font-semibold rounded-lg"
+                  >
+                    {session?.session_name}
+                  </div>
+                ))
+              ) : (
+                <div className="p-4 text-center text-gray-500">
+                  No sessions available
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
-
       <div className="-m-1.5 overflow-x-auto">
         <div className="p-1.5 min-w-full inline-block align-middle">
           <div className="border border-dark-300 rounded-lg divide-y divide-dark-200 dark:border-gray-700 dark:divide-gray-700">

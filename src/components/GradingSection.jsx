@@ -193,25 +193,6 @@ export const GradingSection = ({
     }
   }
 
-  //console.log(selectedSessionId);
-  //console.log(selected);
-
-  // async function fetchExamGrading() {
-  //   setLoading(true);
-  //   const response = await getExamGrading(courseId, selected);
-  //   try {
-  //     if (response.status === 200) {
-  //       setLoading(false);
-  //       setExamGrading(response?.data?.data?.students);
-  //       //console.log(examGrading);
-  //     } else {
-  //       //console.error("Failed to fetch exams, status:", response.status);
-  //     }
-  //   } catch (error) {
-  //     //console.log("error", error);
-  //   }
-  // }
-
   async function fetchExamGrading() {
     setLoading(true);
     try {
@@ -292,7 +273,7 @@ export const GradingSection = ({
             //   }`}
             // >
             openSection === title && (
-              <div className="z-50">
+              <div className="">
                 <button
                   onClick={toggleOpen}
                   className="flex justify-between z-30 items-center sm:w-[200px] max-h-[250px] text-[#92A7BE] hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-white border  border-[#92A7BE] rounded-lg  focus:outline-none  transition duration-300 ease-in-out"

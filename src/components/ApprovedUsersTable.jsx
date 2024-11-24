@@ -20,15 +20,15 @@ const ApprovedTable = ({ selectedOption }) => {
                         </div>
                     </div> */}
             <div className="overflow-hidden">
-              <table className="min-w-full divide-y divide-dark-200 dark:divide-gray-700">
-                <thead className="bg-dark-50 dark:bg-dark-700">
+              <table className="min-w-full divide-y divide-dark-200 ">
+                <thead className="bg-dark-50">
                   <tr>
                     <th scope="col" className="py-3 px-4 pe-0">
                       <div className="flex items-center h-5">
                         <input
                           id="hs-table-pagination-checkbox-all"
                           type="checkbox"
-                          className="border-dark-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-dark-800 dark:border-dark-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-dark-800"
+                          className="border-dark-200 rounded text-blue-600 focus:ring-blue-500  dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-dark-800"
                         />
                         <label
                           for="hs-table-pagination-checkbox-all"
