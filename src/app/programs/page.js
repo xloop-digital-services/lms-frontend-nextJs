@@ -25,7 +25,7 @@ export default function Page() {
   const [program, setProgram] = useState([]);
 
   async function fetchAllPrograms() {
-    setIsLoading(true);
+    setLoader(true);
   
     try {
       const response = await getAllPrograms();
@@ -37,7 +37,7 @@ export default function Page() {
     } catch (error) {
       console.error("Error fetching programs:", error);
     } finally {
-      setIsLoading(false);
+      setLoader(false);
     }
   }
 
