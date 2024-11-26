@@ -225,6 +225,7 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
                       route1={route1}
                       status={program.status}
                       picture={program.picture}
+                      loader={loader}
                     />
                   ))}
                 {filteredCourses
@@ -241,6 +242,7 @@ export default function AdminCoursePage({ route1, programs, title, route }) {
                       chr={`${course.theory_credit_hours}+${course.lab_credit_hours}`}
                       status={course.status}
                       picture={course.picture}
+                      loader={loader}
                     />
                   ))}
               </>

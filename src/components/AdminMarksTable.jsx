@@ -211,6 +211,9 @@ const AdminMarksTable = ({
                         Submitted file
                       </th>
                       <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
+                        Comments
+                      </th>
+                      <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
                         Status
                       </th>
                       <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
@@ -284,6 +287,9 @@ const AdminMarksTable = ({
                                 {assessment.submitted_file.split("/").pop()}
                               </a>
                             )}
+                          </td>
+                          <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
+                            <p>{assessment.comments || "-"}</p>
                           </td>
                           <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
                             <p

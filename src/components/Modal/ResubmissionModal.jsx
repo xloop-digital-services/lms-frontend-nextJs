@@ -56,14 +56,14 @@ const ResubmissionModal = ({
   const handleFileSelection = (file) => {
     if (file) {
       const fileExtension = file.name.split(".").pop().toLowerCase();
-      if (supportedFormats.includes(`.${fileExtension}`)) {
-        setFile(file);
-        setFileUploaded(file.name);
-        setError("");
-      } else {
-        setError("This file format is not supported.");
-        setFileUploaded(null);
-      }
+      // if (supportedFormats.includes(`.${fileExtension}`)) {
+      setFile(file);
+      setFileUploaded(file.name);
+      setError("");
+      // } else {
+      //   setError("This file format is not supported.");
+      //   setFileUploaded(null);
+      // }
     }
   };
 
@@ -186,7 +186,7 @@ const ResubmissionModal = ({
               <input
                 type="file"
                 id="fileInput"
-                accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.zip"
+                // accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.zip"
                 className="hidden"
                 onChange={handleBrowse}
               />
@@ -233,6 +233,7 @@ const ResubmissionModal = ({
             <div className="flex w-full justify-center items-center">
               <button
                 type="submit"
+                disabled={loader}
                 onClick={handleUploadation}
                 className="w-fit flex justify-center py-3 px-12 text-sm font-medium rounded-lg text-dark-100 bg-blue-300 hover:bg-[#3272b6] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
               >

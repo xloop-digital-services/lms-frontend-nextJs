@@ -33,6 +33,9 @@ const UploadingFile = ({
     ".pptx",
     ".txt",
     ".zip",
+    ".png",
+    ".jpg",
+    ".jpeg",
   ];
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -52,14 +55,14 @@ const UploadingFile = ({
   const handleFileSelection = (file) => {
     if (file) {
       const fileExtension = file.name.split(".").pop().toLowerCase();
-      if (supportedFormats.includes(`.${fileExtension}`)) {
-        setFile(file);
-        setFileUploaded(file.name);
-        setError("");
-      } else {
-        setError("This file format is not supported.");
-        setFileUploaded(null);
-      }
+      // if (supportedFormats.includes(`.${fileExtension}`)) {
+      setFile(file);
+      setFileUploaded(file.name);
+      setError("");
+      // } else {
+      //   setError("This file format is not supported.");
+      //   setFileUploaded(null);
+      // }
     }
   };
 
@@ -184,7 +187,7 @@ const UploadingFile = ({
               <input
                 type="file"
                 id="fileInput"
-                accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.zip"
+                // accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.zip"
                 className="hidden"
                 onChange={handleBrowse}
               />

@@ -10,6 +10,7 @@ import { FaEye, FaTrashAlt } from "react-icons/fa";
 import DeleteConfirmationPopup from "./Modal/DeleteConfirmationPopUp";
 import { toast } from "react-toastify";
 import { deleteCourse } from "@/api/route";
+import { CircularProgress } from "@mui/material";
 
 const CourseCard = ({
   image,
@@ -24,6 +25,7 @@ const CourseCard = ({
   chr,
   route1,
   picture,
+  loader,
 }) => {
   const { userData } = useAuth();
   const isAdmin = userData?.Group === "admin";
@@ -76,27 +78,31 @@ const CourseCard = ({
         <div className="mx-1 max-md:mx-0 rounded-xl h-[320px] max-sm:h-[310px] p-2 border border-blue-100 group-hover:cursor-pointer group-hover:border-2 group-hover:border-blue-300 my-4">
           <div className="relative">
             <div className="w-78 h-40">
-              <Image
-                src={
-                  picture &&
-                  picture !== "none" &&
-                  picture !== "None" &&
-                  picture !== "null" &&
-                  picture !== "undefined" &&
-                  picture !== "undefined/undefined"
-                    ? picture
-                    : image
-                }
-                alt="course-image"
-                width={300}
-                height={200}
-                style={{
-                  width: "350px",
-                  height: "165px",
-                  borderRadius: "15px",
-                }}
-                className="p-2 w-full rounded-xl"
-              />
+              {loader ? (
+                <CircularProgress />
+              ) : (
+                <Image
+                  src={
+                    picture &&
+                    picture !== "none" &&
+                    picture !== "None" &&
+                    picture !== "null" &&
+                    picture !== "undefined" &&
+                    picture !== "undefined/undefined"
+                      ? picture
+                      : image
+                  }
+                  alt="course-image"
+                  width={300}
+                  height={200}
+                  style={{
+                    width: "350px",
+                    height: "165px",
+                    borderRadius: "15px",
+                  }}
+                  className="p-2 w-full rounded-xl"
+                />
+              )}
             </div>
 
             <p

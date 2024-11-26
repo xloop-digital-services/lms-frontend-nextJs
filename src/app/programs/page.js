@@ -10,7 +10,7 @@ import StudentProgram from "@/components/StudentProgram";
 import InstructorCoursePage from "@/components/InstructorCoursePage";
 
 export default function Page() {
-  const [loader, setLoader] = useState(true);
+  const [loader, setLoader] = useState(false);
   const { userData } = useAuth();
   const progId = userData?.User?.program?.id;
 
@@ -25,15 +25,19 @@ export default function Page() {
   const [program, setProgram] = useState([]);
 
   async function fetchAllPrograms() {
-    const response = await getAllPrograms();
+    setIsLoading(true);
+  
     try {
+      const response = await getAllPrograms();
       if (response.status === 200) {
-        setPrograms(response.data?.data);
+        setPrograms(response.data?.data); 
       } else {
-        //console.error("Failed to fetch programs, status:", response.status);
+        console.error("Failed to fetch programs, status:", response.status);
       }
     } catch (error) {
-      //console.log("error", error);
+      console.error("Error fetching programs:", error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
