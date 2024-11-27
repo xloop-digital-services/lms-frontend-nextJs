@@ -1,12 +1,16 @@
 "use client";
 import { useEffect, useState } from "react";
 import { getNotificationByUserId } from "@/api/route";
+import { useAuth } from "./AuthContext";
 
 export const useFetchNotifications = (userID) => {
+  const { userData } = useAuth();
+  const group = userData?.Group;
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const fetchNotifications = async () => {
+    if (group === "admin") return;
     setLoading(true);
     try {
       const response = await getNotificationByUserId(userID);
@@ -27,7 +31,7 @@ export const useFetchNotifications = (userID) => {
   };
 
   useEffect(() => {
-    if (!userID) return;
+    // if (!userID || (role !== "student" && role !== "instructor")) return;
 
     const interval = setInterval(() => {
       fetchNotifications();

@@ -1,12 +1,17 @@
 "use client";
 import { useEffect, useState } from "react";
 import { getAnnouncementByUserId } from "@/api/route";
+import { useAuth } from "./AuthContext";
 
-export const useFetchAnnouncement = (userID) => {
+export const useFetchAnnouncement = (userID, role) => {
+  const { userData } = useAuth();
+  const group = userData?.Group;
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  // console.log(group);
+  // console.log(group, userID);
   const fetchAnnouncements = async () => {
+    if (group === "admin") return;
     setLoading(true);
     try {
       const response = await getAnnouncementByUserId(userID);
@@ -27,8 +32,7 @@ export const useFetchAnnouncement = (userID) => {
   };
 
   useEffect(() => {
-    if (!userID) return;
-
+    // if (!userID || (role !== "student" && role !== "instructor")) return;
     const interval = setInterval(() => {
       fetchAnnouncements();
     }, 7000);

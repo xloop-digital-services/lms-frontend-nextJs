@@ -17,6 +17,7 @@ export default function Notifications() {
 
   const {
     announcements,
+
     loading: announcementsLoading,
     refetch: refetchAnnouncements,
   } = useFetchAnnouncement(userID);
@@ -94,8 +95,15 @@ export default function Notifications() {
                     <FaBell size={20} fill="#03A1D8" />
                   </div>
                   <div className="flex flex-col w-64">
-                    <p className="font-md">{announcement.message}</p>
-                    <p className="text-dark-400 font-sm mt-1">
+                    <p className="font-md">
+                      {announcement.message}
+                      <br />
+                      <p className="italic text-sm text-dark-400">
+                        Please ignore any contradictory scheduling in the
+                        calendar.
+                      </p>
+                    </p>
+                    <p className="text-dark-400 text-sm mt-1">
                       {formatDateTime(announcement.created_at)}
                     </p>
                   </div>
@@ -142,7 +150,7 @@ export default function Notifications() {
                   </div>
                   <div className="flex flex-col w-64">
                     <p className="font-md">{msg.message}</p>
-                    <p className="text-dark-400 font-sm mt-1">
+                    <p className="text-dark-400 text-sm mt-1">
                       {formatDateTime(msg.created_at)}
                     </p>
                   </div>
