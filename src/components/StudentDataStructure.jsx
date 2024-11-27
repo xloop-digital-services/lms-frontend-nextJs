@@ -322,17 +322,27 @@ const StudentDataStructure = ({
                               </td>
                               <td className="px-12 py-3 whitespace-nowrap text-blue-300  ">
                                 <div className="flex items-center justify-center gap-4 ">
-                                  <a
-                                    href={quiz.submitted_file}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
+                                  {quiz.submitted_file &&
+                                  quiz.submitted_file !==
+                                    "undefined/undefined" ? (
+                                    <a
+                                      href={quiz.submitted_file}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                    >
+                                      <MdRemoveRedEye
+                                        title="Download submitted file"
+                                        className="cursor-pointer"
+                                        size={23}
+                                      />
+                                    </a>
+                                  ) : (
                                     <MdRemoveRedEye
-                                      title="Download submitted file"
-                                      className="cursor-pointer"
+                                      title="No file available"
+                                      className="text-dark-400"
                                       size={23}
                                     />
-                                  </a>
+                                  )}
                                   {isAdmin && edit && (
                                     <>
                                       <LuUpload

@@ -1662,3 +1662,28 @@ export const getProgressForSession = async (programId) => {
     throw error;
   }
 };
+
+// //get notifications by user ID
+// export const getNotificationByUserId = async (userId) => {
+//   try {
+//     const response = await axiosInstance.get(
+//       `/api/user-announcements/?user_id=${userId}/`
+//     );
+//     return response;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+
+//get announcement by user ID
+
+export const getAnnouncementByUserId = async (userId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/api/user-announcements/?user_id=${userId}/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

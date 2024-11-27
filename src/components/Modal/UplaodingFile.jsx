@@ -78,11 +78,11 @@ const UploadingFile = ({
   const handleUpload = async (type) => {
     setLoader(true);
 
-    if (file === null) {
-      toast.warn("File is not selected");
-      setLoader(false);
-      return;
-    }
+    // if (file === null) {
+    //   toast.warn("File is not selected");
+    //   setLoader(false);
+    //   return;
+    // }
 
     try {
       const s3Data = await handleFileUploadToS3(file, type);

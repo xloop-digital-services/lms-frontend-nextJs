@@ -2,11 +2,12 @@
 import React, { useEffect, useState } from "react";
 import { FaBell, FaPlus } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import useWebSocket from "@/providers/useWebSockets";
+// import useWebSocket from "@/providers/useWebSockets";
 import { useAuth } from "@/providers/AuthContext";
 import { CircularProgress } from "@mui/material";
 import { formatDateTime } from "./AdminDataStructure";
 import { readAnnouncement, readNotification } from "@/api/route";
+import { useFetchAnnouncement } from "@/providers/useFetchAnnouncement";
 
 export default function Notifications() {
   const { userData } = useAuth();
@@ -16,17 +17,21 @@ export default function Notifications() {
   const isInstructor = userData?.Group === "instructor";
   const group = userData?.Group;
   const [currentNotiId, setCurrentNotiId] = useState(null);
+
+  const { announcements, loader, refetch } = useFetchAnnouncement(userID);
+  // const [messages, setMessages] = useState([]);
+  // const [announcements, setAnnouncements] = useState([]);
   // console.log(userID);
   const router = useRouter();
-  const { messages: messages, loading: loading } = useWebSocket(
-    `wss://lms-api-xloopdigital.com/ws/notification/?user_id=${userID}`,
-    group
-  );
+  // const { messages: messages, loading: loading } = useWebSocket(
+  //   `wss://lms-api-xloopdigital.com/ws/notification/?user_id=${userID}`,
+  //   group
+  // );
 
-  const { messages: announcements, loading: loader } = useWebSocket(
-    `wss://lms-api-xloopdigital.com/ws/announcements/?user_id=${userID}`,
-    group
-  );
+  // const { messages: announcements, loading: loader } = useWebSocket(
+  //   `wss://lms-api-xloopdigital.com/ws/announcements/?user_id=${userID}`,
+  //   group
+  // );
 
   const handleCreateAnnoucement = () => {
     router.push("/announcement/new-announcement");
@@ -172,7 +177,6 @@ export default function Notifications() {
             </p>
           )}
         </div>
-
       </div>
     </>
   );
