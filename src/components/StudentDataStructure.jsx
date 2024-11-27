@@ -324,21 +324,26 @@ const StudentDataStructure = ({
                                 <div className="flex items-center justify-center gap-4 ">
                                   {quiz.submitted_file &&
                                   quiz.submitted_file !==
-                                    "undefined/undefined" ? (
+                                    "undefined/undefined" &&
+                                  quiz.submitted_file !== "undefined" ? (
                                     <a
                                       href={quiz.submitted_file}
                                       target="_blank"
                                       rel="noopener noreferrer"
                                     >
                                       <MdRemoveRedEye
-                                        title="Download submitted file"
+                                        title={
+                                          quiz.comments
+                                            ? `Your comment: ${quiz.comments}`
+                                            : "View uploaded file"
+                                        }
                                         className="cursor-pointer"
                                         size={23}
                                       />
                                     </a>
                                   ) : (
                                     <MdRemoveRedEye
-                                      title="No file available"
+                                      title={`Your comment: ${quiz.comments}`}
                                       className="text-dark-400"
                                       size={23}
                                     />

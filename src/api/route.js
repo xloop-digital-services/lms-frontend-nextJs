@@ -547,7 +547,7 @@ export const getProgressForAssignment = async (courseId) => {
 export const uploadAssignment = async (studentInstructorID, assignment) => {
   try {
     const response = await axiosInstance.post(
-      `/api/course/submissions/?instructor_id=${studentInstructorID}`,
+      `/api/course/submissions/?instructor_id=${studentInstructorID}/`,
       assignment,
       {
         headers: {
@@ -601,7 +601,7 @@ export const resubmitQuiz = async (submissionId, quiz) => {
 export const resubmitProject = async (submissionId, project) => {
   try {
     const response = await axiosInstance.put(
-      `/api/course/project_submissions/${submissionId}`,
+      `/api/course/project_submissions/${submissionId}/`,
       project,
       {
         headers: {
@@ -637,7 +637,7 @@ export const resubmitExam = async (submissionId, exam) => {
 export const uploadQuiz = async (studentInstructorID, quiz) => {
   try {
     const response = await axiosInstance.post(
-      `/api/course/quiz_submissions/?instructor_id=${studentInstructorID}`,
+      `/api/course/quiz_submissions/?instructor_id=${studentInstructorID}/`,
       quiz,
       {
         headers: {
@@ -655,7 +655,7 @@ export const uploadQuiz = async (studentInstructorID, quiz) => {
 export const uploadProject = async (studentInstructorID, project) => {
   try {
     const response = await axiosInstance.post(
-      `/api/course/project_submissions/?instructor_id=${studentInstructorID}`,
+      `/api/course/project_submissions/?instructor_id=${studentInstructorID}/`,
       project,
       {
         headers: {
@@ -673,7 +673,7 @@ export const uploadProject = async (studentInstructorID, project) => {
 export const uploadExam = async (studentInstructorID, exam) => {
   try {
     const response = await axiosInstance.post(
-      `/api/course/exam_submissions/?instructor_id=${studentInstructorID}`,
+      `/api/course/exam_submissions/?instructor_id=${studentInstructorID}/`,
       exam,
       {
         headers: {
@@ -1663,24 +1663,24 @@ export const getProgressForSession = async (programId) => {
   }
 };
 
-// //get notifications by user ID
-// export const getNotificationByUserId = async (userId) => {
-//   try {
-//     const response = await axiosInstance.get(
-//       `/api/user-announcements/?user_id=${userId}/`
-//     );
-//     return response;
-//   } catch (error) {
-//     throw error;
-//   }
-// };
+//get notifications by user ID
+export const getNotificationByUserId = async (userId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/api/user-notifications/?user_id=${userId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 
 //get announcement by user ID
 
 export const getAnnouncementByUserId = async (userId) => {
   try {
     const response = await axiosInstance.get(
-      `/api/user-announcements/?user_id=${userId}/`
+      `/api/user-announcements/?user_id=${userId}`
     );
     return response;
   } catch (error) {

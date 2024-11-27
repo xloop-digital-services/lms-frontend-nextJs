@@ -18,6 +18,8 @@ import { CircularProgress } from "@mui/material";
 import { useAuth } from "@/providers/AuthContext";
 import useClickOutside from "@/providers/useClickOutside";
 import useWebSocket from "@/providers/useWebSockets";
+import { useFetchNotifications } from "@/providers/useFetchNotifications";
+import { useFetchAnnouncement } from "@/providers/useFetchAnnouncement";
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
@@ -33,22 +35,31 @@ export default function Navbar() {
   const isAdmin = userData?.Group === "admin";
   const userID = userData?.User?.id;
   const group = userData?.Group;
-  const { messages: messages, loading: loading } = useWebSocket(
-    `wss://lms-api-xloopdigital.com/ws/notification/?user_id=${userID}`,
-    group
-  );
-
-  const { messages: announcements, loading: load } = useWebSocket(
-    `wss://lms-api-xloopdigital.com/ws/announcements/?user_id=${userID}`,
-    group
-  );
-
-  const ra = announcements.filter((message) => message.read === true).length;
-  const ura = announcements.filter((message) => message.read === false).length;
-  const rn = messages.filter((message) => message.status === "read").length;
-  const urn = messages.filter((message) => message.status === "unread").length;
+  const {
+    announcements,
+    loading: announcementsLoading,
+    refetch: refetchAnnouncements,
+  } = useFetchAnnouncement(userID);
+  const {
+    messages,
+    loading: notificationsLoading,
+    refetch: refetchNotifications,
+  } = useFetchNotifications(userID);
+  const ra = (announcements || []).filter(
+    (message) => message.read_status === true
+  ).length;
+  const ura = (announcements || []).filter(
+    (message) => message.read_status === false
+  ).length;
+  const rn = (messages || []).filter(
+    (message) => message.status === "read"
+  ).length;
+  const urn = (messages || []).filter(
+    (message) => message.status === "unread"
+  ).length;
   const reads = ra + rn;
   const unreads = ura + urn;
+
   // console.log(ura, urn);
 
   // console.log("unread", unreads);
