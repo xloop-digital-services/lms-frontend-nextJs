@@ -12,7 +12,7 @@ import { useAuth } from "@/providers/AuthContext";
 import { CircularProgress } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
-import { toast } from "react-toastify"; 
+import { toast } from "react-toastify";
 
 export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   const { userData } = useAuth();
@@ -110,7 +110,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
     setGetting(true);
     try {
       const response = await getAttendanceBySessionIdnCourseId(
-        selectedSession,
+        selectedSessionId,
         courseId,
         date
       );
@@ -188,7 +188,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
       // );
 
       const response = await postAttendanceBySessionId(
-        selectedSession,
+        selectedSessionId,
         courseId,
         attendanceArray
       );
@@ -234,7 +234,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
     );
     try {
       const response = await patchAttendanceBySessionId(
-        selectedSession,
+        selectedSessionId,
         courseId,
         attendanceArray
       );
@@ -255,7 +255,11 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
 
   const handleSessionSelect = (session) => {
     setSelectedSession(session.session_name);
-    setSelectedSessionId(session.id);
+    if (isAdmin) {
+      setSelectedSessionId(session.id);
+    } else if (isInstructor) {
+      setSelectedSessionId(session.session_id);
+    }
     setIsSessionOpen(false);
   };
 
@@ -299,8 +303,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
         fetchAttendanceIns();
       }
     }
-
-  }, [selectedSession, date, toggle]); 
+  }, [selectedSession, date, toggle]);
 
   const handleDateChange = (e) => {
     const selectedDate = e.target.value;
@@ -309,7 +312,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   };
   useClickOutside(sessionDropdown, sessionButton, () =>
     setIsSessionOpen(false)
-  )
+  );
   // console.log(selectedSessionId);
 
   return (

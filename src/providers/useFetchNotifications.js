@@ -15,7 +15,7 @@ export const useFetchNotifications = (userID) => {
     try {
       const response = await getNotificationByUserId(userID);
       if (response.status === 200) {
-        console.log(response.data, "noti");
+        // console.log(response.data, "noti");
         setMessages(response.data.data);
       } else {
         console.error(
