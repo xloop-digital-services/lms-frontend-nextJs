@@ -57,7 +57,7 @@ const TopScoreTable = ({ scores, loadingScore, showAll }) => {
                       scope="col"
                       className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]"
                     >
-                      Overall %
+                      Overall Weighted  %
                     </th>
                   </tr>
                 </thead>

@@ -1,11 +1,18 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import TopScoreTable from "../TopScoreTable";
 import { IoClose } from "react-icons/io5";
 
 const TopScoreModal = ({ scores, loadingScore, showAll, setOpenList }) => {
+  // useEffect(() => {
+  //   document.body.style.overflow = "hidden";
+  //   return () => {
+  //     document.body.style.overflow = "auto";
+  //   };
+  // }, []);
   return (
-    <div className="backDropOverlay h-screen flex justify-center items-center">
-      <div className=" w-[1300px] z-[1000] mx-auto my-20 overflow-auto scrollbar-webkit">
+    <div className="backDropOverlay h-screen fixed flex justify-center items-center">
+      <div className=" w-[1200px] z-[1000] mx-auto my-20 overflow-auto scrollbar-webkit">
         <div
           //   ref={modalClose}
           style={{ backgroundColor: "#EBF6FF" }}
@@ -21,7 +28,7 @@ const TopScoreModal = ({ scores, loadingScore, showAll, setOpenList }) => {
               }}
               className="text-start  px-2 xsm:py-[10px] pb-[5px] font-exo"
             >
-              Top Performers
+              Student Performance Report
             </h1>
             <button
               className="px-2"

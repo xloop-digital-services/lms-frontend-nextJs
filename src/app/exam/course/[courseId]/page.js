@@ -55,9 +55,17 @@ export default function Page({ params }) {
   // const [courses, setCourses] = useState([]);
   const [studentInstructorName, setStudentInstructorName] = useState(null);
   const [studentInstructorID, setStudentInstructorID] = useState(null);
-  const[isSessionOpen, setIsSessionOpen] = useState(false);
+  const [isSessionOpen, setIsSessionOpen] = useState(false);
   const sessionButton = useRef(null);
   const sessionDropdown = useRef(null);
+  const instructions = [
+    "Complete and submit your exam by the specified end time.",
+    "Ensure a stable internet connection and use a compatible browser.",
+    "Find a quiet, distraction-free place to take the exam.",
+    "Cheating or use of unauthorized materials is strictly prohibited. Do not communicate with other students during the exam.",
+    "Review and Ensure all your answers and uploaded files are submitted before the time runs out.",
+    "Contact support immediately if technical issues arise.",
+  ];
 
   async function fetchSessionForUser() {
     setLoading(true);
@@ -482,32 +490,11 @@ export default function Page({ params }) {
               Exam instructions
             </h2>
             <ul className="text-dark-400 list-decimal">
-              <li className="py-2 mx-4">
-                Timing: Complete and submit your exam by the specified end time.
-              </li>
-              <li className="py-2 mx-4">
-                Technical Requirements: Ensure a stable internet connection and
-                use a compatible browser.
-              </li>
-              <li className="py-2 mx-4">
-                Exam Environment: Find a quiet, distraction-free place to take
-                the exam.{" "}
-              </li>
-              <li className="py-2 mx-4">
-                Academic Integrity: Complete the exam independently without
-                unauthorized assistance.
-              </li>
-              <li className="py-2 mx-4">
-                Submission: Review and submit your answers before the deadline.
-              </li>
-              <li className="py-2 mx-4">
-                Technical Issues: Contact support immediately if technical
-                issues arise.
-              </li>
-              <li className="py-2 mx-4">
-                Additional Instructions: Follow any additional instructions
-                provided.
-              </li>
+              {instructions.map((instruction, index) => (
+                <li key={index} className="py-2 mx-4">
+                  {instruction}
+                </li>
+              ))}
             </ul>
             <p className="pt-2 text-mix-200">Note: No Resubmissions allowed*</p>
             <hr className="my-4 text-dark-200 "></hr>
