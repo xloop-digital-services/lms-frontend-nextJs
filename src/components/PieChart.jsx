@@ -5,8 +5,8 @@ import { Doughnut } from "react-chartjs-2";
 const PieChart = ({verified, unverified, pending, shortlisted}) => {
   return (
     <div
-      style={{ height: "326px", width: "100%" }}
-      className="flex justify-center items-center mt-6"
+      style={{ height: "320px", width: "100%" }}
+      className="flex justify-center items-center mt-4"
     >
       <Doughnut
         data={{

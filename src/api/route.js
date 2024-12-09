@@ -1663,6 +1663,24 @@ export const getProgressForSession = async (programId) => {
   }
 };
 
+export const getProgramGraph = async (programId) => {
+  try {
+    const response = await axiosInstance.get(`/api/course/program/${programId}/graph/`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getProgramScores = async (programId) => {
+  try {
+    const response = await axiosInstance.get(`/api/course/program/${programId}/scores/`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 //get notifications by user ID
 export const getNotificationByUserId = async (userId) => {
   try {

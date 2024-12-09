@@ -12,6 +12,8 @@ import {
   getAllSkills,
   getApplicationsTotalNumber,
   getCityStatistics,
+  getProgramGraph,
+  getProgramScores,
   getProgressForSession,
   listAllBatches,
   totalUsersCount,
@@ -21,6 +23,9 @@ import Link from "next/link";
 import DeleteConfirmationPopup from "./Modal/DeleteConfirmationPopUp";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import BatchUserModal from "./Modal/BatchUserModal";
+import TopScoreTable from "./TopScoreTable";
+import { FaList } from "react-icons/fa";
+import TopScoreModal from "./Modal/TopScoreModal";
 
 const AdminDashboard = () => {
   const { isSidebarOpen } = useSidebar();
@@ -31,12 +36,16 @@ const AdminDashboard = () => {
   const [allPrograms, setAllPrograms] = useState([]);
   const [selectedProgram, setSelectedProgram] = useState("");
   const [selectedBarProgram, setSelectedBarProgram] = useState("");
+  const [selectedScoreProgram, setSelectedScoreProgram] = useState("");
   const [programId, setProgramId] = useState(null);
   const [barProgramId, setBarProgramId] = useState(null);
+  const [scoreProgramId, setScoreProgramId] = useState(null);
   const [isProgramOpen, setIsProgramOpen] = useState(false);
   const [isProgramSelected, setIsProgramSelected] = useState(false);
   const [isBarProgramOpen, setIsBarProgramOpen] = useState(false);
   const [isBarProgramSelected, setIsBarProgramSelected] = useState(false);
+  const [isScoreProgramOpen, setIsScoreProgramOpen] = useState(false);
+  const [isScoreProgramSelected, setIsScoreProgramSelected] = useState(false);
   const [allSkills, setAllSkills] = useState([]);
   const [selectedSkill, setSelectedSkill] = useState("");
   const [skillId, setSkillId] = useState(null);
@@ -73,11 +82,16 @@ const AdminDashboard = () => {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [sessionProgress, setSessionProgress] = useState([]);
   const [openInfoModal, setOpenInfoModal] = useState(false);
+  const [loadingScore, setLoadingScore] = useState(false);
+  const [scores, setScores] = useState([]);
+  const [openList, setOpenList] = useState(false);
 
   const dropdownRef = useRef(null);
   const dropButton = useRef(null);
   const barRef = useRef(null);
   const barButton = useRef(null);
+  const scoreRef = useRef(null);
+  const scoreButton = useRef(null);
   const statusDown = useRef(null);
   const statusButton = useRef(null);
   const userDown = useRef(null);
@@ -88,6 +102,7 @@ const AdminDashboard = () => {
   useClickOutside(statusDown, statusButton, () => setIsOpen(false));
   useClickOutside(dropdownRef, dropButton, () => setIsProgramOpen(false));
   useClickOutside(barRef, barButton, () => setIsBarProgramOpen(false));
+  useClickOutside(scoreRef, scoreButton, () => setIsScoreProgramOpen(false));
   useClickOutside(skillDown, skillButton, () => setIsSkillOpen(false));
   useClickOutside(userDown, userButton, () => setIsUserOpen(false));
 
@@ -176,7 +191,7 @@ const AdminDashboard = () => {
     const handleBarChartForProgram = async () => {
       setBarLoading(true);
       try {
-        const response = await getProgressForSession(barProgramId);
+        const response = await getProgramGraph(barProgramId);
         if (response?.data) {
           setSessionProgress(response.data.data); // Adjust based on actual response structure
         } else {
@@ -192,6 +207,25 @@ const AdminDashboard = () => {
       handleBarChartForProgram();
     }
   }, [barProgramId]);
+
+  useEffect(() => {
+    const handleScores = async () => {
+      try {
+        setLoadingScore(true);
+        const response = await getProgramScores(scoreProgramId);
+        console.log("response", response.data.data);
+        setScores(response.data.data);
+      } catch (error) {
+        console.log("error", error);
+      } finally {
+        setLoadingScore(false);
+      }
+    };
+
+    if (scoreProgramId) {
+      handleScores();
+    }
+  }, [scoreProgramId]);
 
   useEffect(() => {
     handleListingAllBatches();
@@ -242,6 +276,9 @@ const AdminDashboard = () => {
   const toggleBarProgramOpen = () => {
     setIsBarProgramOpen((prev) => !prev);
   };
+  const toggleScoreProgramOpen = () => {
+    setIsScoreProgramOpen((prev) => !prev);
+  };
   const toggleSkillOpen = () => {
     setIsSkillOpen((prev) => !prev);
   };
@@ -264,6 +301,13 @@ const AdminDashboard = () => {
     setBarProgramId(option.id);
     setIsBarProgramSelected(true);
     setIsBarProgramOpen(false);
+  };
+
+  const handleScoreProgramSelect = (option) => {
+    setSelectedScoreProgram(option.name);
+    setScoreProgramId(option.id);
+    setIsScoreProgramSelected(true);
+    setIsScoreProgramOpen(false);
   };
 
   const handleBarChartData = async () => {
@@ -289,9 +333,12 @@ const AdminDashboard = () => {
       setSelectedProgram(allPrograms[0].name);
       setSelectedBarProgram(allPrograms[0].name);
       setBarProgramId(allPrograms[0].id);
+      setSelectedScoreProgram(allPrograms[0].name);
+      setScoreProgramId(allPrograms[0].id);
       setProgramId(allPrograms[0].id);
       setIsProgramSelected(true);
       setIsBarProgramSelected(true); // Set the first program's name as default
+      setIsScoreProgramSelected(true); // Set the first program's name as default
     }
     if (allSkills && allSkills.length > 0) {
       setSelectedSkill(allSkills[0].name);
@@ -377,6 +424,10 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleOpenList = () => {
+    setOpenList(true);
+  };
+
   return (
     <>
       <div
@@ -390,9 +441,9 @@ const AdminDashboard = () => {
           width: isSidebarOpen ? "81%" : "100%",
         }}
       >
-        <div className="text-[#07224D] flex flex-col gap-5">
+        <div className="text-[#07224D] flex flex-col gap-4 ">
           {/* <h2 className=" font-exo text-3xl font-bold">Admin Dashboard</h2> */}
-          <div className="flex gap-5 flex-wrap xmd:flex-nowrap w-full">
+          <div className="flex gap-4 flex-wrap xmd:flex-nowrap w-full">
             <div className="bg-surface-100 w-full xmd:w-1/3 flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
               <div className="flex flex-col text-sm h-full justify-center items-center">
                 Total Users
@@ -464,7 +515,7 @@ const AdminDashboard = () => {
           </div>
 
           <div className="flex gap-4 xmd:flex-row flex-col">
-            <div className="bg-surface-100 xmd:w-[66.5%] w-full overflow-x-auto scrollbar-webkit p-5 rounded-xl  h-[450px]">
+            <div className="bg-surface-100 xmd:w-[66.5%] w-full overflow-x-auto scrollbar-webkit p-5 rounded-xl  h-[420px]">
               <div className="border border-dark-300 rounded-xl p-3 h-full ">
                 {/* <div className="font-bold font-exo text-blue-500 text-lg pb-2">
                   Capacity in Different Cities
@@ -486,7 +537,7 @@ const AdminDashboard = () => {
                           !isBarProgramSelected
                             ? " text-dark-500"
                             : "text-[#424b55]"
-                        } flex justify-between items-center w-[300px]  hover:text-[#0e1721] px-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                        } flex justify-between items-center w-[300px]  hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                       >
                         <span className="  max-w-full truncate capitalize">
                           {selectedBarProgram}
@@ -535,7 +586,7 @@ const AdminDashboard = () => {
                 </div>
               </div>
             </div>
-            <div className="bg-surface-100 min-w-[32%] p-4 rounded-xl  h-[450px]">
+            <div className="bg-surface-100 min-w-[32%] p-4 rounded-xl  h-[420px]">
               <div className="flex w-full xmd:flex-col ssm:flex-row flex-col justify-between xmd:items-start items-center">
                 <div className="font-bold font-exo text-blue-500 text-lg">
                   Applications Status Overview
@@ -547,7 +598,7 @@ const AdminDashboard = () => {
                       onClick={toggleUsers}
                       className={`${
                         !selectedUser ? "text-dark-500" : "text-[#424b55]"
-                      } flex justify-between mt-1 items-center w-full gap-1 hover:text-[#0e1721] xlg:px-4 px-2 xlg:py-3 py-2 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                      } flex justify-between mt-1 items-center w-full gap-1 hover:text-[#0e1721] xlg:px-4 px-2 py-2 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                     >
                       {selectedUser || userOptions[0]}
                       <span
@@ -589,7 +640,7 @@ const AdminDashboard = () => {
                           !isProgramSelected
                             ? "text-dark-500"
                             : "text-[#424b55]"
-                        } flex justify-between items-center w-full xlg:px-4 px-2  xlg:py-3  py-2 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                        } flex justify-between items-center w-full xlg:px-4 px-2    py-2 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                         style={{
                           // maxWidth: "220px", // Set the maximum width of the button
                           whiteSpace: "nowrap",
@@ -650,7 +701,7 @@ const AdminDashboard = () => {
                         onClick={toggleSkillOpen}
                         className={`${
                           !isSkillSelected ? " text-dark-500" : "text-[#424b55]"
-                        } flex justify-between mt-1 items-center w-full gap-1 hover:text-[#0e1721] px-4 xlg:py-3 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                        } flex justify-between mt-1 items-center w-full gap-1 hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                       >
                         <span className="xl:max-w-[190px] xmd:max-w-[100px] w-[200px] truncate capitalize">
                           {selectedSkill}
@@ -697,7 +748,7 @@ const AdminDashboard = () => {
               </div>
               <div>
                 {loading ? (
-                  <div className="flex h-full mt-4 justify-center items-center">
+                  <div className="flex h-full mt-3 justify-center items-center">
                     <CircularProgress size={20} />
                   </div>
                 ) : selectedProgram &&
@@ -729,8 +780,81 @@ const AdminDashboard = () => {
               </div>
             </div>
           </div>
-          <div className="bg-[rgb(255,255,255)] rounded-xl p-5 pb-0 xmd:max-h-[260px] h-full xsm:mb-0 mb-4">
-            <div className="flex nsm:items-center nsm:flex-row flex-col ">
+          <div className="bg-[rgb(255,255,255)] rounded-xl px-5 py-4 pb-0 xmd:h-[275px] h-full xsm:mb-0 mb-4">
+            <div className="flex nsm:items-center nsm:flex-row flex-col justify-between">
+              <div>
+                <h1 className="font-bold font-exo  text-blue-500 text-lg sm:w-[200px] w-[180px]  xlg:w-full">
+                  Top Performers
+                </h1>
+              </div>
+              <div className="flex gap-2 items-center">
+                <div>
+                  <button
+                    onClick={handleOpenList}
+                    className="w-fit flex items-center gap-2 py-2 px-10 text-sm font-medium rounded-lg text-dark-100 bg-blue-300 hover:bg-[#3272b6] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
+                  >
+                    <span>
+                      <FaList />
+                    </span>
+                    <span>Show All List</span>
+                  </button>
+                </div>
+                <div>
+                  <div className="relative space-y-2 text-[15px] w-full">
+                    <button
+                      ref={scoreButton}
+                      onClick={toggleScoreProgramOpen}
+                      className={`${
+                        !isScoreProgramSelected
+                          ? " text-dark-500"
+                          : "text-[#424b55]"
+                      } flex justify-between items-center w-[300px]  hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                    >
+                      <span className="  max-w-full truncate capitalize">
+                        {selectedScoreProgram}
+                      </span>
+                      <span
+                        className={`${
+                          isScoreProgramOpen
+                            ? "rotate-180 duration-300"
+                            : "duration-300"
+                        }`}
+                      >
+                        <IoIosArrowDown />
+                      </span>
+                    </button>
+
+                    {isScoreProgramOpen && (
+                      <div
+                        ref={scoreRef}
+                        className="absolute z-20 w-full max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
+                      >
+                        {allPrograms.map((option, index) => (
+                          <div
+                            key={index}
+                            onClick={() => handleScoreProgramSelect(option)}
+                            className="p-2 cursor-pointer"
+                            title={option.name}
+                          >
+                            <div className="xlg:px-4 px-2 py-2 capitalize hover:bg-[#03a3d838] truncate hover:text-blue-300 hover:font-semibold rounded-lg">
+                              {option.name}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <TopScoreTable
+                scores={scores}
+                loadingScore={loadingScore}
+                showAll={openList}
+              />
+            </div>
+            {/* <div className="flex nsm:items-center nsm:flex-row flex-col ">
               <h1 className="font-bold font-exo  text-blue-500 text-lg sm:w-[200px] w-[180px]  xlg:w-full">
                 <Link href="/batch" className="w-fit">
                   Batch Details
@@ -789,11 +913,11 @@ const AdminDashboard = () => {
                       ))}
                     </div>
                   )}
-                </div> */}
+                </div> 
               </div>
-            </div>
+            </div> */}
 
-            <div className="xmd:max-h-[160px] max-h-[300px] mt-3 overflow-y-auto overflow-x-hidden scrollbar-webkit">
+            {/* <div className="xmd:max-h-[160px] max-h-[300px] mt-3 overflow-y-auto overflow-x-hidden scrollbar-webkit">
               {loadingBatch ? (
                 <div className="flex justify-center items-center w-full h-full p-5">
                   <CircularProgress size={20} />
@@ -827,7 +951,7 @@ const AdminDashboard = () => {
                   setOpenInfo={setOpenInfoModal}
                 />
               )}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -845,6 +969,16 @@ const AdminDashboard = () => {
             setConfirmDelete={setConfirmDelete}
             handleDelete={handleDelete}
             field="batch"
+          />
+        )}
+      </div>
+      <div>
+        {openList && (
+          <TopScoreModal
+            scores={scores}
+            loadingScore={loadingScore}
+            showAll={openList}
+            setOpenList={setOpenList}
           />
         )}
       </div>
