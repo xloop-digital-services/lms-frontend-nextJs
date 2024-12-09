@@ -32,16 +32,19 @@ const AssignmentCard = ({
               >
                 {type}
               </p>
-              <div className="flex w-full bg-[#EBF6FF] py-[9px] px-5 rounded-lg items-center">
-                <div className="flex justify-evenly w-full">
-                  <div className="text-blue-300 uppercase text-[12px] font-bold">
-                    Capacity: {capacity}
+              {capacity ||
+                (location && (
+                  <div className="flex w-full bg-[#EBF6FF] py-[9px] px-5 rounded-lg items-center">
+                    <div className="flex justify-evenly w-full">
+                      <div className="text-blue-300 uppercase text-[12px] font-bold">
+                        {capacity && `Capacity: ${capacity}`}
+                      </div>
+                      <div className="text-blue-300 uppercase text-[12px] font-bold">
+                        {location && `Location: ${location}`}
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-blue-300 uppercase text-[12px] font-bold">
-                    Location: {location}
-                  </div>
-                </div>
-              </div>
+                ))}
             </div>
             <div className="font-bold space-x-2 px-2">
               <p>{title}</p>
@@ -59,20 +62,30 @@ const AssignmentCard = ({
                     //   ? "bg-[#FBE7E9] text-[#D84848]"
                     //   : "bg-[#FEF0C7] text-[#F8A029]"
                   >
-                    {Array.isArray(priority) && priority.length > 0 ? (
-                      priority.map((days) => (
-                        <div
-                          className="flex justify-evenly items-center w-full"
-                          key={days.day_of_week}
-                        >
-                          <div className="w-[30%]">{days.day_of_week}:</div>
-                          <div>
-                            {days.start_time} - {days.end_time}
-                          </div>
+                    {priority ? (
+                      Array.isArray(priority) ? (
+                        priority.length > 0 ? (
+                          priority.map((days) => (
+                            <div
+                              className="flex justify-evenly items-center w-full"
+                              key={days.day_of_week}
+                            >
+                              <div className="w-[30%]">{days.day_of_week}:</div>
+                              <div>
+                                {days.start_time} - {days.end_time}
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <p className="text-center">No time is scheduled</p>
+                        )
+                      ) : (
+                        <div className="flex justify-evenly items-center w-full">
+                          <div className="">Due Date: {priority}</div>
                         </div>
-                      ))
+                      )
                     ) : (
-                      <p className="text-center">no time is scheduled</p>
+                      <p className="text-center">No time is scheduled</p>
                     )}
                   </p>
                 </div>

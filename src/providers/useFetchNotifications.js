@@ -15,16 +15,16 @@ export const useFetchNotifications = (userID) => {
     try {
       const response = await getNotificationByUserId(userID);
       if (response.status === 200) {
-        console.log(response.data, "noti");
+        // console.log(response.data, "noti");
         setMessages(response.data.data);
       } else {
-        console.error(
-          "Failed to fetch notifications, status:",
-          response.status
-        );
+        // console.error(
+        //   "Failed to fetch notifications, status:",
+        //   response.status
+        // );
       }
     } catch (error) {
-      console.error("Error fetching notifications:", error);
+      // console.error("Error fetching notifications:", error);
     } finally {
       setLoading(false);
     }
@@ -35,7 +35,7 @@ export const useFetchNotifications = (userID) => {
 
     const interval = setInterval(() => {
       fetchNotifications();
-    }, 7000);
+    }, 10000);
     fetchNotifications();
     return () => clearInterval(interval);
   }, [userID]);

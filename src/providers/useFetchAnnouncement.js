@@ -17,15 +17,15 @@ export const useFetchAnnouncement = (userID, role) => {
       const response = await getAnnouncementByUserId(userID);
       if (response.status === 200) {
         setAnnouncements(response.data.data);
-        console.log(response.data, "ann");
+        // console.log(response.data, "ann");
       } else {
-        console.error(
-          "Failed to fetch announcements, status:",
-          response.status
-        );
+        // console.error(
+        //   "Failed to fetch announcements, status:",
+        //   response.status
+        // );
       }
     } catch (error) {
-      console.error("Error fetching announcements:", error);
+      // console.error("Error fetching announcements:", error);
     } finally {
       setLoading(false);
     }
@@ -35,7 +35,7 @@ export const useFetchAnnouncement = (userID, role) => {
     // if (!userID || (role !== "student" && role !== "instructor")) return;
     const interval = setInterval(() => {
       fetchAnnouncements();
-    }, 7000);
+    }, 10000);
     fetchAnnouncements();
     return () => clearInterval(interval);
   }, [userID]);

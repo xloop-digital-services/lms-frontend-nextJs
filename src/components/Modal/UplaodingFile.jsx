@@ -77,6 +77,11 @@ const UploadingFile = ({
 
   const handleUpload = async (type) => {
     setLoader(true);
+    if (!file && !comment.trim()) {
+      toast.warn("File or comment must be provided");
+      setLoader(false);
+      return;
+    }
 
     // if (file === null) {
     //   toast.warn("File is not selected");

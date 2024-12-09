@@ -268,7 +268,14 @@ const AdminMarksTable = ({
                               assessment?.remarks || "-"
                             )}
                           </td>
-                          <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800 ">
+                          <td
+                            className="px-6 py-4 text-center break-words text-sm font-medium text-gray-800"
+                            style={{
+                              wordBreak: "break-word",
+                              overflowWrap: "break-word",
+                              whiteSpace: "normal",
+                            }}
+                          >
                             {assessment.submitted_file === null ||
                             assessment.submitted_file === "undefined" ||
                             assessment.submitted_file ===
@@ -277,7 +284,7 @@ const AdminMarksTable = ({
                             ) : (
                               <a
                                 href="#"
-                                className="cursor-pointer flex justify-center items-center text-black hover:text-[#2563eb] hover:underline"
+                                className="cursor-pointer text-black hover:text-[#2563eb] hover:underline"
                                 title="download"
                                 onClick={(e) => {
                                   e.preventDefault();
