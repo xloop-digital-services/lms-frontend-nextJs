@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { IoClose } from "react-icons/io5";
+import { IoCheckmark, IoClose } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
 import { createSession, getAllCourses, UpdateSession } from "@/api/route";
 import { CircularProgress } from "@mui/material";
@@ -45,6 +45,9 @@ const SessionCreationModal = ({
   const [isCourseSelected, setIsCourseSelected] = useState(false);
   const [loadingCourses, setLoadingCourses] = useState(false);
   const [selectedDays, setSelectedDays] = useState([]);
+  const [hoveredDay, setHoveredDay] = useState(null);
+  const [editableDays, setEditableDays] = useState({});
+  const [previousSelectedDays, setPreviousSelectedDays] = useState([]);
   const [timeData, setTimeData] = useState({
     // Initialize with each day having default start and end time
     0: { startTime: "", endTime: "" },
@@ -312,7 +315,7 @@ const SessionCreationModal = ({
     //   // console.log('end date,', date)
     //   console.log("formated end date", formattedDate);
     setendDate(event.target.value);
-    // Check if end date is earlier than start date
+
     if (startDate && event.target.value <= startDate) {
       setDateErrorMessage("End date should be greater than start date");
     } else {
@@ -325,7 +328,7 @@ const SessionCreationModal = ({
     const date = new Date();
     date.setHours(hours);
     date.setMinutes(minutes);
-    date.setSeconds(0); // To avoid issues with slight second differences
+    date.setSeconds(0);
     return date;
   };
 
@@ -341,7 +344,7 @@ const SessionCreationModal = ({
       if (endTimeDate <= startTimeDate) {
         setTimeErrorMessage("End time should be greater than start time");
       } else {
-        setTimeErrorMessage(""); // Clear error if times are valid
+        setTimeErrorMessage("");
       }
     }
   };
@@ -359,10 +362,10 @@ const SessionCreationModal = ({
       if (endTimeDate <= startTimeDate) {
         setTimeErrorMessage("End time should be greater than start time");
       } else {
-        setTimeErrorMessage(""); // Clear error when valid
+        setTimeErrorMessage("");
       }
     } else {
-      setTimeErrorMessage(""); // Clear error if no start time
+      setTimeErrorMessage("");
     }
   };
 
@@ -398,16 +401,32 @@ const SessionCreationModal = ({
 
   const handleCheckboxChange = (e) => {
     const day = parseInt(e.target.value, 10);
-    if (selectedDays.includes(day)) {
-      setSelectedDays(selectedDays.filter((d) => d !== day));
-    } else {
-      setSelectedDays([...selectedDays, day]);
-    }
+  
+    setSelectedDays((prevSelectedDays) => {
+      const isSelected = prevSelectedDays.includes(day);
+  
+      if (isSelected) {
+        // If the day is already selected, remove it
+        return prevSelectedDays.filter((d) => d !== day);
+      } else {
+        // If the day is newly selected
+        return [...prevSelectedDays, day];
+      }
+    });
+  
+    setTimeData((prev) => ({
+      ...prev,
+      [day]: {
+        ...prev[day],
+        errorMessage: "", // Clear any error message
+      },
+    }));
   };
+  
 
   const handleTimeChange = (day, timeType, value) => {
-    // Update the timeData for the specific day and time type (start or end)
     setTimeData((prev) => {
+      // Update the time for the specific day
       const updatedDay = {
         ...prev[day],
         [timeType]: value,
@@ -426,15 +445,54 @@ const SessionCreationModal = ({
         }
       }
 
-      // Update the timeData with the new time and possible error message
-      return {
-        ...prev,
-        [day]: {
-          ...updatedDay,
-          errorMessage: timeErrorMessage, // Store the error message for this day
-        },
-      };
+      // Update all selected days with the same time
+      const newTimeData = { ...prev };
+      selectedDays.forEach((selectedDay) => {
+        if (editableDays[selectedDay]) {
+          // Only update days marked as editable
+          newTimeData[selectedDay] = {
+            ...newTimeData[selectedDay],
+            [timeType]: value,
+            errorMessage: timeErrorMessage, // Apply the error message only to the editable day
+          };
+        } else {
+          newTimeData[selectedDay] = {
+            ...newTimeData[selectedDay],
+            [timeType]: value,
+            errorMessage: timeErrorMessage, // Apply the error message to all selected days
+          };
+        }
+
+        // Apply the same start or end time to all selected days
+        // newTimeData[selectedDay] = {
+        //   ...newTimeData[selectedDay],
+        //   [timeType]: value,
+        //   errorMessage: timeErrorMessage, // Apply the error message to all selected days
+        // };
+      });
+
+      return newTimeData;
     });
+  };
+
+  const handleEditTime = (dayKey) => {
+    // Store the previously selected days
+    setPreviousSelectedDays(selectedDays);
+    // Uncheck all days except the one being edited
+    setSelectedDays([parseInt(dayKey, 10)]);
+    setEditableDays((prev) => ({ ...prev, [dayKey]: true }));
+  };
+  
+  const handleSaveEdit = (dayKey) => {
+    setEditableDays((prev) => ({ ...prev, [dayKey]: false }));
+    // Recheck previously selected days
+    setSelectedDays(previousSelectedDays);
+  };
+  
+  const handleCancelEdit = (dayKey) => {
+    setEditableDays((prev) => ({ ...prev, [dayKey]: false }));
+    // Recheck previously selected days
+    setSelectedDays(previousSelectedDays);
   };
 
   return (
@@ -472,7 +530,7 @@ const SessionCreationModal = ({
               <IoClose size={21} />
             </button>
           </div>
-          <div className="bg-surface-100 xsm:p-6 px-3 py-4 rounded-xl xsm:space-y-5 space-y-2 font-inter">
+          <div className="bg-surface-100 xsm:p-6 px-3 py-4 rounded-xl xsm:space-y-5 space-y-2 font-inter max-h-[650px] overflow-auto scrollbar-webkit">
             <div className="flex xsm:flex-row flex-col gap-3 mx-auto w-full justify-between">
               <div className="relative space-y-2 text-[15px] w-full">
                 <p>Batch</p>
@@ -480,7 +538,9 @@ const SessionCreationModal = ({
                   ref={batchButton}
                   onClick={toggleBatchOpen}
                   className={`${
-                    !isBatchSelected || edit ? " text-[#92A7BE]" : "text-[#424b55]"
+                    !isBatchSelected || edit
+                      ? " text-[#92A7BE]"
+                      : "text-[#424b55]"
                   } flex justify-between items-center w-full px-4 py-3 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                   disabled={edit}
                 >
@@ -696,9 +756,9 @@ const SessionCreationModal = ({
             </div>
             <div className="flex flex-col gap-3 mx-auto mt-1 w-full">
               <div className="space-y-2 text-[15px] w-full">
-                <div className="flex justify-between w-[85%]">
+                <div className="flex justify-between w-[90%]">
                   <p>Week Days</p>
-                  <div className="flex gap-[75px]">
+                  <div className="flex gap-[56px]">
                     <p>Start Time</p>
                     <p>End Time</p>
                   </div>
@@ -713,8 +773,10 @@ const SessionCreationModal = ({
                           ? "text-[#424b55]"
                           : "text-[#92A7BE]"
                       }`}
+                      onMouseEnter={() => setHoveredDay(key)}
+                      onMouseLeave={() => setHoveredDay(null)}
                     >
-                      <label className="flex w-[70%] mt-3">
+                      <label className="flex w-[30%] mt-3">
                         <input
                           type="checkbox"
                           value={key}
@@ -724,8 +786,38 @@ const SessionCreationModal = ({
                         />
                         {fullName}
                       </label>
-                      <div className="flex flex-col items-center w-full">
+                      <div className="flex flex-col items-center w-full relative">
                         <div className="flex xsm:flex-row flex-col gap-2 mx-auto w-full justify-between">
+                          <div className="relative w-full ">
+                            {!editableDays[key] ? (
+                              <button
+                                className={`absolute inset-0  ${
+                                  hoveredDay === key &&
+                                  selectedDays.includes(parseInt(key, 10)) &&
+                                  timeData[key]?.startTime &&
+                                  timeData[key]?.endTime
+                                    ? "block"
+                                    : "hidden"
+                                } text-[11px] text-dark-400 hover:text-blue-300 text-end px-2 py-1 rounded-lg`}
+                                onClick={() => handleEditTime(key)}
+                              >
+                                Change time
+                              </button>
+                            ) : (
+                              <div className="absolute inset-0 flex gap-3 items-center justify-end px-2">
+                                <IoClose
+                                  className="hover:cursor-pointer hover:text-dark-400"
+                                  title="Cancel"
+                                  onClick={() => handleCancelEdit(key)}
+                                />
+                                <IoCheckmark
+                                  className="hover:cursor-pointer hover:text-blue-300"
+                                  title="Save"
+                                  onClick={() => handleSaveEdit(key)}
+                                />
+                              </div>
+                            )}
+                          </div>
                           {/* Start Time Input */}
                           <div className="space-y-2 text-[15px] w-full">
                             <div className="relative">
@@ -742,7 +834,8 @@ const SessionCreationModal = ({
                                 className="border border-dark-300 text-[#424b55] outline-none p-2 rounded-lg w-full"
                                 placeholder="Select start time"
                                 disabled={
-                                  !selectedDays.includes(parseInt(key, 10))
+                                  !selectedDays.includes(parseInt(key, 10)) &&
+                                  !editableDays[key]
                                 }
                               />
                             </div>
@@ -764,7 +857,8 @@ const SessionCreationModal = ({
                                 className="border border-dark-300 text-[#424b55] outline-none p-2 rounded-lg w-full"
                                 placeholder="Select end time"
                                 disabled={
-                                  !selectedDays.includes(parseInt(key, 10))
+                                  !selectedDays.includes(parseInt(key, 10)) &&
+                                  !editableDays[key]
                                 }
                               />
                             </div>

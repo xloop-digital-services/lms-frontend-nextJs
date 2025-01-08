@@ -35,7 +35,7 @@ export default function Page({ params }) {
   const [dueDate, setDueDate] = useState("");
   const [quiz, setQuiz] = useState("");
   const [file, setFile] = useState(null);
-  const [resubmission, setResubmission] = useState("");
+  const [resubmission, setResubmission] = useState("0");
   const [updateStatus, setUpdateStatus] = useState(false);
   const [assignmentStatus, setAssignmentStatus] = useState(0);
   const [totalGrade, setTotalGrade] = useState("");
@@ -106,7 +106,7 @@ export default function Page({ params }) {
   };
 
   const handleChangeInstructor = (session) => {
-    setSelectedSession(session);
+    setSelectedSession(session.session_name);
     setSessionId(session.session_id);
     setIsSessionOpen(false);
   };
@@ -338,6 +338,20 @@ export default function Page({ params }) {
     fetchAssignments();
   }, [userId, sessionId, selectedSession, updateStatus]);
 
+  useEffect(() => {
+      if (sessions && sessions.length > 0) {
+        
+        if (isAdmin) {
+          setSelectedSession(sessions[0].session_name);
+          setSessionId(sessions[0].id);
+        } else if (isInstructor) {
+          setSelectedSession(sessions[0].session_name);
+          setSessionId(sessions[0].session_id);
+        }
+      }
+      // console.log('sessions', sessions)
+    }, [sessions, isAdmin, isInstructor]);
+
   return (
     <div
       className={`flex-1 transition-transform pt-[90px] space-y-4 max-md:pt-32 font-inter ${
@@ -422,9 +436,7 @@ export default function Page({ params }) {
                     !selectedSession ? "text-[#92A7BE]" : "text-[#424B55]"
                   } flex justify-between items-center w-full hover:text-[#0E1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#ACC5E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
-                  {selectedSession
-                    ? `${selectedSession.session_name}`
-                    : "Select a session"}
+                  {selectedSession || "Select a session"}
                   <span
                     className={
                       isSessionOpen ? "rotate-180 duration-300" : "duration-300"
@@ -505,11 +517,12 @@ export default function Page({ params }) {
                     />
                   </div>
 
-                  <div className="my-2">
+                  <div className="my-4">
                     <label className="text-md">Project description</label>
-                    <input
+                    <textarea
                       type="text"
-                      className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+                      rows="4"
+                      className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset p-2 sm:text-sm sm:leading-6"
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
                     />
@@ -574,14 +587,20 @@ export default function Page({ params }) {
                   <button
                     type="submit"
                     onClick={handleAssignmentCreation}
-                    disabled={loading}
-                    className={`w-44 my-4 max-sm:w-full flex justify-center py-3 px-4 text-sm font-medium rounded-lg text-surface-100 
+                    disabled={
+                      loading ||
+                      !totalGrade ||
+                      !dueDate ||
+                      !description ||
+                      !question
+                    }
+                    className={`w-44 my-4 max-sm:w-full flex justify-center py-3 px-4 text-sm font-medium disabled:bg-blue-200 disabled:cursor-not-allowed rounded-lg text-surface-100 
     ${
       loading
         ? "bg-blue-300 text-surface-100"
         : currentAssignment
-        ? "bg-[#03A1D8] hover:bg-[#2799bf]"
-        : "bg-[#03A1D8] hover:bg-[#2799bf]"
+        ? "bg-blue-300 hover:bg-blue-700"
+        : "bg-blue-300 hover:bg-blue-700"
     } 
     focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 
     transition duration-150 ease-in-out`}
