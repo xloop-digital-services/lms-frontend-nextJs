@@ -6,7 +6,10 @@ import { getAllPrograms } from "@/api/route";
 
 export default function Page() {
   const [getPrograms, setGetPrograms] = useState([]);
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
+
+  // Configure NProgress
+  
 
   const handleGetAllPrograms = async () => {
     // setLoading(true)
@@ -14,15 +17,15 @@ export default function Page() {
       const response = await getAllPrograms();
       if (response?.data?.status_code === 200) {
         setGetPrograms(response?.data?.data || []);
-        setLoading(false)
+        setLoading(false);
       }
-      if(response?.data?.status_code === 404){
-        setLoading(false)
+      if (response?.data?.status_code === 404) {
+        setLoading(false);
         //console.log('ab aya error')
       }
     } catch (err) {
-        setLoading(false)
-        //console.error("error while fetching the programs", err);
+      setLoading(false);
+      //console.error("error while fetching the programs", err);
     }
   };
 
@@ -32,7 +35,11 @@ export default function Page() {
 
   return (
     <>
-      <UserManagement heading="User Approval" program={getPrograms} loadingProgram={loading} />
+      <UserManagement
+        heading="User Approval"
+        program={getPrograms}
+        loadingProgram={loading}
+      />
     </>
   );
 }

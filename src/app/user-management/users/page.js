@@ -4,6 +4,7 @@ import ShortListUserTable from "@/components/ShortlistUserTable";
 import UserManagement from "@/components/UserManagement";
 import { getAllPrograms } from "@/api/route";
 import { useRouter } from "next/navigation";
+import nProgress from "nprogress";
 
 export default function Page() {
   const [getPrograms, setGetPrograms] = useState([]);
@@ -12,6 +13,15 @@ export default function Page() {
   const goBack = () => {
     router.back();
   };
+
+  useEffect(() => {
+    if (loading) {
+      nProgress.start();
+      console.log("progress"); // Start progress bar when loading
+    } else {
+      nProgress.done(); // Stop progress bar when loading is false
+    }
+  }, [loading]);
 
   const handleGetAllPrograms = async () => {
     // setLoading(true)
