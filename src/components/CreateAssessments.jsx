@@ -39,9 +39,10 @@ export default function CreateAssessments(
 
         <div>
           <label className="text-md">Assignment description</label>
-          <input
+          <textarea
             type="text"
-            className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset h-12 p-2 sm:text-sm sm:leading-6"
+            rows="4" 
+            className="block w-full outline-dark-300 focus:outline-blue-300 font-sans rounded-md border-0 mt-2 py-1.5 placeholder-dark-300 shadow-sm ring-1 ring-inset focus:ring-inset p-2 sm:text-sm sm:leading-6"     
             // value={courseData.name}
             // onChange={(e) =>
             //   setCourseData({ ...courseData, name: e.target.value })

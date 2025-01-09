@@ -1,5 +1,6 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
+import "./nprogress.css";
 import { AuthProvider } from "@/providers/AuthContext";
 import "react-datepicker/dist/react-datepicker.css";
 

@@ -26,6 +26,7 @@ import BatchUserModal from "./Modal/BatchUserModal";
 import TopScoreTable from "./TopScoreTable";
 import { FaList } from "react-icons/fa";
 import TopScoreModal from "./Modal/TopScoreModal";
+import nProgress from "nprogress";
 
 const AdminDashboard = () => {
   const { isSidebarOpen } = useSidebar();
@@ -105,6 +106,15 @@ const AdminDashboard = () => {
   useClickOutside(scoreRef, scoreButton, () => setIsScoreProgramOpen(false));
   useClickOutside(skillDown, skillButton, () => setIsSkillOpen(false));
   useClickOutside(userDown, userButton, () => setIsUserOpen(false));
+
+  useEffect(() => {
+    if (loading || loadingBar || loadingBatch || loadingScore) {
+      nProgress.start();
+      console.log("progress"); // Start progress bar when loading
+    } else {
+      nProgress.done(); // Stop progress bar when loading is false
+    }
+  }, [loading, loadingBar, loadingBatch, loadingScore]);
 
   // Apply filtering whenever search term or dropdown status changes
   useEffect(() => {
