@@ -1665,7 +1665,9 @@ export const getProgressForSession = async (programId) => {
 
 export const getProgramGraph = async (programId) => {
   try {
-    const response = await axiosInstance.get(`/api/course/program/${programId}/graph/`);
+    const response = await axiosInstance.get(
+      `/api/course/program/${programId}/graph/`
+    );
     return response;
   } catch (error) {
     throw error;
@@ -1674,7 +1676,20 @@ export const getProgramGraph = async (programId) => {
 
 export const getProgramScores = async (programId) => {
   try {
-    const response = await axiosInstance.get(`/api/course/program/${programId}/scores/`);
+    const response = await axiosInstance.get(
+      `/api/course/program/${programId}/scores/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getCourseProgressByProgId = async (programID) => {
+  try {
+    const response = await axiosInstance.get(
+      `/api/course/courses/${programID}/graph`
+    );
     return response;
   } catch (error) {
     throw error;

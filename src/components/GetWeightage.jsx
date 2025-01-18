@@ -4,7 +4,7 @@ import { FaCheck, FaEdit, FaTrash } from "react-icons/fa";
 import { sum } from "./CreateWeightage";
 import { toast } from "react-toastify";
 
-export default function GetWeightage({ weigh }) {
+export default function GetWeightage({ weigh, setUpdateWeightages, updateWeight }) {
   const [assignmentsWeightage, setAssignmentsWeightage] = useState("");
   const [quizzesWeightage, setQuizzesWeightage] = useState("");
   const [projectsWeightage, setProjectsWeightage] = useState("");
@@ -52,6 +52,7 @@ export default function GetWeightage({ weigh }) {
           response?.data.message
         );
         setIsEditing(null); // Exit edit mode
+        setUpdateWeightages(!updateWeight)
       } else {
         toast.error("Error updating weightages", response.data?.message);
       }

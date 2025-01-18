@@ -27,6 +27,7 @@ const Grading = ({ courseId }) => {
   const [projects, setProjects] = useState([]);
   const [assignWeightage, setAssignWeightage] = useState(false);
   const [weightage, setWeightage] = useState("");
+  const [updateWeightages, setUpdateWeightages] = useState(false)
   const [weightagesExist, setWeightagesExist] = useState(false);
   const [adminUserId, setAdminUserId] = useState("");
   const [sessionId, setSessionId] = useState(null);
@@ -133,7 +134,7 @@ const Grading = ({ courseId }) => {
   useEffect(() => {
     if (!sessionId) return;
     fetchWeightages();
-  }, [sessionId]);
+  }, [sessionId, updateWeightages]);
 
   // //console.log(sessionId);
   // //console.log(weightage);
@@ -279,7 +280,7 @@ const Grading = ({ courseId }) => {
       {assignWeightage && <CreateWeightage courseId={courseId} />} */}
       {weightagesExist ? (
         <div className="my-4">
-          <GetWeightage weigh={weightage} />
+          <GetWeightage weigh={weightage} setUpdateWeightages={setUpdateWeightages} updateWeight={updateWeightages} />
         </div>
       ) : (
         <div className="my-4">

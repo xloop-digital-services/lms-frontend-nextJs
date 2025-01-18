@@ -14,10 +14,46 @@ const AssessmentDescModal = ({
 }) => {
   if (!isOpen || !quiz) return null;
 
+  const formatDescription = (description) => {
+    if (!description) return "No description available.";
+    const sanitizedDescription = description.replace(/\r\n/g, "\n");
+
+    // Split by remaining line breaks
+    const lines = sanitizedDescription.split("\n");// Split by line breaks
+    let htmlContent = "";
+    let inList = false;
+  
+    lines.forEach((line) => {
+      if (/^(\d+-|-)/.test(line.trim())){
+        // Start a list if not already in one
+        if (!inList) {
+          htmlContent += `<ul class="list-disc pl-5">`; // Add `list-disc` and padding-left for indentation
+          inList = true;
+        }
+        htmlContent += `<li>${line.slice(1).trim()}</li>`; // Add the bullet point
+      } else {
+        // Close the list if we're no longer on a bullet point
+        if (inList) {
+          htmlContent += `</ul>`;
+          inList = false;
+        }
+        htmlContent += `<p>${line.trim()}</p>`; // Add the regular paragraph
+      }
+    });
+  
+    // Close any unclosed list
+    if (inList) {
+      htmlContent += `</ul>`;
+    }
+  
+    return htmlContent;
+  };
+  
+
   //   //console.log(quiz);
   return (
     <div className="backDropOverlay h-screen flex justify-center items-center fixed inset-0 bg-black bg-opacity-50 z-[1000]">
-      <div className="w-[650px] z-[1100] bg-white p-6 rounded-md">
+      <div className="min-w-[650px] max-w-[900px] z-[1100] bg-white p-6 rounded-md ">
         {loading ? (
           <div className="w-full p-2 flex items-center justify-center">
             <CircularProgress size={30} />
@@ -37,9 +73,12 @@ const AssessmentDescModal = ({
                 <h2 className="text-xl flex justify-center font-semibold mb-4 font-exo text-blue-500 ">
                   {quiz.question || "Quiz Details"}
                 </h2>
-                <p className=" flex items-center justify-center mx-12 my-3 text-center text-blue-300">
-                  {quiz.description || "No description available."}
-                </p>
+                <div
+                  className="flex flex-col items-center justify-center gap-3 mx-12 my-3 text-start text-blue-300"
+                  dangerouslySetInnerHTML={{
+                    __html: formatDescription(quiz.description),
+                  }}
+                ></div>
 
                 {quiz?.content ? (
                   <div className="flex items-center capitalize justify-center my-4 gap-2">

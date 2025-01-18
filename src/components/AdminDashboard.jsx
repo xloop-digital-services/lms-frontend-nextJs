@@ -12,6 +12,8 @@ import {
   getAllSkills,
   getApplicationsTotalNumber,
   getCityStatistics,
+  getCourseByProgId,
+  getCourseProgressByProgId,
   getProgramGraph,
   getProgramScores,
   getProgressForSession,
@@ -26,6 +28,7 @@ import BatchUserModal from "./Modal/BatchUserModal";
 import TopScoreTable from "./TopScoreTable";
 import { FaList } from "react-icons/fa";
 import TopScoreModal from "./Modal/TopScoreModal";
+import BarChartCourse from "./BarChartCourse";
 
 const AdminDashboard = () => {
   const { isSidebarOpen } = useSidebar();
@@ -80,11 +83,19 @@ const AdminDashboard = () => {
   const [filterStatus, setFilterStatus] = useState(false);
   const [selectedBatch, setSelectedBatch] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const [sessionProgress, setSessionProgress] = useState([]);
+  const [programProgress, setProgramProgress] = useState([]);
+
   const [openInfoModal, setOpenInfoModal] = useState(false);
   const [loadingScore, setLoadingScore] = useState(false);
   const [scores, setScores] = useState([]);
   const [openList, setOpenList] = useState(false);
+  const [changeProgress, setChangeProgress] = useState(false);
+  const [courseList, setCourseList] = useState([]);
+  const [CourseProgress, setCourseProgress] = useState({});
+  const [selectedBarCourse, setSelectedBarCourse] = useState(null);
+  const [barCourseId, setBarCourseId] = useState(null);
+  const [isBarCourseOpen, setIsBarCourseOpen] = useState(false);
+  const [isBarCourseSelected, setIsBarCourseSelected] = useState(false);
 
   const dropdownRef = useRef(null);
   const dropButton = useRef(null);
@@ -98,10 +109,13 @@ const AdminDashboard = () => {
   const userButton = useRef(null);
   const skillDown = useRef(null);
   const skillButton = useRef(null);
+  const courseButton = useRef(null);
+  const courseDown = useRef(null);
 
   useClickOutside(statusDown, statusButton, () => setIsOpen(false));
   useClickOutside(dropdownRef, dropButton, () => setIsProgramOpen(false));
   useClickOutside(barRef, barButton, () => setIsBarProgramOpen(false));
+  useClickOutside(courseDown, courseButton, () => setIsBarCourseOpen(false));
   useClickOutside(scoreRef, scoreButton, () => setIsScoreProgramOpen(false));
   useClickOutside(skillDown, skillButton, () => setIsSkillOpen(false));
   useClickOutside(userDown, userButton, () => setIsUserOpen(false));
@@ -193,7 +207,7 @@ const AdminDashboard = () => {
       try {
         const response = await getProgramGraph(barProgramId);
         if (response?.data) {
-          setSessionProgress(response.data.data); // Adjust based on actual response structure
+          setProgramProgress(response.data.data); // Adjust based on actual response structure
         } else {
           console.error("Unexpected response format:", response);
         }
@@ -209,11 +223,44 @@ const AdminDashboard = () => {
   }, [barProgramId]);
 
   useEffect(() => {
+    const handleCourseByProgramId = async () => {
+      try {
+        const res = await getCourseByProgId(barProgramId);
+        setCourseList(res.data.data);
+        // console.log("course list", res.data.data);
+      } catch (error) {
+        console.log("error in course", error);
+      }
+    };
+
+    if (barProgramId) {
+      handleCourseByProgramId();
+    }
+  }, [barProgramId]);
+
+  useEffect(() => {
+    const handleCourseProgressBarChart = async () => {
+      try {
+        setBarLoading(true);
+        const res = await getCourseProgressByProgId(barCourseId);
+        // console.log("res", res);
+        setCourseProgress(res.data.data);
+      } catch (error) {
+        console.log("error", error);
+      } finally {
+        setBarLoading(false);
+      }
+    };
+    if (barCourseId && changeProgress == true) {
+      handleCourseProgressBarChart();
+    }
+  }, [changeProgress, barCourseId]);
+
+  useEffect(() => {
     const handleScores = async () => {
       try {
         setLoadingScore(true);
         const response = await getProgramScores(scoreProgramId);
-        console.log("response", response.data.data);
         setScores(response.data.data);
       } catch (error) {
         console.log("error", error);
@@ -276,6 +323,9 @@ const AdminDashboard = () => {
   const toggleBarProgramOpen = () => {
     setIsBarProgramOpen((prev) => !prev);
   };
+  const toggleBarCourseOpen = () => {
+    setIsBarCourseOpen((prev) => !prev);
+  };
   const toggleScoreProgramOpen = () => {
     setIsScoreProgramOpen((prev) => !prev);
   };
@@ -301,6 +351,13 @@ const AdminDashboard = () => {
     setBarProgramId(option.id);
     setIsBarProgramSelected(true);
     setIsBarProgramOpen(false);
+  };
+
+  const handleBarCourseSelect = (option) => {
+    setSelectedBarCourse(option.name);
+    setBarCourseId(option.id);
+    setIsBarCourseSelected(true);
+    setIsBarCourseOpen(false);
   };
 
   const handleScoreProgramSelect = (option) => {
@@ -337,8 +394,8 @@ const AdminDashboard = () => {
       setScoreProgramId(allPrograms[0].id);
       setProgramId(allPrograms[0].id);
       setIsProgramSelected(true);
-      setIsBarProgramSelected(true); // Set the first program's name as default
-      setIsScoreProgramSelected(true); // Set the first program's name as default
+      setIsBarProgramSelected(true);
+      setIsScoreProgramSelected(true);
     }
     if (allSkills && allSkills.length > 0) {
       setSelectedSkill(allSkills[0].name);
@@ -346,6 +403,14 @@ const AdminDashboard = () => {
       setIsSkillSelected(true);
     }
   }, [allPrograms, allSkills]);
+
+  useEffect(() => {
+    if (changeProgress && courseList && courseList.length > 0) {
+      setSelectedBarCourse(courseList[0].name);
+      setBarCourseId(courseList[0].id);
+      setIsBarCourseSelected(true);
+    }
+  }, [courseList, changeProgress]);
 
   // Fetch data when selectedUser or other dependencies change
   useEffect(() => {
@@ -426,6 +491,10 @@ const AdminDashboard = () => {
 
   const handleOpenList = () => {
     setOpenList(true);
+  };
+
+  const handleChangeProgressDetails = () => {
+    setChangeProgress(!changeProgress);
   };
 
   return (
@@ -524,55 +593,117 @@ const AdminDashboard = () => {
                   <BarChart barData={barData} />
                 </div> */}
                 <div className="w-full flex justify-between">
-                  <div className="font-bold font-exo text-blue-500 text-lg pb-2">
-                    Course Progress
+                  <div>
+                    <div
+                      onClick={handleChangeProgressDetails}
+                      className="font-bold font-exo text-blue-500 text-lg  group hover:cursor-pointer flex gap-4 items-center"
+                      title={`Click to show ${!changeProgress ? `course` : "program"} progress`}
+                    >
+                      <div>
+                        {changeProgress ? "Course" : "Program"} Progress
+                      </div>
+                      <div className="hidden group-hover:inline">
+                        <IoIosArrowDown />
+                      </div>
+                    </div>
+                    <div className="text-sm">
+                      {changeProgress && <p>Program: {selectedBarProgram} </p>}
+                    </div>
                   </div>
                   <div>
-                    <div className="relative space-y-2 text-[15px] w-full">
-                      {/* <p>Program</p> */}
-                      <button
-                        ref={barButton}
-                        onClick={toggleBarProgramOpen}
-                        className={`${
-                          !isBarProgramSelected
-                            ? " text-dark-500"
-                            : "text-[#424b55]"
-                        } flex justify-between items-center w-[300px]  hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
-                      >
-                        <span className="  max-w-full truncate capitalize">
-                          {selectedBarProgram}
-                        </span>
-                        <span
+                    {changeProgress ? (
+                      <div className="relative space-y-2 text-[15px] w-full">
+                        {/* <p>Program</p> */}
+                        <button
+                          ref={courseButton}
+                          onClick={toggleBarCourseOpen}
                           className={`${
-                            isBarProgramOpen
-                              ? "rotate-180 duration-300"
-                              : "duration-300"
-                          }`}
+                            !isBarCourseSelected
+                              ? " text-dark-500"
+                              : "text-[#424b55]"
+                          } flex justify-between items-center w-[300px]  hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                         >
-                          <IoIosArrowDown />
-                        </span>
-                      </button>
+                          <span className="  max-w-full truncate capitalize">
+                            {selectedBarCourse}
+                          </span>
+                          <span
+                            className={`${
+                              isBarCourseOpen
+                                ? "rotate-180 duration-300"
+                                : "duration-300"
+                            }`}
+                          >
+                            <IoIosArrowDown />
+                          </span>
+                        </button>
 
-                      {isBarProgramOpen && (
-                        <div
-                          ref={barRef}
-                          className="absolute z-10 w-full max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
-                        >
-                          {allPrograms.map((option, index) => (
-                            <div
-                              key={index}
-                              onClick={() => handleBarProgramSelect(option)}
-                              className="p-2 cursor-pointer"
-                              title={option.name}
-                            >
-                              <div className="xlg:px-4 px-2 py-2 capitalize hover:bg-[#03a3d838] truncate hover:text-blue-300 hover:font-semibold rounded-lg">
-                                {option.name}
+                        {isBarCourseOpen && (
+                          <div
+                            ref={courseDown}
+                            className="absolute z-10 w-full max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
+                          >
+                            {courseList.map((option, index) => (
+                              <div
+                                key={index}
+                                onClick={() => handleBarCourseSelect(option)}
+                                className="p-2 cursor-pointer"
+                                title={option.name}
+                              >
+                                <div className="xlg:px-4 px-2 py-2 capitalize hover:bg-[#03a3d838] truncate hover:text-blue-300 hover:font-semibold rounded-lg">
+                                  {option.name}
+                                </div>
                               </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="relative space-y-2 text-[15px] w-full">
+                        {/* <p>Program</p> */}
+                        <button
+                          ref={barButton}
+                          onClick={toggleBarProgramOpen}
+                          className={`${
+                            !isBarProgramSelected
+                              ? " text-dark-500"
+                              : "text-[#424b55]"
+                          } flex justify-between items-center w-[300px]  hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                        >
+                          <span className="  max-w-full truncate capitalize">
+                            {selectedBarProgram}
+                          </span>
+                          <span
+                            className={`${
+                              isBarProgramOpen
+                                ? "rotate-180 duration-300"
+                                : "duration-300"
+                            }`}
+                          >
+                            <IoIosArrowDown />
+                          </span>
+                        </button>
+
+                        {isBarProgramOpen && (
+                          <div
+                            ref={barRef}
+                            className="absolute z-10 w-full max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
+                          >
+                            {allPrograms.map((option, index) => (
+                              <div
+                                key={index}
+                                onClick={() => handleBarProgramSelect(option)}
+                                className="p-2 cursor-pointer"
+                                title={option.name}
+                              >
+                                <div className="xlg:px-4 px-2 py-2 capitalize hover:bg-[#03a3d838] truncate hover:text-blue-300 hover:font-semibold rounded-lg">
+                                  {option.name}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div>
@@ -580,8 +711,23 @@ const AdminDashboard = () => {
                     <div className="flex justify-center items-center py-4 w-full">
                       <CircularProgress />
                     </div>
+                  ) : changeProgress == true ? (
+                    [
+                      "classes_percentage",
+                      "attendance_percentage",
+                      "percentage_assignments",
+                      "percentage_quizzes",
+                      "percentage_projects",
+                      "percentage_exams",
+                    ].every((key) => CourseProgress[key] === 0) ? (
+                      <div className="text-sm text-dark-400 flex justify-center items-center py-4 w-full">
+                        <p>No Progress Found</p>
+                      </div>
+                    ) : (
+                      <BarChartCourse barData={CourseProgress} />
+                    )
                   ) : (
-                    <BarChart barData={sessionProgress} />
+                    <BarChart barData={programProgress} />
                   )}
                 </div>
               </div>
