@@ -170,8 +170,13 @@ export default function Page({ params }) {
       return;
     }
 
-    const s3Data = await handleFileUploadToS3(file, "Upload Assignment");
-    //console.log("S3 Data:", s3Data);
+    let s3Data = null;
+    if (file) {
+      s3Data =
+        typeof file === "string" && currentAssignment
+          ? currentAssignment.content
+          : await handleFileUploadToS3(file, "Upload Assignment");
+    }
 
     const formData = new FormData();
     formData.append("course", courseId);

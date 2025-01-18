@@ -166,8 +166,13 @@ export default function Page({ params }) {
       return;
     }
 
-    const s3Data = await handleFileUploadToS3(file, "Upload Exams");
-    // console.log("S3 Data:", s3Data);
+    let s3Data = null;
+    if (file) {
+      s3Data =
+        typeof file === "string" && currentAssignment
+          ? currentAssignment.content
+          : await handleFileUploadToS3(file, "Upload Exams");
+    }
 
     const formData = new FormData();
     formData.append("course", courseId);
@@ -241,7 +246,7 @@ export default function Page({ params }) {
     setEndTime(assignmentToEdit.end_time);
     setTotalGrade(assignmentToEdit.total_grade);
     // setResubmission(assignmentToEdit.no_of_resubmissions_allowed);
-    setFile(assignmentToEdit.submitted_file);
+    setFile(assignmentToEdit.content);
     setCreatingQuiz(true);
   };
 

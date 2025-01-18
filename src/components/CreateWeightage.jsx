@@ -24,7 +24,6 @@ export default function CreateWeightage({ courseId, onCreation, sessionId }) {
   const [examsWeightage, setExamsWeightage] = useState("");
   const [attenWeightage, setAttenWeightage] = useState("");
   const [loader, setLoader] = useState(false);
-
   async function handleSubmitWeightage() {
     const totalWeightage = sum(
       quizzesWeightage,
@@ -59,7 +58,7 @@ export default function CreateWeightage({ courseId, onCreation, sessionId }) {
       if (response.status === 200 || response.status === 201) {
         toast.success(
           "Weightages Created successfully",
-          response?.data.message
+          response?.data?.message
         );
         setExamsWeightage("");
         setAssignmentsWeightage("");
@@ -70,10 +69,16 @@ export default function CreateWeightage({ courseId, onCreation, sessionId }) {
           onCreation();
         }
       } else {
-        toast.error("Error creating weightages", response.data?.message);
+        toast.error(
+          "Error creating weightages",
+          response?.data?.message || "Unknown error occurred"
+        );
       }
     } catch (error) {
-      toast.error("Error creating weightages", response.data?.message);
+      toast.error(
+        "Error creating weightages",
+        error?.response?.data?.message || "An error occurred"
+      );
     }
   }
 

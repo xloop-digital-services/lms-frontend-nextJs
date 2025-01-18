@@ -23,7 +23,7 @@ export default function MainCourseCard({
 }) {
   return (
     <>
-      <Link href={route}>
+      <Link href={route} className="my-2">
         <div className="w-full ">
           <div className="border border-dark-300 rounded-xl p-6 flex max-md:flex-col hover:border-blue-300">
             <div className=" mr-4">

@@ -321,11 +321,11 @@ export default function Page({ params }) {
         setLoaderModule(false);
         return;
       }
-      if (!file) {
-        toast.error("Add a file to create the module.");
-        setLoaderModule(false);
-        return;
-      }
+      // if (!file) {
+      //   toast.error("Add a file to create the module.");
+      //   setLoaderModule(false);
+      //   return;
+      // }
       const formData = new FormData();
       formData.append("name", moduleData.name);
       formData.append("description", moduleData.description);
@@ -414,28 +414,34 @@ export default function Page({ params }) {
         if (currentModule.files && currentModule.files.length > 0) {
           moduleData.files = currentModule.files.map((fileItem) => ({
             id: fileItem.id,
-            file: fileItem.file instanceof File ? fileItem.file : null,
-            module_id: fileItem.module_id,
+            file: fileItem.file,
           }));
         }
 
         if (file && file instanceof File) {
+          const uploadedFile = await handleFileUploadToS3(
+            file,
+            "Upload Modules"
+          );
           moduleData.files.push({
-            file: file,
+            file: uploadedFile,
             module_id: moduleId,
           });
         }
       }
 
-      const s3Data = await handleFileUploadToS3(file, "Upload Modules");
+      let filesToUpload =
+        moduleData.files.length > 0
+          ? moduleData.files.map((fileItem) => fileItem.file)
+          : [];
 
       const formData = new FormData();
       formData.append("name", moduleData.name);
       formData.append("description", moduleData.description);
       formData.append("course", moduleData.course);
-      if (file) {
-        formData.append("files", s3Data);
-      }
+
+      filesToUpload.forEach((file) => formData.append("files", file));
+
       formData.append("session", sessionId);
 
       const response = await updateModule(formData, moduleId);
@@ -456,6 +462,7 @@ export default function Page({ params }) {
       setLoaderModule(false);
     }
   }
+
   const handleModuleStatus = async (id, currentStatus) => {
     const moduleToUpdate = modules?.find((mod) => mod.id === id);
     if (!moduleToUpdate) {
@@ -881,7 +888,9 @@ export default function Page({ params }) {
             )}
             {isAdmin && (
               <div className="relative space-y-2 text-[15px] w-full">
-                <p className="text-blue-500 font-semibold">Select Session</p>
+                <p className="text-blue-500 font-semibold mt-4">
+                  Select Session
+                </p>
                 <button
                   ref={sessionButton}
                   onClick={toggleSessionOpen}

@@ -1,7 +1,14 @@
 import { CircularProgress } from "@mui/material";
 import React from "react";
 
-const TopScoreTable = ({ scores, loadingScore, showAll }) => {
+const TopScoreTable = ({ total, scores, loadingScore, showAll }) => {
+  const totalQuizMarks = total?.grades_summary?.total_quiz_marks || 0;
+  // const totalAssignmentMarks =
+  //   scores.itdata[0]?.grades_summary?.total_assignment_marks || 0;
+  // const totalExamMarks =
+  //   scores.itdata[0]?.grades_summary?.total_exam_marks || 0;
+  // const totalProjectMarks =
+  //   scores.itdata[0]?.grades_summary?.total_project_marks || 0;
   return (
     <div className="flex flex-col ">
       <div className="-m-1.5 overflow-x-auto">
@@ -33,7 +40,7 @@ const TopScoreTable = ({ scores, loadingScore, showAll }) => {
                       scope="col"
                       className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]"
                     >
-                      Quiz
+                      Quiz 
                     </th>
                     <th
                       scope="col"
@@ -57,7 +64,7 @@ const TopScoreTable = ({ scores, loadingScore, showAll }) => {
                       scope="col"
                       className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]"
                     >
-                      Overall Weighted  %
+                      Overall Weighted %
                     </th>
                   </tr>
                 </thead>
@@ -79,24 +86,32 @@ const TopScoreTable = ({ scores, loadingScore, showAll }) => {
                             {score.student_registration_id}
                           </td>
                           <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
-                            {score.grades_summary.assignments.toFixed(2)}
-                          </td>
-                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
-                            {score.grades_summary.quizzes.toFixed(2)}
-                          </td>
-                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
-                            {score.grades_summary.projects.toFixed(2)}
-                          </td>
-                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
-                            {score.grades_summary.exams.toFixed(2)}
-                          </td>
-                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
-                            {score.grades_summary.attendance_grace_marks.toFixed(
-                              2
+                            {score.grades_summary.assignments.toFixed(1)}/
+                            {score.grades_summary?.total_assignment_marks.toFixed(
+                              1
                             )}
                           </td>
                           <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
-                            {score.grades_summary.overall_percentage.toFixed(2)}
+                            {score.grades_summary.quizzes.toFixed(1)}/
+                            {score.grades_summary?.total_quiz_marks.toFixed(1)}
+                          </td>
+                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
+                            {score.grades_summary.projects.toFixed(1)}/
+                            {score.grades_summary?.total_project_marks.toFixed(
+                              1
+                            )}
+                          </td>
+                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
+                            {score.grades_summary.exams.toFixed(1)}/
+                            {score.grades_summary?.total_exam_marks.toFixed(1)}
+                          </td>
+                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
+                            {score.grades_summary.attendance_grace_marks.toFixed(
+                              1
+                            )}
+                          </td>
+                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
+                            {score.grades_summary.overall_percentage.toFixed(1)}
                           </td>
                         </tr>
                       )

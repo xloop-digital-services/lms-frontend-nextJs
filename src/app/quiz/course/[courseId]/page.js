@@ -97,7 +97,6 @@ export default function Page({ params }) {
 
   useEffect(() => {
     if (sessions && sessions.length > 0) {
-      
       if (isAdmin) {
         setSelectedSession(sessions[0].session_name);
         setSessionId(sessions[0].id);
@@ -178,8 +177,13 @@ export default function Page({ params }) {
       return;
     }
 
-    const s3Data = await handleFileUploadToS3(file, "Upload Quiz");
-    //console.log("S3 Data:", s3Data);
+    let s3Data = null;
+    if (file) {
+      s3Data =
+        typeof file === "string" && currentAssignment
+          ? currentAssignment.content
+          : await handleFileUploadToS3(file, "Upload Quiz");
+    }
 
     const formData = new FormData();
     formData.append("course", courseId);
@@ -457,7 +461,7 @@ export default function Page({ params }) {
                     !selectedSession ? "text-[#92A7BE]" : "text-[#424B55]"
                   } flex justify-between items-center w-full hover:text-[#0E1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#ACC5E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
-                   {selectedSession || "Select a session"}
+                  {selectedSession || "Select a session"}
                   <span
                     className={
                       isSessionOpen ? "rotate-180 duration-300" : "duration-300"

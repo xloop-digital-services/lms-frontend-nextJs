@@ -150,8 +150,13 @@ export default function Page({ params }) {
       return;
     }
 
-    const s3Data = await handleFileUploadToS3(file, "Upload Projects");
-    //console.log("S3 Data:", s3Data);
+    let s3Data = null;
+    if (file) {
+      s3Data =
+        typeof file === "string" && currentAssignment
+          ? currentAssignment.content
+          : await handleFileUploadToS3(file, "Upload Projects");
+    }
 
     const formData = new FormData();
     formData.append("course", courseId);
@@ -339,18 +344,17 @@ export default function Page({ params }) {
   }, [userId, sessionId, selectedSession, updateStatus]);
 
   useEffect(() => {
-      if (sessions && sessions.length > 0) {
-        
-        if (isAdmin) {
-          setSelectedSession(sessions[0].session_name);
-          setSessionId(sessions[0].id);
-        } else if (isInstructor) {
-          setSelectedSession(sessions[0].session_name);
-          setSessionId(sessions[0].session_id);
-        }
+    if (sessions && sessions.length > 0) {
+      if (isAdmin) {
+        setSelectedSession(sessions[0].session_name);
+        setSessionId(sessions[0].id);
+      } else if (isInstructor) {
+        setSelectedSession(sessions[0].session_name);
+        setSessionId(sessions[0].session_id);
       }
-      // console.log('sessions', sessions)
-    }, [sessions, isAdmin, isInstructor]);
+    }
+    // console.log('sessions', sessions)
+  }, [sessions, isAdmin, isInstructor]);
 
   return (
     <div

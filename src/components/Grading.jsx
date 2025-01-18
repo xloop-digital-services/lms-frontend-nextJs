@@ -35,6 +35,7 @@ const Grading = ({ courseId }) => {
   const sessionButton = useRef(null);
   const sessionDropdown = useRef(null);
   const userId = group === "instructor" ? userData?.User?.id : adminUserId;
+  const [updateWeightages, setUpdateWeightages] = useState(false);
   //console.log(userId);
   const handleCreateWeightage = () => {
     setAssignWeightage(!assignWeightage);
@@ -133,7 +134,7 @@ const Grading = ({ courseId }) => {
   useEffect(() => {
     if (!sessionId) return;
     fetchWeightages();
-  }, [sessionId]);
+  }, [sessionId, updateWeightages]);
 
   // //console.log(sessionId);
   // //console.log(weightage);
@@ -279,7 +280,11 @@ const Grading = ({ courseId }) => {
       {assignWeightage && <CreateWeightage courseId={courseId} />} */}
       {weightagesExist ? (
         <div className="my-4">
-          <GetWeightage weigh={weightage} />
+          <GetWeightage
+            weigh={weightage}
+            setUpdateWeightages={setUpdateWeightages}
+            updateWeight={updateWeightages}
+          />
         </div>
       ) : (
         <div className="my-4">

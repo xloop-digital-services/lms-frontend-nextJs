@@ -16,7 +16,7 @@ const TopScoreModal = ({ scores, loadingScore, showAll, setOpenList }) => {
         <div
           //   ref={modalClose}
           style={{ backgroundColor: "#EBF6FF" }}
-          className="xsm:p-5 p-2 m-2 rounded-xl"
+          className="xsm:p-3 p-2 m-2 rounded-xl"
         >
           <div className="flex justify-between">
             <h1
@@ -40,7 +40,7 @@ const TopScoreModal = ({ scores, loadingScore, showAll, setOpenList }) => {
             </button>
           </div>
 
-          <div className="bg-surface-100 xsm:p-4 px-3 py-4 rounded-xl xsm:space-y-5 space-y-2 font-inter ">
+          <div className="bg-surface-100 xsm:p-4 px-2 py-4 rounded-xl xsm:space-y-5 space-y-2 font-inter ">
             <TopScoreTable
               scores={scores}
               loadingScore={loadingScore}
