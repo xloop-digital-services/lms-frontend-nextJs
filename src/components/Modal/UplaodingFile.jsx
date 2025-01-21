@@ -153,6 +153,12 @@ const UploadingFile = ({
     }
   };
 
+  const handleRemoveFile = () => {
+    setFile(null);
+    setFileUploaded(null);
+    setError("");
+  };
+
   return (
     <div className="backDropOverlay h-screen flex justify-center items-center">
       <div className="w-[550px] z-[1000] mx-auto my-20">
@@ -211,8 +217,14 @@ const UploadingFile = ({
                 Supported formats: pdf, doc, docx, ppt, pptx, txt, zip
               </p>
               {fileUploaded && (
-                <p className="text-[#1ab725] text-[13px] mt-2 border border-[#1ab7245f] p-1 px-4 rounded-lg">
+                <p className="text-[#1ab725] text-[13px] mt-2 flex items-center gap-4 border border-[#1ab7245f] p-1 px-4 rounded-lg">
                   {fileUploaded} selected
+                  <span
+                    className="hover:text-dark-900 duration-300 cursor-pointer"
+                    onClick={handleRemoveFile}
+                  >
+                    <IoClose />
+                  </span>
                 </p>
               )}
               {error && (
@@ -235,7 +247,7 @@ const UploadingFile = ({
               <button
                 type="submit"
                 onClick={handleUploadation}
-                disabled={loader || !fileUploaded }
+                disabled={loader || (!fileUploaded && !comment)}
                 className="w-fit flex justify-center py-3 px-12 disabled:cursor-not-allowed disabled:bg-dark-300 text-sm font-medium rounded-lg text-dark-100 bg-blue-300 hover:bg-[#3272b6] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
               >
                 {loader ? (

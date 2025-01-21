@@ -339,7 +339,7 @@ export default function Page({ params }) {
   }, [userId, sessionId, selectedSession, updateStatus]);
 
   useEffect(() => {
-      if (sessions && sessions.length > 0) {
+      if (sessions && sessions.length > 0 && !selectedSession) {
         
         if (isAdmin) {
           setSelectedSession(sessions[0].session_name);
