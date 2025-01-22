@@ -33,6 +33,7 @@ import { toast } from "react-toastify";
 import UploadContent from "@/components/Modal/UploadFile";
 import DeleteConfirmationPopup from "@/components/Modal/DeleteConfirmationPopUp";
 import { handleFileUploadToS3 } from "@/components/ApplicationForm";
+import { formatDateTime } from "@/components/AdminDataStructure";
 
 export const downloadFile = async (filePath) => {
   //console.log("ye raha", filePath);
@@ -1117,6 +1118,7 @@ export default function Page({ params }) {
                           {" "}
                           Module {modules.length - index}
                         </p>
+
                         {!isStudent && (
                           <div className="flex max-sm:flex-col">
                             {moduleId !== module.id && (
@@ -1288,28 +1290,33 @@ export default function Page({ params }) {
                         </p>
                       )}
                       {module?.files?.map((file) => (
-                        <div
-                          className="flex items-center gap-2 group"
-                          key={file.id}
-                        >
-                          <a
-                            href={file.file}
-                            className="group-hover:cursor-pointer flex justify-center items-center space-x-2"
-                            download
+                        <div className="flex justify-between max-md:flex-col" key={file.id}>
+                          <div
+                            className="flex items-center gap-2 group"
+                            
                           >
-                            <FaFileDownload
-                              size={20}
-                              fill="#03A1D8"
-                              className="group-hover:cursor-pointer"
-                            />
-                            <button
-                              onClick={() => downloadFile(file.file)}
-                              className="flex items-center text-blue-300 my-4 group-hover:cursor-pointer"
+                            <a
+                              href={file.file}
+                              className="group-hover:cursor-pointer flex justify-center items-center space-x-2"
+                              download
                             >
-                              {file.file.split("/").pop()}
-                            </button>
-                          </a>
-                          <p>{downloadStatus}</p>
+                              <FaFileDownload
+                                size={20}
+                                fill="#03A1D8"
+                                className="group-hover:cursor-pointer"
+                              />
+                              <button
+                                onClick={() => downloadFile(file.file)}
+                                className="flex items-center text-blue-300 my-4 group-hover:cursor-pointer"
+                              >
+                                {file.file.split("/").pop()}
+                              </button>
+                            </a>
+                            <p>{downloadStatus}</p>
+                          </div>
+                          <div className="flex my-4 items-center justify-center p-2 h-8 bg-blue-600 text-blue-300 rounded-md">
+                            {formatDateTime(module.created_at)}
+                          </div>
                         </div>
                       ))}
                     </div>
