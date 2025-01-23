@@ -45,7 +45,11 @@ const AdminStudentGrading = ({ courseId }) => {
   };
   const handleSessionSelect = (session) => {
     setSelectedSession(session.session_name);
-    setSelectedSessionId(session.id);
+    if (isAdmin) {
+      setSelectedSessionId(session.id);
+    } else {
+      setSelectedSessionId(session.session_id);
+    }
     setIsSessionOpen(false);
   };
   const handleBatchSelection = (e) => {
@@ -120,7 +124,9 @@ const AdminStudentGrading = ({ courseId }) => {
   }, []);
 
   useEffect(() => {
-    fetchAttendanceAdmin();
+    if (selectedSessionId) {
+      fetchAttendanceAdmin();
+    }
     if (isInstructor) {
       fetchSessions();
     } else {
@@ -210,22 +216,28 @@ const AdminStudentGrading = ({ courseId }) => {
                         </td>
                       </tr>
                     ) : attendance && attendance.length > 0 ? (
-                      attendance?.map((att, index) => {
-                        return (
-                          <tr key={index}>
-                            <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
-                              {att.registration_id}
-                            </td>
-                            <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 hover:text-blue-300">
-                              <Link
-                                href={`/students/course/${courseId}/student/${selectedSessionId}/${att.registration_id}/`}
-                              >
-                                {att.user || att.name}
-                              </Link>
-                            </td>
-                          </tr>
-                        );
-                      })
+                      [...attendance]
+                        .sort((a, b) => {
+                          const nameA = (a.user || a.name || "").toLowerCase();
+                          const nameB = (b.user || b.name || "").toLowerCase();
+                          return nameA.localeCompare(nameB);
+                        })
+                        .map((att, index) => {
+                          return (
+                            <tr key={index}>
+                              <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                                {att.registration_id}
+                              </td>
+                              <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 hover:text-blue-300">
+                                <Link
+                                  href={`/students/course/${courseId}/student/${selectedSessionId}/${att.registration_id}/`}
+                                >
+                                  {att.user || att.name}
+                                </Link>
+                              </td>
+                            </tr>
+                          );
+                        })
                     ) : (
                       <tr>
                         <td
