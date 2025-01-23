@@ -223,7 +223,13 @@ const AdminMarksTable = ({
                   </thead>
                   <tbody className="divide-y divide-dark-200 dark:divide-gray-700">
                     {assessments && assessments.length > 0 ? (
-                      assessments.map((assessment, index) => (
+                      [...assessments]
+                      .sort((a, b) => {
+                        const nameA = (a.student_name || "").toLowerCase();
+                        const nameB = (b.student_name || "").toLowerCase();
+                        return nameA.localeCompare(nameB);
+                      })
+                      .map((assessment, index) => (
                         <tr key={index}>
                           <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
                             {assessment?.registration_id}

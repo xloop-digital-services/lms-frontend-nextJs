@@ -44,8 +44,10 @@ export default function Page({ params }) {
     }
 
     // if (!regId && courseId) return;
-    fetchAttendance();
-  }, [courseId, isStudent]);
+    if (isStudent && regId && courseId) {
+      fetchAttendance();
+    }
+  }, [courseId, isStudent, regId, courseId]);
 
   return (
     <>

@@ -59,7 +59,7 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
 
     try {
       if (response.status === 200) {
-        setSessions(response.data.data); // Store the sessions data
+        setSessions(response.data.data);
       } else {
         // console.error("Failed to fetch sessions, status:", response.status);
       }
@@ -85,17 +85,15 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
       if (response.status === 200) {
         const initialAttendance = response.data.data.students.reduce(
           (acc, student) => {
-            // Initialize each student's attendance to 0 (Present) initially
-            acc[student.registration_id] = 0; // '0' for Present
+            acc[student.registration_id] = 0;
             return acc;
           },
           {}
         );
 
         // console.log("Attendance:", response.data.data.students);
-        setGetAttendance(response.data.data.students); // Setting attendance data
-        setSelectedAttendance(initialAttendance); // Setting the initial status to 'Present'
-        // Fetch additional attendance insights if needed
+        setGetAttendance(response.data.data.students);
+        setSelectedAttendance(initialAttendance);
       } else {
         // console.error("Failed to fetch attendance, status:", response.status);
       }
@@ -182,11 +180,6 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
     );
 
     try {
-      // const response = await markAttendanceByCourseId(
-      //   courseId,
-      //   attendanceArray
-      // );
-
       const response = await postAttendanceBySessionId(
         selectedSessionId,
         courseId,
@@ -213,13 +206,11 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
 
   const handleEdit = () => {
     setEdit(true);
-
-    // Initialize selectedAttendance with the current attendance status
     const initialAttendance = {};
     attendance.forEach((att) => {
       initialAttendance[att.student] = att.status;
     });
-    setSelectedAttendance(initialAttendance); // Preload the selectedAttendance with current values
+    setSelectedAttendance(initialAttendance);
   };
 
   const handleResubmission = async () => {
@@ -277,9 +268,6 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   //   }
   // }, [isAttendancePosted, courseId, group, userId, selectedSessionId]);
   useEffect(() => {
-    // console.log("isInstructor:", isInstructor);
-    // console.log("isAdmin:", isAdmin);
-
     if (isInstructor) {
       fetchSessions();
     } else if (isAdmin) {
@@ -294,10 +282,9 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
   // }, [courseId, selectedSession, date]);
 
   useEffect(() => {
-    // Only set the date and fetch attendance when the component loads or when selectedSession changes
     if (selectedSession) {
       if (!date) {
-        setDate(formattedDate); // Set the default formatted date initially
+        setDate(formattedDate);
       } else {
         fetchAttendance();
         fetchAttendanceIns();
@@ -344,25 +331,16 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                   ref={sessionDropdown}
                   className="absolute top-full left-0 z-20 p-2  w-full lg:max-h-[170px] max-h-[150px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                 >
-                  {Array.isArray(sessions) && isInstructor
-                    ? sessions.map((session) => (
-                        <div
-                          key={session.session_id}
-                          onClick={() => handleSessionSelect(session)}
-                          className="px-2 py-2 hover:bg-blue-100 hover:text-blue-300 rounded-lg"
-                        >
-                          {session.session_name}
-                        </div>
-                      ))
-                    : sessions.map((session) => (
-                        <div
-                          key={session.id}
-                          onClick={() => handleSessionSelect(session)}
-                          className="px-2 py-2 hover:bg-blue-100 hover:text-blue-300 rounded-lg"
-                        >
-                          {session.session_name}
-                        </div>
-                      ))}
+                  {Array.isArray(sessions) &&
+                    sessions.map((session) => (
+                      <div
+                        key={session.session_id}
+                        onClick={() => handleSessionSelect(session)}
+                        className="px-2 py-2 hover:bg-blue-100 hover:text-blue-300 rounded-lg"
+                      >
+                        {session.session_name}
+                      </div>
+                    ))}
                 </div>
               )}
             </div>
@@ -416,7 +394,12 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                         </td>
                       </tr>
                     ) : date && selectedSession && attendance.length > 0 ? (
-                      attendance.map((att, index) => (
+                      [...attendance]
+                      .sort((a, b) => {
+                        const nameA = (a.student_name || "").toLowerCase();
+                        const nameB = (b.student_name || "").toLowerCase();
+                        return nameA.localeCompare(nameB);
+                      }).map((att, index) => (
                         <tr key={index}>
                           <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
                             {att.student}
@@ -478,7 +461,12 @@ export default function GetAttendanceTable({ courseId, isAttendancePosted }) {
                     ) : date &&
                       Array.isArray(getAttendance) &&
                       getAttendance.length > 0 ? (
-                      getAttendance.map((att, index) => (
+                        [...getAttendance]
+                        .sort((a, b) => {
+                          const nameA = (a.user || a.full_name  || "").toLowerCase();
+                          const nameB = (b.user || b.full_name  || "").toLowerCase();
+                          return nameA.localeCompare(nameB);
+                        }).map((att, index) => (
                         <tr key={index}>
                           <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
                             {att.student || att.registration_id}
