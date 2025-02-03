@@ -12,7 +12,7 @@ const StudentProgressBarChart = ({
       <div className="h-full">
         <Bar
           data={{
-            labels: ["Course", "Quiz", "Assignment"], // X-axis labels
+            labels: ["Attendance", "Quiz", "Assignment"], // X-axis labels
             datasets: [
               {
                 label: "Progress", // Label for the dataset
