@@ -34,7 +34,9 @@ export const useFetchNotifications = (userID) => {
     // if (!userID || (role !== "student" && role !== "instructor")) return;
 
     const interval = setInterval(() => {
-      fetchNotifications();
+      if (userID) {
+        fetchNotifications();
+      }
     }, 10000);
     fetchNotifications();
     return () => clearInterval(interval);

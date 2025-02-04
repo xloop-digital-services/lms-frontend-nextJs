@@ -9,6 +9,7 @@ import {
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 import { handleFileUploadToS3 } from "../ApplicationForm";
+import { CheckFileSize } from "../CheckFIleSize";
 
 const UploadingFile = ({
   field,
@@ -24,6 +25,8 @@ const UploadingFile = ({
   const [error, setError] = useState("");
   const [isDragOver, setIsDragOver] = useState(false);
   const [loader, setLoader] = useState(false);
+  const [wait, setWait] = useState(false);
+  const rangeStart = 450 * 1024 * 1024;
 
   const supportedFormats = [
     ".pdf",
@@ -41,15 +44,37 @@ const UploadingFile = ({
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
   const handleBrowse = (event) => {
+    setError("");
     const selectedFile = event.target.files[0];
+
+    if (selectedFile.size >= rangeStart) {
+      setWait(true);
+    }
+    const message = CheckFileSize(selectedFile.size);
+    // console.log("file", selectedFile, message);
+    if (message.length > 0) {
+      setError(message);
+    }
+
     handleFileSelection(selectedFile);
   };
 
   const handleDrop = (event) => {
     event.preventDefault();
-    const droppedFile = event.dataTransfer.files[0];
-    handleFileSelection(droppedFile);
-    setIsDragOver(false);
+    if (event.dataTransfer.files[0]) {
+      setError("");
+      const droppedFile = event.dataTransfer.files[0];
+      if (droppedFile.size >= rangeStart) {
+        setWait(true);
+      }
+      const message = CheckFileSize(droppedFile.size);
+      console.log("file", droppedFile, message);
+      if (message.length > 0) {
+        setError(message);
+      }
+      handleFileSelection(droppedFile);
+      setIsDragOver(false);
+    }
   };
 
   const handleFileSelection = (file) => {
@@ -58,7 +83,6 @@ const UploadingFile = ({
       // if (supportedFormats.includes(`.${fileExtension}`)) {
       setFile(file);
       setFileUploaded(file.name);
-      setError("");
       // } else {
       //   setError("This file format is not supported.");
       //   setFileUploaded(null);
@@ -77,6 +101,12 @@ const UploadingFile = ({
 
   const handleUpload = async (type) => {
     setLoader(true);
+    if (error) {
+      toast.warn("The file is too large and cannot exceed 600MB.");
+      setLoader(false);
+      return;
+    }
+
     if (!file && !comment.trim()) {
       toast.warn("File or comment must be provided");
       setLoader(false);
@@ -161,6 +191,7 @@ const UploadingFile = ({
   const handleRemoveFile = () => {
     setFile(null);
     setFileUploaded(null);
+    setWait(false);
     setError("");
   };
 
@@ -222,10 +253,20 @@ const UploadingFile = ({
                 Supported formats: pdf, doc, docx, ppt, pptx, txt, zip
               </p>
               {fileUploaded && (
-                <p className="text-[#1ab725] text-[13px] flex items-center gap-4 mt-2 border border-[#1ab7245f] p-1 px-4 rounded-lg">
+                <p
+                  className={`${
+                    error
+                      ? "text-[#ff4c4c] border-[#ff4c4c5f]"
+                      : "text-[#1ab725] border-[#1ab7245f]"
+                  } text-[13px] flex items-center gap-4 mt-2 border  p-1 px-4 rounded-lg`}
+                >
                   {fileUploaded} selected
                   <span
-                    className="hover:text-dark-900 duration-300 cursor-pointer"
+                    className={
+                      loader
+                        ? "hidden"
+                        : "flex hover:text-dark-900 duration-300 cursor-pointer"
+                    }
                     onClick={handleRemoveFile}
                   >
                     <IoClose />
@@ -233,8 +274,11 @@ const UploadingFile = ({
                 </p>
               )}
               {error && (
-                <p className="text-[#ff4c4c] text-[13px] mt-2 border border-[#ff4c4c5f] p-1 px-4 rounded-lg">
-                  {error}
+                <p className=" text-[10px] text-[#ff4c4c] p-1 px-4 ">{error}</p>
+              )}
+              {wait && loader && (
+                <p className="text-[13px] text-dark-400 p-1 px-4">
+                  Please Wait! The file might take time to upload.
                 </p>
               )}
             </div>
@@ -253,7 +297,17 @@ const UploadingFile = ({
                 type="submit"
                 onClick={handleUploadation}
                 disabled={loader || (!fileUploaded && !comment)}
-                className="w-fit flex justify-center py-3 px-12 disabled:cursor-not-allowed disabled:bg-dark-300 text-sm font-medium rounded-lg text-dark-100 bg-blue-300 hover:bg-[#3272b6] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
+                className={`
+                  w-fit flex justify-center py-3 px-12 text-sm font-medium rounded-lg text-dark-100 
+                  transition duration-150 ease-in-out 
+                  ${
+                    loader
+                      ? "bg-blue-300"
+                      : !fileUploaded && !comment
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-blue-300 hover:bg-[#3272b6] active:bg-indigo-700"
+                  }
+                `}
               >
                 {loader ? (
                   <CircularProgress size={20} style={{ color: "white" }} />

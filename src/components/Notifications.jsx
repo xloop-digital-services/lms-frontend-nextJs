@@ -129,9 +129,8 @@ export default function Notifications() {
           messages
             .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
             .map((msg) => (
-              <>
+              <div key={msg.notification_id}>
                 <div
-                  key={msg.notification_id}
                   className={`flex mx-2 my-2 justify-center items-center py-1 line-clamp-2 cursor-pointer ${
                     msg.status === "unread"
                       ? "bg-blue-600 rounded-xl"
@@ -157,7 +156,7 @@ export default function Notifications() {
                   <hr className="text-dark-200 my-2"></hr>
                 </div>
                 <hr className="text-dark-200 m-2"></hr>
-              </>
+              </div>
             ))
         ) : (
           <p className="text-blue-300 flex items-center justify-center">
