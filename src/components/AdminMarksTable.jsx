@@ -288,6 +288,7 @@ const AdminMarksTable = ({
                                 "undefined/undefined" ? (
                                 "-"
                               ) : (
+                                <>
                                 <a
                                   href="#"
                                   className="cursor-pointer text-black hover:text-[#2563eb] hover:underline"
@@ -299,6 +300,10 @@ const AdminMarksTable = ({
                                 >
                                   {assessment.submitted_file.split("/").pop()}
                                 </a>
+                                <p className="text-dark-400">{assessment.submitted_at.split('T').slice(0,1)}</p>
+                                <p className="text-dark-400"> at {new Date(assessment.submitted_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}</p>
+                                
+                                </>
                               )}
                             </td>
                             <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">

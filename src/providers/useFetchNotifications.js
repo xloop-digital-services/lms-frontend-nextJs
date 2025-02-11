@@ -10,9 +10,10 @@ export const useFetchNotifications = (userID) => {
   const [loading, setLoading] = useState(false);
 
   const fetchNotifications = async () => {
-    if (group === "admin") return;
+    if (!userID || group === "admin") return;
     setLoading(true);
     try {
+      // console.log(userID)
       const response = await getNotificationByUserId(userID);
       if (response.status === 200) {
         // console.log(response.data, "noti");
@@ -31,16 +32,18 @@ export const useFetchNotifications = (userID) => {
   };
 
   useEffect(() => {
-    // if (!userID || (role !== "student" && role !== "instructor")) return;
+    if (!userID || group === "admin") return;
 
     const interval = setInterval(() => {
       if (userID) {
         fetchNotifications();
       }
     }, 10000);
-    fetchNotifications();
+
+    // fetchNotifications();
+
     return () => clearInterval(interval);
-  }, [userID]);
+  }, [userID, group]);
 
   return { messages, loading, refetch: fetchNotifications };
 };

@@ -20,9 +20,28 @@ import { IoClose } from "react-icons/io5";
 
 export const handleFileUploadToS3 = async (file, category) => {
   const formData = new FormData();
-  formData.append("file", file);
-  formData.append("category", category);
+  const now = new Date();
+  const timestamp = `${now.getFullYear()}${(now.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}${now.getDate().toString().padStart(2, "0")}_${now
+    .getHours()
+    .toString()
+    .padStart(2, "0")}${now.getMinutes().toString().padStart(2, "0")}${now
+    .getSeconds()
+    .toString()
+    .padStart(2, "0")}`;
+  const fileExtension = file.name.split(".").pop();
+  const uniqueFileName = `${file.name
+    .split(".")
+    .slice(0, -1)
+    .join(".")}_${timestamp}.${fileExtension}`;
+  console.log(uniqueFileName);
 
+  formData.append(
+    "file",
+    new File([file], uniqueFileName, { type: file.type })
+  );
+  formData.append("category", category);
   try {
     const response = await fetch("/api/s3-upload", {
       method: "POST",
