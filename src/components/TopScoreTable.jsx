@@ -1,8 +1,9 @@
 import { CircularProgress } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 
 const TopScoreTable = ({ total, scores, loadingScore, showAll }) => {
   const totalQuizMarks = total?.grades_summary?.total_quiz_marks || 0;
+  // console.log(scores);
   // const totalAssignmentMarks =
   //   scores.itdata[0]?.grades_summary?.total_assignment_marks || 0;
   // const totalExamMarks =
@@ -40,7 +41,7 @@ const TopScoreTable = ({ total, scores, loadingScore, showAll }) => {
                       scope="col"
                       className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]"
                     >
-                      Quiz 
+                      Quiz
                     </th>
                     <th
                       scope="col"
@@ -85,26 +86,63 @@ const TopScoreTable = ({ total, scores, loadingScore, showAll }) => {
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 ">
                             {score.student_registration_id}
                           </td>
-                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
-                            {score.grades_summary.assignments.toFixed(1)}/
-                            {score.grades_summary?.total_assignment_marks.toFixed(
-                              1
+                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                            {(
+                              score.grades_summary?.assignments
+                                ?.obtained_marks ??
+                              score.grades_summary?.assignments ??
+                              0
+                            ).toFixed(1)}{" "}
+                            /{" "}
+                            {(
+                              score.grades_summary?.assignments?.total_marks ??
+                              score.grades_summary?.total_assignment_marks ??
+                              0
                             )}
                           </td>
-                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
-                            {score.grades_summary.quizzes.toFixed(1)}/
-                            {score.grades_summary?.total_quiz_marks.toFixed(1)}
-                          </td>
-                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
-                            {score.grades_summary.projects.toFixed(1)}/
-                            {score.grades_summary?.total_project_marks.toFixed(
-                              1
+
+                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                            {(
+                              score.grades_summary?.quizzes?.obtained_marks ??
+                              score.grades_summary?.quizzes ??
+                              0
+                            ).toFixed(1)}{" "}
+                            /{" "}
+                            {(
+                              score.grades_summary?.quizzes?.total_marks ??
+                              score.grades_summary?.total_quiz_marks ??
+                              0
                             )}
                           </td>
-                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
-                            {score.grades_summary.exams.toFixed(1)}/
-                            {score.grades_summary?.total_exam_marks.toFixed(1)}
+
+                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                            {(
+                              score.grades_summary?.projects?.obtained_marks ??
+                              score.grades_summary?.projects ??
+                              0
+                            ).toFixed(1)}{" "}
+                            /{" "}
+                            {(
+                              score.grades_summary?.projects?.total_marks ??
+                              score.grades_summary?.total_project_marks ??
+                              0
+                            )}
                           </td>
+
+                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
+                            {(
+                              score.grades_summary?.exams?.obtained_marks ??
+                              score.grades_summary?.exams ??
+                              0
+                            ).toFixed(1)}{" "}
+                            /{" "}
+                            {(
+                              score.grades_summary?.exams?.total_marks ??
+                              score.grades_summary?.total_exam_marks ??
+                              0
+                            )}
+                          </td>
+
                           <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">
                             {score.grades_summary.attendance_grace_marks.toFixed(
                               1

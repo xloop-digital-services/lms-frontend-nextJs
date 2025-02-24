@@ -1709,6 +1709,17 @@ export const getProgramScores = async (programId) => {
   }
 };
 
+export const getProgramDetails = async (programId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/api/course/program/${programId}/student-scores-summary/?program_assignment_weightage=50&program_quiz_weightage=10&program_project_special_weightage=10&program_project_regular_weightage=10&special_course_id=25&program_exam_special_weightage=10&program_exam_regular_weightage=10`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getCourseProgressByProgId = async (programID) => {
   try {
     const response = await axiosInstance.get(

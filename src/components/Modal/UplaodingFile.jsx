@@ -120,7 +120,12 @@ const UploadingFile = ({
     // }
 
     try {
-      const s3Data = await handleFileUploadToS3(file, type);
+      let s3Data;
+      if(file){
+        s3Data = await handleFileUploadToS3(file, type);
+      } else {
+        s3Data = '';
+      }
       // console.log("S3 Data:", s3Data);
 
       const formData = new FormData();
@@ -181,7 +186,7 @@ const UploadingFile = ({
       handleUploadAssignment();
     }
     if (field === "project") {
-      handleUploadProject();
+      handleUploadProject();   
     }
     if (field === "exam") {
       handleUploadExam();
@@ -287,7 +292,7 @@ const UploadingFile = ({
               <input
                 type="text"
                 className="border border-dark-300 outline-none p-3 rounded-lg w-full"
-                placeholder="Regarding assignment or note"
+                placeholder={`Regarding ${field} or note`}
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
               />
@@ -304,7 +309,7 @@ const UploadingFile = ({
                     loader
                       ? "bg-blue-300"
                       : !fileUploaded && !comment
-                      ? "bg-gray-400 cursor-not-allowed"
+                      ? " bg-dark-300 cursor-not-allowed"
                       : "bg-blue-300 hover:bg-[#3272b6] active:bg-indigo-700"
                   }
                 `}

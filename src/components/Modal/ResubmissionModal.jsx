@@ -114,7 +114,12 @@ const ResubmissionModal = ({
     }
 
     try {
-      const s3Data = await handleFileUploadToS3(file, type);
+      let s3Data;
+      if (file) {
+        s3Data = await handleFileUploadToS3(file, type);
+      } else {
+        s3Data = " ";
+      }
       //console.log("S3 Data:", s3Data);
 
       const formData = new FormData();

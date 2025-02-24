@@ -14,6 +14,7 @@ import {
   getCityStatistics,
   getCourseByProgId,
   getCourseProgressByProgId,
+  getProgramDetails,
   getProgramGraph,
   getProgramScores,
   getProgressForSession,
@@ -263,13 +264,28 @@ const AdminDashboard = () => {
         const response = await getProgramScores(scoreProgramId);
         setScores(response.data.data);
       } catch (error) {
-        console.log("error", error);
+        // console.log("error", error);
       } finally {
         setLoadingScore(false);
       }
     };
 
-    if (scoreProgramId) {
+    const handleModifiedScores = async () => {
+      try {
+        setLoadingScore(true);
+        const response = await getProgramDetails(scoreProgramId);
+        console.log(response.data.data);
+        setScores(response.data.data)
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoadingScore(false);
+      }
+    };
+
+    if (scoreProgramId == 3) {
+      handleModifiedScores();
+    } else if (scoreProgramId) {
       handleScores();
     }
   }, [scoreProgramId]);
@@ -513,7 +529,7 @@ const AdminDashboard = () => {
         <div className="text-[#07224D] flex flex-col gap-4 ">
           {/* <h2 className=" font-exo text-3xl font-bold">Admin Dashboard</h2> */}
           <div className="flex gap-4 flex-wrap xmd:flex-nowrap w-full">
-          <div className="bg-surface-100 w-full xmd:w-1/3 flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
+            <div className="bg-surface-100 w-full xmd:w-1/3 flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
               <div className="flex flex-col text-sm h-full justify-center items-center">
                 Total Users
                 <span className="text-xl font-semibold font-exo ">
