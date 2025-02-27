@@ -19,6 +19,14 @@ const TopScoreTable = ({ total, scores, loadingScore, showAll }) => {
               <table className="min-w-full divide-y divide-dark-200 ">
                 <thead className="bg-surface-100 text-blue-500 sticky top-0 z-10 shadow-sm shadow-dark-200">
                   <tr>
+                    {showAll && (
+                      <th
+                        scope="col"
+                        className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[7%]"
+                      >
+                        S. NO.
+                      </th>
+                    )}
                     <th
                       scope="col"
                       className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]"
@@ -63,7 +71,7 @@ const TopScoreTable = ({ total, scores, loadingScore, showAll }) => {
                     </th>
                     <th
                       scope="col"
-                      className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]"
+                      className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[15%]"
                     >
                       Overall Weighted %
                     </th>
@@ -80,6 +88,11 @@ const TopScoreTable = ({ total, scores, loadingScore, showAll }) => {
                     (showAll ? scores : scores.slice(0, 3)).map(
                       (score, index) => (
                         <tr key={index}>
+                          {showAll && (
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
+                              {index + 1}
+                            </td>
+                          )}
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 ">
                             {score.student_name}
                           </td>
@@ -94,11 +107,9 @@ const TopScoreTable = ({ total, scores, loadingScore, showAll }) => {
                               0
                             ).toFixed(1)}{" "}
                             /{" "}
-                            {(
-                              score.grades_summary?.assignments?.total_marks ??
+                            {score.grades_summary?.assignments?.total_marks ??
                               score.grades_summary?.total_assignment_marks ??
-                              0
-                            )}
+                              0}
                           </td>
 
                           <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
@@ -108,11 +119,9 @@ const TopScoreTable = ({ total, scores, loadingScore, showAll }) => {
                               0
                             ).toFixed(1)}{" "}
                             /{" "}
-                            {(
-                              score.grades_summary?.quizzes?.total_marks ??
+                            {score.grades_summary?.quizzes?.total_marks ??
                               score.grades_summary?.total_quiz_marks ??
-                              0
-                            )}
+                              0}
                           </td>
 
                           <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
@@ -122,11 +131,9 @@ const TopScoreTable = ({ total, scores, loadingScore, showAll }) => {
                               0
                             ).toFixed(1)}{" "}
                             /{" "}
-                            {(
-                              score.grades_summary?.projects?.total_marks ??
+                            {score.grades_summary?.projects?.total_marks ??
                               score.grades_summary?.total_project_marks ??
-                              0
-                            )}
+                              0}
                           </td>
 
                           <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800">
@@ -136,11 +143,9 @@ const TopScoreTable = ({ total, scores, loadingScore, showAll }) => {
                               0
                             ).toFixed(1)}{" "}
                             /{" "}
-                            {(
-                              score.grades_summary?.exams?.total_marks ??
+                            {score.grades_summary?.exams?.total_marks ??
                               score.grades_summary?.total_exam_marks ??
-                              0
-                            )}
+                              0}
                           </td>
 
                           <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-800 ">

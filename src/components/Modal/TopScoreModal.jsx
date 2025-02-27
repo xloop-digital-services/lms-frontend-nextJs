@@ -12,7 +12,7 @@ const TopScoreModal = ({ scores, loadingScore, showAll, setOpenList }) => {
   // }, []);
   return (
     <div className="backDropOverlay h-screen fixed flex justify-center items-center">
-      <div className=" w-[1200px] z-[1000] mx-auto my-20 overflow-auto scrollbar-webkit">
+      <div className=" w-[1500px] z-[1000] mx-auto my-20 overflow-auto scrollbar-webkit">
         <div
           //   ref={modalClose}
           style={{ backgroundColor: "#EBF6FF" }}

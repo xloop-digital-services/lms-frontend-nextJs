@@ -337,7 +337,7 @@ function SideBar() {
                     isLinkActive("/grading")
                       ? "bg-blue-300 text-blue-600 hover:bg-opacity-60"
                       : "text-dark-600 hover:text-blue-600  hover:bg-[#e6f8ff] hover:bg-opacity-40"
-                  } ${isStudent && 'hidden'}`}
+                  }`}
                 >
                   <FaClipboardCheck size={24} />
                   Grading

@@ -64,8 +64,8 @@ export default function Page({ params }) {
           </div> */}
 
           {isStudent ? (
-            // <StudentGrading courseId={courseId} />
-            <p className="flex justify-center items-center w-full h-full text-mix-200">Page is temperary closed!</p>
+            <StudentGrading courseId={courseId} />
+            // <p className="flex justify-center items-center w-full h-full text-mix-200">Page is temperary closed!</p>
           ) : (
             <Grading courseId={courseId} />
           )}

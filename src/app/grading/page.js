@@ -21,8 +21,8 @@ export default function Page() {
     //   ) : (
     <>
       {isStudent ? (
-        // <CoursePage path="grading" heading="Grading" />
-        <p className="flex justify-center items-center w-full h-full text-mix-200">Page is temperary closed!</p>
+        <CoursePage path="grading" heading="Grading" />
+        // <p className="flex justify-center items-center w-full h-full text-mix-200">Page is temperary closed!</p>
       ) : isAdmin ? (
         <AdminCoursePage title="Grading" route="course" route1="grading" />
       ) : isInstructor ? (
