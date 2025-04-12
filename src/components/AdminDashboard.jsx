@@ -5,6 +5,7 @@ import BatchTable from "@/components/BatchTable";
 import BarChart from "@/components/BarChartProgram";
 import PieChart from "@/components/PieChart";
 import { IoIosArrowDown } from "react-icons/io";
+// import usersIcon from "../../public/assets/img/usersIcon.svg"
 import useClickOutside from "@/providers/useClickOutside";
 import {
   DeleteBatch,
@@ -516,11 +517,10 @@ const AdminDashboard = () => {
   return (
     <>
       <div
-        className={`flex-1 transition-transform pt-[100px] space-y-4 max-md:pt-22 font-inter ${
-          isSidebarOpen
-            ? "translate-x-64 ml-20 "
-            : "translate-x-0 xlg:pl-10 pl-4 pr-4"
-        }`}
+        className={`flex-1 transition-transform pt-[100px] space-y-4 max-md:pt-22 font-inter ${isSidebarOpen
+          ? "translate-x-64 ml-20 "
+          : "translate-x-0 xlg:pl-10 pl-4 pr-4"
+          }`}
         style={{
           // paddingBottom: "20px",
           width: isSidebarOpen ? "81%" : "100%",
@@ -529,74 +529,60 @@ const AdminDashboard = () => {
         <div className="text-[#07224D] flex flex-col gap-4 ">
           {/* <h2 className=" font-exo text-3xl font-bold">Admin Dashboard</h2> */}
           <div className="flex gap-4 flex-wrap xmd:flex-nowrap w-full">
-            <div className="bg-surface-100 w-full xmd:w-1/3 flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
-              <div className="flex flex-col text-sm h-full justify-center items-center">
-                Total Users
-                <span className="text-xl font-semibold font-exo ">
-                  {allUsers}
-                </span>
-              </div>
-              <div className="space-y-2">
-                <div className="flex flex-col text-[12px] justify-center items-center">
-                  Active Users
-                  <span className="text-base font-semibold font-exo ">
-                    {allActiveUsers}
-                  </span>
+            {/* #### */}
+            <div className="bg-surface-100 w-full xmd:w-1/3 flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300 border-b-[8px] border-b-[#0074EE]">
+              <div className="bg-white flex flex-col rounded-lg gap-[15px] w-full">
+                <div className="p-2 rounded-md">
+                  <img src="/assets/img/user-icon.jpg" alt="userIcon" />
                 </div>
-                <div className="flex flex-col text-[12px] justify-center items-center">
-                  Inactive Users
-                  <span className="text-base font-semibold font-exo ">
-                    {allInActiveUsers}
-                  </span>
-                </div>
-              </div>
-            </div>
 
-            <div className="bg-surface-100 w-full xmd:w-1/3 flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
-              <div className="flex flex-col text-sm h-full justify-center items-center">
-                Total Students
-                <span className="text-xl font-semibold font-exo text-blue-500">
-                  {allStudents}
-                </span>
-              </div>
-              <div className="space-y-2">
-                <div className="flex flex-col text-[12px] justify-center items-center">
-                  Active Students
-                  <span className="text-base font-semibold font-exo text-blue-500">
-                    {allActiveStudents}
-                  </span>
-                </div>
-                <div className="flex flex-col text-[12px] justify-center items-center">
-                  Inactive Students
-                  <span className="text-base font-semibold font-exo text-blue-500">
-                    {allInActiveStudents}
-                  </span>
+                <div>
+                  <p className="text-gray-500 text-[18px] tracking-wide">
+                    Total Users / Active Users
+                  </p>
+                  <p className="text-[25px] font-bold text-gray-800">
+                    {allUsers} / <span>{allActiveUsers}</span>
+                  </p>
                 </div>
               </div>
             </div>
+            {/* #### */}
+            {/* #### */}
+            <div className="bg-surface-100 w-full xmd:w-1/3 flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300 border-b-[8px] border-b-[#0074EE]">
+              <div className="bg-white flex flex-col rounded-lg gap-[15px] w-full">
+                <div className="p-2 rounded-md">
+                  <img src="/assets/img/student-icon.jpg" alt="userIcon" />
+                </div>
 
-            <div className="bg-surface-100 w-full xmd:w-1/3 flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300">
-              <div className="flex flex-col text-sm h-full justify-center items-center">
-                Total Instructors
-                <span className="text-xl font-semibold font-exo text-blue-500">
-                  {allInstructors}
-                </span>
-              </div>
-              <div className="space-y-2">
-                <div className="flex flex-col text-[12px] justify-center items-center">
-                  Active Instructors
-                  <span className="text-base font-semibold font-exo text-blue-500">
-                    {allActiveInstructors}
-                  </span>
-                </div>
-                <div className="flex flex-col text-[12px] justify-center items-center">
-                  Inactive Instructors
-                  <span className="text-base font-semibold font-exo text-blue-500">
-                    {allInActiveInstructors}
-                  </span>
+                <div>
+                  <p className="text-gray-500 text-[18px] tracking-wide">
+                    Total Students / Active Students
+                  </p>
+                  <p className="text-[25px] font-bold text-gray-800">
+                    {allStudents} / <span>{allActiveStudents}</span>
+                  </p>
                 </div>
               </div>
             </div>
+            {/* #### */}
+            {/* #### */}
+            <div className="bg-surface-100 w-full xmd:w-1/3 flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300 border-b-[8px] border-b-[#0074EE]">
+              <div className="bg-white flex flex-col rounded-lg gap-[15px] w-full">
+                <div className="p-2 rounded-md">
+                  <img src="/assets/img/instructor-icon.jpg" alt="userIcon" />
+                </div>
+
+                <div>
+                  <p className="text-gray-500 text-[18px] tracking-wide">
+                    Total Instructors / Active Instructors
+                  </p>
+                  <p className="text-[25px] font-bold text-gray-800">
+                    {allInstructors} / <span>{allActiveInstructors}</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+            {/* #### */}
           </div>
 
           <div className="flex gap-4 xmd:flex-row flex-col">
@@ -613,9 +599,8 @@ const AdminDashboard = () => {
                     <div
                       onClick={handleChangeProgressDetails}
                       className="font-bold font-exo text-blue-500 text-lg  group hover:cursor-pointer flex gap-4 items-center"
-                      title={`Click to show ${
-                        !changeProgress ? `course` : "program"
-                      } progress`}
+                      title={`Click to show ${!changeProgress ? `course` : "program"
+                        } progress`}
                     >
                       <div>
                         {changeProgress ? "Course" : "Program"} Progress
@@ -635,21 +620,19 @@ const AdminDashboard = () => {
                         <button
                           ref={courseButton}
                           onClick={toggleBarCourseOpen}
-                          className={`${
-                            !isBarCourseSelected
-                              ? " text-dark-500"
-                              : "text-[#424b55]"
-                          } flex justify-between items-center w-[300px]  hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                          className={`${!isBarCourseSelected
+                            ? " text-dark-500"
+                            : "text-[#424b55]"
+                            } flex justify-between items-center w-[300px]  hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                         >
                           <span className="  max-w-full truncate capitalize">
                             {selectedBarCourse}
                           </span>
                           <span
-                            className={`${
-                              isBarCourseOpen
-                                ? "rotate-180 duration-300"
-                                : "duration-300"
-                            }`}
+                            className={`${isBarCourseOpen
+                              ? "rotate-180 duration-300"
+                              : "duration-300"
+                              }`}
                           >
                             <IoIosArrowDown />
                           </span>
@@ -681,21 +664,19 @@ const AdminDashboard = () => {
                         <button
                           ref={barButton}
                           onClick={toggleBarProgramOpen}
-                          className={`${
-                            !isBarProgramSelected
-                              ? " text-dark-500"
-                              : "text-[#424b55]"
-                          } flex justify-between items-center w-[300px]  hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                          className={`${!isBarProgramSelected
+                            ? " text-dark-500"
+                            : "text-[#424b55]"
+                            } flex justify-between items-center w-[300px]  hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                         >
                           <span className="  max-w-full truncate capitalize">
                             {selectedBarProgram}
                           </span>
                           <span
-                            className={`${
-                              isBarProgramOpen
-                                ? "rotate-180 duration-300"
-                                : "duration-300"
-                            }`}
+                            className={`${isBarProgramOpen
+                              ? "rotate-180 duration-300"
+                              : "duration-300"
+                              }`}
                           >
                             <IoIosArrowDown />
                           </span>
@@ -760,17 +741,15 @@ const AdminDashboard = () => {
                     <button
                       ref={userButton}
                       onClick={toggleUsers}
-                      className={`${
-                        !selectedUser ? "text-dark-500" : "text-[#424b55]"
-                      } flex justify-between mt-1 items-center w-full gap-1 hover:text-[#0e1721] xlg:px-4 px-2 py-2 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                      className={`${!selectedUser ? "text-dark-500" : "text-[#424b55]"
+                        } flex justify-between mt-1 items-center w-full gap-1 hover:text-[#0e1721] xlg:px-4 px-2 py-2 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                     >
                       {selectedUser || userOptions[0]}
                       <span
-                        className={`${
-                          isUserOpen
-                            ? "rotate-180 duration-300"
-                            : "duration-300"
-                        }`}
+                        className={`${isUserOpen
+                          ? "rotate-180 duration-300"
+                          : "duration-300"
+                          }`}
                       >
                         <IoIosArrowDown />
                       </span>
@@ -800,11 +779,10 @@ const AdminDashboard = () => {
                       <button
                         ref={dropButton}
                         onClick={toggleProgramOpen}
-                        className={`${
-                          !isProgramSelected
-                            ? "text-dark-500"
-                            : "text-[#424b55]"
-                        } flex justify-between items-center w-full xlg:px-4 px-2    py-2 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                        className={`${!isProgramSelected
+                          ? "text-dark-500"
+                          : "text-[#424b55]"
+                          } flex justify-between items-center w-full xlg:px-4 px-2    py-2 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                         style={{
                           // maxWidth: "220px", // Set the maximum width of the button
                           whiteSpace: "nowrap",
@@ -816,11 +794,10 @@ const AdminDashboard = () => {
                           {selectedProgram}
                         </span>
                         <span
-                          className={`${
-                            isProgramOpen
-                              ? "rotate-180 duration-300"
-                              : "duration-300"
-                          } pl-1`}
+                          className={`${isProgramOpen
+                            ? "rotate-180 duration-300"
+                            : "duration-300"
+                            } pl-1`}
                         >
                           <IoIosArrowDown />
                         </span>
@@ -863,9 +840,8 @@ const AdminDashboard = () => {
                       <button
                         ref={skillButton}
                         onClick={toggleSkillOpen}
-                        className={`${
-                          !isSkillSelected ? " text-dark-500" : "text-[#424b55]"
-                        } flex justify-between mt-1 items-center w-full gap-1 hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                        className={`${!isSkillSelected ? " text-dark-500" : "text-[#424b55]"
+                          } flex justify-between mt-1 items-center w-full gap-1 hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                       >
                         <span className="xl:max-w-[190px] xmd:max-w-[100px] w-[200px] truncate capitalize">
                           {selectedSkill}
@@ -920,9 +896,9 @@ const AdminDashboard = () => {
                   selectedUser &&
                   isUserSelected ? (
                   verfiedRequest === 0 &&
-                  unverifiedRequest === 0 &&
-                  pendingRequest === 0 &&
-                  shortListRequest === 0 ? (
+                    unverifiedRequest === 0 &&
+                    pendingRequest === 0 &&
+                    shortListRequest === 0 ? (
                     <div className="flex justify-center items-center text-dark-400 text-sm h-full mt-4">
                       No applications found
                     </div>
@@ -968,21 +944,19 @@ const AdminDashboard = () => {
                     <button
                       ref={scoreButton}
                       onClick={toggleScoreProgramOpen}
-                      className={`${
-                        !isScoreProgramSelected
-                          ? " text-dark-500"
-                          : "text-[#424b55]"
-                      } flex justify-between items-center w-[300px]  hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                      className={`${!isScoreProgramSelected
+                        ? " text-dark-500"
+                        : "text-[#424b55]"
+                        } flex justify-between items-center w-[300px]  hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                     >
                       <span className="  max-w-full truncate capitalize">
                         {selectedScoreProgram}
                       </span>
                       <span
-                        className={`${
-                          isScoreProgramOpen
-                            ? "rotate-180 duration-300"
-                            : "duration-300"
-                        }`}
+                        className={`${isScoreProgramOpen
+                          ? "rotate-180 duration-300"
+                          : "duration-300"
+                          }`}
                       >
                         <IoIosArrowDown />
                       </span>
