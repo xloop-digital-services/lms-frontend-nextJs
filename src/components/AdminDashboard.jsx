@@ -3,1123 +3,562 @@ import { useSidebar } from "@/providers/useSidebar";
 import React, { useEffect, useRef, useState } from "react";
 import BatchTable from "@/components/BatchTable";
 import BarChart from "@/components/BarChartProgram";
+import BarChartCourse from "@/components/BarChartCourse";
 import PieChart from "@/components/PieChart";
-import { IoIosArrowDown } from "react-icons/io";
-// import usersIcon from "../../public/assets/img/usersIcon.svg"
-import useClickOutside from "@/providers/useClickOutside";
+import TopScoreTable from "@/components/TopScoreTable";
+import TopScoreModal from "./Modal/TopScoreModal";
+import DeleteConfirmationPopup from "./Modal/DeleteConfirmationPopUp";
+import BatchUserModal from "./Modal/BatchUserModal";
 import {
   DeleteBatch,
   getAllPrograms,
   getAllSkills,
   getApplicationsTotalNumber,
-  getCityStatistics,
+  getProgramGraph,
   getCourseByProgId,
   getCourseProgressByProgId,
-  getProgramDetails,
-  getProgramGraph,
   getProgramScores,
-  getProgressForSession,
+  getProgramDetails,
   listAllBatches,
   totalUsersCount,
 } from "@/api/route";
+import useClickOutside from "@/providers/useClickOutside";
 import { CircularProgress } from "@mui/material";
-import Link from "next/link";
-import DeleteConfirmationPopup from "./Modal/DeleteConfirmationPopUp";
-import { FaMagnifyingGlass } from "react-icons/fa6";
-import BatchUserModal from "./Modal/BatchUserModal";
-import TopScoreTable from "./TopScoreTable";
+import { IoIosArrowDown } from "react-icons/io";
 import { FaList } from "react-icons/fa";
-import TopScoreModal from "./Modal/TopScoreModal";
-import BarChartCourse from "./BarChartCourse";
 
 const AdminDashboard = () => {
   const { isSidebarOpen } = useSidebar();
-  const [batches, setBatches] = useState([]);
-  const [updateBatch, setUpdateBatch] = useState(false);
-  const [loadingBatch, setloadingBatch] = useState(true);
-  const [loading, setLoading] = useState(true);
-  const [allPrograms, setAllPrograms] = useState([]);
-  const [selectedProgram, setSelectedProgram] = useState("");
-  const [selectedBarProgram, setSelectedBarProgram] = useState("");
-  const [selectedScoreProgram, setSelectedScoreProgram] = useState("");
-  const [programId, setProgramId] = useState(null);
-  const [barProgramId, setBarProgramId] = useState(null);
-  const [scoreProgramId, setScoreProgramId] = useState(null);
-  const [isProgramOpen, setIsProgramOpen] = useState(false);
-  const [isProgramSelected, setIsProgramSelected] = useState(false);
-  const [isBarProgramOpen, setIsBarProgramOpen] = useState(false);
-  const [isBarProgramSelected, setIsBarProgramSelected] = useState(false);
-  const [isScoreProgramOpen, setIsScoreProgramOpen] = useState(false);
-  const [isScoreProgramSelected, setIsScoreProgramSelected] = useState(false);
-  const [allSkills, setAllSkills] = useState([]);
-  const [selectedSkill, setSelectedSkill] = useState("");
-  const [skillId, setSkillId] = useState(null);
-  const [isSkillOpen, setIsSkillOpen] = useState(false);
-  const [isSkillSelected, setIsSkillSelected] = useState(false);
-  const [verfiedRequest, setverfiedRequest] = useState(null);
-  const [unverifiedRequest, setUnverifiedRequest] = useState(null);
-  const [pendingRequest, setPendingRequest] = useState(null);
-  const [shortListRequest, setShortlisted] = useState(null);
-  const [isUserOpen, setIsUserOpen] = useState(false);
-  const [isUserSelected, setIsUserSelected] = useState(false);
-  const [selectedUser, setSelectedUser] = useState("Select user");
-  const [isOpen, setIsOpen] = useState(false);
-  const [isSelected, setIsSelected] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState("");
-  const options = ["Show All", "Active", "Inactive"];
-  const [barData, setBarData] = useState([]);
-  const [loadingBar, setBarLoading] = useState(false);
-  const [allUsers, setAllUsers] = useState(0);
-  const [allStudents, setAllStudents] = useState(0);
-  const [allInstructors, setAllIntructors] = useState(0);
-  const [allActiveUsers, setAllActiveUsers] = useState(0);
-  const [allActiveStudents, setAllActiveStudents] = useState(0);
-  const [allActiveInstructors, setAllActiveInstructors] = useState(0);
-  const [allInActiveUsers, setAllInActiveUsers] = useState(0);
-  const [allInActiveStudents, setAllInActiveStudents] = useState(0);
-  const [allInActiveInstructors, setAllInActiveInstructors] = useState(0);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredBatches, setFilteredBatches] = useState([]);
-  const [isFilter, setIsFilter] = useState(false);
-  const [filterValue, setFilterValue] = useState(false);
-  const [filterStatus, setFilterStatus] = useState(false);
-  const [selectedBatch, setSelectedBatch] = useState(null);
-  const [confirmDelete, setConfirmDelete] = useState(false);
-  const [programProgress, setProgramProgress] = useState([]);
 
-  const [openInfoModal, setOpenInfoModal] = useState(false);
-  const [loadingScore, setLoadingScore] = useState(false);
-  const [scores, setScores] = useState([]);
-  const [openList, setOpenList] = useState(false);
-  const [changeProgress, setChangeProgress] = useState(false);
+  // === Top‑cards & batch list ===
+  const [allUsers, setAllUsers] = useState(0);
+  const [allActiveUsers, setAllActiveUsers] = useState(0);
+  const [allStudents, setAllStudents] = useState(0);
+  const [allActiveStudents, setAllActiveStudents] = useState(0);
+  const [allInstructors, setAllInstructors] = useState(0);
+  const [allActiveInstructors, setAllActiveInstructors] = useState(0);
+
+  const [batches, setBatches] = useState([]);
+  const [loadingBatch, setLoadingBatch] = useState(true);
+  const [updateBatch, setUpdateBatch] = useState(false);
+
+  // === Programs & Courses (Progress) ===
+  const [allPrograms, setAllPrograms] = useState([]);
+  const [selectedBarProgram, setSelectedBarProgram] = useState("Select Program");
+  const [barProgramId, setBarProgramId] = useState(null);
+  const [isBarProgramOpen, setIsBarProgramOpen] = useState(false);
+  const [programProgress, setProgramProgress] = useState([]);
+  const [loadingBar, setLoadingBar] = useState(false);
+
   const [courseList, setCourseList] = useState([]);
-  const [CourseProgress, setCourseProgress] = useState({});
-  const [selectedBarCourse, setSelectedBarCourse] = useState(null);
+  const [selectedBarCourse, setSelectedBarCourse] = useState("All Courses");
   const [barCourseId, setBarCourseId] = useState(null);
   const [isBarCourseOpen, setIsBarCourseOpen] = useState(false);
-  const [isBarCourseSelected, setIsBarCourseSelected] = useState(false);
+  const [courseProgress, setCourseProgress] = useState({});
 
-  const dropdownRef = useRef(null);
-  const dropButton = useRef(null);
-  const barRef = useRef(null);
-  const barButton = useRef(null);
-  const scoreRef = useRef(null);
-  const scoreButton = useRef(null);
-  const statusDown = useRef(null);
-  const statusButton = useRef(null);
-  const userDown = useRef(null);
-  const userButton = useRef(null);
-  const skillDown = useRef(null);
-  const skillButton = useRef(null);
-  const courseButton = useRef(null);
-  const courseDown = useRef(null);
+  // === Applications (Pie) ===
+  const [allSkills, setAllSkills] = useState([]);
+  const [selectedUser, setSelectedUser] = useState("Student");
+  const [isUserOpen, setIsUserOpen] = useState(false);
+  const [selectedProgram, setSelectedProgram] = useState("Select Program");
+  const [programId, setProgramId] = useState(null);
+  const [selectedSkill, setSelectedSkill] = useState("Select Skill");
+  const [skillId, setSkillId] = useState(null);
+  const [isProgramOpen, setIsProgramOpen] = useState(false);
+  const [isSkillOpen, setIsSkillOpen] = useState(false);
+  const [pieLoading, setPieLoading] = useState(false);
+  const [verifiedRequest, setVerifiedRequest] = useState(0);
+  const [unverifiedRequest, setUnverifiedRequest] = useState(0);
+  const [pendingRequest, setPendingRequest] = useState(0);
+  const [shortlistedRequest, setShortlistedRequest] = useState(0);
 
-  useClickOutside(statusDown, statusButton, () => setIsOpen(false));
-  useClickOutside(dropdownRef, dropButton, () => setIsProgramOpen(false));
+  // === Top Performers ===
+  const [scores, setScores] = useState([]);
+  const [loadingScore, setLoadingScore] = useState(false);
+  const [selectedScoreProgram, setSelectedScoreProgram] = useState("Select Program");
+  const [scoreProgramId, setScoreProgramId] = useState(null);
+  const [isScoreProgramOpen, setIsScoreProgramOpen] = useState(false);
+  const [openList, setOpenList] = useState(false);
+
+  // === Delete & Info Modals ===
+  const [selectedBatch, setSelectedBatch] = useState(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [openInfoModal, setOpenInfoModal] = useState(false);
+
+  // === Refs for click‑outside ===
+  const barRef = useRef(null),
+        barButton = useRef(null),
+        courseRef = useRef(null),
+        courseButton = useRef(null),
+        userRef = useRef(null),
+        userButton = useRef(null),
+        progRef = useRef(null),
+        progButton = useRef(null),
+        skillRef = useRef(null),
+        skillButton = useRef(null),
+        scoreRef = useRef(null),
+        scoreButton = useRef(null);
+
   useClickOutside(barRef, barButton, () => setIsBarProgramOpen(false));
-  useClickOutside(courseDown, courseButton, () => setIsBarCourseOpen(false));
+  useClickOutside(courseRef, courseButton, () => setIsBarCourseOpen(false));
+  useClickOutside(userRef, userButton, () => setIsUserOpen(false));
+  useClickOutside(progRef, progButton, () => setIsProgramOpen(false));
+  useClickOutside(skillRef, skillButton, () => setIsSkillOpen(false));
   useClickOutside(scoreRef, scoreButton, () => setIsScoreProgramOpen(false));
-  useClickOutside(skillDown, skillButton, () => setIsSkillOpen(false));
-  useClickOutside(userDown, userButton, () => setIsUserOpen(false));
 
-  // Apply filtering whenever search term or dropdown status changes
+  // === Fetch totals & batches on mount ===
   useEffect(() => {
-    // Set the initial status to "Show All" when the page loads
-    if (!selectedStatus) {
-      setSelectedStatus("Show All");
-    }
-
-    const handleFilter = () => {
-      let matchesSearchTerm = false;
-      let matchesStatus = false;
-
-      if (searchTerm.length === 0 && selectedStatus === "Show All") {
-        // If both filters are empty, show all batches
-        setFilteredBatches(batches);
-        setIsFilter(false);
-      } else {
-        if (searchTerm.length > 0 || selectedStatus) {
-          const filteredData = batches.filter((batch) => {
-            const searchTermMatches = batch.batch
-              ?.toLowerCase()
-              .includes(searchTerm.toLowerCase());
-
-            const statusMatches =
-              selectedStatus === "Show All" ||
-              (selectedStatus === "Active" && batch.status === 1) ||
-              (selectedStatus === "Inactive" && batch.status === 0);
-
-            matchesSearchTerm = matchesSearchTerm || searchTermMatches;
-            matchesStatus = matchesStatus || statusMatches;
-
-            // Only return batches that match both the search term and status
-            return searchTermMatches && statusMatches;
-          });
-
-          // If filtered data exists, show it; otherwise, set it to empty
-          setFilteredBatches(filteredData);
-          setIsFilter(filteredData.length > 0);
-        }
-      }
-
-      setFilterValue(matchesSearchTerm);
-      setFilterStatus(matchesStatus);
-      // If no results match the filters, set these accordingly
-    };
-
-    // Trigger filtering when search term, status, or batches change
-    handleFilter();
-  }, [searchTerm, selectedStatus, batches]);
-
-  const handleTotalUsers = async () => {
-    try {
-      const response = await totalUsersCount();
-      // console.log("total Counts", response?.data?.data);
-      setAllUsers(response?.data?.data?.all_users_length);
-      setAllIntructors(response?.data?.data?.instructor_user_length);
-      setAllStudents(response?.data?.data?.student_user_length);
-      setAllActiveUsers(response?.data?.data?.active_users_length);
-      setAllInActiveUsers(response?.data?.data?.inactive_users_length);
-      setAllActiveInstructors(response?.data?.data?.active_instructor_length);
-      setAllInActiveInstructors(
-        response?.data?.data?.inactive_instructor_length
-      );
-      setAllActiveStudents(response?.data?.data?.active_student_length);
-      setAllInActiveStudents(response?.data?.data?.inactive_student_length);
-    } catch (error) {
-      // console.log("error fetching the total users", error);
-    }
-  };
-
-  const handleListingAllBatches = async () => {
-    try {
-      const response = await listAllBatches();
-      // console.log("batches", response?.data);
-      setBatches(response?.data);
-      setloadingBatch(false);
-    } catch (error) {
-      // console.log("error while fetching the batches", error);
-      setloadingBatch(false);
-    }
-  };
-
-  useEffect(() => {
-    const handleBarChartForProgram = async () => {
-      setBarLoading(true);
-      try {
-        const response = await getProgramGraph(barProgramId);
-        if (response?.data) {
-          setProgramProgress(response.data.data); // Adjust based on actual response structure
-        } else {
-          console.error("Unexpected response format:", response);
-        }
-      } catch (error) {
-        console.log("error", error);
-      } finally {
-        setBarLoading(false);
-      }
-    };
-    if (barProgramId) {
-      handleBarChartForProgram();
-    }
-  }, [barProgramId]);
-
-  useEffect(() => {
-    const handleCourseByProgramId = async () => {
-      try {
-        const res = await getCourseByProgId(barProgramId);
-        setCourseList(res.data.data);
-        // console.log("course list", res.data.data);
-      } catch (error) {
-        console.log("error in course", error);
-      }
-    };
-
-    if (barProgramId) {
-      handleCourseByProgramId();
-    }
-  }, [barProgramId]);
-
-  useEffect(() => {
-    const handleCourseProgressBarChart = async () => {
-      try {
-        setBarLoading(true);
-        const res = await getCourseProgressByProgId(barCourseId);
-        // console.log("res", res);
-        setCourseProgress(res.data.data);
-      } catch (error) {
-        console.log("error", error);
-      } finally {
-        setBarLoading(false);
-      }
-    };
-    if (barCourseId && changeProgress == true) {
-      handleCourseProgressBarChart();
-    }
-  }, [changeProgress, barCourseId]);
-
-  useEffect(() => {
-    const handleScores = async () => {
-      try {
-        setLoadingScore(true);
-        const response = await getProgramScores(scoreProgramId);
-        setScores(response.data.data);
-      } catch (error) {
-        // console.log("error", error);
-      } finally {
-        setLoadingScore(false);
-      }
-    };
-
-    const handleModifiedScores = async () => {
-      try {
-        setLoadingScore(true);
-        const response = await getProgramDetails(scoreProgramId);
-        console.log(response.data.data);
-        setScores(response.data.data)
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoadingScore(false);
-      }
-    };
-
-    if (scoreProgramId == 3) {
-      handleModifiedScores();
-    } else if (scoreProgramId) {
-      handleScores();
-    }
-  }, [scoreProgramId]);
-
-  useEffect(() => {
-    handleListingAllBatches();
+    totalUsersCount()
+      .then(res => {
+        const d = res.data.data;
+        setAllUsers(d.all_users_length);
+        setAllActiveUsers(d.active_users_length);
+        setAllStudents(d.student_user_length);
+        setAllActiveStudents(d.active_student_length);
+        setAllInstructors(d.instructor_user_length);
+        setAllActiveInstructors(d.active_instructor_length);
+      });
+    listAllBatches()
+      .then(res => setBatches(res.data))
+      .finally(() => setLoadingBatch(false));
   }, [updateBatch]);
 
+  // === Fetch programs & skills on mount ===
   useEffect(() => {
-    handleListingAllBatches();
-    handleGetAllPrograms();
-    handleGetAllSkills();
-    handleBarChartData();
-    handleTotalUsers();
+    getAllPrograms().then(res => {
+      setAllPrograms(res.data.data || []);
+      if (res.data.data.length) {
+        const first = res.data.data[0];
+        setSelectedBarProgram(first.name);
+        setBarProgramId(first.id);
+        setSelectedProgram(first.name);
+        setProgramId(first.id);
+        setSelectedScoreProgram(first.name);
+        setScoreProgramId(first.id);
+      }
+    });
+    getAllSkills().then(res => {
+      setAllSkills(res.data || []);
+      if (res.data.length) {
+        setSelectedSkill(res.data[0].name);
+        setSkillId(res.data[0].id);
+      }
+    });
   }, []);
 
-  const handleGetAllPrograms = async () => {
-    // setLoading(true)
-    try {
-      const response = await getAllPrograms();
-      if (response?.data?.status_code === 200) {
-        setAllPrograms(response?.data?.data || []);
-        setLoading(false);
-      }
-      if (response?.data?.status_code === 404) {
-        setLoading(false);
-        toast.error(response?.data?.message);
-        // console.log("ab aya error");
-      }
-    } catch (err) {
-      setLoading(false);
-      // console.error("error while fetching the programs", err);
-    }
-  };
+  // === Fetch program progress & its courses ===
+  useEffect(() => {
+    if (!barProgramId) return;
+    setLoadingBar(true);
+    getProgramGraph(barProgramId)
+      .then(res => setProgramProgress(res.data.data))
+      .catch(console.error);
+    getCourseByProgId(barProgramId)
+      .then(res => {
+        setCourseList(res.data.data);
+        setSelectedBarCourse("All Courses");
+        setBarCourseId(null);
+      })
+      .catch(console.error)
+      .finally(() => setLoadingBar(false));
+  }, [barProgramId]);
 
-  const handleGetAllSkills = async () => {
-    try {
-      const response = await getAllSkills();
-      // console.log("fetching skills", response.data);
-      setAllSkills(response?.data);
-      setLoading(false);
-    } catch (error) {
-      // console.log("error fetching the list of skills");
-      setLoading(false);
-    }
-  };
+  // === Fetch course progress ===
+  useEffect(() => {
+    if (!barCourseId) return;
+    setLoadingBar(true);
+    getCourseProgressByProgId(barCourseId)
+      .then(res => setCourseProgress(res.data.data))
+      .catch(console.error)
+      .finally(() => setLoadingBar(false));
+  }, [barCourseId]);
 
-  const toggleProgramOpen = () => {
-    setIsProgramOpen((prev) => !prev);
-  };
-  const toggleBarProgramOpen = () => {
-    setIsBarProgramOpen((prev) => !prev);
-  };
-  const toggleBarCourseOpen = () => {
-    setIsBarCourseOpen((prev) => !prev);
-  };
-  const toggleScoreProgramOpen = () => {
-    setIsScoreProgramOpen((prev) => !prev);
-  };
-  const toggleSkillOpen = () => {
-    setIsSkillOpen((prev) => !prev);
-  };
+  // === Fetch pie chart data ===
+  useEffect(() => {
+    if (!selectedUser) return;
+    setPieLoading(true);
+    const fn =
+      selectedUser === "Student"
+        ? getApplicationsTotalNumber(programId, "student")
+        : getApplicationsTotalNumber(skillId, "instructor");
+    fn
+      .then(res => {
+        const d = res.data.data;
+        setVerifiedRequest(d.verified);
+        setUnverifiedRequest(d.unverified);
+        setPendingRequest(d.pending);
+        setShortlistedRequest(d.short_listed);
+      })
+      .catch(console.error)
+      .finally(() => setPieLoading(false));
+  }, [selectedUser, programId, skillId]);
 
-  const handleSkillSelect = (option) => {
-    setSelectedSkill(option.name);
-    setSkillId(option.id);
-    setIsSkillSelected(true);
-    setIsSkillOpen(false);
-  };
+  // === Fetch top‑scores ===
+  useEffect(() => {
+    if (!scoreProgramId) return;
+    setLoadingScore(true);
+    const fn =
+      scoreProgramId === 3
+        ? getProgramDetails(scoreProgramId)
+        : getProgramScores(scoreProgramId);
+    fn
+      .then(res => setScores(res.data.data))
+      .catch(console.error)
+      .finally(() => setLoadingScore(false));
+  }, [scoreProgramId]);
 
-  const handleProgramSelect = (option) => {
-    setSelectedProgram(option.name);
-    setProgramId(option.id);
-    setIsProgramSelected(true);
-    setIsProgramOpen(false);
-  };
-  const handleBarProgramSelect = (option) => {
-    setSelectedBarProgram(option.name);
-    setBarProgramId(option.id);
-    setIsBarProgramSelected(true);
+  // === Handlers ===
+  const toggleBarProgramOpen = () => setIsBarProgramOpen(p => !p);
+  const handleBarProgramSelect = opt => {
+    setSelectedBarProgram(opt.name);
+    setBarProgramId(opt.id);
     setIsBarProgramOpen(false);
   };
 
-  const handleBarCourseSelect = (option) => {
-    setSelectedBarCourse(option.name);
-    setBarCourseId(option.id);
-    setIsBarCourseSelected(true);
+  const toggleBarCourseOpen = () => setIsBarCourseOpen(p => !p);
+  const handleBarCourseSelect = opt => {
+    setSelectedBarCourse(opt.name);
+    setBarCourseId(opt.id);
     setIsBarCourseOpen(false);
   };
 
-  const handleScoreProgramSelect = (option) => {
-    setSelectedScoreProgram(option.name);
-    setScoreProgramId(option.id);
-    setIsScoreProgramSelected(true);
+  const toggleUsers = () => setIsUserOpen(p => !p);
+  const handleUserSelect = opt => {
+    setSelectedUser(opt);
+    setIsUserOpen(false);
+  };
+
+  const toggleProgramOpen = () => setIsProgramOpen(p => !p);
+  const handleProgramSelect = opt => {
+    setSelectedProgram(opt.name);
+    setProgramId(opt.id);
+    setIsProgramOpen(false);
+  };
+
+  const toggleSkillOpen = () => setIsSkillOpen(p => !p);
+  const handleSkillSelect = opt => {
+    setSelectedSkill(opt.name);
+    setSkillId(opt.id);
+    setIsSkillOpen(false);
+  };
+
+  const toggleScoreProgramOpen = () => setIsScoreProgramOpen(p => !p);
+  const handleScoreProgramSelect = opt => {
+    setSelectedScoreProgram(opt.name);
+    setScoreProgramId(opt.id);
     setIsScoreProgramOpen(false);
   };
 
-  const handleBarChartData = async () => {
-    try {
-      const response = await getCityStatistics();
-      // console.log('bar chart', response?.data?.data)
-      setBarData(response?.data?.data);
-      setLoading(false);
-    } catch (error) {
-      // console.log("error while fetching the bar data", error);
-      setLoading(false);
-    }
-  };
-
-  // Set the initial selectedUser to "Student"
-  useEffect(() => {
-    setSelectedUser("Student");
-    setIsUserSelected(true);
-  }, []);
-
-  useEffect(() => {
-    if (allPrograms && allPrograms.length > 0) {
-      setSelectedProgram(allPrograms[0].name);
-      setSelectedBarProgram(allPrograms[0].name);
-      setBarProgramId(allPrograms[0].id);
-      setSelectedScoreProgram(allPrograms[0].name);
-      setScoreProgramId(allPrograms[0].id);
-      setProgramId(allPrograms[0].id);
-      setIsProgramSelected(true);
-      setIsBarProgramSelected(true);
-      setIsScoreProgramSelected(true);
-    }
-    if (allSkills && allSkills.length > 0) {
-      setSelectedSkill(allSkills[0].name);
-      setSkillId(allSkills[0].id);
-      setIsSkillSelected(true);
-    }
-  }, [allPrograms, allSkills]);
-
-  useEffect(() => {
-    if (changeProgress && courseList && courseList.length > 0) {
-      setSelectedBarCourse(courseList[0].name);
-      setBarCourseId(courseList[0].id);
-      setIsBarCourseSelected(true);
-    }
-  }, [courseList, changeProgress]);
-
-  // Fetch data when selectedUser or other dependencies change
-  useEffect(() => {
-    const handlePieChatData = async () => {
-      try {
-        let response;
-
-        // Check if selectedUser is "student" or "instructor"
-        if (selectedUser.toLowerCase() === "student") {
-          response = await getApplicationsTotalNumber(
-            programId,
-            selectedUser.toLowerCase()
-          );
-        } else if (selectedUser.toLowerCase() === "instructor") {
-          response = await getApplicationsTotalNumber(
-            skillId,
-            selectedUser.toLowerCase()
-          );
-        }
-
-        // Update the state with the response data
-        if (response) {
-          setverfiedRequest(response?.data?.data.verified);
-          setUnverifiedRequest(response?.data?.data.unverified);
-          setPendingRequest(response?.data?.data.pending);
-          setShortlisted(response?.data?.data.short_listed);
-        }
-
-        setLoading(false);
-      } catch (error) {
-        // console.log("error while fetching number of applications", error);
-        setLoading(false);
-      }
-    };
-
-    // Ensure data fetching happens only when dependencies are set
-    if (selectedProgram && selectedUser.toLowerCase()) {
-      setLoading(true);
-      handlePieChatData();
-    }
-  }, [selectedProgram, programId, selectedSkill, skillId, selectedUser]);
-
-  const toggleUsers = () => {
-    setIsUserOpen((prev) => !prev);
-  };
-
-  const handleUserSelect = (option) => {
-    setSelectedUser(option);
-    setIsUserOpen(false);
-    setIsUserSelected(true);
-  };
-
-  const toggleOpen = () => {
-    setIsOpen(true);
-  };
-
-  const handleOptionSelect = (option) => {
-    setSelectedStatus(option);
-    setIsOpen(false);
-    setIsSelected(true);
-  };
-
-  const userOptions = ["Student", "Instructor"];
-
-  const handleDelete = async () => {
-    try {
-      setLoading(true);
-      const response = await DeleteBatch(selectedBatch);
-      toast.success("Batch deleted successfully!");
-      // console.log("deleting the batch", response);
-      setUpdateBatch(!updateBatch);
+  const handleDelete = () => {
+    DeleteBatch(selectedBatch).then(() => {
+      setUpdateBatch(u => !u);
       setConfirmDelete(false);
-      setLoading(false);
-    } catch (error) {
-      // console.log("error while deleting the batch", error);
-    }
-  };
-
-  const handleOpenList = () => {
-    setOpenList(true);
-  };
-
-  const handleChangeProgressDetails = () => {
-    setChangeProgress(!changeProgress);
+    });
   };
 
   return (
     <>
       <div
-        className={`flex-1 transition-transform pt-[100px] space-y-4 max-md:pt-22 font-inter ${isSidebarOpen
-          ? "translate-x-64 ml-20 "
-          : "translate-x-0 xlg:pl-10 pl-4 pr-4"
-          }`}
-        style={{
-          // paddingBottom: "20px",
-          width: isSidebarOpen ? "81%" : "100%",
-        }}
+        className={`flex-1 pt-[100px] transition-transform ${
+          isSidebarOpen ? "translate-x-64 ml-20" : "translate-x-0 pl-4 pr-4"
+        }`}
+        style={{ width: isSidebarOpen ? "81%" : "100%" }}
       >
-        <div className="text-[#07224D] flex flex-col gap-4 ">
-          {/* <h2 className=" font-exo text-3xl font-bold">Admin Dashboard</h2> */}
-          <div className="flex gap-4 flex-wrap xmd:flex-nowrap w-full">
-            {/* #### */}
-            <div className="bg-surface-100 w-full xmd:w-1/3 flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300 border-b-[8px] border-b-[#0074EE]">
-              <div className="bg-white flex flex-col rounded-lg gap-[15px] w-full">
-                <div className="p-2 rounded-md">
-                  <img src="/assets/img/user-icon.jpg" alt="userIcon" />
-                </div>
-
-                <div>
-                  <p className="text-gray-500 text-[18px] tracking-wide">
-                    Total Users / Active Users
-                  </p>
-                  <p className="text-[25px] font-bold text-gray-800">
-                    {allUsers} / <span>{allActiveUsers}</span>
-                  </p>
-                </div>
+        <div className="space-y-4 font-inter text-[#07224D]">
+          {/* Top cards */}
+          <div className="flex flex-wrap gap-4 xmd:flex-nowrap">
+            {/* Users */}
+            <div className="w-full xmd:w-1/3 bg-surface-100 border-2 border-surface-100 hover:border-blue-300 rounded-xl px-5 py-4 flex items-center border-b-[8px] border-b-[#0074EE]">
+              <div className="bg-white rounded-lg p-4 flex flex-col gap-4 w-full">
+                <img src="/assets/img/user-icon.jpg" alt="users" className="w-8 h-8"/>
+                <p className="text-gray-500 text-lg">Total Users / Active Users</p>
+                <p className="text-2xl font-bold">{allUsers} / {allActiveUsers}</p>
               </div>
             </div>
-            {/* #### */}
-            {/* #### */}
-            <div className="bg-surface-100 w-full xmd:w-1/3 flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300 border-b-[8px] border-b-[#0074EE]">
-              <div className="bg-white flex flex-col rounded-lg gap-[15px] w-full">
-                <div className="p-2 rounded-md">
-                  <img src="/assets/img/student-icon.jpg" alt="userIcon" />
-                </div>
-
-                <div>
-                  <p className="text-gray-500 text-[18px] tracking-wide">
-                    Total Students / Active Students
-                  </p>
-                  <p className="text-[25px] font-bold text-gray-800">
-                    {allStudents} / <span>{allActiveStudents}</span>
-                  </p>
-                </div>
+            {/* Students */}
+            <div className="w-full xmd:w-1/3 bg-surface-100 border-2 border-surface-100 hover:border-blue-300 rounded-xl px-5 py-4 flex items-center border-b-[8px] border-b-[#0074EE]">
+              <div className="bg-white rounded-lg p-4 flex flex-col gap-4 w-full">
+                <img src="/assets/img/student-icon.jpg" alt="students" className="w-8 h-8"/>
+                <p className="text-gray-500 text-lg">Total Students / Active Students</p>
+                <p className="text-2xl font-bold">{allStudents} / {allActiveStudents}</p>
               </div>
             </div>
-            {/* #### */}
-            {/* #### */}
-            <div className="bg-surface-100 w-full xmd:w-1/3 flex justify-between items-center px-5 py-4 rounded-xl cursor-pointer border-2 border-surface-100 hover:border-blue-300 duration-300 border-b-[8px] border-b-[#0074EE]">
-              <div className="bg-white flex flex-col rounded-lg gap-[15px] w-full">
-                <div className="p-2 rounded-md">
-                  <img src="/assets/img/instructor-icon.jpg" alt="userIcon" />
-                </div>
-
-                <div>
-                  <p className="text-gray-500 text-[18px] tracking-wide">
-                    Total Instructors / Active Instructors
-                  </p>
-                  <p className="text-[25px] font-bold text-gray-800">
-                    {allInstructors} / <span>{allActiveInstructors}</span>
-                  </p>
-                </div>
+            {/* Instructors */}
+            <div className="w-full xmd:w-1/3 bg-surface-100 border-2 border-surface-100 hover:border-blue-300 rounded-xl px-5 py-4 flex items-center border-b-[8px] border-b-[#0074EE]">
+              <div className="bg-white rounded-lg p-4 flex flex-col gap-4 w-full">
+                <img src="/assets/img/instructor-icon.jpg" alt="instructors" className="w-8 h-8"/>
+                <p className="text-gray-500 text-lg">Total Instructors / Active Instructors</p>
+                <p className="text-2xl font-bold">{allInstructors} / {allActiveInstructors}</p>
               </div>
             </div>
-            {/* #### */}
           </div>
 
-          <div className="flex gap-4 xmd:flex-row flex-col">
-            <div className="bg-surface-100 xmd:w-[66.5%] w-full overflow-x-auto scrollbar-webkit p-5 rounded-xl  h-[420px]">
-              <div className="border border-dark-300 rounded-xl p-3 h-full ">
-                {/* <div className="font-bold font-exo text-blue-500 text-lg pb-2">
-                  Capacity in Different Cities
-                </div>
-                <div>
-                  <BarChart barData={barData} />
-                </div> */}
-                <div className="w-full flex justify-between">
-                  <div>
-                    <div
-                      onClick={handleChangeProgressDetails}
-                      className="font-bold font-exo text-blue-500 text-lg  group hover:cursor-pointer flex gap-4 items-center"
-                      title={`Click to show ${!changeProgress ? `course` : "program"
-                        } progress`}
-                    >
-                      <div>
-                        {changeProgress ? "Course" : "Program"} Progress
-                      </div>
-                      <div className="hidden group-hover:inline">
-                        <IoIosArrowDown />
-                      </div>
+          {/* Progress & Applications */}
+          <div className="flex flex-col gap-4 xmd:flex-row">
+            {/* Progress Card */}
+            <div className="w-full xmd:w-[66.5%] bg-surface-100 p-5 rounded-xl h-[420px] overflow-auto">
+              <div className="h-full border border-dark-300 rounded-xl p-3">
+                {/* Header with both dropdowns */}
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-blue-500 font-bold text-lg">Progress</h3>
+                  <div className="flex gap-4">
+                    {/* Program */}
+                    <div className="relative">
+                      <button
+                        ref={barButton}
+                        onClick={toggleBarProgramOpen}
+                        className="flex justify-between items-center w-[300px] px-4 py-2 bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+                      >
+                        <span className="truncate capitalize">{selectedBarProgram}</span>
+                        <IoIosArrowDown
+                          className={isBarProgramOpen ? "rotate-180 transition" : "transition"}
+                        />
+                      </button>
+                      {isBarProgramOpen && (
+                        <div
+                          ref={barRef}
+                          className="absolute z-10 mt-1 w-full max-h-[170px] overflow-auto bg-surface-100 border border-dark-300 rounded-lg shadow-lg"
+                        >
+                          {allPrograms.map(opt => (
+                            <div
+                              key={opt.id}
+                              onClick={() => handleBarProgramSelect(opt)}
+                              className="px-4 py-2 capitalize hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold cursor-pointer"
+                            >
+                              {opt.name}
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                    <div className="text-sm">
-                      {changeProgress && <p>Program: {selectedBarProgram} </p>}
+                    {/* Course */}
+                    <div className="relative">
+                      <button
+                        ref={courseButton}
+                        onClick={toggleBarCourseOpen}
+                        className="flex justify-between items-center w-[300px] px-4 py-2 bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+                      >
+                        <span className="truncate capitalize">{selectedBarCourse}</span>
+                        <IoIosArrowDown
+                          className={isBarCourseOpen ? "rotate-180 transition" : "transition"}
+                        />
+                      </button>
+                      {isBarCourseOpen && (
+                        <div
+                          ref={courseRef}
+                          className="absolute z-10 mt-1 w-full max-h-[170px] overflow-auto bg-surface-100 border border-dark-300 rounded-lg shadow-lg"
+                        >
+                          <div
+                            onClick={() => handleBarCourseSelect({ id: null, name: "All Courses" })}
+                            className="px-4 py-2 capitalize hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold cursor-pointer"
+                          >
+                            All Courses
+                          </div>
+                          {courseList.map(opt => (
+                            <div
+                              key={opt.id}
+                              onClick={() => handleBarCourseSelect(opt)}
+                              className="px-4 py-2 capitalize hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold cursor-pointer"
+                            >
+                              {opt.name}
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
-                  <div>
-                    {changeProgress ? (
-                      <div className="relative space-y-2 text-[15px] w-full">
-                        {/* <p>Program</p> */}
-                        <button
-                          ref={courseButton}
-                          onClick={toggleBarCourseOpen}
-                          className={`${!isBarCourseSelected
-                            ? " text-dark-500"
-                            : "text-[#424b55]"
-                            } flex justify-between items-center w-[300px]  hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
-                        >
-                          <span className="  max-w-full truncate capitalize">
-                            {selectedBarCourse}
-                          </span>
-                          <span
-                            className={`${isBarCourseOpen
-                              ? "rotate-180 duration-300"
-                              : "duration-300"
-                              }`}
-                          >
-                            <IoIosArrowDown />
-                          </span>
-                        </button>
-
-                        {isBarCourseOpen && (
-                          <div
-                            ref={courseDown}
-                            className="absolute z-10 w-full max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
-                          >
-                            {courseList.map((option, index) => (
-                              <div
-                                key={index}
-                                onClick={() => handleBarCourseSelect(option)}
-                                className="p-2 cursor-pointer"
-                                title={option.name}
-                              >
-                                <div className="xlg:px-4 px-2 py-2 capitalize hover:bg-[#03a3d838] truncate hover:text-blue-300 hover:font-semibold rounded-lg">
-                                  {option.name}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="relative space-y-2 text-[15px] w-full">
-                        {/* <p>Program</p> */}
-                        <button
-                          ref={barButton}
-                          onClick={toggleBarProgramOpen}
-                          className={`${!isBarProgramSelected
-                            ? " text-dark-500"
-                            : "text-[#424b55]"
-                            } flex justify-between items-center w-[300px]  hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
-                        >
-                          <span className="  max-w-full truncate capitalize">
-                            {selectedBarProgram}
-                          </span>
-                          <span
-                            className={`${isBarProgramOpen
-                              ? "rotate-180 duration-300"
-                              : "duration-300"
-                              }`}
-                          >
-                            <IoIosArrowDown />
-                          </span>
-                        </button>
-
-                        {isBarProgramOpen && (
-                          <div
-                            ref={barRef}
-                            className="absolute z-10 w-full max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
-                          >
-                            {allPrograms.map((option, index) => (
-                              <div
-                                key={index}
-                                onClick={() => handleBarProgramSelect(option)}
-                                className="p-2 cursor-pointer"
-                                title={option.name}
-                              >
-                                <div className="xlg:px-4 px-2 py-2 capitalize hover:bg-[#03a3d838] truncate hover:text-blue-300 hover:font-semibold rounded-lg">
-                                  {option.name}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
                 </div>
-                <div>
+
+                {/* Chart */}
+                <div className="h-[calc(100%-64px)]">
                   {loadingBar ? (
-                    <div className="flex justify-center items-center py-4 w-full">
+                    <div className="flex justify-center items-center h-full">
                       <CircularProgress />
                     </div>
-                  ) : changeProgress == true ? (
-                    [
-                      "classes_percentage",
-                      "attendance_percentage",
-                      "percentage_assignments",
-                      "percentage_quizzes",
-                      "percentage_projects",
-                      "percentage_exams",
-                    ].every((key) => CourseProgress[key] === 0) ? (
-                      <div className="text-sm text-dark-400 flex justify-center items-center py-4 w-full">
-                        <p>No Progress Found</p>
-                      </div>
-                    ) : (
-                      <BarChartCourse barData={CourseProgress} />
-                    )
+                  ) : barCourseId ? (
+                    <BarChartCourse barData={courseProgress} />
                   ) : (
                     <BarChart barData={programProgress} />
                   )}
                 </div>
               </div>
             </div>
-            <div className="bg-surface-100 min-w-[32%] p-4 rounded-xl  h-[420px]">
-              <div className="flex w-full xmd:flex-col ssm:flex-row flex-col justify-between xmd:items-start items-center">
-                <div className="font-bold font-exo text-blue-500 text-lg">
-                  Applications Status Overview
+
+            {/* Applications Status */}
+            <div className="w-full xmd:w-[32%] bg-surface-100 p-4 rounded-xl h-[420px]">
+              <div className="flex flex-col gap-4 h-full">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-blue-500 font-bold text-lg">
+                    Applications Status Overview
+                  </h3>
                 </div>
-                <div className="flex gap-2  justify-between items-center w-full">
+                <div className="flex gap-2">
+                  {/* User type */}
                   <div className="relative w-full">
                     <button
                       ref={userButton}
                       onClick={toggleUsers}
-                      className={`${!selectedUser ? "text-dark-500" : "text-[#424b55]"
-                        } flex justify-between mt-1 items-center w-full gap-1 hover:text-[#0e1721] xlg:px-4 px-2 py-2 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                      className="flex justify-between items-center w-full px-4 py-2 bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
                     >
-                      {selectedUser || userOptions[0]}
-                      <span
-                        className={`${isUserOpen
-                          ? "rotate-180 duration-300"
-                          : "duration-300"
-                          }`}
-                      >
-                        <IoIosArrowDown />
-                      </span>
+                      {selectedUser}
+                      <IoIosArrowDown
+                        className={isUserOpen ? "rotate-180 transition" : "transition"}
+                      />
                     </button>
-
                     {isUserOpen && (
                       <div
-                        ref={userDown}
-                        className="absolute capitalize z-50 w-full mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                        ref={userRef}
+                        className="absolute z-10 mt-1 w-full bg-surface-100 border border-dark-300 rounded-lg shadow-lg"
                       >
-                        {userOptions.map((option, index) => (
+                        {["Student", "Instructor"].map(opt => (
                           <div
-                            key={index}
-                            onClick={() => handleUserSelect(option)}
-                            className="p-2 cursor-pointer"
+                            key={opt}
+                            onClick={() => handleUserSelect(opt)}
+                            className="px-4 py-2 capitalize hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold cursor-pointer"
                           >
-                            <div className="xlg:px-4 px-2 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
-                              {option}
-                            </div>
+                            {opt}
                           </div>
                         ))}
                       </div>
                     )}
                   </div>
-                  {selectedUser.toLowerCase() === "student" ? (
-                    <div className={`${loading && "hidden"} relative w-full`}>
+                  {/* Program/Skill */}
+                  <div className="relative w-full">
+                    {selectedUser === "Student" ? (
                       <button
-                        ref={dropButton}
+                        ref={progButton}
                         onClick={toggleProgramOpen}
-                        className={`${!isProgramSelected
-                          ? "text-dark-500"
-                          : "text-[#424b55]"
-                          } flex justify-between items-center w-full xlg:px-4 px-2    py-2 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
-                        style={{
-                          // maxWidth: "220px", // Set the maximum width of the button
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                        }}
+                        className="flex justify-between items-center w-full px-4 py-2 bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
                       >
-                        <span className=" xl:max-w-[190px] xlg:max-w-[120px] xmd:max-w-[60px] w-full truncate capitalize">
-                          {selectedProgram}
-                        </span>
-                        <span
-                          className={`${isProgramOpen
-                            ? "rotate-180 duration-300"
-                            : "duration-300"
-                            } pl-1`}
-                        >
-                          <IoIosArrowDown />
-                        </span>
+                        {selectedProgram}
+                        <IoIosArrowDown
+                          className={isProgramOpen ? "rotate-180 transition" : "transition"}
+                        />
                       </button>
-
-                      {isProgramOpen && (
-                        <div
-                          ref={dropdownRef}
-                          className="absolute z-50 mt-1  w-full  max-h-[240px] overflow-y-auto scrollbar-webkit  bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
-                          style={{
-                            // maxWidth: "220px", // Set the maximum width of the button
-                            whiteSpace: "nowrap",
-                            // overflow: "hidden",
-                            // textOverflow: "ellipsis",
-                          }}
-                        >
-                          {allPrograms && allPrograms.length > 0 ? (
-                            allPrograms.map((option, index) => (
-                              <div
-                                key={index}
-                                onClick={() => handleProgramSelect(option)}
-                                className="p-2 cursor-pointer"
-                                title={option.name}
-                              >
-                                <div className="xlg:px-4 px-2 py-2 capitalize hover:bg-[#03a3d838] truncate hover:text-blue-300 hover:font-semibold rounded-lg">
-                                  {option.name}
-                                </div>
-                              </div>
-                            ))
-                          ) : (
-                            <p className="text-[12px] text-dark-400 text-center p-1">
-                              No Program found
-                            </p>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <div className={`${loading && "hidden"} relative`}>
+                    ) : (
                       <button
                         ref={skillButton}
                         onClick={toggleSkillOpen}
-                        className={`${!isSkillSelected ? " text-dark-500" : "text-[#424b55]"
-                          } flex justify-between mt-1 items-center w-full gap-1 hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                        className="flex justify-between items-center w-full px-4 py-2 bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
                       >
-                        <span className="xl:max-w-[190px] xmd:max-w-[100px] w-[200px] truncate capitalize">
-                          {selectedSkill}
-                        </span>
-                        <span
-                          className={
-                            isSkillOpen
-                              ? "rotate-180 duration-300"
-                              : "duration-300"
-                          }
-                        >
-                          <IoIosArrowDown />
-                        </span>
+                        {selectedSkill}
+                        <IoIosArrowDown
+                          className={isSkillOpen ? "rotate-180 transition" : "transition"}
+                        />
                       </button>
-
-                      {isSkillOpen && (
-                        <div
-                          ref={skillDown}
-                          className="absolute z-50 mt-1 w-full max-h-[240px] overflow-y-auto scrollbar-webkit  bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
-                        >
-                          {allSkills && allSkills.length > 0 ? (
-                            allSkills.map((option) => (
-                              <div
-                                key={option.id}
-                                onClick={() => handleSkillSelect(option)}
-                                className="p-2 cursor-pointer"
-                                title={option.name}
-                              >
-                                <div className="xlg:px-4 px-2 py-2 capitalize hover:bg-[#03a3d838] truncate hover:text-blue-300 hover:font-semibold rounded-lg">
-                                  {option.name}
-                                </div>
-                              </div>
-                            ))
-                          ) : (
-                            <p className="text-[12px] text-dark-400 text-center p-1">
-                              No Skill found
-                            </p>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div>
-                {loading ? (
-                  <div className="flex h-full mt-3 justify-center items-center">
-                    <CircularProgress size={20} />
-                  </div>
-                ) : selectedProgram &&
-                  selectedSkill &&
-                  selectedUser &&
-                  isUserSelected ? (
-                  verfiedRequest === 0 &&
-                    unverifiedRequest === 0 &&
-                    pendingRequest === 0 &&
-                    shortListRequest === 0 ? (
-                    <div className="flex justify-center items-center text-dark-400 text-sm h-full mt-4">
-                      No applications found
-                    </div>
-                  ) : (
-                    <div>
-                      <PieChart
-                        verified={verfiedRequest}
-                        unverified={unverifiedRequest}
-                        pending={pendingRequest}
-                        shortlisted={shortListRequest}
-                      />
-                    </div>
-                  )
-                ) : (
-                  <div className="flex justify-center items-center text-dark-400 text-sm h-full mt-4">
-                    Select the user and the program to see the results
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-          <div className="bg-[rgb(255,255,255)] rounded-xl px-5 py-4 pb-0 xmd:h-[275px] h-full xsm:mb-0 mb-4">
-            <div className="flex nsm:items-center nsm:flex-row flex-col justify-between">
-              <div>
-                <h1 className="font-bold font-exo  text-blue-500 text-lg sm:w-[200px] w-[180px]  xlg:w-full">
-                  Top Performers
-                </h1>
-              </div>
-              <div className="flex gap-2 items-center">
-                <div>
-                  <button
-                    onClick={handleOpenList}
-                    className="w-fit flex items-center gap-2 py-2 px-10 text-sm font-medium rounded-lg text-dark-100 bg-blue-300 hover:bg-[#3272b6] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
-                  >
-                    <span>
-                      <FaList />
-                    </span>
-                    <span>Show All List</span>
-                  </button>
-                </div>
-                <div>
-                  <div className="relative space-y-2 text-[15px] w-full">
-                    <button
-                      ref={scoreButton}
-                      onClick={toggleScoreProgramOpen}
-                      className={`${!isScoreProgramSelected
-                        ? " text-dark-500"
-                        : "text-[#424b55]"
-                        } flex justify-between items-center w-[300px]  hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
-                    >
-                      <span className="  max-w-full truncate capitalize">
-                        {selectedScoreProgram}
-                      </span>
-                      <span
-                        className={`${isScoreProgramOpen
-                          ? "rotate-180 duration-300"
-                          : "duration-300"
-                          }`}
-                      >
-                        <IoIosArrowDown />
-                      </span>
-                    </button>
-
-                    {isScoreProgramOpen && (
+                    )}
+                    {isProgramOpen && (
                       <div
-                        ref={scoreRef}
-                        className="absolute z-20 w-full max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
+                        ref={progRef}
+                        className="absolute z-10 mt-1 w-full bg-surface-100 border border-dark-300 rounded-lg shadow-lg"
                       >
-                        {allPrograms.map((option, index) => (
+                        {allPrograms.map(opt => (
                           <div
-                            key={index}
-                            onClick={() => handleScoreProgramSelect(option)}
-                            className="p-2 cursor-pointer"
-                            title={option.name}
+                            key={opt.id}
+                            onClick={() => handleProgramSelect(opt)}
+                            className="px-4 py-2 capitalize hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold cursor-pointer"
                           >
-                            <div className="xlg:px-4 px-2 py-2 capitalize hover:bg-[#03a3d838] truncate hover:text-blue-300 hover:font-semibold rounded-lg">
-                              {option.name}
-                            </div>
+                            {opt.name}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {isSkillOpen && (
+                      <div
+                        ref={skillRef}
+                        className="absolute z-10 mt-1 w-full bg-surface-100 border border-dark-300 rounded-lg shadow-lg"
+                      >
+                        {allSkills.map(opt => (
+                          <div
+                            key={opt.id}
+                            onClick={() => handleSkillSelect(opt)}
+                            className="px-4 py-2 capitalize hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold cursor-pointer"
+                          >
+                            {opt.name}
                           </div>
                         ))}
                       </div>
                     )}
                   </div>
                 </div>
+                <div className="flex-grow">
+                  {pieLoading ? (
+                    <div className="flex justify-center items-center h-full">
+                      <CircularProgress size={20} />
+                    </div>
+                  ) : (
+                    <PieChart
+                      verified={verifiedRequest}
+                      unverified={unverifiedRequest}
+                      pending={pendingRequest}
+                      shortlisted={shortlistedRequest}
+                    />
+                  )}
+                </div>
               </div>
             </div>
-            <div>
-              <TopScoreTable
-                scores={scores}
-                loadingScore={loadingScore}
-                showAll={openList}
-              />
-            </div>
-            {/* <div className="flex nsm:items-center nsm:flex-row flex-col ">
-              <h1 className="font-bold font-exo  text-blue-500 text-lg sm:w-[200px] w-[180px]  xlg:w-full">
-                <Link href="/batch" className="w-fit">
-                  Batch Details
-                </Link>
-              </h1>
-              <div className="w-full flex items-center justify-end gap-4 ">
-                <div className=" relative flex nsm:w-[50%] w-full nsm:mt-0 mt-1">
-                  {" "}
-                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-dark-300">
-                    <FaMagnifyingGlass size={18} />
-                  </span>
-                  <div className="border py-2 border-dark-500 rounded-lg w-full">
-                    <input
-                      type="text"
-                      placeholder="Search by names"
-                      className="pl-9 px-3  text-sm  outline-none w-full"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                  </div>
-                </div>
-                {/* <div>
-                  <button
-                    onClick={toggleOpen}
-                    className={` ${
-                      !isSelected && !options[0]
-                        ? " text-dark-500"
-                        : "text-[#424b55]"
-                    } flex justify-between text-sm gap-1 z-50 items-center w-full md:w-[200px] hover:text-[#0e1721] px-4 py-2 text-left bg-white border border-dark-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
-                  >
-                    {selectedStatus || options[0]}
-                    <span
-                      className={`${
-                        isOpen ? "rotate-180 duration-300" : "duration-300"
-                      }`}
-                    >
-                      <IoIosArrowDown />
-                    </span>
-                  </button>
+          </div>
 
-                  {isOpen && (
+          {/* Top Performers */}
+          <div className="bg-white rounded-xl px-5 py-4">
+            <div className="flex justify-between items-center mb-4">
+              <h1 className="text-blue-500 font-bold text-lg">Top Performers</h1>
+              <div className="flex gap-4">
+                <button
+                  onClick={() => setOpenList(true)}
+                  className="flex items-center gap-2 px-6 py-2 bg-blue-300 hover:bg-blue-400 rounded-lg text-white"
+                >
+                  <FaList /> Show All List
+                </button>
+                <div className="relative">
+                  <button
+                    ref={scoreButton}
+                    onClick={toggleScoreProgramOpen}
+                    className="flex justify-between items-center w-[300px] px-4 py-2 bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+                  >
+                    {selectedScoreProgram}
+                    <IoIosArrowDown
+                      className={isScoreProgramOpen ? "rotate-180 transition" : "transition"}
+                    />
+                  </button>
+                  {isScoreProgramOpen && (
                     <div
-                      ref={statusDown}
-                      className="absolute capitalize z-50 w-full md:w-[200px] max-h-[150px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
+                      ref={scoreRef}
+                      className="absolute z-10 mt-1 w-full bg-surface-100 border border-dark-300 rounded-lg shadow-lg"
                     >
-                      {options.map((option, index) => (
+                      {allPrograms.map(opt => (
                         <div
-                          key={index}
-                          onClick={() => handleOptionSelect(option)}
-                          className="p-1 cursor-pointer"
+                          key={opt.id}
+                          onClick={() => handleScoreProgramSelect(opt)}
+                          className="px-4 py-2 capitalize hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold cursor-pointer"
                         >
-                          <div className="px-4 py-1 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
-                            {option}
-                          </div>
+                          {opt.name}
                         </div>
                       ))}
                     </div>
                   )}
-                </div> 
-              </div>
-            </div> */}
-
-            {/* <div className="xmd:max-h-[160px] max-h-[300px] mt-3 overflow-y-auto overflow-x-hidden scrollbar-webkit">
-              {loadingBatch ? (
-                <div className="flex justify-center items-center w-full h-full p-5">
-                  <CircularProgress size={20} />
                 </div>
-              ) : filteredBatches.length === 0 ? (
-                <p className="text-center text-dark-300 pt-6">No batch found</p>
-              ) : isFilter ? (
-                <BatchTable
-                  batches={filteredBatches}
-                  loading={loadingBatch}
-                  setLoading={setloadingBatch}
-                  updateBatch={updateBatch}
-                  setUpdateBatch={setUpdateBatch}
-                  setSelectedBatch={setSelectedBatch}
-                  setConfirmDelete={setConfirmDelete}
-                  selectedBatch={selectedBatch}
-                  confirmDelete={confirmDelete}
-                  setOpenInfo={setOpenInfoModal}
-                />
-              ) : (
-                <BatchTable
-                  batches={batches}
-                  loading={loadingBatch}
-                  setLoading={setloadingBatch}
-                  updateBatch={updateBatch}
-                  setUpdateBatch={setUpdateBatch}
-                  setSelectedBatch={setSelectedBatch}
-                  setConfirmDelete={setConfirmDelete}
-                  selectedBatch={selectedBatch}
-                  confirmDelete={confirmDelete}
-                  setOpenInfo={setOpenInfoModal}
-                />
-              )}
-            </div> */}
+              </div>
+            </div>
+            <TopScoreTable scores={scores} loadingScore={loadingScore} showAll={openList} />
           </div>
         </div>
       </div>
-      <div>
-        {openInfoModal && (
-          <BatchUserModal
-            selectedBatch={selectedBatch}
-            setOpenInfo={setOpenInfoModal}
-          />
-        )}
-      </div>
-      <div>
-        {confirmDelete && (
-          <DeleteConfirmationPopup
-            setConfirmDelete={setConfirmDelete}
-            handleDelete={handleDelete}
-            field="batch"
-          />
-        )}
-      </div>
-      <div>
-        {openList && (
-          <TopScoreModal
-            scores={scores}
-            loadingScore={loadingScore}
-            showAll={openList}
-            setOpenList={setOpenList}
-          />
-        )}
-      </div>
+
+      {/* Modals */}
+      {openInfoModal && (
+        <BatchUserModal selectedBatch={selectedBatch} setOpenInfo={setOpenInfoModal} />
+      )}
+      {confirmDelete && (
+        <DeleteConfirmationPopup
+          setConfirmDelete={setConfirmDelete}
+          handleDelete={handleDelete}
+          field="batch"
+        />
+      )}
+      {openList && (
+        <TopScoreModal scores={scores} loadingScore={loadingScore} showAll={openList} setOpenList={setOpenList} />
+      )}
     </>
   );
 };
