@@ -5,7 +5,6 @@ import PerformanceTable from "@/components/PerformanceTable";
 import { useSidebar } from "@/providers/useSidebar";
 import { useWindowSize } from "@/providers/useWindowSize";
 import StudentMarksTable from "@/components/StudentMarksTable";
-import CourseHead from "@/components/CourseHead";
 import {
   getAssignmentProgress,
   getAttendanceStudentPage,
@@ -13,11 +12,12 @@ import {
   getOverallProgress,
   getProjectProgress,
   getQuizProgress,
-  getStudentAttendanceAdmin,
 } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
-import StudentAttendence from "./StudentAttendence";
 import StudentAttendanceTable from "./StudentAttendanceTable";
+import { FaDownload } from "react-icons/fa";
+import { generateExcel } from "@/utils/generateExcel";
+import { generatePDF } from "@/utils/generatePdf";
 
 export default function StudentGradingAdmin({
   courseId,
@@ -39,16 +39,34 @@ export default function StudentGradingAdmin({
   const { userData } = useAuth();
   const isStudent = userData?.Group === "student";
   const isAdmin = userData?.Group === "admin";
-  //   const courseId = params.courseId;
-  // const userId = userData?.user_data?.user;
   const regId = isStudent ? userData?.user_data?.registration_id : propRegId;
-  // const regId = userData?.user_data?.registration_id;
-  // //console.log(regId);
+  const [showMenu, setShowMenu] = useState(false);
+  const menuRef = useRef();
+
+  const handleClickOutside = (e) => {
+    if (menuRef.current && !menuRef.current.contains(e.target)) {
+      setShowMenu(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+
+  const handleExport = (type) => {
+    setShowMenu(false);
+    if (type === 'excel') {
+      generateExcel();
+    } else {
+      generatePDF();
+    }
+  };
+
   const toggleOpen = () => {
     setIsOpen(!isOpen);
   };
-
-  //console.log(sessionId);
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
     setIsOpen(false);
@@ -56,18 +74,12 @@ export default function StudentGradingAdmin({
 
   async function fetchOverallProgress() {
     const response = await getOverallProgress(courseId, sessionId, regId);
-    // setLoader(true);
     try {
       if (response.status === 200) {
         setProgress(response.data);
-        // setLoader(false);
-        // //console.log(progress);
-        // //console.log(response.data);
       } else {
-        //console.error("Failed to fetch courses", response.status);
       }
     } catch (error) {
-      //console.log("error", error);
     }
   }
 
@@ -76,12 +88,8 @@ export default function StudentGradingAdmin({
     try {
       const response = await getAttendanceStudentPage(regId, courseId);
       if (response.status === 200) {
-        //console.log("student attendence", response.data.data.attendance);
         setAttendanceStudent(response.data.data.attendance);
-        // console.log(attendanceStudent);
         setLoader(false);
-        //console.log(attendance);
-        //console.log(response.data);
       } else {
         //console.error("Failed to fetch courses", response.status);
         setLoader(false);
@@ -200,15 +208,47 @@ export default function StudentGradingAdmin({
   const handleToggleSection = (section) => {
     setOpenSection(openSection === section ? null : section);
   };
-
+ 
   return (
     <>
-      <h2 className="text-md font-semi-bold text-blue-500">
-        Registration Id of Student:{" "}
-        <span className="font-bold px-2 py-1 rounded-md bg-gray-100 text-black">
-          {regId}
-        </span>
-      </h2>
+      <div className="flex justify-between ">
+        <h2 className="text-md font-semi-bold text-blue-500">
+          Registration Id of Student:{" "}
+          <span className="font-bold px-2 py-1 rounded-md bg-gray-100 text-black">
+            {regId}
+          </span>
+        </h2>
+        <div className="relative inline-block" ref={menuRef}>
+          <button
+            onClick={() => setShowMenu(!showMenu)}
+            title="Download student performance report"
+            className="flex items-center gap-1 text-blue-500 hover:text-blue-300"
+          >
+            <FaDownload />
+            Export
+          </button>
+
+          {showMenu && (
+            <div className="absolute left-[-5rem] mt-2 w-40 bg-surface-100 border border-dark-300 rounded shadow-md z-10">
+
+              <button
+                onClick={() => handleExport('excel')}
+                className="w-full text-left px-4 py-2 hover:bg-dark-100"
+              >
+                Export as Excel
+              </button>
+              <button
+                onClick={() => handleExport('pdf')}
+                className="w-full text-left px-4 py-2 hover:bg-dark-100"
+              >
+                Export as PDF
+              </button>
+            </div>
+          )}
+        </div>
+
+
+      </div>
 
       <div className="my-5 space-y-3">
         <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
@@ -224,9 +264,8 @@ export default function StudentGradingAdmin({
             </span>
           </div>
           <div
-            className={`transition-container ${
-              openSection === "Assignment" ? "max-height-full" : "max-height-0"
-            }`}
+            className={`transition-container ${openSection === "Assignment" ? "max-height-full" : "max-height-0"
+              }`}
           >
             {openSection === "Assignment" && (
               <div className="mt-2">
@@ -252,9 +291,8 @@ export default function StudentGradingAdmin({
             </span>
           </div>
           <div
-            className={`transition-container ${
-              openSection === "Quiz" ? "max-height-full" : "max-height-0"
-            }`}
+            className={`transition-container ${openSection === "Quiz" ? "max-height-full" : "max-height-0"
+              }`}
           >
             {openSection === "Quiz" && (
               <div className="mt-2">
@@ -281,9 +319,8 @@ export default function StudentGradingAdmin({
             </span>
           </div>
           <div
-            className={`transition-container ${
-              openSection === "Project" ? "max-height-full" : "max-height-0"
-            }`}
+            className={`transition-container ${openSection === "Project" ? "max-height-full" : "max-height-0"
+              }`}
           >
             {openSection === "Project" && (
               <div className="mt-2">
@@ -310,9 +347,8 @@ export default function StudentGradingAdmin({
             </span>
           </div>
           <div
-            className={`transition-container ${
-              openSection === "Exam" ? "max-height-full" : "max-height-0"
-            }`}
+            className={`transition-container ${openSection === "Exam" ? "max-height-full" : "max-height-0"
+              }`}
           >
             {openSection === "Exam" && (
               <div className="mt-2">
@@ -338,9 +374,8 @@ export default function StudentGradingAdmin({
             </span>
           </div>
           <div
-            className={`transition-container ${
-              openSection === "Attendance" ? "max-height-full" : "max-height-0"
-            }`}
+            className={`transition-container ${openSection === "Attendance" ? "max-height-full" : "max-height-0"
+              }`}
           >
             {openSection === "Attendance" && (
               <div className="mt-2">

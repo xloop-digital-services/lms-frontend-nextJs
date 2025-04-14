@@ -2,8 +2,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { GradingSection } from "./GradingSection";
 import {
+  allStudentsCoursePerformanceDetailed,
+  gethideGradingforStudents,
   getInstructorSessionsbyCourseId,
   getWeightages,
+  hideGradingfromStudents,
   listSessionByCourseId,
 } from "@/api/route";
 import CreateWeightage from "./CreateWeightage";
@@ -12,12 +15,19 @@ import { useAuth } from "@/providers/AuthContext";
 import CourseHead from "./CourseHead";
 import useClickOutside from "@/providers/useClickOutside";
 import { IoIosArrowDown } from "react-icons/io";
+import ConfirmHideGrading from "./Modal/ConfirmHideGrading";
+import { toast } from "react-toastify";
+import GradingConfirmationModal from "./Modal/GradingHideModal";
+import { FaDownload } from "react-icons/fa";
+import { downloadGradingPDF } from "@/utils/downloadGradingPdf";
+import { downloadGradingExcel } from "@/utils/downloadGrading";
 
 const Grading = ({ courseId }) => {
   const { userData } = useAuth();
   const group = userData?.Group;
   const isAdmin = userData?.Group === "admin";
   const isInstructor = userData?.Group === "instructor";
+  const isStudent = userData?.Group === "student";
   const [loader, setLoader] = useState(false);
   const [quizzes, setQuizzes] = useState([]);
   const [assignments, setAssignments] = useState([]);
@@ -36,9 +46,85 @@ const Grading = ({ courseId }) => {
   const sessionDropdown = useRef(null);
   const userId = group === "instructor" ? userData?.User?.id : adminUserId;
   const [updateWeightages, setUpdateWeightages] = useState(false);
-  //console.log(userId);
+  const [hideGrading, setHideGrading] = useState();
+  const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [confirmModal, setConfirmModal] = useState(false);
+  const [studentPerformance, setStudentPerformance] = useState();
+  const menuRef = useRef();
+  const tableRef = useRef();
+  const [showMenu, setShowMenu] = useState(false);
+  const handleClickOutside = (e) => {
+    if (menuRef.current && !menuRef.current.contains(e.target)) {
+      setShowMenu(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+
+
   const handleCreateWeightage = () => {
     setAssignWeightage(!assignWeightage);
+  };
+
+  const handleOpenModal = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  }
+
+  const fetchStudentsGrading = async () => {
+    if (!sessionId) {
+      toast.error("Session ID is required.");
+      return;
+    }
+    console.log(sessionId);
+
+    try {
+      const currentFlagResponse = await gethideGradingforStudents(sessionId);
+
+      if (currentFlagResponse.status !== 200) {
+        toast.error("Failed to fetch current grading status.");
+        return;
+      }
+      const currentFlag = currentFlagResponse.data.grading_flag;
+      setHideGrading(currentFlag);
+
+    } catch (error) {
+      toast.error("Error fetching grading status.");
+    }
+  };
+
+  const handlehideStudentsGrading = async () => {
+    if (!sessionId) {
+      toast.error("Session ID is required.");
+      return;
+    }
+
+    const updatedFlag = !hideGrading;
+
+    try {
+      const response = await hideGradingfromStudents(sessionId, {
+        grading_flag: updatedFlag,
+      });
+
+      if (response.status === 200) {
+        setHideGrading(updatedFlag);
+        toast.success(
+          `Grading ${updatedFlag ? "hidden" : "shown"} successfully!`
+        );
+      } else {
+        toast.error("Failed to update grading status.");
+      }
+    } catch (error) {
+      toast.error("Error updating grading status.");
+    }
   };
 
   const handleChange = (e) => {
@@ -100,16 +186,27 @@ const Grading = ({ courseId }) => {
       //console.log("error", error);
     }
   }
+  async function fetchCoursePerformanceDetailed() {
+    if (!sessionId) {
+      console.log('Session ID is not selected');
+      return;
+    }
 
-  useEffect(() => {
-    if (!isInstructor) return;
-    fetchSessionsInstructor();
-  }, [userData, isInstructor]);
-
-  useEffect(() => {
-    if (!isAdmin) return;
-    fetchSessions();
-  }, [sessionId, selectedSession, isAdmin]);
+    setLoading(true);
+    try {
+      const response = await allStudentsCoursePerformanceDetailed(courseId, sessionId);
+      if (response.status === 200) {
+        setStudentPerformance(response?.data?.data);
+        // console.log(response?.data?.data);
+      } else {
+        // console.log('Failed to fetch data', response.status);
+      }
+    } catch (error) {
+      // console.error('Error fetching performance details:', error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   async function fetchWeightages() {
     const response = await getWeightages(courseId, sessionId);
@@ -131,20 +228,33 @@ const Grading = ({ courseId }) => {
     fetchWeightages();
     setAssignWeightage(false);
   };
+
+  useEffect(() => {
+    if (!isInstructor) return;
+    fetchSessionsInstructor();
+  }, [userData, isInstructor]);
+
+  useEffect(() => {
+    if (!isAdmin) return;
+    fetchSessions();
+  }, [sessionId, selectedSession, isAdmin]);
+
   useEffect(() => {
     if (!sessionId) return;
     fetchWeightages();
   }, [sessionId, updateWeightages]);
 
-  // //console.log(sessionId);
-  // //console.log(weightage);
+  useEffect(() => {
+    if (!sessionId) return;
+    fetchStudentsGrading()
+    fetchCoursePerformanceDetailed()
+  }, [sessionId])
+
+
   return (
-    // <div className="">
     <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4">
       <CourseHead
         id={courseId}
-        // rating="Top Instructor"
-        // instructorName="Maaz"
         haveStatus={true}
         program="course"
       />{" "}
@@ -154,9 +264,8 @@ const Grading = ({ courseId }) => {
           <button
             ref={sessionButton}
             onClick={toggleSessionOpen}
-            className={`${
-              !selectedSession ? "text-[#92A7BE]" : "text-[#424B55]"
-            } flex justify-between items-center w-full hover:text-[#0E1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#ACC5E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+            className={`${!selectedSession ? "text-[#92A7BE]" : "text-[#424B55]"
+              } flex justify-between items-center w-full hover:text-[#0E1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#ACC5E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
           >
             {selectedSession || "Select a session"}
             <span
@@ -199,9 +308,8 @@ const Grading = ({ courseId }) => {
           <button
             ref={sessionButton}
             onClick={toggleSessionOpen}
-            className={`${
-              !selectedSession ? "text-[#92A7BE]" : "text-[#424B55]"
-            } flex justify-between items-center w-full hover:text-[#0E1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#ACC5E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+            className={`${!selectedSession ? "text-[#92A7BE]" : "text-[#424B55]"
+              } flex justify-between items-center w-full hover:text-[#0E1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#ACC5E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
           >
             {" "}
             {selectedSession
@@ -241,6 +349,38 @@ const Grading = ({ courseId }) => {
           )}{" "}
         </div>
       )}
+      {
+        sessionId &&
+
+        <div className="flex max-md:flex-col my-2 mx-2 items-end justify-end">
+          <div className="relative inline-block" ref={menuRef}>
+            <button
+              onClick={() => setShowMenu(!showMenu)}
+              title="Download student performance report"
+              className="flex items-center gap-1 text-blue-500 hover:text-blue-300"
+            >
+              <FaDownload className="text-blue-500" />
+            </button>
+            {showMenu && (
+              <div className="absolute left-[-10.5rem] mt-2 w-48 bg-surface-100 border border-dark-300 rounded shadow-md z-50">
+
+                <button
+                  onClick={() => downloadGradingPDF(studentPerformance)}
+                  className="w-full text-left px-4 py-2 hover:bg-dark-100"
+                >
+                  Export as PDF
+                </button>
+                <button
+                  onClick={() => downloadGradingExcel(studentPerformance)}
+                  className="w-full text-left px-4 py-2 hover:bg-dark-100"
+                >
+                  Export as Excel
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      }
       <GradingSection
         title="Assignment"
         options={assignments}
@@ -270,14 +410,6 @@ const Grading = ({ courseId }) => {
         selectedSessionId={selectedSessionId}
       />
       <hr className="text-dark-200" />
-      {/* <button
-        onClick={handleCreateWeightage}
-        className="bg-blue-300 from-dark-600 justify-end text-surface-100 p-2 rounded-md w-48 my-2 flex justify-center"
-        type="submit"
-      >
-        {assignWeightage ? "Cancel" : "Assign Weightages"}
-      </button>
-      {assignWeightage && <CreateWeightage courseId={courseId} />} */}
       {weightagesExist ? (
         <div className="my-4">
           <GetWeightage
@@ -285,16 +417,36 @@ const Grading = ({ courseId }) => {
             setUpdateWeightages={setUpdateWeightages}
             updateWeight={updateWeightages}
           />
+
+
+          <button
+            onClick={handlehideStudentsGrading}
+            className="bg-blue-300 hover:bg-[#3272b6] from-dark-600 text-surface-100 p-2 rounded-md w-52 my-2 flex justify-center"
+            type="submit"
+          >
+            {hideGrading ? "Show Students Grading" : "Hide Students Grading"}
+          </button>
         </div>
       ) : (
         <div className="my-4">
-          <button
-            onClick={handleCreateWeightage}
-            className="bg-blue-300 hover:bg-[#3272b6] from-dark-600 justify-end text-surface-100 p-2 rounded-md w-48 my-2 flex justify-center"
-            type="submit"
-          >
-            {assignWeightage ? "Cancel" : "Assign Weightages"}
-          </button>
+          <div className="flex">
+            <button
+              onClick={handleCreateWeightage}
+              className="bg-blue-300 hover:bg-[#3272b6] mr-2 from-dark-600 text-surface-100 p-2 rounded-md w-48 my-2 flex justify-center"
+              type="submit"
+            >
+              {assignWeightage ? "Cancel" : "Assign Weightages"}
+            </button>
+
+
+            <button
+              onClick={handlehideStudentsGrading}
+              className="bg-blue-300 hover:bg-[#3272b6] from-dark-600 text-surface-100 p-2 rounded-md w-52 my-2 flex justify-center"
+              type="submit"
+            >
+              {hideGrading ? "Show Students Grading" : "Hide Students Grading"}
+            </button>
+          </div>
           {assignWeightage && (
             <CreateWeightage
               courseId={courseId}
@@ -302,6 +454,8 @@ const Grading = ({ courseId }) => {
               sessionId={sessionId}
             />
           )}
+
+
         </div>
       )}
     </div>

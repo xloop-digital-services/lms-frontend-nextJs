@@ -750,12 +750,16 @@ const AdminDashboard = () => {
                 </div>
               </div>
             </div>
+
+
+
+            
             <div className="bg-surface-100 min-w-[32%] p-4 rounded-xl  h-[420px]">
               <div className="flex w-full xmd:flex-col ssm:flex-row flex-col justify-between xmd:items-start items-center">
                 <div className="font-bold font-exo text-blue-500 text-lg">
                   Applications Status Overview
                 </div>
-                <div className="flex gap-2  justify-between items-center w-full">
+                <div className="flex gap-2  justify-between items-center w-full max-sm:flex-col">
                   <div className="relative w-full">
                     <button
                       ref={userButton}
@@ -943,19 +947,23 @@ const AdminDashboard = () => {
                 )}
               </div>
             </div>
+
+
+
+
           </div>
           <div className="bg-[rgb(255,255,255)] rounded-xl px-5 py-4 pb-0 xmd:h-[275px] h-full xsm:mb-0 mb-4">
             <div className="flex nsm:items-center nsm:flex-row flex-col justify-between">
-              <div>
+              <div className="">
                 <h1 className="font-bold font-exo  text-blue-500 text-lg sm:w-[200px] w-[180px]  xlg:w-full">
                   Top Performers
                 </h1>
               </div>
-              <div className="flex gap-2 items-center">
+              <div className="flex gap-2 items-center max-sm:flex-col">
                 <div>
                   <button
                     onClick={handleOpenList}
-                    className="w-fit flex items-center gap-2 py-2 px-10 text-sm font-medium rounded-lg text-dark-100 bg-blue-300 hover:bg-[#3272b6] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
+                    className="w-fit max-sm:w-full flex items-center gap-2 py-2 px-10 text-sm font-medium rounded-lg text-dark-100 bg-blue-300 hover:bg-[#3272b6] focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
                   >
                     <span>
                       <FaList />
@@ -964,7 +972,7 @@ const AdminDashboard = () => {
                   </button>
                 </div>
                 <div>
-                  <div className="relative space-y-2 text-[15px] w-full">
+                  <div className="relative space-y-2 text-[15px] w-full max-sm:w-full">
                     <button
                       ref={scoreButton}
                       onClick={toggleScoreProgramOpen}
@@ -972,9 +980,9 @@ const AdminDashboard = () => {
                         !isScoreProgramSelected
                           ? " text-dark-500"
                           : "text-[#424b55]"
-                      } flex justify-between items-center w-[300px]  hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                      } flex justify-between items-center w-[300px]  max-sm:w-full hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                     >
-                      <span className="  max-w-full truncate capitalize">
+                      <span className="max-w-full truncate capitalize">
                         {selectedScoreProgram}
                       </span>
                       <span
@@ -1018,104 +1026,6 @@ const AdminDashboard = () => {
                 showAll={openList}
               />
             </div>
-            {/* <div className="flex nsm:items-center nsm:flex-row flex-col ">
-              <h1 className="font-bold font-exo  text-blue-500 text-lg sm:w-[200px] w-[180px]  xlg:w-full">
-                <Link href="/batch" className="w-fit">
-                  Batch Details
-                </Link>
-              </h1>
-              <div className="w-full flex items-center justify-end gap-4 ">
-                <div className=" relative flex nsm:w-[50%] w-full nsm:mt-0 mt-1">
-                  {" "}
-                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-dark-300">
-                    <FaMagnifyingGlass size={18} />
-                  </span>
-                  <div className="border py-2 border-dark-500 rounded-lg w-full">
-                    <input
-                      type="text"
-                      placeholder="Search by names"
-                      className="pl-9 px-3  text-sm  outline-none w-full"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                  </div>
-                </div>
-                {/* <div>
-                  <button
-                    onClick={toggleOpen}
-                    className={` ${
-                      !isSelected && !options[0]
-                        ? " text-dark-500"
-                        : "text-[#424b55]"
-                    } flex justify-between text-sm gap-1 z-50 items-center w-full md:w-[200px] hover:text-[#0e1721] px-4 py-2 text-left bg-white border border-dark-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
-                  >
-                    {selectedStatus || options[0]}
-                    <span
-                      className={`${
-                        isOpen ? "rotate-180 duration-300" : "duration-300"
-                      }`}
-                    >
-                      <IoIosArrowDown />
-                    </span>
-                  </button>
-
-                  {isOpen && (
-                    <div
-                      ref={statusDown}
-                      className="absolute capitalize z-50 w-full md:w-[200px] max-h-[150px] mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
-                    >
-                      {options.map((option, index) => (
-                        <div
-                          key={index}
-                          onClick={() => handleOptionSelect(option)}
-                          className="p-1 cursor-pointer"
-                        >
-                          <div className="px-4 py-1 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
-                            {option}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div> 
-              </div>
-            </div> */}
-
-            {/* <div className="xmd:max-h-[160px] max-h-[300px] mt-3 overflow-y-auto overflow-x-hidden scrollbar-webkit">
-              {loadingBatch ? (
-                <div className="flex justify-center items-center w-full h-full p-5">
-                  <CircularProgress size={20} />
-                </div>
-              ) : filteredBatches.length === 0 ? (
-                <p className="text-center text-dark-300 pt-6">No batch found</p>
-              ) : isFilter ? (
-                <BatchTable
-                  batches={filteredBatches}
-                  loading={loadingBatch}
-                  setLoading={setloadingBatch}
-                  updateBatch={updateBatch}
-                  setUpdateBatch={setUpdateBatch}
-                  setSelectedBatch={setSelectedBatch}
-                  setConfirmDelete={setConfirmDelete}
-                  selectedBatch={selectedBatch}
-                  confirmDelete={confirmDelete}
-                  setOpenInfo={setOpenInfoModal}
-                />
-              ) : (
-                <BatchTable
-                  batches={batches}
-                  loading={loadingBatch}
-                  setLoading={setloadingBatch}
-                  updateBatch={updateBatch}
-                  setUpdateBatch={setUpdateBatch}
-                  setSelectedBatch={setSelectedBatch}
-                  setConfirmDelete={setConfirmDelete}
-                  selectedBatch={selectedBatch}
-                  confirmDelete={confirmDelete}
-                  setOpenInfo={setOpenInfoModal}
-                />
-              )}
-            </div> */}
           </div>
         </div>
       </div>
@@ -1143,6 +1053,7 @@ const AdminDashboard = () => {
             loadingScore={loadingScore}
             showAll={openList}
             setOpenList={setOpenList}
+            title="program wise"
           />
         )}
       </div>

@@ -35,7 +35,7 @@ export const handleFileUploadToS3 = async (file, category) => {
     .split(".")
     .slice(0, -1)
     .join(".")}_${timestamp}.${fileExtension}`;
-  console.log(uniqueFileName);
+  // console.log(uniqueFileName);
 
   formData.append(
     "file",

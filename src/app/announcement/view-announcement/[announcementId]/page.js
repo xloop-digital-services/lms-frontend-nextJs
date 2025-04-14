@@ -97,7 +97,7 @@ export default function Page({ params }) {
                 {" "}
                 {announcement.message}
                 <br />
-                <p className="italic mt-4 font-light ">
+                <p className="italic mt-4 font-light text-sm">
                   {
                     "Please ignore any contradictory scheduling in the calendar."
                   }

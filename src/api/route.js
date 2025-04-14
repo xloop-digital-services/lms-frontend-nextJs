@@ -1730,3 +1730,54 @@ export const getCourseProgressByProgId = async (programID) => {
     throw error;
   }
 };
+
+
+export const gethideGradingforStudents = async (sessionId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/api/course/sessions/${sessionId}/grading-flag-get/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+export const hideGradingfromStudents = async (sessionId, flag) => {
+  try {
+    const response = await axiosInstance.patch(
+      `/api/course/sessions/${sessionId}/grading-flag/`,
+      flag
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+export const allStudentsCoursePerformance = async (courseId, sessionId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/api/course/session/${courseId}/${sessionId}/scores/`,
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const allStudentsCoursePerformanceDetailed = async (courseId, sessionId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/api/course/course-details/${courseId}/${sessionId}/`,
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+
