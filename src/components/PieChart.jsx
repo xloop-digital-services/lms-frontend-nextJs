@@ -1,19 +1,19 @@
 import React from "react";
 import { Chart as ChartJS } from "chart.js/auto";
-import { Doughnut } from "react-chartjs-2";
+import { Doughnut, Pie } from "react-chartjs-2";
 
-const PieChart = ({verified, unverified, pending, shortlisted}) => {
+const PieChart = ({ verified, unverified, pending, shortlisted }) => {
   return (
     <div
       style={{ height: "320px", width: "100%" }}
       className="flex justify-center items-center mt-4"
     >
-      <Doughnut
+      <Pie
         data={{
           labels: ["Verified", 'Unverified', "Pending", "Shortlist"],
           datasets: [
             {
-              data: [verified, unverified ,pending, shortlisted],
+              data: [verified, unverified, pending, shortlisted],
               backgroundColor: ["#18A07A", "#d84848", "#f29d41", '#0074EE'],
             },
           ],
@@ -24,7 +24,8 @@ const PieChart = ({verified, unverified, pending, shortlisted}) => {
               display: true, // Show the legend
               position: "bottom", // Position the legend at the bottom
               labels: {
-                boxWidth: 20, // Width of the color box
+                boxWidth: 15, // Width of the color box
+                boxHeight: 15,
                 padding: 20, // Padding between the legend and chart
               },
             },

@@ -1,5 +1,4 @@
 import React from "react";
-import { Chart as ChartJS } from "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 
 const BarChartCourse = ({ barData }) => {
@@ -10,6 +9,7 @@ const BarChartCourse = ({ barData }) => {
       style={{ width: "100%", height: "315px" }}
     >
       <div className="h-full">
+
         <Bar
           data={{
             labels: [
@@ -32,7 +32,8 @@ const BarChartCourse = ({ barData }) => {
                   barData.avg_obtain_sum_exams,
                 ],
                 backgroundColor: "#0074EE",
-                barThickness: 30,
+                barThickness: 100,
+                borderRadius: 5
               },
             ],
           }}
@@ -40,15 +41,14 @@ const BarChartCourse = ({ barData }) => {
             maintainAspectRatio: false,
             scales: {
               x: {
-                grid: {
-                  display: false,
-                },
-                ticks: {
-                  autoSkip: false,
-                },
+                stacked: true,
+                grid: { display: false },
+                ticks: { autoSkip: false },
               },
               y: {
                 beginAtZero: true,
+                max: 100, 
+                stacked: false,
                 title: {
                   display: true,
                   text: "Average Obtained Sum",
@@ -62,6 +62,7 @@ const BarChartCourse = ({ barData }) => {
                 },
               },
             },
+
             plugins: {
               tooltip: {
                 callbacks: {
@@ -154,14 +155,15 @@ const BarChartCourse = ({ barData }) => {
               },
               legend: {
                 display: true,
-                position: "top",
+                position: "bottom",
                 align: "center",
                 labels: {
-                  boxWidth: 40,
-                  boxHeight: 5,
-                  padding: 10,
+                  boxWidth: 15,
+                  boxHeight: 15,
+                  padding: 7,
                 },
               },
+
             },
           }}
         />

@@ -61,7 +61,7 @@ const TopScoreTable = ({ total, scores, loadingScore, showAll }) => {
                       scope="col"
                       className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]"
                     >
-                      Attendence
+                      Attendance
                     </th>
                     <th
                       scope="col"
@@ -79,7 +79,7 @@ const TopScoreTable = ({ total, scores, loadingScore, showAll }) => {
                       </td>
                     </tr>
                   ) : scores.length > 0 ? (
-                    (showAll ? scores : scores.slice(0, 3)).map(
+                    (showAll ? scores : scores.slice(0, 2)).map(
                       (score, index) => (
                         <tr key={index}>
                           {showAll && (

@@ -34,7 +34,8 @@ const BarChart = ({ barData }) => {
                   barData.percentage_exams,
                 ],
                 backgroundColor: "#0074EE",
-                barThickness: 30,
+                barThickness: 100,
+                borderRadius: 5
               },
             ],
           }}
@@ -46,7 +47,7 @@ const BarChart = ({ barData }) => {
                   display: false,
                 },
                 ticks: {
-                  autoSkip: false, // Prevent skipping of ticks to show all labels
+                  autoSkip: false,
                   font: {
                     // size: 10,
                   },
@@ -57,20 +58,19 @@ const BarChart = ({ barData }) => {
               },
               y: {
                 beginAtZero: true,
-                max: 100, // Set maximum value of Y-axis to 100
+                max: 100,
                 title: {
                   display: true,
-                  text: "Progress", // Y-axis label
+                  text: "Progress",
                 },
                 ticks: {
-                  // Only show ticks at 0, 50, and 100
                   stepSize: 20,
                   callback: function (value) {
-                    return value + "%"; // Add "%" to Y-axis tick values
+                    return value + "%";
                   },
                 },
                 grid: {
-                  display: true, // Hide Y-axis grid lines
+                  display: true, 
                 },
               },
             },
@@ -78,13 +78,10 @@ const BarChart = ({ barData }) => {
               tooltip: {
                 callbacks: {
                   title: (tooltipItems) => {
-                    // Show the label (e.g., Classes, Attendance, etc.)
                     return tooltipItems[0].label;
                   },
                   label: (tooltipItem) => {
                     const dataIndex = tooltipItem.dataIndex;
-
-                    // Map data for tooltips
                     const dataMapping = [
                       {
                         label: "Classes",
@@ -146,12 +143,12 @@ const BarChart = ({ barData }) => {
               },
               legend: {
                 display: true,
-                position: "top",
+                position: "bottom",
                 align: "center",
                 labels: {
-                  boxWidth: 40,
-                  boxHeight: 5,
-                  padding: 10, // Padding between the legend and chart
+                  boxWidth: 15,
+                  boxHeight: 15,
+                  padding: 7,
                 },
               },
             },
