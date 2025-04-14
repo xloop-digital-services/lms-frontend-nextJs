@@ -56,6 +56,31 @@ const AdminDashboard = () => {
   const [isBarCourseOpen, setIsBarCourseOpen] = useState(false);
   const [courseProgress, setCourseProgress] = useState({});
 
+  function getBarSize(width) {
+    if (width < 640)   return 30;  // mobile
+    if (width < 1024)  return 50;  // tablet
+    return 70;                     // desktop
+  }
+  function getBarGap(width) {
+    if (width < 640)   return "10%";
+    if (width < 1024)  return "15%";
+    return "20%";
+  }
+
+  useEffect(() => {
+    const onResize = () => {
+      setBarSize(getBarSize(window.innerWidth));
+      setBarGap(getBarGap(window.innerWidth));
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+
+   // 1) Responsive barSize & barGap
+   const [barSize, setBarSize] = useState(getBarSize(window.innerWidth));
+   const [barGap, setBarGap]   = useState(getBarGap(window.innerWidth));
+
   // === Applications (Pie) ===
   const [allSkills, setAllSkills] = useState([]);
   const [selectedUser, setSelectedUser] = useState("Student");
@@ -87,17 +112,17 @@ const AdminDashboard = () => {
 
   // === Refs for click‑outside ===
   const barRef = useRef(null),
-        barButton = useRef(null),
-        courseRef = useRef(null),
-        courseButton = useRef(null),
-        userRef = useRef(null),
-        userButton = useRef(null),
-        progRef = useRef(null),
-        progButton = useRef(null),
-        skillRef = useRef(null),
-        skillButton = useRef(null),
-        scoreRef = useRef(null),
-        scoreButton = useRef(null);
+    barButton = useRef(null),
+    courseRef = useRef(null),
+    courseButton = useRef(null),
+    userRef = useRef(null),
+    userButton = useRef(null),
+    progRef = useRef(null),
+    progButton = useRef(null),
+    skillRef = useRef(null),
+    skillButton = useRef(null),
+    scoreRef = useRef(null),
+    scoreButton = useRef(null);
 
   useClickOutside(barRef, barButton, () => setIsBarProgramOpen(false));
   useClickOutside(courseRef, courseButton, () => setIsBarCourseOpen(false));
@@ -259,9 +284,8 @@ const AdminDashboard = () => {
   return (
     <>
       <div
-        className={`flex-1 pt-[100px] transition-transform ${
-          isSidebarOpen ? "translate-x-64 ml-20" : "translate-x-0 pl-4 pr-4"
-        }`}
+        className={`flex-1 pt-[100px] transition-transform ${isSidebarOpen ? "translate-x-64 ml-20" : "translate-x-0 pl-4 pr-4"
+          }`}
         style={{ width: isSidebarOpen ? "81%" : "100%" }}
       >
         <div className="space-y-4 font-inter text-[#07224D]">
@@ -269,24 +293,24 @@ const AdminDashboard = () => {
           <div className="flex flex-wrap gap-4 xmd:flex-nowrap">
             {/* Users */}
             <div className="w-full xmd:w-1/3 bg-surface-100 border-2 border-surface-100 hover:border-blue-300 rounded-xl px-5 py-4 flex items-center border-b-[8px] border-b-[#0074EE]">
-              <div className="bg-white rounded-lg p-4 flex flex-col gap-4 w-full">
-                <img src="/assets/img/user-icon.jpg" alt="users" className="w-8 h-8"/>
+              <div className="bg-surface-100 rounded-lg p-4 flex flex-col gap-4 w-full">
+                <img src="/assets/img/user-icon.jpg" alt="users" className="w-8 h-8" />
                 <p className="text-gray-500 text-lg">Total Users / Active Users</p>
                 <p className="text-2xl font-bold">{allUsers} / {allActiveUsers}</p>
               </div>
             </div>
             {/* Students */}
             <div className="w-full xmd:w-1/3 bg-surface-100 border-2 border-surface-100 hover:border-blue-300 rounded-xl px-5 py-4 flex items-center border-b-[8px] border-b-[#0074EE]">
-              <div className="bg-white rounded-lg p-4 flex flex-col gap-4 w-full">
-                <img src="/assets/img/student-icon.jpg" alt="students" className="w-8 h-8"/>
+              <div className="bg-surface-100 rounded-lg p-4 flex flex-col gap-4 w-full">
+                <img src="/assets/img/student-icon.jpg" alt="students" className="w-8 h-8" />
                 <p className="text-gray-500 text-lg">Total Students / Active Students</p>
                 <p className="text-2xl font-bold">{allStudents} / {allActiveStudents}</p>
               </div>
             </div>
             {/* Instructors */}
             <div className="w-full xmd:w-1/3 bg-surface-100 border-2 border-surface-100 hover:border-blue-300 rounded-xl px-5 py-4 flex items-center border-b-[8px] border-b-[#0074EE]">
-              <div className="bg-white rounded-lg p-4 flex flex-col gap-4 w-full">
-                <img src="/assets/img/instructor-icon.jpg" alt="instructors" className="w-8 h-8"/>
+              <div className="bg-surface-100 rounded-lg p-4 flex flex-col gap-4 w-full">
+                <img src="/assets/img/instructor-icon.jpg" alt="instructors" className="w-8 h-8" />
                 <p className="text-gray-500 text-lg">Total Instructors / Active Instructors</p>
                 <p className="text-2xl font-bold">{allInstructors} / {allActiveInstructors}</p>
               </div>
@@ -296,18 +320,18 @@ const AdminDashboard = () => {
           {/* Progress & Applications */}
           <div className="flex flex-col gap-4 xmd:flex-row">
             {/* Progress Card */}
-            <div className="w-full xmd:w-[66.5%] bg-surface-100 p-5 rounded-xl h-[420px] overflow-auto">
-              <div className="h-full border border-dark-300 rounded-xl p-3">
+            <div className="w-full md:w-2/3 bg-surface-100 p-4 md:p-6 rounded-xl h-auto md:h-[420px] overflow-auto">
+              <div className="h-full border border-dark-300 rounded-xl p-4 md:p-6 flex flex-col">
                 {/* Header with both dropdowns */}
-                <div className="flex justify-between items-center mb-4">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
                   <h3 className="text-blue-500 font-bold text-lg">Progress</h3>
-                  <div className="flex gap-4">
-                    {/* Program */}
-                    <div className="relative">
+                  <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                    {/* Program Dropdown */}
+                    <div className="relative w-full sm:w-64 md:w-80">
                       <button
                         ref={barButton}
                         onClick={toggleBarProgramOpen}
-                        className="flex justify-between items-center w-[300px] px-4 py-2 bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+                        className="w-full flex justify-between items-center px-4 py-2 bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
                       >
                         <span className="truncate capitalize">{selectedBarProgram}</span>
                         <IoIosArrowDown
@@ -317,7 +341,7 @@ const AdminDashboard = () => {
                       {isBarProgramOpen && (
                         <div
                           ref={barRef}
-                          className="absolute z-10 mt-1 w-full max-h-[170px] overflow-auto bg-surface-100 border border-dark-300 rounded-lg shadow-lg"
+                          className="absolute z-10 mt-1 w-full max-h-40 overflow-auto bg-surface-100 border border-dark-300 rounded-lg shadow-lg"
                         >
                           {allPrograms.map(opt => (
                             <div
@@ -331,12 +355,13 @@ const AdminDashboard = () => {
                         </div>
                       )}
                     </div>
-                    {/* Course */}
-                    <div className="relative">
+
+                    {/* Course Dropdown */}
+                    <div className="relative w-full sm:w-64 md:w-80">
                       <button
                         ref={courseButton}
                         onClick={toggleBarCourseOpen}
-                        className="flex justify-between items-center w-[300px] px-4 py-2 bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+                        className="w-full flex justify-between items-center px-4 py-2 bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
                       >
                         <span className="truncate capitalize">{selectedBarCourse}</span>
                         <IoIosArrowDown
@@ -346,7 +371,7 @@ const AdminDashboard = () => {
                       {isBarCourseOpen && (
                         <div
                           ref={courseRef}
-                          className="absolute z-10 mt-1 w-full max-h-[170px] overflow-auto bg-surface-100 border border-dark-300 rounded-lg shadow-lg"
+                          className="absolute z-10 mt-1 w-full max-h-40 overflow-auto bg-surface-100 border border-dark-300 rounded-lg shadow-lg"
                         >
                           <div
                             onClick={() => handleBarCourseSelect({ id: null, name: "All Courses" })}
@@ -370,16 +395,30 @@ const AdminDashboard = () => {
                 </div>
 
                 {/* Chart */}
-                <div className="h-[calc(100%-64px)]">
-                  {loadingBar ? (
-                    <div className="flex justify-center items-center h-full">
-                      <CircularProgress />
+                <div className="flex-grow overflow-hidden">
+                  <div className="h-full w-full scrollbar-webkit overflow-x-auto">
+                    <div className="h-full">
+                      {loadingBar ? (
+                        <div className="flex justify-center items-center h-full">
+                          <CircularProgress />
+                        </div>
+                      ) : barCourseId ? (
+                        <BarChartCourse
+                          barData={courseProgress}
+                          barSize={barSize}
+                          barCategoryGap="15%"
+                          color="#FF0000"
+                        />
+                      ) : (
+                        <BarChart
+                          barData={programProgress}
+                          barSize={barSize}
+                          barCategoryGap="15%"
+                          color="#FF0000"
+                        />
+                      )}
                     </div>
-                  ) : barCourseId ? (
-                    <BarChartCourse barData={courseProgress} />
-                  ) : (
-                    <BarChart barData={programProgress} />
-                  )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -500,7 +539,7 @@ const AdminDashboard = () => {
           </div>
 
           {/* Top Performers */}
-          <div className="bg-white rounded-xl px-5 py-4">
+          <div className="bg-surface-100 rounded-xl px-5 py-4">
             <div className="flex justify-between items-center mb-4">
               <h1 className="text-blue-500 font-bold text-lg">Top Performers</h1>
               <div className="flex gap-4">
