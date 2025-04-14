@@ -37,7 +37,7 @@ const GradingConfirmationModal = ({
                             </button>
                         </div>
                         <div className="bg-surface-100 p-4 rounded-2xl text-center">
-                            <p>Are you sure you want to {actionType} students' grading?</p>
+                            <p>Are you sure you want to {actionType} student&apos;s grading?</p>
                             <div className="flex justify-center gap-4 mt-6">
                                 <button
                                     className="border border-blue-300 text-blue-300 rounded-lg px-5 py-2.5 hover:bg-mix-400"
