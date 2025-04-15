@@ -110,42 +110,39 @@ const BarChart = ({ barData }) => {
                         label: "Assignments",
                         percentage: barData.percentage_assignments,
                         details: [
-                          `Obtained: ${barData.avg_obtain_sum_assignments.toFixed(2)}`,
-                          `Total: ${barData.avg_total_sum_assignments.toFixed(2)}`,
+                          `Obtained: ${(barData.avg_obtain_sum_assignments ?? 0).toFixed(2)}`,
+                          `Total: ${(barData.avg_total_sum_assignments ?? 0).toFixed(2)}`,
                         ],
                       },
                       {
                         label: "Quizzes",
                         percentage: barData.percentage_quizzes,
                         details: [
-                          `Obtained: ${barData.avg_obtain_sum_quizzes.toFixed(2)}`,
-                          `Total: ${barData.avg_total_sum_quizzes.toFixed(2)}`,
+                          `Obtained: ${(barData.avg_obtain_sum_quizzes ?? 0).toFixed(2)}`,
+                          `Total: ${(barData.avg_total_sum_quizzes ?? 0).toFixed(2)}`,
                         ],
                       },
                       {
                         label: "Projects",
                         percentage: barData.percentage_projects,
                         details: [
-                          `Obtained: ${barData.avg_obtain_sum_projects.toFixed(2)}`,
-                          `Total: ${barData.avg_total_sum_projects.toFixed(2)}`,
+                          `Obtained: ${(barData.avg_obtain_sum_projects ?? 0).toFixed(2)}`,
+                          `Total: ${(barData.avg_total_sum_projects ?? 0).toFixed(2)}`,
                         ],
                       },
                       {
                         label: "Exams",
                         percentage: barData.percentage_exams,
                         details: [
-                          `Obtained: ${barData.avg_obtain_sum_exams.toFixed(2)}`,
-                          `Total: ${barData.avg_total_sum_exams.toFixed(2)}`,
+                          `Obtained: ${(barData.avg_obtain_sum_exams ?? 0).toFixed(2)}`,
+                          `Total: ${(barData.avg_total_sum_exams ?? 0).toFixed(2)}`,
                         ],
                       },
                     ];
 
-                    const currentData = dataMapping[dataIndex];
-                    return [
-                      `Percentage: ${currentData.percentage.toFixed(2)}%`,
-                      ...currentData.details,
-                    ];
-                  },
+                    return dataMapping[dataIndex];
+                  }
+
                 },
               },
               legend: {

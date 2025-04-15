@@ -663,7 +663,7 @@ const AdminDashboard = () => {
 
                 <div>
                   {loadingBar ? (
-                    <div className="flex justify-center items-center py-4 w-full">
+                    <div className="flex justify-center items-center py-4 w-full h-[380px]">
                       <CircularProgress />
                     </div>
                   ) : changeProgress ? (

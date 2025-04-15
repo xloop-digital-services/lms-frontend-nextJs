@@ -265,7 +265,7 @@ const AdminStudentGrading = ({ courseId }) => {
               className="flex items-center gap-1 text-blue-500 hover:text-blue-300 rounded-md border border-dark-300 px-2 py-1"
             >
               {/* <FaDownload /> */}
-              View course progress
+              View overall course progress
             </button>
 
           </div>

@@ -51,7 +51,7 @@ const TopScoreModal = ({ scores, loadingScore, showAll, setOpenList, title }) =>
                   <FaDownload className="text-blue-500" />
                 </button>
                 {showMenu && (
-                  <div className="absolute left-[-10rem] mt-2 w-48 bg-surface-100 border border-dark-300 rounded shadow-md z-50">
+                  <div className="absolute left-[-10rem] mt-2 w-48 bg-surface-100 border border-dark-300 rounded-lg shadow-md z-50">
 
                     <button
                       onClick={() => downloadPDF(scores, title)}

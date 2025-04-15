@@ -30,20 +30,19 @@ export const useFetchNotifications = (userID) => {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     if (!userID || group === "admin") return;
 
-    const interval = setInterval(() => {
-      if (userID) {
-        fetchNotifications();
-      }
-    }, 10000);
+    // Call immediately
+    fetchNotifications();
 
-    // fetchNotifications();
+    const interval = setInterval(() => {
+      fetchNotifications();
+    }, 10000);
 
     return () => clearInterval(interval);
   }, [userID, group]);
+
 
   return { messages, loading, refetch: fetchNotifications };
 };

@@ -16,6 +16,8 @@ import {
   getUserSessions,
 } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
+import Lottie from "lottie-react";
+import bouncing from "../../public/data/bouncing.json";
 
 export default function StudentGrading({ courseId, regId: propRegId }) {
   const { width } = useWindowSize();
@@ -235,8 +237,11 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
       />
 
       {hideGrading ? (
-        <div className="w-full flex items-center justify-center font-semibold text-blue-500">
-          This section is unavailable for a while
+        <div className="flex flex-col items-center justify-center h-[550px]">
+          <div className="w-full flex items-center justify-center font-semibold text-blue-500 ">
+            This section is unavailable for a while.
+          </div>
+          <Lottie animationData={bouncing} className="h-[300px]" />
         </div>
       ) : (
         <>
