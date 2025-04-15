@@ -3,7 +3,7 @@ import { Chart as ChartJS } from "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 
 const BarChart = ({ barData }) => {
-  // console.log(barData, "length");
+  const barThickness = typeof window !== "undefined" && window.innerWidth < 640 ? 30 : 100;
 
   const totalWidth = barData.length * 250;
   return (
@@ -24,6 +24,17 @@ const BarChart = ({ barData }) => {
             ],
             datasets: [
               {
+                label: "Background",
+                data: [100, 100, 100, 100, 100, 100],
+                backgroundColor: "#F6FBFD",
+                // borderRadius: 8,
+                barThickness: barThickness,
+                categoryPercentage: 0.6,
+                barPercentage: 0.7,
+                order: 2,
+
+              },
+              {
                 label: "Percentage (%)",
                 data: [
                   barData.classes_percentage,
@@ -34,8 +45,14 @@ const BarChart = ({ barData }) => {
                   barData.percentage_exams,
                 ],
                 backgroundColor: "#0074EE",
-                barThickness: 100,
-                borderRadius: 5
+                barThickness: barThickness,
+                categoryPercentage: 0.6,
+                barPercentage: 0.7,
+                order: 1,
+                borderRadius: {
+                  topLeft: 8,
+                  topRight: 8
+                },
               },
             ],
           }}
@@ -43,34 +60,24 @@ const BarChart = ({ barData }) => {
             maintainAspectRatio: false,
             scales: {
               x: {
-                grid: {
-                  display: false,
-                },
-                ticks: {
-                  autoSkip: false,
-                  font: {
-                    // size: 10,
-                  },
-                  callback: function (value) {
-                    return this.getLabelForValue(value).split("\n");
-                  },
-                },
+                stacked: true,
+                grid: { display: false },
+                ticks: { autoSkip: false },
               },
               y: {
                 beginAtZero: true,
                 max: 100,
+                stacked: false,
                 title: {
                   display: true,
-                  text: "Progress",
+                  text: "Average Obtained Sum",
                 },
                 ticks: {
                   stepSize: 20,
-                  callback: function (value) {
-                    return value + "%";
-                  },
+                  callback: (value) => `${value}`,
                 },
                 grid: {
-                  display: true, 
+                  display: true,
                 },
               },
             },

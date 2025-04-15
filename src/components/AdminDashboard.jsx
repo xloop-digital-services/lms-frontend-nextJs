@@ -115,6 +115,12 @@ const AdminDashboard = () => {
   const skillButton = useRef(null);
   const courseButton = useRef(null);
   const courseDown = useRef(null);
+  const barProgramRef = useRef(null);
+  const barProgramBtnRef = useRef(null);
+
+  const barCourseRef = useRef(null);
+  const barCourseBtnRef = useRef(null);
+
 
   useClickOutside(statusDown, statusButton, () => setIsOpen(false));
   useClickOutside(dropdownRef, dropButton, () => setIsProgramOpen(false));
@@ -123,8 +129,12 @@ const AdminDashboard = () => {
   useClickOutside(scoreRef, scoreButton, () => setIsScoreProgramOpen(false));
   useClickOutside(skillDown, skillButton, () => setIsSkillOpen(false));
   useClickOutside(userDown, userButton, () => setIsUserOpen(false));
+  useClickOutside(barProgramRef, barProgramBtnRef, () => setIsBarProgramOpen(false));
+  useClickOutside(barCourseRef, barCourseBtnRef, () => setIsBarCourseOpen(false));
 
-  // Apply filtering whenever search term or dropdown status changes
+
+
+
   useEffect(() => {
     // Set the initial status to "Show All" when the page loads
     if (!selectedStatus) {
@@ -369,22 +379,19 @@ const AdminDashboard = () => {
     setSelectedBarProgram(program.name);
     setBarProgramId(program.id);
     setSelectedBarCourse("All Courses");
-    setBarCourseId(null); // default to show full program progress
+    setBarCourseId(null); // reset course ID
+    setChangeProgress(false); // Show program-level progress
     setIsBarProgramOpen(false);
   };
 
-  const handleBarCourseSelect = (option) => {
-    setSelectedBarCourse(option.name);
-    setIsBarCourseSelected(true);
-    setIsBarCourseOpen(false);
 
-    if (option.name === "All Courses") {
-      setChangeProgress(false); // show program chart
-    } else {
-      setBarCourseId(option.id);
-      setChangeProgress(true); // show course chart
-    }
+  const handleBarCourseSelect = (course) => {
+    setSelectedBarCourse(course === "All Courses" ? "All Courses" : course.name);
+    setBarCourseId(course === "All Courses" ? null : course.id);
+    setChangeProgress(course !== "All Courses");
+    setIsBarCourseOpen(false);
   };
+
 
   const handleScoreProgramSelect = (option) => {
     setSelectedScoreProgram(option.name);
@@ -592,10 +599,11 @@ const AdminDashboard = () => {
                   <div className="font-bold font-exo text-blue-500 text-lg">Progress
                   </div>
                   <div className="flex gap-4 max-md:flex-col items-center">
-                    <div className="relative text-[15px] w-full">
+                    <div className="relative text-[15px] w-full" >
                       <button
                         onClick={toggleBarProgramOpen}
-                        className="flex justify-between items-center w-[300px] px-4 py-2 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg hover:text-[#0e1721] focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+                        ref={barProgramBtnRef}
+                        className="flex justify-between items-center w-[300px] px-4 py-2.5 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg hover:text-[#0e1721] focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
                       >
                         <span className="truncate capitalize">{selectedBarProgram || "Select Program"}</span>
                         <span className={`${isBarProgramOpen ? "rotate-180 duration-300" : "duration-300"}`}>
@@ -604,7 +612,7 @@ const AdminDashboard = () => {
                       </button>
 
                       {isBarProgramOpen && (
-                        <div className="absolute capitalize z-50 w-full mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out">
+                        <div ref={barProgramRef} className="absolute capitalize max-h-[182px] overflow-scroll z-50 w-full mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out scrollbar-webkit">
                           <div className="cursor-pointer p-2">
 
                             {allPrograms.map((option, index) => (
@@ -615,34 +623,27 @@ const AdminDashboard = () => {
                               >
                                 {option.name}
                               </div>
-                            ))}
+                            ))} 
                           </div>
                         </div>
                       )}
                     </div>
 
                     {selectedBarProgram && (
-                      <div className="relative text-[15px] w-full">
+                      <div className="relative text-[15px] w-full" ref={barCourseRef}>
                         <button
+                          ref={barCourseBtnRef}
                           onClick={toggleBarCourseOpen}
-                          className="flex justify-between items-center w-[300px] px-4 py-2 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg hover:text-[#0e1721] focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+                          className="flex justify-between items-center w-[300px] px-4 py-2.5 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg hover:text-[#0e1721] focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
                         >
                           <span className="truncate capitalize">{selectedBarCourse || "Select Course"}</span>
                           <span className={`${isBarCourseOpen ? "rotate-180 duration-300" : "duration-300"}`}>
                             <IoIosArrowDown />
                           </span>
                         </button>
-
                         {isBarCourseOpen && (
-                          <div className="absolute capitalize z-50 w-full mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out">
+                          <div ref={barCourseRef} className="absolute capitalize z-50 max-h-[182px] overflow-scroll w-full mt-1 bg-surface-100 border border-dark-200 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out scrollbar-webkit">
                             <div className="cursor-pointer p-2">
-
-                              <div
-                                onClick={() => handleBarCourseSelect("All Courses")}
-                                className="xlg:px-4 px-2 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg cursor-pointer"
-                              >
-                                All Courses
-                              </div>
                               {courseList.map((course, index) => (
                                 <div
                                   key={index}
@@ -665,24 +666,21 @@ const AdminDashboard = () => {
                     <div className="flex justify-center items-center py-4 w-full">
                       <CircularProgress />
                     </div>
-                  ) && (
-                      <BarChart barData={programProgress} />
-                    ) : selectedBarCourse ? (
-                      ["classes_percentage", "attendance_percentage", "percentage_assignments", "percentage_quizzes", "percentage_projects", "percentage_exams"].every((key) => CourseProgress[key] === 0) ? (
-                        <div className="text-sm text-dark-400 flex justify-center items-center py-4 w-full">
-                          <p>No Progress Found</p>
-                        </div>
-                      ) : (
-                        <BarChartCourse barData={CourseProgress} />
-                      )
-                    ) : null}
+                  ) : changeProgress ? (
+                    ["classes_percentage", "attendance_percentage", "percentage_assignments", "percentage_quizzes", "percentage_projects", "percentage_exams"].every((key) => CourseProgress[key] === 0) ? (
+                      <div className="text-sm text-dark-400 flex justify-center items-center py-4 w-full h-[400px]">
+                        <p>No Progress Found</p>
+                      </div>
+                    ) : (
+                      <BarChartCourse barData={CourseProgress} />
+                    )
+                  ) : (
+                    <BarChart barData={programProgress} />
+                  )}
                 </div>
+
               </div>
-
             </div>
-            {/* </div> */}
-
-
 
             <div className="bg-surface-100 min-w-[32%] p-4 rounded-xl h-[420px] max-sm:h-[500px]">
               <div className="flex w-full xmd:flex-col ssm:flex-row flex-col justify-between xmd:items-start items-center">

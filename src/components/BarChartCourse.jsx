@@ -2,6 +2,8 @@ import React from "react";
 import { Bar } from "react-chartjs-2";
 
 const BarChartCourse = ({ barData }) => {
+  const barThickness = typeof window !== "undefined" && window.innerWidth < 640 ? 30 : 100;
+
   const totalWidth = 6 * 250;
   return (
     <div
@@ -9,7 +11,6 @@ const BarChartCourse = ({ barData }) => {
       style={{ width: "100%", height: "315px" }}
     >
       <div className="h-full">
-
         <Bar
           data={{
             labels: [
@@ -22,7 +23,18 @@ const BarChartCourse = ({ barData }) => {
             ],
             datasets: [
               {
-                label: "Average Obtained Sum",
+                label: "Background",
+                data: [100, 100, 100, 100, 100, 100],
+                backgroundColor: "#F6FBFD",
+                // borderRadius: 8,
+                barThickness: barThickness,
+                categoryPercentage: 0.6,
+                barPercentage: 0.7,
+                order: 2,
+                
+              },
+              {
+                label: "Average Obtained Sum %",
                 data: [
                   barData.classes_percentage,
                   barData.attendance_percentage,
@@ -32,10 +44,17 @@ const BarChartCourse = ({ barData }) => {
                   barData.avg_obtain_sum_exams,
                 ],
                 backgroundColor: "#0074EE",
-                barThickness: 100,
-                borderRadius: 5
+                barThickness: barThickness,
+                categoryPercentage: 0.6,
+                barPercentage: 0.7,
+                order: 1,
+                borderRadius: {
+                  topLeft: 8,
+                  topRight: 8
+                },
               },
             ],
+            
           }}
           options={{
             maintainAspectRatio: false,
@@ -47,7 +66,7 @@ const BarChartCourse = ({ barData }) => {
               },
               y: {
                 beginAtZero: true,
-                max: 100, 
+                max: 100,
                 stacked: false,
                 title: {
                   display: true,
@@ -62,7 +81,17 @@ const BarChartCourse = ({ barData }) => {
                 },
               },
             },
-
+            plugins: {
+              legend: {
+                display: true,
+                position: "bottom",
+                labels: {
+                  boxWidth: 12,
+                  boxHeight: 12,
+                  padding: 5,
+                },
+              },
+            },
             plugins: {
               tooltip: {
                 callbacks: {
