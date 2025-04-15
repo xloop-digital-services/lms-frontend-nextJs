@@ -79,7 +79,13 @@ const AssessmentDescModal = ({
                         downloadFile(quiz.content);
                       }}
                     >
-                      {quiz?.content?.split("/").pop()}
+                      {(() => {
+                        const fileName = quiz?.content?.split("/").pop(); 
+                        const match = fileName.match(/^(.+?)_\d+\.(.+)$/); 
+                        return match ? `${match[1]}.${match[2]}` : fileName; 
+                      })()}
+                      
+                      {/* {quiz?.content?.split("/").pop()} */}
                       {/* {quiz.assignment_name} */}
                     </a>
                   </div>

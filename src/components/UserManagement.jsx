@@ -131,7 +131,6 @@ const UserManagement = ({ heading, program, loadingProgram, goBack }) => {
   }, [selectedOption]);
 
   useEffect(() => {
-    // //console.log("userUpdate", statusUpdated);
     setMessage("");
     setUserByProgramID([]);
     if (programID) {
@@ -153,7 +152,6 @@ const UserManagement = ({ heading, program, loadingProgram, goBack }) => {
           setLoading(false);
         }
       };
-
       handleUserByStatus();
     }
   }, [programID, selectedStatus, selectedOption, statusUpdated]);

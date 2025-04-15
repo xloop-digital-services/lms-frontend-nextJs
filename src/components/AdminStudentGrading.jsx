@@ -1,17 +1,22 @@
 "use client";
 import {
+  allStudentsCoursePerformance,
   getAttendanceBySessionId,
   getInstructorSessionsbyCourseId,
   listAllBatches,
   listSessionByCourseId,
 } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
-import { Try } from "@mui/icons-material";
+import { Try, Upload } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import useClickOutside from "@/providers/useClickOutside";
+import { FaDownload, FaUpload } from "react-icons/fa";
+import * as XLSX from "xlsx";
+import TopScoreModal from "./Modal/TopScoreModal";
+import { saveAs } from 'file-saver';
 
 const AdminStudentGrading = ({ courseId }) => {
   const { userData } = useAuth();
@@ -34,9 +39,27 @@ const AdminStudentGrading = ({ courseId }) => {
   const [selectedSession, setSelectedSession] = useState("");
   const sessionButton = useRef(null);
   const sessionDropdown = useRef(null);
-
   const [selectedSessionId, setSelectedSessionId] = useState("");
   const [selectedBatchId, setSelectedBatchId] = useState("");
+  const [showMenu, setShowMenu] = useState(false);
+  const menuRef = useRef();
+  const [openPerformanceModal, setOpenPerformanceModal] = useState(false);
+  const [studentPerformance, setStudentPerformance] = useState();
+  const [loadingScore, setLoadingScore] = useState(false);
+
+
+  const handleClickOutside = (e) => {
+    if (menuRef.current && !menuRef.current.contains(e.target)) {
+      setShowMenu(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+
   useClickOutside(sessionDropdown, sessionButton, () =>
     setIsSessionOpen(false)
   );
@@ -94,6 +117,21 @@ const AdminStudentGrading = ({ courseId }) => {
     }
   }
 
+  async function fetchCoursePerformance() {
+    setLoadingScore(true);
+    try {
+      const response = await allStudentsCoursePerformance(courseId, selectedSessionId);
+      if (response.status === 200) {
+        setStudentPerformance(response?.data?.data);
+        console.log(response?.data?.data);
+      } else {
+      }
+    } catch (error) {
+    } finally {
+      setLoadingScore(false);
+    }
+  }
+
   const fetchAllSessions = async () => {
     try {
       const response = await listSessionByCourseId(courseId);
@@ -131,8 +169,36 @@ const AdminStudentGrading = ({ courseId }) => {
       fetchSessions();
     } else {
       fetchAllSessions();
+      fetchCoursePerformance();
     }
   }, [selectedSessionId]);
+
+  const generateTemplate = () => {
+    const workbook = XLSX.utils.book_new();
+
+    const sheets = {
+      Assignments: [['Title', 'Total Marks', 'Due Date']],
+      Quizzes: [['Title', 'Total Marks', 'Date']],
+      Exams: [['Title', 'Total Marks', 'Date']],
+      Projects: [['Title', 'Total Marks', 'Submission Date']],
+    };
+
+    Object.entries(sheets).forEach(([sheetName, data]) => {
+      const worksheet = XLSX.utils.aoa_to_sheet(data);
+      XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+    });
+
+    const wbout = XLSX.write(workbook, { type: 'binary', bookType: 'xlsx' });
+
+    const buf = new ArrayBuffer(wbout.length);
+    const view = new Uint8Array(buf);
+    for (let i = 0; i < wbout.length; i++) {
+      view[i] = wbout.charCodeAt(i) & 0xff;
+    }
+
+    const blob = new Blob([buf], { type: 'application/octet-stream' });
+    saveAs(blob, 'grading-template.xlsx');
+  };
 
   return (
     <div className="flex flex-col">
@@ -142,9 +208,8 @@ const AdminStudentGrading = ({ courseId }) => {
           <button
             ref={sessionButton}
             onClick={toggleSessionOpen}
-            className={`${
-              !selectedSession ? "text-[#92A7BE]" : "text-[#424B55]"
-            } flex justify-between items-center w-full hover:text-[#0E1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#ACC5E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+            className={`${!selectedSession ? "text-[#92A7BE]" : "text-[#424B55]"
+              } flex justify-between items-center w-full hover:text-[#0E1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#ACC5E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
           >
             {selectedSession || "Select a session"}
             <span
@@ -161,7 +226,7 @@ const AdminStudentGrading = ({ courseId }) => {
               className="absolute top-full left-0 z-20 w-full lg:max-h-[170px] max-h-[150px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
             >
               {Array.isArray(instructorSessions.data) &&
-              instructorSessions.data.length > 0 ? (
+                instructorSessions.data.length > 0 ? (
                 instructorSessions.data.map((session, index) => (
                   <div
                     key={index}
@@ -190,6 +255,49 @@ const AdminStudentGrading = ({ courseId }) => {
           )}
         </div>
       </div>
+      {
+        selectedSessionId &&
+        <div className="flex max-md:flex-col my-2 items-end justify-end">
+          <div className="mr-2">
+            <button
+              onClick={() => setOpenPerformanceModal(true)}
+              title="View student performance report"
+              className="flex items-center gap-1 text-blue-500 hover:text-blue-300 rounded-md border border-dark-300 px-2 py-1"
+            >
+              {/* <FaDownload /> */}
+              View overall course progress
+            </button>
+
+          </div>
+          {/* <div className="relative inline-block" ref={menuRef}>
+            <button
+              onClick={() => setShowMenu(!showMenu)}
+              title="Download student performance report"
+              className="flex items-center gap-1 text-blue-500 hover:text-blue-300 rounded-md border border-dark-300 px-2 py-1"
+            >
+              <FaUpload />
+              Import
+            </button>
+            {showMenu && (
+              <div className="absolute left-[-6.8rem] mt-2 w-48 bg-surface-100 border border-dark-300 rounded shadow-md z-50">
+
+                <button
+                  onClick={generateTemplate}
+                  className="w-full text-left px-4 py-2 hover:bg-dark-100"
+                >
+                  Download template
+                </button>
+                <button
+                  // onClick={() => handleExport('pdf')}
+                  className="w-full text-left px-4 py-2 hover:bg-dark-100"
+                >
+                  Upload Excel
+                </button>
+              </div>
+            )}
+          </div> */}
+        </div>
+      }
       <div className="-m-1.5 overflow-x-auto">
         <div className="p-1.5 min-w-full inline-block align-middle">
           <div className="border border-dark-300 rounded-lg divide-y divide-dark-200 dark:border-gray-700 dark:divide-gray-700">
@@ -254,8 +362,22 @@ const AdminStudentGrading = ({ courseId }) => {
             </div>
           </div>
         </div>
+
+        {openPerformanceModal && (
+          <TopScoreModal
+            scores={studentPerformance}
+            loadingScore={loadingScore}
+            showAll={true}
+            setOpenList={setOpenPerformanceModal}
+            title='course wise'
+          />
+        )}
+
       </div>
     </div>
+
+
+
   );
 };
 

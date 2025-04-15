@@ -34,6 +34,7 @@ import UploadContent from "@/components/Modal/UploadFile";
 import DeleteConfirmationPopup from "@/components/Modal/DeleteConfirmationPopUp";
 import { handleFileUploadToS3 } from "@/components/ApplicationForm";
 import { formatDateTime } from "@/components/AdminDataStructure";
+import Link from "next/link";
 
 export const downloadFile = async (filePath) => {
   //console.log("ye raha", filePath);
@@ -611,11 +612,10 @@ export default function Page({ params }) {
         </div>
       ) : (
         <div
-          className={`flex-1 transition-transform pt-[90px] space-y-4 max-md:pt-32 font-inter ${
-            isSidebarOpen
+          className={`flex-1 transition-transform pt-[90px] space-y-4 max-md:pt-32 font-inter ${isSidebarOpen
               ? "translate-x-64 ml-20 "
               : "translate-x-0 pl-10 pr-10 max-md:pl-2 max-md:pr-2"
-          }`}
+            }`}
           style={{ width: isSidebarOpen ? "81%" : "100%" }}
         >
           <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4">
@@ -657,11 +657,10 @@ export default function Page({ params }) {
 
                         <div className="w-11 h-6 bg-blue-600 rounded-full"></div>
                         <div
-                          className={`absolute w-4 h-4 bg-blue-300 rounded-full shadow-md transform transition-transform ${
-                            courseStatus === 1
+                          className={`absolute w-4 h-4 bg-blue-300 rounded-full shadow-md transform transition-transform ${courseStatus === 1
                               ? "translate-x-5"
                               : "translate-x-1"
-                          }`}
+                            }`}
                         ></div>
                       </label>
                       <span className="ml-4 text-md">
@@ -750,7 +749,6 @@ export default function Page({ params }) {
                       />
                     </div>
                   </div>
-
                   <div className="my-4 sm:mb-0">
                     <label className="text-lg  text-blue-500 font-exo font-bold">
                       Skills Names
@@ -788,7 +786,6 @@ export default function Page({ params }) {
                         >
                           Create a Skill
                         </button>
-
                         <select
                           value=""
                           onChange={handleSelectChange}
@@ -827,18 +824,65 @@ export default function Page({ params }) {
                     {courseData.about}
                   </p>
                 </div>
+                <div className="flex flex-col mt-2">
+                  <h2 className="text-xl text-blue-500 font-exo font-bold mb-2">
+                    Course Activities
+                  </h2>
+                  <Link
+                    href={`/assignment/course/${courseId}`}
+                    className="text-lg text-dark-500 hover:underline"
+                  >
+                    Assignments{" "}
+                  </Link>
+                  <Link
+                    href={`/quiz/course/${courseId}`}
+                    className="text-lg text-dark-500 hover:underline"
+                  >
+                    {" "}
+                    Quizzes{" "}
+                  </Link>
+                  <Link
+                    href={`/project/course/${courseId}`}
+                    className="text-lg text-dark-500 hover:underline"
+                  >
+                    {" "}
+                    Project{" "}
+                  </Link>
+                  <Link
+                    href={`/exam/course/${courseId}`}
+                    className="text-lg text-dark-500 hover:underline"
+                  >
+                    {" "}
+                    Exam{" "}
+                  </Link>
+                  <Link
+                    href={`/attendance/course/${courseId}`}
+                    className="text-lg text-dark-500 hover:underline"
+                  >
+                    {" "}
+                    Attendance{" "}
+                  </Link>
+                  <Link
+                    href={`/grading/course/${courseId}`}
+                    className="text-lg text-dark-500 hover:underline"
+                  >
+                    {" "}
+                    Grading{" "}
+                  </Link>
+                </div>
                 <div className="flex flex-col">
-                  <div className="flex justify-between max-md:flex-col mt-8 mb-4 max-sm:my-2">
+                  <div className="flex justify-between max-md:flex-col mt-4 mb-4 max-sm:my-2">
                     <h2 className="text-xl text-blue-500 font-exo font-bold">
                       Skills You gain
                     </h2>
                   </div>
-                  <div className="flex gap-2 max-md:flex-col">
+
+                  <div className="flex flex-wrap gap-2 max-md:flex-col">
                     {skills?.length > 0 ? (
                       skills.map((skillName, index) => (
                         <div
                           key={index}
-                          className="flex bg-blue-600 w-fit py-[9px] px-5 rounded-lg items-center space-x-2 max-md:mt-2 "
+                          className="flex bg-blue-600 py-[9px] px-5 rounded-lg items-center space-x-2 max-md:mt-2"
                         >
                           <p className="uppercase text-[12px] text-blue-300">
                             {skillName}
@@ -849,6 +893,7 @@ export default function Page({ params }) {
                       <p>No skills available</p>
                     )}
                   </div>
+
                 </div>
               </>
             )}
@@ -889,15 +934,14 @@ export default function Page({ params }) {
             )}
             {isAdmin && (
               <div className="relative space-y-2 text-[15px] w-full">
-                <p className="text-blue-500 font-semibold mt-4">
+                <p className="text-blue-500 font-semibold mt-4 ">
                   Select Session
                 </p>
                 <button
                   ref={sessionButton}
                   onClick={toggleSessionOpen}
-                  className={`${
-                    !selectedSession ? "text-[#92A7BE]" : "text-[#424B55]"
-                  } flex justify-between items-center w-full hover:text-[#0E1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#ACC5E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                  className={`${!selectedSession ? "text-[#92A7BE]" : "text-[#424B55]"
+                    } flex justify-between items-center w-full hover:text-[#0E1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#ACC5E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
                   {selectedSession || "Select a session"}
                   <span
@@ -935,14 +979,13 @@ export default function Page({ params }) {
               </div>
             )}
             {isInstructor && (
-              <div className="relative space-y-2 text-[15px] w-full">
+              <div className="relative space-y-2 text-[15px] w-full mt-4">
                 <p className="text-blue-500 font-semibold">Select Session</p>
                 <button
                   ref={sessionButton}
                   onClick={toggleSessionOpen}
-                  className={`${
-                    !selectedSession ? "text-[#92A7BE]" : "text-[#424B55]"
-                  } flex justify-between items-center w-full hover:text-[#0E1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#ACC5E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                  className={`${!selectedSession ? "text-[#92A7BE]" : "text-[#424B55]"
+                    } flex justify-between items-center w-full hover:text-[#0E1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#ACC5E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
                   {selectedSession
                     ? `${selectedSession.session_name}`
@@ -986,6 +1029,7 @@ export default function Page({ params }) {
                 <h2 className="text-xl font-exo text-blue-500 font-bold">
                   Modules
                 </h2>
+
                 {!isStudent && (
                   <button
                     className=" flex justify-center items-center gap-2  text-surface-100 bg-blue-300 p-4 rounded-xl hover:bg-blue-700"
@@ -1032,11 +1076,10 @@ export default function Page({ params }) {
                         />
                         <div className="w-11 h-6 bg-blue-600 rounded-full"></div>
                         <div
-                          className={`absolute w-4 h-4 bg-blue-300 rounded-full shadow-md transform transition-transform ${
-                            moduleStatus === 1
+                          className={`absolute w-4 h-4 bg-blue-300 rounded-full shadow-md transform transition-transform ${moduleStatus === 1
                               ? "translate-x-5"
                               : "translate-x-1"
-                          }`}
+                            }`}
                         ></div>
                       </label>
                       <span className="ml-4 text-md">
@@ -1081,11 +1124,10 @@ export default function Page({ params }) {
                       Upload File
                     </button>
                     <button
-                      className={`w-88 flex justify-center items-center gap-2 mt-4 p-4 max-sm:p-2 rounded-xl mr-4 max-sm:text-sm ${
-                        loaderModule
+                      className={`w-88 flex justify-center items-center gap-2 mt-4 p-4 max-sm:p-2 rounded-xl mr-4 max-sm:text-sm ${loaderModule
                           ? "bg-blue-300 cursor-not-allowed"
                           : "bg-blue-300 hover:bg-blue-700"
-                      } text-surface-100`}
+                        } text-surface-100`}
                       onClick={handleCreateModule}
                       disabled={loaderModule}
                     >
@@ -1127,11 +1169,10 @@ export default function Page({ params }) {
                                   Module Status
                                 </span>
                                 <label
-                                  className={`relative inline-flex items-center ${
-                                    module.status === 1
+                                  className={`relative inline-flex items-center ${module.status === 1
                                       ? "cursor-not-allowed"
                                       : "cursor-pointer"
-                                  }`}
+                                    }`}
                                 >
                                   <input
                                     type="checkbox"
@@ -1146,18 +1187,16 @@ export default function Page({ params }) {
                                     className="sr-only"
                                   />
                                   <div
-                                    className={`w-11 h-6 rounded-full ${
-                                      module.status === 1
+                                    className={`w-11 h-6 rounded-full ${module.status === 1
                                         ? "bg-dark-100"
                                         : "bg-blue-600"
-                                    }`}
+                                      }`}
                                   ></div>
                                   <div
-                                    className={`absolute w-4 h-4 rounded-full shadow-md transform transition-transform ${
-                                      module.status === 1
+                                    className={`absolute w-4 h-4 rounded-full shadow-md transform transition-transform ${module.status === 1
                                         ? "translate-x-5 bg-dark-200"
                                         : "translate-x-1 bg-blue-300"
-                                    }`}
+                                      }`}
                                   ></div>
                                 </label>
                                 <span className="ml-4 text-md">
@@ -1191,9 +1230,8 @@ export default function Page({ params }) {
                             <button
                               onClick={() => handleDeleteClick(module.id)}
                               title="Delete Module"
-                              className={`flex justify-center mt-4 items-center gap-2 text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-blue-700 ${
-                                moduleId === module.id ? "hidden" : ""
-                              }`}
+                              className={`flex justify-center mt-4 items-center gap-2 text-surface-100 bg-blue-300 p-4 rounded-xl mr-4 hover:bg-blue-700 ${moduleId === module.id ? "hidden" : ""
+                                }`}
                             >
                               <p className="flex justify-center items-center gap-2">
                                 <FaTrash />
@@ -1203,11 +1241,10 @@ export default function Page({ params }) {
                             {moduleId === module.id && (
                               <>
                                 <button
-                                  className={`flex justify-center items-center gap-2 mt-4 p-4 rounded-xl mr-4 ${
-                                    loaderModule
+                                  className={`flex justify-center items-center gap-2 mt-4 p-4 rounded-xl mr-4 ${loaderModule
                                       ? "bg-blue-300 cursor-not-allowed"
                                       : "bg-blue-300 hover:bg-blue-700"
-                                  } text-surface-100`}
+                                    } text-surface-100`}
                                   onClick={handleSaveModule}
                                   disabled={loaderModule}
                                 >
@@ -1290,11 +1327,11 @@ export default function Page({ params }) {
                         </p>
                       )}
                       {module?.files?.map((file) => (
-                        <div className="flex justify-between max-md:flex-col" key={file.id}>
-                          <div
-                            className="flex items-center gap-2 group"
-                            
-                          >
+                        <div
+                          className="flex justify-between max-md:flex-col"
+                          key={file.id}
+                        >
+                          <div className="flex items-center gap-2 group">
                             <a
                               href={file.file}
                               className="group-hover:cursor-pointer flex justify-center items-center space-x-2"
@@ -1315,7 +1352,7 @@ export default function Page({ params }) {
                             <p>{downloadStatus}</p>
                           </div>
                           <div className="flex my-4 items-center justify-center p-2 h-8 bg-blue-600 text-blue-300 rounded-md">
-                            {formatDateTime(module.created_at)}
+                            {`Posted on: ${formatDateTime(module.created_at)}`}
                           </div>
                         </div>
                       ))}

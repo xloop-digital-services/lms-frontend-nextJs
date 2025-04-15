@@ -28,44 +28,16 @@ export default function Page({ params }) {
         if (response.status === 200) {
           setAttendance(response.data);
           setLoader(false);
-          //console.log(attendance);
-          //console.log(response.data);
         } else {
-          //console.error("Failed to fetch courses", response.status);
           setLoader(false);
         }
       } catch (error) {
-        //console.log("error", error);
-        // setLoader(false);
       }
     }
 
     fetchAttendance();
   }, []);
 
-  // useEffect(() => {
-  //   if (!regId) return;
-  //   async function fetchAttendance() {
-  //     const response = await getStudentAttendance(courseId, regId);
-  //     setLoader(true);
-  //     try {
-  //       if (response.status === 200) {
-  //         setAttendanceStudent(response.data);
-  //         setLoader(false);
-  //         //console.log(attendance);
-  //         //console.log(response.data);
-  //       } else {
-  //         //console.error("Failed to fetch courses", response.status);
-  //         setLoader(false);
-  //       }
-  //     } catch (error) {
-  //       //console.log("error", error);
-  //       setLoader(false);
-  //     }
-  //   }
-
-  //   fetchAttendance();
-  // }, [regId]);
   return (
     <>
       {loader ? (
@@ -84,11 +56,10 @@ export default function Page({ params }) {
           <div className=" bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl  p-4">
             <CourseHead
               id={courseId}
-              // rating="Top Instructor"
-              // instructorName="Maaz"
               haveStatus={isStudent ? true : false}
               program="course"
             />
+          
             <AdminStudentGrading courseId={courseId} />
           </div>
         </div>

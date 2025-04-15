@@ -3,7 +3,7 @@ import { Chart as ChartJS } from "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 
 const BarChart = ({ barData }) => {
-  // console.log(barData, "length");
+  const barThickness = typeof window !== "undefined" && window.innerWidth < 640 ? 30 : 100;
 
   const totalWidth = barData.length * 250;
   return (
@@ -24,6 +24,17 @@ const BarChart = ({ barData }) => {
             ],
             datasets: [
               {
+                label: "Background",
+                data: [100, 100, 100, 100, 100, 100],
+                backgroundColor: "#F6FBFD",
+                // borderRadius: 8,
+                barThickness: barThickness,
+                categoryPercentage: 0.6,
+                barPercentage: 0.7,
+                order: 2,
+
+              },
+              {
                 label: "Percentage (%)",
                 data: [
                   barData.classes_percentage,
@@ -34,7 +45,14 @@ const BarChart = ({ barData }) => {
                   barData.percentage_exams,
                 ],
                 backgroundColor: "#0074EE",
-                barThickness: 30,
+                barThickness: barThickness,
+                categoryPercentage: 0.6,
+                barPercentage: 0.7,
+                order: 1,
+                borderRadius: {
+                  topLeft: 8,
+                  topRight: 8
+                },
               },
             ],
           }}
@@ -42,35 +60,24 @@ const BarChart = ({ barData }) => {
             maintainAspectRatio: false,
             scales: {
               x: {
-                grid: {
-                  display: false,
-                },
-                ticks: {
-                  autoSkip: false, // Prevent skipping of ticks to show all labels
-                  font: {
-                    // size: 10,
-                  },
-                  callback: function (value) {
-                    return this.getLabelForValue(value).split("\n");
-                  },
-                },
+                stacked: true,
+                grid: { display: false },
+                ticks: { autoSkip: false },
               },
               y: {
                 beginAtZero: true,
-                max: 100, // Set maximum value of Y-axis to 100
+                max: 100,
+                stacked: false,
                 title: {
                   display: true,
-                  text: "Progress", // Y-axis label
+                  text: "Average Obtained Sum",
                 },
                 ticks: {
-                  // Only show ticks at 0, 50, and 100
                   stepSize: 20,
-                  callback: function (value) {
-                    return value + "%"; // Add "%" to Y-axis tick values
-                  },
+                  callback: (value) => `${value}`,
                 },
                 grid: {
-                  display: true, // Hide Y-axis grid lines
+                  display: true,
                 },
               },
             },
@@ -78,13 +85,10 @@ const BarChart = ({ barData }) => {
               tooltip: {
                 callbacks: {
                   title: (tooltipItems) => {
-                    // Show the label (e.g., Classes, Attendance, etc.)
                     return tooltipItems[0].label;
                   },
                   label: (tooltipItem) => {
                     const dataIndex = tooltipItem.dataIndex;
-
-                    // Map data for tooltips
                     const dataMapping = [
                       {
                         label: "Classes",
@@ -106,52 +110,49 @@ const BarChart = ({ barData }) => {
                         label: "Assignments",
                         percentage: barData.percentage_assignments,
                         details: [
-                          `Obtained: ${barData.avg_obtain_sum_assignments.toFixed(2)}`,
-                          `Total: ${barData.avg_total_sum_assignments.toFixed(2)}`,
+                          `Obtained: ${(barData.avg_obtain_sum_assignments ?? 0).toFixed(2)}`,
+                          `Total: ${(barData.avg_total_sum_assignments ?? 0).toFixed(2)}`,
                         ],
                       },
                       {
                         label: "Quizzes",
                         percentage: barData.percentage_quizzes,
                         details: [
-                          `Obtained: ${barData.avg_obtain_sum_quizzes.toFixed(2)}`,
-                          `Total: ${barData.avg_total_sum_quizzes.toFixed(2)}`,
+                          `Obtained: ${(barData.avg_obtain_sum_quizzes ?? 0).toFixed(2)}`,
+                          `Total: ${(barData.avg_total_sum_quizzes ?? 0).toFixed(2)}`,
                         ],
                       },
                       {
                         label: "Projects",
                         percentage: barData.percentage_projects,
                         details: [
-                          `Obtained: ${barData.avg_obtain_sum_projects.toFixed(2)}`,
-                          `Total: ${barData.avg_total_sum_projects.toFixed(2)}`,
+                          `Obtained: ${(barData.avg_obtain_sum_projects ?? 0).toFixed(2)}`,
+                          `Total: ${(barData.avg_total_sum_projects ?? 0).toFixed(2)}`,
                         ],
                       },
                       {
                         label: "Exams",
                         percentage: barData.percentage_exams,
                         details: [
-                          `Obtained: ${barData.avg_obtain_sum_exams.toFixed(2)}`,
-                          `Total: ${barData.avg_total_sum_exams.toFixed(2)}`,
+                          `Obtained: ${(barData.avg_obtain_sum_exams ?? 0).toFixed(2)}`,
+                          `Total: ${(barData.avg_total_sum_exams ?? 0).toFixed(2)}`,
                         ],
                       },
                     ];
 
-                    const currentData = dataMapping[dataIndex];
-                    return [
-                      `Percentage: ${currentData.percentage.toFixed(2)}%`,
-                      ...currentData.details,
-                    ];
-                  },
+                    return dataMapping[dataIndex];
+                  }
+
                 },
               },
               legend: {
                 display: true,
-                position: "top",
+                position: "bottom",
                 align: "center",
                 labels: {
-                  boxWidth: 40,
-                  boxHeight: 5,
-                  padding: 10, // Padding between the legend and chart
+                  boxWidth: 15,
+                  boxHeight: 15,
+                  padding: 7,
                 },
               },
             },

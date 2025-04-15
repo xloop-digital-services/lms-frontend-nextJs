@@ -9,12 +9,15 @@ import CourseHead from "@/components/CourseHead";
 import {
   getAssignmentProgress,
   getExamProgress,
+  gethideGradingforStudents,
   getOverallProgress,
   getProjectProgress,
   getQuizProgress,
   getUserSessions,
 } from "@/api/route";
 import { useAuth } from "@/providers/AuthContext";
+import Lottie from "lottie-react";
+import bouncing from "../../public/data/bouncing.json";
 
 export default function StudentGrading({ courseId, regId: propRegId }) {
   const { width } = useWindowSize();
@@ -32,12 +35,9 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
   const isStudent = userData?.Group === "student";
   const [sessions, setSessions] = useState([]);
   const [sessionId, setSessionId] = useState(null);
-  //   const courseId = params.courseId;
-  // const userId = userData?.user_data?.user;
   const [studentInstructorName, setStudentInstructorName] = useState(null);
   const regId = isStudent ? userData?.user_data?.registration_id : propRegId;
-  // const regId = userData?.user_data?.registration_id;
-  // //console.log(regId);
+  const [hideGrading, setHideGrading] = useState();
   const toggleOpen = () => {
     setIsOpen(!isOpen);
   };
@@ -67,13 +67,8 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
           );
         }
       } else {
-        //console.error(
-        //   "Failed to fetch user sessions, status:",
-        //   response.status
-        // );
       }
     } catch (error) {
-      //console.log("Error:", error);
     } finally {
       setLoader(false);
     }
@@ -82,8 +77,6 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
   useEffect(() => {
     fetchSessionForUser();
   }, []);
-
-  //console.log(sessionId);
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
     setIsOpen(false);
@@ -105,18 +98,44 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
       //console.log("error", error);
     }
   }
+  const fetchStudentsGrading = async () => {
+    if (!sessionId) {
+      toast.error("Session ID is required.");
+      return;
+    }
+    console.log(sessionId);
+
+    try {
+      const currentFlagResponse = await gethideGradingforStudents(sessionId);
+
+      if (currentFlagResponse.status !== 200) {
+        toast.error("Failed to fetch current grading status.");
+        return;
+      }
+      const currentFlag = currentFlagResponse.data.grading_flag;
+      setHideGrading(currentFlag);
+      // console.log(currentFlagResponse.data);
+
+    } catch (error) {
+      toast.error("Error fetching grading status.");
+    }
+  };
+
 
   useEffect(() => {
     if (!regId || !sessionId) return;
     fetchOverallProgress();
   }, []);
   useEffect(() => {
+
     if (!regId || !sessionId) return;
     fetchOverallProgress();
     fetchAssignmentProgress();
     fetchQuizProgress();
     fetchProjectProgress();
     fetchExamProgress();
+    fetchStudentsGrading()
+
   }, [regId, sessionId]);
 
   useEffect(() => {
@@ -132,6 +151,8 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+
 
   async function fetchAssignmentProgress() {
     const response = await getAssignmentProgress(courseId, sessionId, regId);
@@ -204,172 +225,100 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
     setOpenSection(openSection === section ? null : section);
   };
 
+
+
   return (
-    <>
-      <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4">
-        <CourseHead
-          id={courseId}
-          // rating="Top Instructor"
-          // instructorName="Maaz"
-          haveStatus={true}
-          program="course"
-          instructorName={studentInstructorName ? studentInstructorName : ""}
-        />
-        <div className="my-5 space-y-3">
-          <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
-            <div
-              className=" flex justify-between items-center "
-              onClick={() => handleToggleSection("Assignment")}
-            >
-              <p className="text-[17px] font-semibold text-blue-500 font-exo">
-                Assignment
-              </p>
-              <span className="">
-                <IoIosArrowDown />
-              </span>
-            </div>
-            <div
-              className={`transition-container ${
-                openSection === "Assignment"
-                  ? "max-height-full"
-                  : "max-height-0"
-              }`}
-            >
-              {openSection === "Assignment" && (
-                <div className="mt-2">
-                  <StudentMarksTable
-                    key={assignment.id}
-                    field={openSection}
-                    assessments={assignment?.data}
-                  />
-                </div>
-              )}
-            </div>
+    <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4">
+      <CourseHead
+        id={courseId}
+        haveStatus={true}
+        program="course"
+        instructorName={studentInstructorName || ""}
+      />
+
+      {hideGrading ? (
+        <div className="flex flex-col items-center justify-center h-[550px]">
+          <div className="w-full flex items-center justify-center font-semibold text-blue-500 ">
+            This section is unavailable for a while.
           </div>
-          <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
-            <div
-              className=" flex justify-between items-center "
-              onClick={() => handleToggleSection("Quiz")}
-            >
-              <p className="text-[17px] font-semibold text-blue-500 font-exo">
-                Quiz
-              </p>
-              <span className="">
-                <IoIosArrowDown />
-              </span>
-            </div>
-            <div
-              className={`transition-container ${
-                openSection === "Quiz" ? "max-height-full" : "max-height-0"
-              }`}
-            >
-              {openSection === "Quiz" && (
-                <div className="mt-2">
-                  <StudentMarksTable
-                    key={quiz.id}
-                    field={openSection}
-                    assessments={quiz?.data}
-                  />
+          <Lottie animationData={bouncing} className="h-[300px]" />
+        </div>
+      ) : (
+        <>
+          <div className="my-5 space-y-3">
+            {[
+              { title: "Assignment", data: assignment },
+              { title: "Quiz", data: quiz },
+              { title: "Project", data: project },
+              { title: "Exam", data: exam },
+            ].map(({ title, data }) => (
+              <div
+                key={title}
+                className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col"
+              >
+                <div
+                  className="flex justify-between items-center"
+                  onClick={() => handleToggleSection(title)}
+                >
+                  <p className="text-[17px] font-semibold text-blue-500 font-exo">
+                    {title}
+                  </p>
+                  <span>
+                    <IoIosArrowDown />
+                  </span>
                 </div>
-              )}
-            </div>
+                <div
+                  className={`transition-container ${openSection === title ? "max-height-full" : "max-height-0"
+                    }`}
+                >
+                  {openSection === title && data && (
+                    <div className="mt-2">
+                      <StudentMarksTable
+                        key={data?.id}
+                        field={openSection}
+                        assessments={data?.data}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
 
-          <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
-            <div
-              className=" flex justify-between items-center "
-              onClick={() => handleToggleSection("Project")}
-            >
-              <p className="text-[17px] font-semibold text-blue-500 font-exo">
-                Project
-              </p>
-              <span className="">
-                <IoIosArrowDown />
-              </span>
-            </div>
-            <div
-              className={`transition-container ${
-                openSection === "Project" ? "max-height-full" : "max-height-0"
-              }`}
-            >
-              {openSection === "Project" && (
-                <div className="mt-2">
-                  <StudentMarksTable
-                    key={project.id}
-                    field={openSection}
-                    assessments={project?.data}
-                  />
-                </div>
-              )}
-            </div>
+          <div className="font-semibold text-blue-500 font-exo py-3">
+            Student Performance Overview
           </div>
 
-          <div className="border border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
-            <div
-              className=" flex justify-between items-center "
-              onClick={() => handleToggleSection("Exam")}
-            >
-              <p className="text-[17px] font-semibold text-blue-500 font-exo">
-                Exam
-              </p>
-              <span className="">
-                <IoIosArrowDown />
-              </span>
-            </div>
-            <div
-              className={`transition-container ${
-                openSection === "Exam" ? "max-height-full" : "max-height-0"
-              }`}
-            >
-              {openSection === "Exam" && (
-                <div className="mt-2">
-                  <StudentMarksTable
-                    key={exam.id}
-                    field={openSection}
-                    assessments={exam?.data}
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-        {/* <div
-            className={`transition-container ${
-              openSection !== null ? "max-height-0" : "max-height-full"
-            }`}
-          > */}
-        <div className={`font-semibold text-blue-500 font-exo py-3 `}>
-          Student Performance Overview
-        </div>
-        {progress ? (
-          <PerformanceTable
-            assignmentScore={progress?.assignments?.grades}
-            assignmentWeightage={progress?.assignments?.weightage}
-            assignmentWeightedScore={progress?.assignments?.percentage}
-            quizWeightage={progress?.quizzes?.weightage}
-            quizScore={progress?.quizzes?.grades}
-            quizWeightedScore={progress?.quizzes?.percentage}
-            projectWeightage={progress?.projects?.weightage}
-            projectScore={progress?.projects?.grades}
-            projectWeightedScore={progress?.projects?.percentage}
-            examsWeightage={progress?.exams?.weightage}
-            examsScore={progress?.exams?.grades}
-            examsWeightedScore={progress?.exams?.percentage}
-            attenWeightage={progress?.attendance?.weightage}
-            attenScore={progress?.attendance?.total_present_attendance}
-            attenWeightedScore={progress?.attendance?.attendance_grace_marks}
-            assignment_total={progress?.assignments?.total_grades}
-            quiz_total={progress?.quizzes?.total_grades}
-            project_total={progress?.projects?.total_grades}
-            exam_total={progress?.exams?.total_grades}
-            atten_total={progress?.attendance?.total_attendance}
-          />
-        ) : (
-          <p className="text-blue-300 h-12 w-full flex justify-center items-center">
-            No Weightages for this course assigned yet
-          </p>
-        )}
-      </div>
-    </>
+          {progress ? (
+            <PerformanceTable
+              assignmentScore={progress?.assignments?.grades}
+              assignmentWeightage={progress?.assignments?.weightage}
+              assignmentWeightedScore={progress?.assignments?.percentage}
+              quizWeightage={progress?.quizzes?.weightage}
+              quizScore={progress?.quizzes?.grades}
+              quizWeightedScore={progress?.quizzes?.percentage}
+              projectWeightage={progress?.projects?.weightage}
+              projectScore={progress?.projects?.grades}
+              projectWeightedScore={progress?.projects?.percentage}
+              examsWeightage={progress?.exams?.weightage}
+              examsScore={progress?.exams?.grades}
+              examsWeightedScore={progress?.exams?.percentage}
+              attenWeightage={progress?.attendance?.weightage}
+              attenScore={progress?.attendance?.total_present_attendance}
+              attenWeightedScore={progress?.attendance?.attendance_grace_marks}
+              assignment_total={progress?.assignments?.total_grades}
+              quiz_total={progress?.quizzes?.total_grades}
+              project_total={progress?.projects?.total_grades}
+              exam_total={progress?.exams?.total_grades}
+              atten_total={progress?.attendance?.total_attendance}
+            />
+          ) : (
+            <p className="text-blue-300 h-12 w-full flex justify-center items-center">
+              No Weightages for this course assigned yet
+            </p>
+          )}
+        </>
+      )}
+    </div>
   );
 }

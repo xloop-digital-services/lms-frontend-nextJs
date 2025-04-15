@@ -14,9 +14,9 @@ export default function CoursesLayout({ children }) {
     <>
       <AuthProvider>
         <SidebarProvider>
-          <Navbar />
-          <SideBar />
-          {children}
+            <Navbar />
+            <SideBar />
+            {children}
         </SidebarProvider>
       </AuthProvider>
     </>

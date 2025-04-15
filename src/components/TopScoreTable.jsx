@@ -2,14 +2,8 @@ import { CircularProgress } from "@mui/material";
 import React, { useEffect } from "react";
 
 const TopScoreTable = ({ total, scores, loadingScore, showAll }) => {
+  console.log(scores);
   const totalQuizMarks = total?.grades_summary?.total_quiz_marks || 0;
-  // console.log(scores);
-  // const totalAssignmentMarks =
-  //   scores.itdata[0]?.grades_summary?.total_assignment_marks || 0;
-  // const totalExamMarks =
-  //   scores.itdata[0]?.grades_summary?.total_exam_marks || 0;
-  // const totalProjectMarks =
-  //   scores.itdata[0]?.grades_summary?.total_project_marks || 0;
   return (
     <div className="flex flex-col ">
       <div className="-m-1.5 overflow-x-auto">
@@ -67,7 +61,7 @@ const TopScoreTable = ({ total, scores, loadingScore, showAll }) => {
                       scope="col"
                       className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]"
                     >
-                      Attendence
+                      Attendance
                     </th>
                     <th
                       scope="col"
@@ -85,7 +79,7 @@ const TopScoreTable = ({ total, scores, loadingScore, showAll }) => {
                       </td>
                     </tr>
                   ) : scores.length > 0 ? (
-                    (showAll ? scores : scores.slice(0, 3)).map(
+                    (showAll ? scores : scores.slice(0, 2)).map(
                       (score, index) => (
                         <tr key={index}>
                           {showAll && (

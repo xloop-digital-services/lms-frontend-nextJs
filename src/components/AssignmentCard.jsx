@@ -32,19 +32,22 @@ const AssignmentCard = ({
               >
                 {type}
               </p>
-              {capacity ||
-                (location && (
-                  <div className="flex w-full bg-[#EBF6FF] py-[9px] px-5 rounded-lg items-center">
-                    <div className="flex justify-evenly w-full">
+              {(capacity || location) && (
+                <div className="flex w-full bg-[#EBF6FF] py-[9px] px-5 rounded-lg items-center">
+                  <div className="flex justify-evenly w-full">
+                    {capacity && (
                       <div className="text-blue-300 uppercase text-[12px] font-bold">
-                        {capacity && `Capacity: ${capacity}`}
+                        Capacity: {capacity}
                       </div>
+                    )}
+                    {location && (
                       <div className="text-blue-300 uppercase text-[12px] font-bold">
-                        {location && `Location: ${location}`}
+                        Location: {location}
                       </div>
-                    </div>
+                    )}
                   </div>
-                ))}
+                </div>
+              )}
             </div>
             <div className="font-bold space-x-2 px-2">
               <p>{title}</p>

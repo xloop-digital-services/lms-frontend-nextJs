@@ -1,8 +1,9 @@
 import React from "react";
-import { Chart as ChartJS } from "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 
 const BarChartCourse = ({ barData }) => {
+  const barThickness = typeof window !== "undefined" && window.innerWidth < 640 ? 30 : 100;
+
   const totalWidth = 6 * 250;
   return (
     <div
@@ -22,7 +23,18 @@ const BarChartCourse = ({ barData }) => {
             ],
             datasets: [
               {
-                label: "Average Obtained Sum",
+                label: "Background",
+                data: [100, 100, 100, 100, 100, 100],
+                backgroundColor: "#F6FBFD",
+                // borderRadius: 8,
+                barThickness: barThickness,
+                categoryPercentage: 0.6,
+                barPercentage: 0.7,
+                order: 2,
+                
+              },
+              {
+                label: "Average Obtained Sum %",
                 data: [
                   barData.classes_percentage,
                   barData.attendance_percentage,
@@ -32,23 +44,30 @@ const BarChartCourse = ({ barData }) => {
                   barData.avg_obtain_sum_exams,
                 ],
                 backgroundColor: "#0074EE",
-                barThickness: 30,
+                barThickness: barThickness,
+                categoryPercentage: 0.6,
+                barPercentage: 0.7,
+                order: 1,
+                borderRadius: {
+                  topLeft: 8,
+                  topRight: 8
+                },
               },
             ],
+            
           }}
           options={{
             maintainAspectRatio: false,
             scales: {
               x: {
-                grid: {
-                  display: false,
-                },
-                ticks: {
-                  autoSkip: false,
-                },
+                stacked: true,
+                grid: { display: false },
+                ticks: { autoSkip: false },
               },
               y: {
                 beginAtZero: true,
+                max: 100,
+                stacked: false,
                 title: {
                   display: true,
                   text: "Average Obtained Sum",
@@ -59,6 +78,17 @@ const BarChartCourse = ({ barData }) => {
                 },
                 grid: {
                   display: true,
+                },
+              },
+            },
+            plugins: {
+              legend: {
+                display: true,
+                position: "bottom",
+                labels: {
+                  boxWidth: 12,
+                  boxHeight: 12,
+                  padding: 5,
                 },
               },
             },
@@ -154,14 +184,15 @@ const BarChartCourse = ({ barData }) => {
               },
               legend: {
                 display: true,
-                position: "top",
+                position: "bottom",
                 align: "center",
                 labels: {
-                  boxWidth: 40,
-                  boxHeight: 5,
-                  padding: 10,
+                  boxWidth: 15,
+                  boxHeight: 15,
+                  padding: 7,
                 },
               },
+
             },
           }}
         />
