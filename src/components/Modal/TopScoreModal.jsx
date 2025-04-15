@@ -5,6 +5,7 @@ import { IoClose } from "react-icons/io5";
 import { FaDownload } from "react-icons/fa";
 
 import { downloadExcel } from "@/utils/downloadExcel";
+import { downloadPDF } from "@/utils/downloadPdf";
 
 
 const TopScoreModal = ({ scores, loadingScore, showAll, setOpenList, title }) => {

@@ -1,5 +1,6 @@
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+import { toast } from "react-toastify";
 
 export const downloadGradingExcel = (data) => {
     const generateSheetData = (category, itemsList) => {
@@ -44,6 +45,12 @@ export const downloadGradingExcel = (data) => {
         XLSX.utils.book_append_sheet(wb, examSheet, "Exams");
     }
 
+    if(wb.SheetNames.length === 0) {
+        toast.warn("No data available to export.");
+        return;
+    }
+
     const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
     saveAs(new Blob([wbout], { type: "application/octet-stream" }), "grading_evaluation.xlsx");
+
 };

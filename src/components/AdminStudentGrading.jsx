@@ -261,15 +261,15 @@ const AdminStudentGrading = ({ courseId }) => {
           <div className="mr-2">
             <button
               onClick={() => setOpenPerformanceModal(true)}
-              title="Download student performance report"
+              title="View student performance report"
               className="flex items-center gap-1 text-blue-500 hover:text-blue-300 rounded-md border border-dark-300 px-2 py-1"
             >
               {/* <FaDownload /> */}
-              View
+              View course progress
             </button>
 
           </div>
-          <div className="relative inline-block" ref={menuRef}>
+          {/* <div className="relative inline-block" ref={menuRef}>
             <button
               onClick={() => setShowMenu(!showMenu)}
               title="Download student performance report"
@@ -295,7 +295,7 @@ const AdminStudentGrading = ({ courseId }) => {
                 </button>
               </div>
             )}
-          </div>
+          </div> */}
         </div>
       }
       <div className="-m-1.5 overflow-x-auto">
