@@ -3,54 +3,137 @@ import { saveAs } from "file-saver";
 import { toast } from "react-toastify";
 
 export const downloadGradingExcel = (data) => {
-    const generateSheetData = (category, itemsList) => {
-        const sheet = [];
+  const allStudentsMap = new Map();
+  const titles = {
+    assignments: [],
+    quizzes: [],
+    projects: [],
+    exams: [],
+  };
 
-        itemsList.forEach(items => {
-            sheet.push([`${category}: ${items.title} (Total Marks: ${items.total_marks})`, "", "", ""]);
-            sheet.push(["Student Name", "Obtained Marks", "Percentage %", "Remarks"]);
+  // 1. Extract titles and prepare student map
+  const fillCategoryData = (category, items) => {
+    items.forEach((item) => {
+      //   const colKey = `${category}: ${item.title} (/ ${item.total_marks})`;
+      const label = category.charAt(0).toUpperCase() + category.slice(1, -1); // e.g. "assignments" -> "Assignment"
+      const colKey = `${label}: ${item.title} (/ ${item.total_marks})`;
 
-            if (Array.isArray(items.students) && items.students.length === 0) {
-                sheet.push(["No students found", "", "", ""]);
-            } else {
-                (items.students || []).forEach(student => {
-                    sheet.push([student.student_name, student.obtained_marks, student.percentage, student?.remarks]);
-                });
-            }
-            sheet.push(["", "", "", ""]);
+      titles[category].push(colKey);
+
+      (item.students || []).forEach((s) => {
+        const id = s.registration_id || s.student_name;
+        if (!allStudentsMap.has(id)) {
+          allStudentsMap.set(id, {
+            "S. No.": 0,
+            "Student ID": s.registration_id || "",
+            "Student Name": s.student_name || "",
+          });
+        }
+        const student = allStudentsMap.get(id);
+        student[colKey] = s.obtained_marks ?? 0;
+      });
+    });
+  };
+
+  if (Array.isArray(data.assignments))
+    fillCategoryData("assignments", data.assignments);
+  if (Array.isArray(data.quizzes)) fillCategoryData("quizzes", data.quizzes);
+  if (Array.isArray(data.projects)) fillCategoryData("projects", data.projects);
+  if (Array.isArray(data.exams)) fillCategoryData("exams", data.exams);
+
+  // Add attendance
+  if (Array.isArray(data.attendance)) {
+    data.attendance.forEach((s) => {
+      const id = s.registration_id || s.student_name;
+      if (!allStudentsMap.has(id)) {
+        allStudentsMap.set(id, {
+          "S. No.": 0,
+          "Student ID": s.registration_id || "",
+          "Student Name": s.student_name || "",
         });
+      }
+      const student = allStudentsMap.get(id);
+      student["Present Classes"] = s.present_classes ?? 0;
+      student["Total Classes"] = s.total_classes ?? 0;
+      student["Attendance %"] = s.percentage?.toFixed(2) ?? "0";
+    });
+  }
 
-        return sheet;
+  // Calculate category totals
+  allStudentsMap.forEach((student) => {
+    const calcTotal = (list) =>
+      list.reduce((sum, title) => sum + (Number(student[title]) || 0), 0);
+
+    // Helper to calculate total marks for a category
+    const getTotalPossibleMarks = (items) => {
+      return items.reduce((sum, item) => sum + (item.total_marks || 0), 0);
     };
 
-    const wb = XLSX.utils.book_new();
+    // Total possible marks per category
+    const totalAssignmentMarks = getTotalPossibleMarks(data.assignments || []);
+    const totalQuizMarks = getTotalPossibleMarks(data.quizzes || []);
+    const totalProjectMarks = getTotalPossibleMarks(data.projects || []);
+    const totalExamMarks = getTotalPossibleMarks(data.exams || []);
 
-    if (data.assignments && data.assignments.length > 0) {
-        const assignmentSheet = XLSX.utils.aoa_to_sheet(generateSheetData("Assignment", data.assignments));
-        XLSX.utils.book_append_sheet(wb, assignmentSheet, "Assignments");
-    }
+    allStudentsMap.forEach((student) => {
+      const getSum = (list) =>
+        list.reduce((sum, key) => sum + (Number(student[key]) || 0), 0);
 
-    if (data.quizzes && data.quizzes.length > 0) {
-        const quizSheet = XLSX.utils.aoa_to_sheet(generateSheetData("Quiz", data.quizzes));
-        XLSX.utils.book_append_sheet(wb, quizSheet, "Quizzes");
-    }
+      const assignmentTotal = getSum(titles.assignments);
+      const quizTotal = getSum(titles.quizzes);
+      const projectTotal = getSum(titles.projects);
+      const examTotal = getSum(titles.exams);
 
-    if (data.projects && data.projects.length > 0) {
-        const projectSheet = XLSX.utils.aoa_to_sheet(generateSheetData("Project", data.projects));
-        XLSX.utils.book_append_sheet(wb, projectSheet, "Projects");
-    }
+      student[
+        "Assignment Total"
+      ] = `${assignmentTotal} / ${totalAssignmentMarks}`;
+      student["Quiz Total"] = `${quizTotal} / ${totalQuizMarks}`;
+      student["Project Total"] = `${projectTotal} / ${totalProjectMarks}`;
+      student["Exam Total"] = `${examTotal} / ${totalExamMarks}`;
+    });
+  });
 
-    if (data.exams && data.exams.length > 0) {
-        const examSheet = XLSX.utils.aoa_to_sheet(generateSheetData("Exam", data.exams));
-        XLSX.utils.book_append_sheet(wb, examSheet, "Exams");
-    }
+  // Construct header
+  const headers = [
+    "S. No.",
+    "Student ID",
+    "Student Name",
+    ...titles.assignments,
+    "Assignment Total",
+    ...titles.quizzes,
+    "Quiz Total",
+    ...titles.projects,
+    "Project Total",
+    ...titles.exams,
+    "Exam Total",
+    "Present Classes",
+    "Total Classes",
+    "Attendance %",
+  ];
 
-    if(wb.SheetNames.length === 0) {
-        toast.warn("No data available to export.");
-        return;
-    }
+  // Construct rows
+  const sheetData = [headers];
+  let i = 1;
+  for (const student of allStudentsMap.values()) {
+    student["S. No."] = i++;
+    const row = headers.map((key) => student[key] ?? "");
+    sheetData.push(row);
+  }
 
-    const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-    saveAs(new Blob([wbout], { type: "application/octet-stream" }), "grading_evaluation.xlsx");
+  if (sheetData.length <= 1) {
+    toast.warn("No data available to export.");
+    return;
+  }
 
+  // Export
+  const ws = XLSX.utils.aoa_to_sheet(sheetData);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Grading Report");
+
+  const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+  saveAs(
+    new Blob([wbout], { type: "application/octet-stream" }),
+    "grading_evaluation.xlsx"
+  );
+  
 };
