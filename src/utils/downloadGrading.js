@@ -59,6 +59,14 @@ export const downloadGradingExcel = (data) => {
     });
   }
 
+  const summaryMap = new Map();
+  (data.student_overall_summary || []).forEach((summary) => {
+    summaryMap.set(
+      summary.registration_id,
+      summary.overall_percentage?.toFixed(2) || "0"
+    );
+  });
+
   // Calculate category totals
   allStudentsMap.forEach((student) => {
     const calcTotal = (list) =>
@@ -84,32 +92,47 @@ export const downloadGradingExcel = (data) => {
       const projectTotal = getSum(titles.projects);
       const examTotal = getSum(titles.exams);
 
-      student[
-        "Assignment Total"
-      ] = `${assignmentTotal} / ${totalAssignmentMarks}`;
-      student["Quiz Total"] = `${quizTotal} / ${totalQuizMarks}`;
-      student["Project Total"] = `${projectTotal} / ${totalProjectMarks}`;
-      student["Exam Total"] = `${examTotal} / ${totalExamMarks}`;
+      student[`Assignment Total (/ ${totalAssignmentMarks})`] = assignmentTotal;
+      student[`Quiz Total (/ ${totalQuizMarks})`] = quizTotal;
+      student[`Project Total (/ ${totalProjectMarks})`] = projectTotal;
+      student[`Exam Total (/ ${totalExamMarks})`] = examTotal;
+      const regId = student["Student ID"];
+      student["Total Percentage"] = summaryMap.get(regId) || "0";
     });
   });
 
-  // Construct header
+  // Helper to calculate total marks for a category
+  const getTotalPossibleMarks = (items) => {
+    return (items || []).reduce(
+      (sum, item) => sum + (item.total_marks || 0),
+      0
+    );
+  };
+
+  // Total possible marks per category (define early)
+  const totalAssignmentMarks = getTotalPossibleMarks(data.assignments);
+  const totalQuizMarks = getTotalPossibleMarks(data.quizzes);
+  const totalProjectMarks = getTotalPossibleMarks(data.projects);
+  const totalExamMarks = getTotalPossibleMarks(data.exams);
+
   const headers = [
     "S. No.",
     "Student ID",
     "Student Name",
     ...titles.assignments,
-    "Assignment Total",
+    `Assignment Total (/ ${totalAssignmentMarks})`,
     ...titles.quizzes,
-    "Quiz Total",
+    `Quiz Total (/ ${totalQuizMarks})`,
     ...titles.projects,
-    "Project Total",
+    `Project Total (/ ${totalProjectMarks})`,
     ...titles.exams,
-    "Exam Total",
+    `Exam Total (/ ${totalExamMarks})`,
     "Present Classes",
     "Total Classes",
     "Attendance %",
+    "Total Percentage", 
   ];
+  
 
   // Construct rows
   const sheetData = [headers];
@@ -135,5 +158,4 @@ export const downloadGradingExcel = (data) => {
     new Blob([wbout], { type: "application/octet-stream" }),
     "grading_evaluation.xlsx"
   );
-  
 };
