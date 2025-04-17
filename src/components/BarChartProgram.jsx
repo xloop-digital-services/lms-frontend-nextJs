@@ -5,7 +5,8 @@ import { Bar } from "react-chartjs-2";
 const BarChart = ({ barData }) => {
   const barThickness = typeof window !== "undefined" && window.innerWidth < 640 ? 30 : 100;
 
-  const totalWidth = barData.length * 250;
+  const totalWidth = barData?.length * 250;
+  console.log(barData)
   return (
     <div
       className="scrollbar-webkit overflow-x-auto"
@@ -37,12 +38,12 @@ const BarChart = ({ barData }) => {
               {
                 label: "Percentage (%)",
                 data: [
-                  barData.classes_percentage,
-                  barData.attendance_percentage,
-                  barData.percentage_assignments,
-                  barData.percentage_quizzes,
-                  barData.percentage_projects,
-                  barData.percentage_exams,
+                  barData?.classes_percentage,
+                  barData?.attendance_percentage,
+                  barData?.percentage_assignments,
+                  barData?.percentage_quizzes,
+                  barData?.percentage_projects,
+                  barData?.percentage_exams,
                 ],
                 backgroundColor: "#0074EE",
                 barThickness: barThickness,
@@ -89,60 +90,65 @@ const BarChart = ({ barData }) => {
                   },
                   label: (tooltipItem) => {
                     const dataIndex = tooltipItem.dataIndex;
+
                     const dataMapping = [
                       {
                         label: "Classes",
-                        percentage: barData.classes_percentage,
+                        percentage: barData?.classes_percentage,
                         details: [
-                          `Total Classes: ${barData.total_classes}`,
-                          `Completed Classes: ${barData.completed_classes}`,
+                          `Total Classes: ${barData?.total_classes}`,
+                          `Completed Classes: ${barData?.completed_classes}`,
                         ],
                       },
                       {
                         label: "Attendance",
-                        percentage: barData.attendance_percentage,
+                        percentage: barData?.attendance_percentage,
                         details: [
-                          `Total Attendance: ${barData.total_attendance}`,
-                          `Present: ${barData.total_present_attendance}`,
+                          `Total Attendance: ${barData?.total_attendance}`,
+                          `Present: ${barData?.total_present_attendance}`,
                         ],
                       },
                       {
                         label: "Assignments",
-                        percentage: barData.percentage_assignments,
+                        percentage: barData?.percentage_assignments,
                         details: [
-                          `Obtained: ${(barData.avg_obtain_sum_assignments ?? 0).toFixed(2)}`,
-                          `Total: ${(barData.avg_total_sum_assignments ?? 0).toFixed(2)}`,
+                          `Obtained: ${(barData?.avg_obtain_sum_assignments ?? 0).toFixed(2)}`,
+                          `Total: ${(barData?.avg_total_sum_assignments ?? 0).toFixed(2)}`,
                         ],
                       },
                       {
                         label: "Quizzes",
-                        percentage: barData.percentage_quizzes,
+                        percentage: barData?.percentage_quizzes,
                         details: [
-                          `Obtained: ${(barData.avg_obtain_sum_quizzes ?? 0).toFixed(2)}`,
-                          `Total: ${(barData.avg_total_sum_quizzes ?? 0).toFixed(2)}`,
+                          `Obtained: ${(barData?.avg_obtain_sum_quizzes ?? 0).toFixed(2)}`,
+                          `Total: ${(barData?.avg_total_sum_quizzes ?? 0).toFixed(2)}`,
                         ],
                       },
                       {
                         label: "Projects",
-                        percentage: barData.percentage_projects,
+                        percentage: barData?.percentage_projects,
                         details: [
-                          `Obtained: ${(barData.avg_obtain_sum_projects ?? 0).toFixed(2)}`,
-                          `Total: ${(barData.avg_total_sum_projects ?? 0).toFixed(2)}`,
+                          `Obtained: ${(barData?.avg_obtain_sum_projects ?? 0).toFixed(2)}`,
+                          `Total: ${(barData?.avg_total_sum_projects ?? 0).toFixed(2)}`,
                         ],
                       },
                       {
                         label: "Exams",
-                        percentage: barData.percentage_exams,
+                        percentage: barData?.percentage_exams,
                         details: [
-                          `Obtained: ${(barData.avg_obtain_sum_exams ?? 0).toFixed(2)}`,
-                          `Total: ${(barData.avg_total_sum_exams ?? 0).toFixed(2)}`,
+                          `Obtained: ${(barData?.avg_obtain_sum_exams ?? 0).toFixed(2)}`,
+                          `Total: ${(barData?.avg_total_sum_exams ?? 0).toFixed(2)}`,
                         ],
                       },
                     ];
 
-                    return dataMapping[dataIndex];
-                  }
+                    const item = dataMapping[dataIndex];
 
+                    return [
+                      `${item.label}: ${(item.percentage ?? 0).toFixed(2)}%`,
+                      ...item.details
+                    ];
+                  }
                 },
               },
               legend: {
