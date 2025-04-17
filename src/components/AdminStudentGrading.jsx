@@ -123,7 +123,7 @@ const AdminStudentGrading = ({ courseId }) => {
       const response = await allStudentsCoursePerformance(courseId, selectedSessionId);
       if (response.status === 200) {
         setStudentPerformance(response?.data?.data);
-        console.log(response?.data?.data);
+        // console.log(response?.data?.data);
       } else {
       }
     } catch (error) {

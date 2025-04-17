@@ -2,7 +2,7 @@ import { CircularProgress } from "@mui/material";
 import React, { useEffect } from "react";
 
 const TopScoreTable = ({ total, scores, loadingScore, showAll }) => {
-  console.log(scores);
+  // console.log(scores);
   const totalQuizMarks = total?.grades_summary?.total_quiz_marks || 0;
   return (
     <div className="flex flex-col ">

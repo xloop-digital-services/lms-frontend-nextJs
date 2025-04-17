@@ -3,7 +3,7 @@ import autoTable from "jspdf-autotable";
 
 export const downloadGradingPDF = (data, title) => {
     if (!data || !data.assignments || !data.quizzes || !data.projects || !data.exams) {
-        console.error("Invalid data passed to downloadGradingPDF:", data);
+        // console.error("Invalid data passed to downloadGradingPDF:", data);
         return;
     }
 
