@@ -36,7 +36,7 @@ export default function Notifications() {
   const handleAnnounce = async (id) => {
     router.push(`/announcement/view-announcement/${id}`);
     setCurrentNotiId(id);
-    console.log(id);
+    // console.log(id);
     try {
       const data = {
         user_id: userID,

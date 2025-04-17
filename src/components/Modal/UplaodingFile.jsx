@@ -68,7 +68,7 @@ const UploadingFile = ({
         setWait(true);
       }
       const message = CheckFileSize(droppedFile.size);
-      console.log("file", droppedFile, message);
+      // console.log("file", droppedFile, message);
       if (message.length > 0) {
         setError(message);
       }

@@ -17,7 +17,7 @@ export default function Page() {
   useEffect(() => {
     if (loading) {
       nProgress.start();
-      console.log("progress"); // Start progress bar when loading
+      // console.log("progress"); // Start progress bar when loading
     } else {
       nProgress.done(); // Stop progress bar when loading is false
     }

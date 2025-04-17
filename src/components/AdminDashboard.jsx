@@ -212,10 +212,10 @@ const AdminDashboard = () => {
       if (response?.data) {
         setProgramProgress(response.data.data); // Adjust based on actual response structure
       } else {
-        console.error("Unexpected response format:", response);
+        // console.error("Unexpected response format:", response);
       }
     } catch (error) {
-      console.log("error", error);
+      // console.log("error", error);
     } finally {
       setBarLoading(false);
     }
@@ -230,7 +230,7 @@ const AdminDashboard = () => {
       setCourseList(res.data.data);
       // console.log("course list", res.data.data);
     } catch (error) {
-      console.log("error in course", error);
+      // console.log("error in course", error);
     }
   };
 
@@ -249,10 +249,10 @@ const AdminDashboard = () => {
         const res = await getCourseProgressByProgId(barCourseId);
         // console.log("res", res);
         setCourseProgress(res?.data?.data);
-        console.log(barCourseId);
-        console.log("res.data.data", JSON.stringify(res.data.data, null, 2));
+        // console.log(barCourseId);
+        // console.log("res.data.data", JSON.stringify(res.data.data, null, 2));
       } catch (error) {
-        console.log("error", error);
+        // console.log("error", error);
       } finally {
         setBarLoading(false);
       }
@@ -279,10 +279,10 @@ const AdminDashboard = () => {
       try {
         setLoadingScore(true);
         const response = await getProgramDetails(scoreProgramId);
-        console.log(response.data.data);
+        // console.log(response.data.data);
         setScores(response.data.data)
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       } finally {
         setLoadingScore(false);
       }
@@ -435,11 +435,11 @@ const AdminDashboard = () => {
     const handleCourseByProgramId = async () => {
       try {
         const res = await getCourseByProgId(barProgramId);
-        console.log(barProgramId);
+        // console.log(barProgramId);
         const allOption = { id: null, name: "All Courses" };
         setCourseList([allOption, ...res?.data?.data]);
       } catch (error) {
-        console.log("error in course", error);
+        // console.log("error in course", error);
       }
     };
 

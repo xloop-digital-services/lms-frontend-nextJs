@@ -84,7 +84,7 @@ const Grading = ({ courseId }) => {
       toast.error("Session ID is required.");
       return;
     }
-    console.log(sessionId);
+    // console.log(sessionId);
 
     try {
       const currentFlagResponse = await gethideGradingforStudents(sessionId);
@@ -188,7 +188,7 @@ const Grading = ({ courseId }) => {
   }
   async function fetchCoursePerformanceDetailed() {
     if (!sessionId) {
-      console.log('Session ID is not selected');
+      // console.log('Session ID is not selected');
       return;
     }
 
@@ -197,7 +197,7 @@ const Grading = ({ courseId }) => {
       const response = await allStudentsCoursePerformanceDetailed(courseId, sessionId);
       if (response.status === 200) {
         setStudentPerformance(response?.data?.data);
-        console.log("allStudentsCoursePerformanceDetailed api response: ",response?.data?.data);
+        // console.log("allStudentsCoursePerformanceDetailed api response: ",response?.data?.data);
       } else {
         // console.log('Failed to fetch data', response.status);
       }

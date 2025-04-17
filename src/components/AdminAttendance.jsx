@@ -8,7 +8,7 @@ import GetAttendanceAdminTable from "./GetAttendanceAdminTable";
 import GetAttendanceTable from "./GetAttendanceTable";
 
 export default function AdminAttendance({ courseId }) {
-  console.log("mai agya");
+  // console.log("mai agya");
   // console.log(courseId);
   return (
     <div className=" bg-surface-100  rounded-xl ">

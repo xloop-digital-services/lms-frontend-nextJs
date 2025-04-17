@@ -6,7 +6,7 @@ const BarChart = ({ barData }) => {
   const barThickness = typeof window !== "undefined" && window.innerWidth < 640 ? 30 : 100;
 
   const totalWidth = barData?.length * 250;
-  console.log(barData)
+  // console.log(barData)
   return (
     <div
       className="scrollbar-webkit overflow-x-auto"

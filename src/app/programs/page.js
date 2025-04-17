@@ -32,10 +32,10 @@ export default function Page() {
       if (response.status === 200) {
         setPrograms(response.data?.data); 
       } else {
-        console.error("Failed to fetch programs, status:", response.status);
+        // console.error("Failed to fetch programs, status:", response.status);
       }
     } catch (error) {
-      console.error("Error fetching programs:", error);
+      // console.error("Error fetching programs:", error);
     } finally {
       setLoader(false);
     }

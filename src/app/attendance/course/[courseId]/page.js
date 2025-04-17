@@ -30,7 +30,7 @@ export default function Page({ params }) {
           // console.log("student attendence", response.data.data.attendance);
           setAttendanceStudent(response.data.data.attendance);
 
-          console.log(attendanceStudent);
+          // console.log(attendanceStudent);
           setLoader(false);
           //console.log(response.data);
         } else {

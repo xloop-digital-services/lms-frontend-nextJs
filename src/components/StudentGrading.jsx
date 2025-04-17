@@ -103,7 +103,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
       toast.error("Session ID is required.");
       return;
     }
-    console.log(sessionId);
+    // console.log(sessionId);
 
     try {
       const currentFlagResponse = await gethideGradingforStudents(sessionId);
