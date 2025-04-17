@@ -88,7 +88,6 @@ const AdminDashboard = () => {
   const [selectedBatch, setSelectedBatch] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [programProgress, setProgramProgress] = useState([]);
-
   const [openInfoModal, setOpenInfoModal] = useState(false);
   const [loadingScore, setLoadingScore] = useState(false);
   const [scores, setScores] = useState([]);
@@ -96,7 +95,7 @@ const AdminDashboard = () => {
   const [changeProgress, setChangeProgress] = useState(false);
   const [courseList, setCourseList] = useState([]);
   const [CourseProgress, setCourseProgress] = useState({});
-  const [selectedBarCourse, setSelectedBarCourse] = useState(null);
+  const [selectedBarCourse, setSelectedBarCourse] = useState();
   const [barCourseId, setBarCourseId] = useState(null);
   const [isBarCourseOpen, setIsBarCourseOpen] = useState(false);
   const [isBarCourseSelected, setIsBarCourseSelected] = useState(false);
@@ -133,10 +132,7 @@ const AdminDashboard = () => {
   useClickOutside(barCourseRef, barCourseBtnRef, () => setIsBarCourseOpen(false));
 
 
-
-
   useEffect(() => {
-    // Set the initial status to "Show All" when the page loads
     if (!selectedStatus) {
       setSelectedStatus("Show All");
     }
@@ -146,7 +142,6 @@ const AdminDashboard = () => {
       let matchesStatus = false;
 
       if (searchTerm.length === 0 && selectedStatus === "Show All") {
-        // If both filters are empty, show all batches
         setFilteredBatches(batches);
         setIsFilter(false);
       } else {
@@ -164,11 +159,9 @@ const AdminDashboard = () => {
             matchesSearchTerm = matchesSearchTerm || searchTermMatches;
             matchesStatus = matchesStatus || statusMatches;
 
-            // Only return batches that match both the search term and status
             return searchTermMatches && statusMatches;
           });
 
-          // If filtered data exists, show it; otherwise, set it to empty
           setFilteredBatches(filteredData);
           setIsFilter(filteredData.length > 0);
         }
@@ -176,17 +169,14 @@ const AdminDashboard = () => {
 
       setFilterValue(matchesSearchTerm);
       setFilterStatus(matchesStatus);
-      // If no results match the filters, set these accordingly
     };
 
-    // Trigger filtering when search term, status, or batches change
     handleFilter();
   }, [searchTerm, selectedStatus, batches]);
 
   const handleTotalUsers = async () => {
     try {
       const response = await totalUsersCount();
-      // console.log("total Counts", response?.data?.data);
       setAllUsers(response?.data?.data?.all_users_length);
       setAllIntructors(response?.data?.data?.instructor_user_length);
       setAllStudents(response?.data?.data?.student_user_length);
@@ -199,7 +189,6 @@ const AdminDashboard = () => {
       setAllActiveStudents(response?.data?.data?.active_student_length);
       setAllInActiveStudents(response?.data?.data?.inactive_student_length);
     } catch (error) {
-      // console.log("error fetching the total users", error);
     }
   };
 
@@ -215,40 +204,41 @@ const AdminDashboard = () => {
     }
   };
 
-  useEffect(() => {
-    const handleBarChartForProgram = async () => {
-      setBarLoading(true);
-      try {
-        const response = await getProgramGraph(barProgramId);
-        if (response?.data) {
-          setProgramProgress(response.data.data); // Adjust based on actual response structure
-        } else {
-          console.error("Unexpected response format:", response);
-        }
-      } catch (error) {
-        console.log("error", error);
-      } finally {
-        setBarLoading(false);
+  // useEffect(() => {
+  const handleBarChartForProgram = async () => {
+    setBarLoading(true);
+    try {
+      const response = await getProgramGraph(barProgramId);
+      if (response?.data) {
+        setProgramProgress(response.data.data); // Adjust based on actual response structure
+      } else {
+        console.error("Unexpected response format:", response);
       }
-    };
-    if (barProgramId) {
-      handleBarChartForProgram();
+    } catch (error) {
+      console.log("error", error);
+    } finally {
+      setBarLoading(false);
     }
-  }, [barProgramId]);
+  };
+
+  // }, [barProgramId]);
+
+
+  const handleCourseByProgramId = async () => {
+    try {
+      const res = await getCourseByProgId(barProgramId);
+      setCourseList(res.data.data);
+      // console.log("course list", res.data.data);
+    } catch (error) {
+      console.log("error in course", error);
+    }
+  };
+
 
   useEffect(() => {
-    const handleCourseByProgramId = async () => {
-      try {
-        const res = await getCourseByProgId(barProgramId);
-        setCourseList(res.data.data);
-        // console.log("course list", res.data.data);
-      } catch (error) {
-        console.log("error in course", error);
-      }
-    };
-
     if (barProgramId) {
       handleCourseByProgramId();
+      handleBarChartForProgram();
     }
   }, [barProgramId]);
 
@@ -258,7 +248,9 @@ const AdminDashboard = () => {
         setBarLoading(true);
         const res = await getCourseProgressByProgId(barCourseId);
         // console.log("res", res);
-        setCourseProgress(res.data.data);
+        setCourseProgress(res?.data?.data);
+        console.log(barCourseId);
+        console.log("res.data.data", JSON.stringify(res.data.data, null, 2));
       } catch (error) {
         console.log("error", error);
       } finally {
@@ -379,11 +371,10 @@ const AdminDashboard = () => {
     setSelectedBarProgram(program.name);
     setBarProgramId(program.id);
     setSelectedBarCourse("All Courses");
-    setBarCourseId(null); // reset course ID
-    setChangeProgress(false); // Show program-level progress
+    setBarCourseId(null);
+    setChangeProgress(false);
     setIsBarProgramOpen(false);
   };
-
 
   const handleBarCourseSelect = (course) => {
     setSelectedBarCourse(course === "All Courses" ? "All Courses" : course.name);
@@ -391,7 +382,6 @@ const AdminDashboard = () => {
     setChangeProgress(course !== "All Courses");
     setIsBarCourseOpen(false);
   };
-
 
   const handleScoreProgramSelect = (option) => {
     setSelectedScoreProgram(option.name);
@@ -403,16 +393,13 @@ const AdminDashboard = () => {
   const handleBarChartData = async () => {
     try {
       const response = await getCityStatistics();
-      // console.log('bar chart', response?.data?.data)
       setBarData(response?.data?.data);
       setLoading(false);
     } catch (error) {
-      // console.log("error while fetching the bar data", error);
       setLoading(false);
     }
   };
 
-  // Set the initial selectedUser to "Student"
   useEffect(() => {
     setSelectedUser("Student");
     setIsUserSelected(true);
@@ -448,8 +435,9 @@ const AdminDashboard = () => {
     const handleCourseByProgramId = async () => {
       try {
         const res = await getCourseByProgId(barProgramId);
+        console.log(barProgramId);
         const allOption = { id: null, name: "All Courses" };
-        setCourseList([allOption, ...res.data.data]);
+        setCourseList([allOption, ...res?.data?.data]);
       } catch (error) {
         console.log("error in course", error);
       }
@@ -460,14 +448,11 @@ const AdminDashboard = () => {
     }
   }, [barProgramId]);
 
-
-  // Fetch data when selectedUser or other dependencies change
   useEffect(() => {
     const handlePieChatData = async () => {
       try {
         let response;
 
-        // Check if selectedUser is "student" or "instructor"
         if (selectedUser.toLowerCase() === "student") {
           response = await getApplicationsTotalNumber(
             programId,
@@ -479,8 +464,6 @@ const AdminDashboard = () => {
             selectedUser.toLowerCase()
           );
         }
-
-        // Update the state with the response data
         if (response) {
           setverfiedRequest(response?.data?.data.verified);
           setUnverifiedRequest(response?.data?.data.unverified);
@@ -490,12 +473,9 @@ const AdminDashboard = () => {
 
         setLoading(false);
       } catch (error) {
-        // console.log("error while fetching number of applications", error);
         setLoading(false);
       }
     };
-
-    // Ensure data fetching happens only when dependencies are set
     if (selectedProgram && selectedUser.toLowerCase()) {
       setLoading(true);
       handlePieChatData();
@@ -529,12 +509,10 @@ const AdminDashboard = () => {
       setLoading(true);
       const response = await DeleteBatch(selectedBatch);
       toast.success("Batch deleted successfully!");
-      // console.log("deleting the batch", response);
       setUpdateBatch(!updateBatch);
       setConfirmDelete(false);
       setLoading(false);
     } catch (error) {
-      // console.log("error while deleting the batch", error);
     }
   };
 
@@ -623,7 +601,7 @@ const AdminDashboard = () => {
                               >
                                 {option.name}
                               </div>
-                            ))} 
+                            ))}
                           </div>
                         </div>
                       )}
@@ -666,17 +644,29 @@ const AdminDashboard = () => {
                     <div className="flex justify-center items-center py-4 w-full h-[380px]">
                       <CircularProgress />
                     </div>
-                  ) : changeProgress ? (
-                    ["classes_percentage", "attendance_percentage", "percentage_assignments", "percentage_quizzes", "percentage_projects", "percentage_exams"].every((key) => CourseProgress[key] === 0) ? (
-                      <div className="text-sm text-dark-400 flex justify-center items-center py-4 w-full h-[400px]">
+                  ) : selectedBarCourse === "All Courses" ? (
+                    programProgress ? (
+                      <BarChart barData={programProgress} />
+                    ) : (
+                      <div className="text-sm text-dark-400 flex justify-center items-center py-4 w-full h-[310px]">
                         <p>No Progress Found</p>
                       </div>
-                    ) : (
-                      <BarChartCourse barData={CourseProgress} />
                     )
+                  ) : CourseProgress && [
+                    "classes_percentage",
+                    "attendance_percentage",
+                    "percentage_assignments",
+                    "percentage_quizzes",
+                    "percentage_projects",
+                    "percentage_exams"
+                  ].every((key) => CourseProgress[key] === 0) ? (
+                    <div className="text-sm text-dark-400 flex justify-center items-center py-4 w-full h-[310px]">
+                      <p>No Progress Found</p>
+                    </div>
                   ) : (
-                    <BarChart barData={programProgress} />
+                    <BarChartCourse barData={CourseProgress} />
                   )}
+
                 </div>
 
               </div>

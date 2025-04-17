@@ -785,6 +785,8 @@ export const getAllPrograms = async () => {
   try {
     const response = await axiosInstance.get(`/api/course/programs/`);
     return response;
+    // console.log(response);
+    // return response.json();
   } catch (error) {
     throw error;
   }

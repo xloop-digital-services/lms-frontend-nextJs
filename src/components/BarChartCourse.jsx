@@ -26,22 +26,20 @@ const BarChartCourse = ({ barData }) => {
                 label: "Background",
                 data: [100, 100, 100, 100, 100, 100],
                 backgroundColor: "#F6FBFD",
-                // borderRadius: 8,
                 barThickness: barThickness,
                 categoryPercentage: 0.6,
                 barPercentage: 0.7,
                 order: 2,
-                
               },
               {
                 label: "Average Obtained Sum %",
                 data: [
-                  barData.classes_percentage,
-                  barData.attendance_percentage,
-                  barData.avg_obtain_sum_assignments,
-                  barData.avg_obtain_sum_quizzes,
-                  barData.avg_obtain_sum_projects,
-                  barData.avg_obtain_sum_exams,
+                  barData?.classes_percentage,
+                  barData?.attendance_percentage,
+                  barData?.avg_obtain_sum_assignments,
+                  barData?.avg_obtain_sum_quizzes,
+                  barData?.avg_obtain_sum_projects,
+                  barData?.avg_obtain_sum_exams,
                 ],
                 backgroundColor: "#0074EE",
                 barThickness: barThickness,
@@ -50,11 +48,10 @@ const BarChartCourse = ({ barData }) => {
                 order: 1,
                 borderRadius: {
                   topLeft: 8,
-                  topRight: 8
+                  topRight: 8,
                 },
               },
             ],
-            
           }}
           options={{
             maintainAspectRatio: false,
@@ -91,108 +88,93 @@ const BarChartCourse = ({ barData }) => {
                   padding: 5,
                 },
               },
-            },
-            plugins: {
               tooltip: {
                 callbacks: {
                   title: (tooltipItems) => tooltipItems[0].label,
                   label: (tooltipItem) => {
                     const dataIndex = tooltipItem.dataIndex;
-
-                    // Tooltip details for each category
-                    const dataMapping = [
-                      {
-                        label: "Classes",
-                        details: [
-                          `Percentage: ${barData.classes_percentage.toFixed(
-                            2
-                          )}`,
-                          `Total: ${barData.total_classes}`,
-                          `Completed: ${barData.completed_classes}`,
-                        ],
-                      },
-                      {
-                        label: "Attendance",
-                        details: [
-                          `Percentage: ${barData.attendance_percentage.toFixed(
-                            2
-                          )}`,
-                          `Total: ${barData.total_attendance}`,
-                          `Present: ${barData.total_present_attendance}`,
-                        ],
-                      },
-                      {
-                        label: "Assignments",
-                        details: [
-                          `Percentage: ${barData.percentage_assignments.toFixed(
-                            2
-                          )}`,
-                          `Highest Marks: ${barData.highest_obtain_sum_assignments.toFixed(
-                            2
-                          )}`,
-                          `Lowest Marks: ${barData.lowest_obtain_sum_assignments.toFixed(
-                            2
-                          )}`,
-                        ],
-                      },
-                      {
-                        label: "Quizzes",
-                        details: [
-                          `Percentage: ${barData.percentage_quizzes.toFixed(
-                            2
-                          )}`,
-                          `Highest Marks: ${barData.highest_obtain_sum_quizzes.toFixed(
-                            2
-                          )}`,
-                          `Lowest Marks: ${barData.lowest_obtain_sum_quizzes.toFixed(
-                            2
-                          )}`,
-                        ],
-                      },
-                      {
-                        label: "Projects",
-                        details: [
-                          `Percentage: ${barData.percentage_projects.toFixed(
-                            2
-                          )}`,
-                          `Highest Marks: ${barData.highest_obtain_sum_projects.toFixed(
-                            2
-                          )}`,
-                          `Lowest Marks: ${barData.lowest_obtain_sum_projects.toFixed(
-                            2
-                          )}`,
-                        ],
-                      },
-                      {
-                        label: "Exams",
-                        details: [
-                          `Percentage: ${barData.percentage_exams.toFixed(2)}`,
-                          `Highest Marks: ${barData.highest_obtain_sum_exams.toFixed(
-                            2
-                          )}`,
-                          `Lowest Marks: ${barData.lowest_obtain_sum_exams.toFixed(
-                            2
-                          )}`,
-                        ],
-                      },
+                    const labels = [
+                      "Classes",
+                      "Attendance",
+                      "Assignments",
+                      "Quizzes",
+                      "Projects",
+                      "Exams",
                     ];
+                    const detailsMap = {
+                      0: [
+                        `Total Classes: ${barData?.total_classes ?? "N/A"}`,
+                        `Completed Classes: ${barData?.completed_classes ?? "N/A"}`,
+                      ],
+                      1: [
+                        `Total Attendance: ${barData?.total_attendance ?? "N/A"}`,
+                        `Present Attendance: ${barData?.total_present_attendance ?? "N/A"}`,
+                      ],
+                      2: [
+                        `Obtained: ${(barData?.avg_obtain_sum_assignments ?? 0).toFixed(2)}`,
+                        `Total: ${(barData?.avg_total_sum_assignments ?? 0).toFixed(2)}`,
+                      ],
+                      3: [
+                        `Obtained: ${(barData?.avg_obtain_sum_quizzes ?? 0).toFixed(2)}`,
+                        `Total: ${(barData?.avg_total_sum_quizzes ?? 0).toFixed(2)}`,
+                      ],
+                      4: [
+                        `Obtained: ${(barData?.avg_obtain_sum_projects ?? 0).toFixed(2)}`,
+                        `Total: ${(barData?.avg_total_sum_projects ?? 0).toFixed(2)}`,
+                      ],
+                      5: [
+                        `Obtained: ${(barData?.avg_obtain_sum_exams ?? 0).toFixed(2)}`,
+                        `Total: ${(barData?.avg_total_sum_exams ?? 0).toFixed(2)}`,
+                      ],
+                    };
 
-                    const currentData = dataMapping[dataIndex];
-                    return currentData.details;
+                    let percentage = tooltipItem.raw ?? 0;
+
+                    // Handling zero values for specific fields in tooltips
+                    if (dataIndex === 2 && barData?.avg_obtain_sum_assignments === 0) {
+                      percentage = 0;
+                    }
+                    if (dataIndex === 3 && barData?.avg_obtain_sum_quizzes === 0) {
+                      percentage = 0;
+                    }
+                    if (dataIndex === 4 && barData?.avg_obtain_sum_projects === 0) {
+                      percentage = 0;
+                    }
+                    if (dataIndex === 5 && barData?.avg_obtain_sum_exams === 0) {
+                      percentage = 0;
+                    }
+
+                    // If both obtained and total are zero, show 0%
+                    switch (dataIndex) {
+                      case 2:
+                        if (barData?.avg_obtain_sum_assignments === 0 && barData?.avg_total_sum_assignments === 0) {
+                          percentage = 0;
+                        }
+                        break;
+                      case 3:
+                        if (barData?.avg_obtain_sum_quizzes === 0 && barData?.avg_total_sum_quizzes === 0) {
+                          percentage = 0;
+                        }
+                        break;
+                      case 4:
+                        if (barData?.avg_obtain_sum_projects === 0 && barData?.avg_total_sum_projects === 0) {
+                          percentage = 0;
+                        }
+                        break;
+                      case 5:
+                        if (barData?.avg_obtain_sum_exams === 0 && barData?.avg_total_sum_exams === 0) {
+                          percentage = 0;
+                        }
+                        break;
+                      default:
+                        break;
+                    }
+
+                    const lines = [`${labels[dataIndex]}: ${percentage}%`, ...detailsMap[dataIndex]];
+                    return lines;
                   },
                 },
               },
-              legend: {
-                display: true,
-                position: "bottom",
-                align: "center",
-                labels: {
-                  boxWidth: 15,
-                  boxHeight: 15,
-                  padding: 7,
-                },
-              },
-
             },
           }}
         />
