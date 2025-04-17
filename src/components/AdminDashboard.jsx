@@ -904,7 +904,7 @@ const AdminDashboard = () => {
                     {isScoreProgramOpen && (
                       <div
                         ref={scoreRef}
-                        className="absolute z-20 w-full max-h-[170px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
+                        className="absolute z-20 w-full max-h-[120px] overflow-auto scrollbar-webkit bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opaCity duration-300 ease-in-out"
                       >
                         {allPrograms.map((option, index) => (
                           <div
