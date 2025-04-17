@@ -544,8 +544,8 @@ const AdminDashboard = () => {
                 <div className="bg-[#ecf3fc] p-2 w-12 rounded-md">
                   <Image src={users} alt="instructors" className="w-8 h-8" />
                 </div>
-                <p className="mt-4 text-base text-[#07224D]">Total Users / Active Users</p>
-                <p className="text-2xl font-bold text-[#022567] font-exo">{allUsers} / {allActiveUsers}</p>
+                <p className="mt-4 text-base text-[#07224D]">Active Users / Total Users</p>
+                <p className="text-2xl font-bold text-[#022567] font-exo"> {allActiveUsers}/ {allUsers}</p>
               </div>
             </div>
 
@@ -554,8 +554,8 @@ const AdminDashboard = () => {
                 <div className="bg-[#ecf3fc] p-2 w-12 rounded-md">
                   <Image src={instructor} alt="instructors" className="w-8 h-8" />
                 </div>
-                <p className="mt-4 text-base text-[#07224D]">Total Students / Active Students</p>
-                <p className="text-2xl font-bold text-[#022567] font-exo">{allStudents} / {allActiveStudents}</p>
+                <p className="mt-4 text-base text-[#07224D]">Active Students/ Total Students</p>
+                <p className="text-2xl font-bold text-[#022567] font-exo"> {allActiveStudents}/ {allStudents}</p>
               </div>
             </div>
 
@@ -564,8 +564,8 @@ const AdminDashboard = () => {
                 <div className="bg-[#ecf3fc] p-2 w-12 rounded-md">
                   <Image src={students} alt="instructors" className="w-8 h-8" />
                 </div>
-                <p className="mt-4 text-base text-[#07224D]">Total Instructors / Active Instructors</p>
-                <p className="text-2xl font-bold text-[#022567] font-exo">{allInstructors} / {allActiveInstructors}</p>
+                <p className="mt-4 text-base text-[#07224D]">Active Instructors/Total Instructors</p>
+                <p className="text-2xl font-bold text-[#022567] font-exo"> {allActiveInstructors}/ {allInstructors}</p>
               </div>
             </div>
           </div>
