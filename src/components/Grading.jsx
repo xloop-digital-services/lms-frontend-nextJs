@@ -197,7 +197,7 @@ const Grading = ({ courseId }) => {
       const response = await allStudentsCoursePerformanceDetailed(courseId, sessionId);
       if (response.status === 200) {
         setStudentPerformance(response?.data?.data);
-        // console.log(response?.data?.data);
+        console.log("allStudentsCoursePerformanceDetailed api response: ",response?.data?.data);
       } else {
         // console.log('Failed to fetch data', response.status);
       }
@@ -364,12 +364,12 @@ const Grading = ({ courseId }) => {
             {showMenu && (
               <div className="absolute left-[-10.5rem] mt-2 w-48 bg-surface-100 border border-dark-300 rounded shadow-md z-50">
 
-                <button
+                {/* <button
                   onClick={() => downloadGradingPDF(studentPerformance)}
                   className="w-full text-left px-4 py-2 hover:bg-dark-100"
                 >
                   Export as PDF
-                </button>
+                </button> */}
                 <button
                   onClick={() => downloadGradingExcel(studentPerformance)}
                   className="w-full text-left px-4 py-2 hover:bg-dark-100"
