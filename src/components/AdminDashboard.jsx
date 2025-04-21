@@ -365,11 +365,11 @@ const AdminDashboard = () => {
     setSelectedBarProgram(option.name);
     setSelectedScoreProgram(option.name);
 
-    (console.log("application status overview program selected: ",option.name))
+   //  (console.log("application status overview program selected: ",option.name))
     setProgramId(option.id);
     setBarProgramId(option.id);
     setScoreProgramId(option.id);
-    (console.log("application status overview program selected: ",option.id))
+   //  (console.log("application status overview program selected: ",option.id))
 
     setIsProgramSelected(true);
     setIsProgramOpen(false);
@@ -379,12 +379,12 @@ const AdminDashboard = () => {
     setSelectedProgram(program.name);
     setSelectedScoreProgram(program.name);
 
-    console.log("Bar chart selected program name: ",program.name)
+    // console.log("Bar chart selected program name: ",program.name)
     setBarProgramId(program.id);
     setProgramId(program.id);
     setScoreProgramId(program.id);
 
-    console.log("Bar chart selected program id: ",program.id)
+    // console.log("Bar chart selected program id: ",program.id)
     setSelectedBarCourse("All Courses");
     setBarCourseId(null);
     setChangeProgress(false);
@@ -405,12 +405,12 @@ const AdminDashboard = () => {
     setSelectedBarProgram(option.name);
     setSelectedProgram(option.name);
 
-    {console.log("top performers program selected: ",option.name)}
+    // {console.log("top performers program selected: ",option.name)}
     setScoreProgramId(option.id);
     setBarProgramId(option.id);
     setProgramId(option.id);
 
-    {console.log("top performers program selected: ",option.id)}
+    // {console.log("top performers program selected: ",option.id)}
 
     setIsScoreProgramSelected(true);
     setIsScoreProgramOpen(false);
