@@ -361,11 +361,14 @@ const AdminDashboard = () => {
   };
 
   const handleProgramSelect = (option) => {
-    // setSelectedProgram(option.name);
+    setSelectedProgram(option.name);
     setSelectedBarProgram(option.name);
+    setSelectedScoreProgram(option.name);
+
     (console.log("application status overview program selected: ",option.name))
-    // setProgramId(option.id);
+    setProgramId(option.id);
     setBarProgramId(option.id);
+    setScoreProgramId(option.id);
     (console.log("application status overview program selected: ",option.id))
 
     setIsProgramSelected(true);
@@ -373,8 +376,14 @@ const AdminDashboard = () => {
   };
   const handleBarProgramSelect = (program) => {
     setSelectedBarProgram(program.name);
+    setSelectedProgram(program.name);
+    setSelectedScoreProgram(program.name);
+
     console.log("Bar chart selected program name: ",program.name)
     setBarProgramId(program.id);
+    setProgramId(program.id);
+    setScoreProgramId(program.id);
+
     console.log("Bar chart selected program id: ",program.id)
     setSelectedBarCourse("All Courses");
     setBarCourseId(null);
@@ -392,11 +401,15 @@ const AdminDashboard = () => {
   };
 
   const handleScoreProgramSelect = (option) => {
-    // setSelectedScoreProgram(option.name);
+    setSelectedScoreProgram(option.name);
     setSelectedBarProgram(option.name);
+    setSelectedProgram(option.name);
+
     {console.log("top performers program selected: ",option.name)}
-    // setScoreProgramId(option.id);
+    setScoreProgramId(option.id);
     setBarProgramId(option.id);
+    setProgramId(option.id);
+
     {console.log("top performers program selected: ",option.id)}
 
     setIsScoreProgramSelected(true);
@@ -601,7 +614,7 @@ const AdminDashboard = () => {
               </div>
             </div>
           </div>
-          {/* progress section */}
+          {/* progress and application status overview section */}
           <div className="flex gap-4 xmd:flex-row flex-col">
             <div className="bg-surface-100 xmd:w-[66.5%] w-full overflow-x-auto scrollbar-webkit p-2 rounded-xl h-[420px] max-sm:h-[500px]">
               <div className="border border-dark-200 p-2 rounded-lg m-1">
@@ -792,8 +805,8 @@ const AdminDashboard = () => {
                         }}
                       >
                         <span className=" xl:max-w-[190px] xlg:max-w-[120px] xmd:max-w-[60px] w-full truncate capitalize">
-                          {/* {selectedProgram} */}
-                          {selectedBarProgram}
+                          {selectedProgram}
+                          {/* {selectedBarProgram} */}
                         </span>
                         <span
                           className={`${
@@ -895,8 +908,8 @@ const AdminDashboard = () => {
                   <div className="flex h-full mt-3 justify-center items-center">
                     <CircularProgress size={20} />
                   </div>
-                // ) : selectedProgram &&
-              ) : selectedBarProgram &&
+                ) : selectedProgram &&
+              // ) : selectedBarProgram &&
 
                   selectedSkill &&
                   selectedUser &&
@@ -955,8 +968,8 @@ const AdminDashboard = () => {
                       } flex justify-between items-center w-[300px] max-sm:w-full hover:text-[#0e1721] px-4 py-2 text-sm text-left bg-surface-100 border  border-[#acc5e0] rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                     >
                       <span className="max-w-full truncate capitalize">
-                        {/* {selectedScoreProgram} */}
-                        {selectedBarProgram}
+                        {selectedScoreProgram}
+                        {/* {selectedBarProgram} */}
                       </span>
                       <span
                         className={`${
