@@ -1,6 +1,6 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react"; // Ensure useState is imported
-import { IoIosArrowDown } from "react-icons/io"; // Import the icon
+import React, { useState, useRef, useEffect } from "react"; 
+import { IoIosArrowDown } from "react-icons/io"; 
 import PerformanceTable from "@/components/PerformanceTable";
 import { useSidebar } from "@/providers/useSidebar";
 import { useWindowSize } from "@/providers/useWindowSize";
@@ -10,6 +10,7 @@ import {
   getAssignmentProgress,
   getExamProgress,
   gethideGradingforStudents,
+  getHideGradingfromStudentsPerAssignment,
   getOverallProgress,
   getProjectProgress,
   getQuizProgress,
@@ -18,6 +19,7 @@ import {
 import { useAuth } from "@/providers/AuthContext";
 import Lottie from "lottie-react";
 import bouncing from "../../public/data/bouncing.json";
+import { toast } from "react-toastify";
 
 export default function StudentGrading({ courseId, regId: propRegId }) {
   const { width } = useWindowSize();
@@ -38,6 +40,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
   const [studentInstructorName, setStudentInstructorName] = useState(null);
   const regId = isStudent ? userData?.user_data?.registration_id : propRegId;
   const [hideGrading, setHideGrading] = useState();
+  const [hideGradingAssessment, setHideGradingAssessment] = useState();
   const toggleOpen = () => {
     setIsOpen(!isOpen);
   };
@@ -84,18 +87,12 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
 
   async function fetchOverallProgress() {
     const response = await getOverallProgress(courseId, sessionId, regId);
-    // setLoader(true);
     try {
       if (response.status === 200) {
         setProgress(response.data);
-        // setLoader(false);
-        // //console.log(progress);
-        // //console.log(response.data);
       } else {
-        //console.error("Failed to fetch courses", response.status);
       }
     } catch (error) {
-      //console.log("error", error);
     }
   }
   const fetchStudentsGrading = async () => {
@@ -103,8 +100,6 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
       toast.error("Session ID is required.");
       return;
     }
-    // console.log(sessionId);
-
     try {
       const currentFlagResponse = await gethideGradingforStudents(sessionId);
 
@@ -114,13 +109,29 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
       }
       const currentFlag = currentFlagResponse.data.grading_flag;
       setHideGrading(currentFlag);
-      // console.log(currentFlagResponse.data);
-
     } catch (error) {
       toast.error("Error fetching grading status.");
     }
   };
 
+  // const fetchStudentsGradingperAssessment = async () => {
+  //   if (!sessionId) {
+  //     toast.error("Session ID is required.");
+  //     return;
+  //   }
+  //   try {
+  //     const currentFlagResponse = await getHideGradingfromStudentsPerAssignment(sessionId);
+
+  //     if (currentFlagResponse.status !== 200) {
+  //       toast.error("Failed to fetch current grading status.");
+  //       return;
+  //     }
+  //     const currentFlag = currentFlagResponse.data.grading_flag;
+  //     setHideGradingAssessment(currentFlag);
+  //   } catch (error) {
+  //     toast.error("Error fetching grading status.");
+  //   }
+  // };
 
   useEffect(() => {
     if (!regId || !sessionId) return;
@@ -135,7 +146,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
     fetchProjectProgress();
     fetchExamProgress();
     fetchStudentsGrading()
-
+    // fetchStudentsGradingperAssessment()
   }, [regId, sessionId]);
 
   useEffect(() => {
@@ -144,9 +155,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
         setIsOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -162,10 +171,8 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
         setAssignment(response.data);
         setLoader(false);
       } else {
-        //console.error("Failed to fetch courses", response.status);
       }
     } catch (error) {
-      //console.log("error", error);
     }
   }
 
@@ -176,13 +183,9 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
       if (response.status === 200) {
         setQuiz(response.data);
         setLoader(false);
-        // //console.log(quiz);
-        // //console.log(response.data);
       } else {
-        //console.error("Failed to fetch courses", response.status);
       }
     } catch (error) {
-      //console.log("error", error);
     }
   }
 
@@ -193,13 +196,9 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
       if (response.status === 200) {
         setProject(response.data);
         setLoader(false);
-        // //console.log(project);
-        // //console.log(response.data);
       } else {
-        //console.error("Failed to fetch courses", response.status);
       }
     } catch (error) {
-      //console.log("error", error);
     }
   }
 
@@ -211,13 +210,9 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
       if (response.status === 200) {
         setExam(response.data);
         setLoader(false);
-        // //console.log(exam);
-        // //console.log(response.data);
       } else {
-        //console.error("Failed to fetch courses", response.status);
       }
     } catch (error) {
-      //console.log("error", error);
     }
   }
 
