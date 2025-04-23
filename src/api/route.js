@@ -2,26 +2,6 @@ import { axiosInstance } from "@/config/config";
 
 const API = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-//signup api
-// export const SignUpUser = async (user) => {
-//   try {
-//     const response = await axiosInstance.post(`/api/auth/create/`,user);
-//     return response;
-//   } catch (error) {
-//     throw error;
-//   }
-// };
-
-// //login api
-// export const LoginUser = async (user) => {
-//   try {
-//     const response = await axiosInstance.post(`/api/auth/login/`,user);
-//     return response;
-//   } catch (error) {
-//     throw error;
-//   }
-// };
-
 //get user sessions
 export const getUserSessions = async () => {
   try {
@@ -172,9 +152,7 @@ export const getModuleByCourseId = async (courseId, sessionId) => {
 
 //get assignment by courseId
 export const getAssignmentsByCourseId = async (
-  // id
   courseId,
-  // insId,
   sessionId
 ) => {
   try {
@@ -495,18 +473,6 @@ export const getAttendanceStudentPage = async (regId, courseId) => {
   }
 };
 
-// attendance/student/<int:course_id>/
-// export const getStudentAttendance = async (courseId) => {
-//   try {
-//     const response = await axiosInstance.get(
-//       `/api/attendance/student/${courseId}/`
-//     );
-//     return response;
-//   } catch (error) {
-//     throw error;
-//   }
-// };
-
 //get overall course progress percentage
 export const getProgressForCourse = async (courseId) => {
   try {
@@ -686,16 +652,6 @@ export const uploadExam = async (studentInstructorID, exam) => {
     throw error;
   }
 };
-
-// export const getUserByProgramID = async (programID, selectedOption) =>{
-//   try {
-//     const response = await axiosInstance.get(`/applications-process/${programID}/?group_name=${selectedOption}`)
-//     return response
-
-//   } catch (error) {
-//     throw error
-//   }
-// }
 
 export const getUserByStatus = async (
   programID,
@@ -1561,17 +1517,6 @@ export const getCalendarSessions = async (userId) => {
   }
 };
 
-// //get data
-// export const getData = async () => {
-//   try {
-//     const response = await axiosInstance.get(
-//       `/api/user-process/1/?group_name=student`
-//     );
-//     return response;
-//   } catch (error) {
-//     throw error;
-//   }
-// };
 
 //get calendar sessions
 export const getCalendarData = async (userId) => {
@@ -1678,7 +1623,6 @@ export const getNotificationByUserId = async (userId) => {
 };
 
 //get announcement by user ID
-
 export const getAnnouncementByUserId = async (userId) => {
   try {
     const response = await axiosInstance.get(
@@ -1734,6 +1678,7 @@ export const getCourseProgressByProgId = async (programID) => {
 };
 
 
+//to patch the hide status of grading per assessment
 export const gethideGradingforStudents = async (sessionId) => {
   try {
     const response = await axiosInstance.get(
@@ -1746,6 +1691,7 @@ export const gethideGradingforStudents = async (sessionId) => {
 };
 
 
+//to get the hide status of grading per course per session
 export const hideGradingfromStudents = async (sessionId, flag) => {
   try {
     const response = await axiosInstance.patch(
@@ -1759,6 +1705,7 @@ export const hideGradingfromStudents = async (sessionId, flag) => {
 };
 
 
+//to get the course wise of performance of all students (overview in students section)
 export const allStudentsCoursePerformance = async (courseId, sessionId) => {
   try {
     const response = await axiosInstance.get(
@@ -1770,6 +1717,8 @@ export const allStudentsCoursePerformance = async (courseId, sessionId) => {
   }
 };
 
+
+//to get the course wise of performance of all students (detailed in grading section)
 export const allStudentsCoursePerformanceDetailed = async (courseId, sessionId) => {
   try {
     const response = await axiosInstance.get(
@@ -1780,6 +1729,71 @@ export const allStudentsCoursePerformanceDetailed = async (courseId, sessionId) 
     throw error;
   }
 };
+
+
+//to get the hide status of grading per assessment
+export const getHideGradingfromStudentsPerAssignment = async (sessionId, assessmentId) => {
+  try {
+    const response = await axiosInstance.get(
+      `api/course/assessment/update-flag/${sessionId}/assignment/${assessmentId}/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//to patch the hide status of grading per assessment (assignment)
+export const hideGradingfromStudentsPerAssignment = async (sessionId, assessmentId, grading_flag) => {
+  try {
+    const response = await axiosInstance.patch(
+      `api/course/assessment/update-flag/${sessionId}/assignment/${assessmentId}/`, grading_flag
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//to patch the hide status of grading per assessment (quiz)
+export const hideGradingfromStudentsPerQuiz = async (sessionId, assessmentId, grading_flag) => {
+  try {
+    const response = await axiosInstance.patch(
+      `api/course/assessment/update-flag/${sessionId}/quiz/${assessmentId}/`, grading_flag
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+
+export const hideGradingfromStudentsPerProject = async (sessionId, assessmentId, grading_flag) => {
+  try {
+    const response = await axiosInstance.patch(
+      `api/course/assessment/update-flag/${sessionId}/project/${assessmentId}/`, grading_flag
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+
+export const hideGradingfromStudentsPerExam = async (sessionId, assessmentId, grading_flag) => {
+  try {
+    const response = await axiosInstance.patch(
+      `api/course/assessment/update-flag/${sessionId}/exam/${assessmentId}/`, grading_flag
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
 
 
 

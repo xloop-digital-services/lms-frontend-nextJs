@@ -15,11 +15,8 @@ import { useAuth } from "@/providers/AuthContext";
 import CourseHead from "./CourseHead";
 import useClickOutside from "@/providers/useClickOutside";
 import { IoIosArrowDown } from "react-icons/io";
-import ConfirmHideGrading from "./Modal/ConfirmHideGrading";
 import { toast } from "react-toastify";
-import GradingConfirmationModal from "./Modal/GradingHideModal";
 import { FaDownload } from "react-icons/fa";
-import { downloadGradingPDF } from "@/utils/downloadGradingPdf";
 import { downloadGradingExcel } from "@/utils/downloadGrading";
 
 const Grading = ({ courseId }) => {
@@ -51,6 +48,7 @@ const Grading = ({ courseId }) => {
   const [loading, setLoading] = useState(false);
   const [confirmModal, setConfirmModal] = useState(false);
   const [studentPerformance, setStudentPerformance] = useState();
+ 
   const menuRef = useRef();
   const tableRef = useRef();
   const [showMenu, setShowMenu] = useState(false);
@@ -64,8 +62,6 @@ const Grading = ({ courseId }) => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-
-
 
   const handleCreateWeightage = () => {
     setAssignWeightage(!assignWeightage);
@@ -95,7 +91,6 @@ const Grading = ({ courseId }) => {
       }
       const currentFlag = currentFlagResponse.data.grading_flag;
       setHideGrading(currentFlag);
-
     } catch (error) {
       toast.error("Error fetching grading status.");
     }

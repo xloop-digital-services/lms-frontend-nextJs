@@ -124,9 +124,9 @@ const UploadContent = ({
                   Browse
                 </span>
               </p>
-              <p className="text-[#92A7BE] text-[12px]">
+              {/* <p className="text-[#92A7BE] text-[12px]">
                 Supported formats: pdf, doc, docx, ppt, pptx, txt, zip
-              </p>
+              </p> */}
               {fileUploaded && (
                 <p className="text-[#1ab725] text-[13px] mt-2 border border-[#1ab7245f] p-1 px-4 rounded-lg">
                   {fileUploaded} selected

@@ -49,7 +49,6 @@ const SessionCreationModal = ({
   const [editableDays, setEditableDays] = useState({});
   const [previousSelectedDays, setPreviousSelectedDays] = useState([]);
   const [timeData, setTimeData] = useState({
-    // Initialize with each day having default start and end time
     0: { startTime: "", endTime: "" },
     1: { startTime: "", endTime: "" },
     2: { startTime: "", endTime: "" },
@@ -296,24 +295,11 @@ const SessionCreationModal = ({
   }, []);
 
   const handleStartDate = (event) => {
-    // Check if the date is a valid Date object
-    // if (date instanceof Date && !isNaN(date)) {
-    //   const formattedDate = date.toISOString().split("T")[0]; // Extract the date part
-    //   setstartDate(formattedDate); // Set the start date
-    //   // console.log("start date,", date);
-    //   console.log("formated start date", formattedDate);
-    // } else {
-    //   toast.error("Invalid date selected");
     setstartDate(event.target.value);
     // }
   };
 
   const handleEndDateChange = (event) => {
-    // if (date instanceof Date && !isNaN(date)) {
-    //   const formattedDate = date.toISOString().split("T")[0]; // Extract the date part
-    //   setendDate(formattedDate); // Set the end date
-    //   // console.log('end date,', date)
-    //   console.log("formated end date", formattedDate);
     setendDate(event.target.value);
 
     if (startDate && event.target.value <= startDate) {
@@ -459,16 +445,9 @@ const SessionCreationModal = ({
           newTimeData[selectedDay] = {
             ...newTimeData[selectedDay],
             [timeType]: value,
-            errorMessage: timeErrorMessage, // Apply the error message to all selected days
+            errorMessage: timeErrorMessage, 
           };
         }
-
-        // Apply the same start or end time to all selected days
-        // newTimeData[selectedDay] = {
-        //   ...newTimeData[selectedDay],
-        //   [timeType]: value,
-        //   errorMessage: timeErrorMessage, // Apply the error message to all selected days
-        // };
       });
 
       return newTimeData;
@@ -840,8 +819,6 @@ const SessionCreationModal = ({
                               />
                             </div>
                           </div>
-
-                          {/* End Time Input */}
                           <div className="space-y-2 text-[15px] w-full">
                             <div className="relative">
                               <input

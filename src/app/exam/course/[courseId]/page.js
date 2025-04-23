@@ -22,6 +22,7 @@ import AdminDataStructure, {
 } from "@/components/AdminDataStructure";
 import { handleFileUploadToS3 } from "@/components/ApplicationForm";
 import { IoIosArrowDown } from "react-icons/io";
+import { getDefaultDateTime } from "@/app/quiz/course/[courseId]/page";
 
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
@@ -37,7 +38,7 @@ export default function Page({ params }) {
   const [endTime, setEndTime] = useState(null);
   const [loading, setLoading] = useState(false);
   const [description, setDescription] = useState("");
-  const [dueDate, setDueDate] = useState("");
+  const [dueDate, setDueDate] = useState(getDefaultDateTime());
   const [quiz, setQuiz] = useState("");
   const [file, setFile] = useState(null);
   const [totalGrade, setTotalGrade] = useState("");

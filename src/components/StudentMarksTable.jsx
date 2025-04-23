@@ -62,26 +62,38 @@ const StudentMarksTable = ({ field, assessments }) => {
                                   : 0}
                               </td>
 
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
-                                {assessment?.marks_obtain
-                                  ? assessment.marks_obtain
-                                  : 0}
-                              </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
-                                {assessment?.remarks ? assessment.remarks : "-"}
-                              </td>
+                              {
+                                assessment?.grading_flag ?
+                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
+                                    {assessment?.marks_obtain
+                                      ? assessment.marks_obtain
+                                      : 0}
+                                  </td>
+                                  : <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
+                                    Not graded yet
+                                  </td>
+                              }
+                              {
+                                assessment?.grading_flag ?
+                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
+                                    {assessment?.remarks ? assessment.remarks : "-"}
+                                  </td>
+                                  : <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
+                                    Not graded yet
+                                  </td>
+                              }
+
 
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center text-surface-100">
                                 <p
-                                  className={`w-[120px] text-center px-4 py-2 text-[12px] rounded-lg ${
-                                    assessment?.status === "Submitted"
-                                      ? "bg-mix-300 w-[120px]"
-                                      : assessment?.status === "Pending"
+                                  className={`w-[120px] text-center px-4 py-2 text-[12px] rounded-lg ${assessment?.status === "Submitted"
+                                    ? "bg-mix-300 w-[120px]"
+                                    : assessment?.status === "Pending"
                                       ? "bg-mix-500 text-[#fff] w-[120px]"
                                       : assessment?.status === "Late Submission"
-                                      ? "bg-mix-600 text-[#fff] w-[110px]"
-                                      : "bg-mix-200 w-[120px]"
-                                  }`}
+                                        ? "bg-mix-600 text-[#fff] w-[110px]"
+                                        : "bg-mix-200 w-[120px]"
+                                    }`}
                                 >
                                   {assessment?.status}
                                 </p>
