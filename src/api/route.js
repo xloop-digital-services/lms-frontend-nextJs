@@ -1743,6 +1743,44 @@ export const getHideGradingfromStudentsPerAssignment = async (sessionId, assessm
   }
 };
 
+//to get the hide status of grading per assessment
+export const getHideGradingfromStudentsPerQuiz = async (sessionId, assessmentId) => {
+  try {
+    const response = await axiosInstance.get(
+      `api/course/assessment/update-flag/${sessionId}/quiz/${assessmentId}/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+//to get the hide status of grading per assessment
+export const getHideGradingfromStudentsPerProject = async (sessionId, assessmentId) => {
+  try {
+    const response = await axiosInstance.get(
+      `api/course/assessment/update-flag/${sessionId}/project/${assessmentId}/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//to get the hide status of grading per assessment
+export const getHideGradingfromStudentsPerExam = async (sessionId, assessmentId) => {
+  try {
+    const response = await axiosInstance.get(
+      `api/course/assessment/update-flag/${sessionId}/exam/${assessmentId}/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
 //to patch the hide status of grading per assessment (assignment)
 export const hideGradingfromStudentsPerAssignment = async (sessionId, assessmentId, grading_flag) => {
   try {

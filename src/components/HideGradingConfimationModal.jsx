@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { IoClose } from 'react-icons/io5';
 import { toast } from 'react-toastify';
 
-export default function HideGradingConfimationModal({ onClose, sessionId, selected, assessments, title }) {
+export default function HideGradingConfimationModal({ onClose, sessionId, selected, assessments, title, flag }) {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [hideGrading, setHideGrading] = useState();
     const [loading, setLoading] = useState(false);
@@ -24,7 +24,7 @@ export default function HideGradingConfimationModal({ onClose, sessionId, select
 
     async function hideGradeofAssessment() {
         setLoading(true);
-        const updatedFlag = !hideGrading;
+        const updatedFlag = !flag; 
 
         let response;
 
@@ -48,12 +48,12 @@ export default function HideGradingConfimationModal({ onClose, sessionId, select
             }
 
             if (response && response.status === 200) {
-                setHideGrading(updatedFlag);
-                onClose()
-                toast.success(`Grading ${updatedFlag ? "shown" : "hidden"} successfully!`);
+                setHideGrading(updatedFlag); 
+                onClose();
+                toast.success(`Grading ${updatedFlag === true ? "shown" : "hidden"} successfully!`);
             } else {
                 toast.error("Failed to update grading status.");
-                onClose()
+                onClose();
             }
         } catch (error) {
             toast.error("Error updating grading status.");
@@ -64,7 +64,7 @@ export default function HideGradingConfimationModal({ onClose, sessionId, select
 
 
     return (
-        <div className="backDropOverlay fixed inset-0 z-50 bg-opacity-50 flex items-center justify-center overflow-y-hidden">
+        <div className="backDropOverlay fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center overflow-y-hidden">
             <div className="bg-[#EBF6FF] w-full max-w-[600px] mx-4 p-3 rounded-2xl relative">
                 {loading ? (
                     <div className="absolute inset-0 w-full p-2 flex items-center justify-center bg-surface-100 bg-opacity-30 z-[1100]">

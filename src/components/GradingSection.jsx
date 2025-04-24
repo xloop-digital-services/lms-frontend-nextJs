@@ -7,6 +7,9 @@ import {
   getExamByCourseId,
   getExamGrading,
   getHideGradingfromStudentsPerAssignment,
+  getHideGradingfromStudentsPerExam,
+  getHideGradingfromStudentsPerProject,
+  getHideGradingfromStudentsPerQuiz,
   getProjectByCourseId,
   getProjectGrading,
   getQuizByCourseId,
@@ -19,6 +22,7 @@ import { PiEyeClosed } from "react-icons/pi";
 import { FaEye } from "react-icons/fa";
 import { toast } from "react-toastify";
 import HideGradingConfimationModal from "./HideGradingConfimationModal";
+import ModalPortal from "./ModalPortal";
 
 export const GradingSection = ({
   title,
@@ -209,7 +213,6 @@ export const GradingSection = ({
 
   useEffect(() => {
     if (!selected) return;
-    fetchStudentsGradingperAssessment();
     if (title === "Assignment") {
       fetchAssignmentsGrading();
     } else if (title === "Quiz") {
@@ -222,20 +225,34 @@ export const GradingSection = ({
     setFetch(false);
   }, [selected, fetch, title, isAdmin, isInstructor]);
 
+  useEffect(() => {
+    if (!selected) return;
+    fetchStudentsGradingperAssessment();
+  }, [selected, title])
 
   const handleHideGrading = () => {
     setShowConfirmation(true);
   };
 
   const fetchStudentsGradingperAssessment = async () => {
+    // console.log("Hifsjkfn");
     if (!sessionId) {
       toast.error("Session ID is required.");
       return;
     }
     try {
-      const currentFlagResponse = await getHideGradingfromStudentsPerAssignment(sessionId);
+      let currentFlagResponse;
 
-      if (currentFlagResponse.status !== 200) {
+      if (title === "Assignment") {
+        currentFlagResponse = await getHideGradingfromStudentsPerAssignment(sessionId, selected);
+      } else if (title === "Quiz") {
+        currentFlagResponse = await getHideGradingfromStudentsPerQuiz(sessionId, selected);
+      } else if (title === "Exam") {
+        currentFlagResponse = await getHideGradingfromStudentsPerExam(sessionId, selected);
+      } else if (title === "Project") {
+        currentFlagResponse = await getHideGradingfromStudentsPerProject(sessionId, selected);
+      }
+      if (!currentFlagResponse || currentFlagResponse.status !== 200) {
         toast.error("Failed to fetch current grading status.");
         return;
       }
@@ -243,9 +260,9 @@ export const GradingSection = ({
       setHideGradingAssessment(currentFlag);
     } catch (error) {
       // toast.error("Error fetching grading status.");
-    }
-  };
 
+    };
+  }
   return (
     <div className="border my-3 border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
       <div
@@ -265,9 +282,16 @@ export const GradingSection = ({
                 Total Marks: {totalMarks ? totalMarks : 0}
               </p>
               <div className="flex items-center gap-2 text-sm ">
-                Grading shown to students: {hideGradingAssessment ? "Shown" : "Hidden"}
-                <button className="cursor-pointer" onClick={handleHideGrading}>
-                  {hideGradingAssessment ? <PiEyeClosed title="Hide now" /> : <FaEye title="Show now" />}
+                Grading shown to students: {hideGradingAssessment === true ? "Shown" : "Hidden"}
+                <button className="cursor-pointer rounded-md py-1 px-2 bg-blue-300 text-surface-100  hover:bg-[#2670be]" onClick={handleHideGrading}>
+                  {hideGradingAssessment === true ? (
+                    <div className="flex items-center gap-2 ">
+                      Hide now
+                      <PiEyeClosed title="Hide now" />
+                    </div>)
+                    :
+                    <div className="flex items-center gap-2 "> Show now <FaEye title="Show now" />
+                    </div>}
                 </button>
               </div>
             </div>
@@ -336,21 +360,25 @@ export const GradingSection = ({
 
       <div className="">
         {showConfirmation && (
-          <HideGradingConfimationModal
-            selected={assessmentId}
-            sessionId={sessionId}
-            onClose={() => setShowConfirmation(false)}
-            title={title}
-            assessments={
-              title === "Assignment"
-                ? assignmentGrading
-                : title === "Quiz"
-                  ? quizGrading
-                  : title === "Project"
-                    ? projectGrading
-                    : examGrading
-            }
-          />
+          <ModalPortal >
+            <HideGradingConfimationModal
+              selected={assessmentId}
+              sessionId={sessionId}
+              
+              onClose={() => setShowConfirmation(false)}
+              title={title}
+              flag={hideGradingAssessment}
+              assessments={
+                title === "Assignment"
+                  ? assignmentGrading
+                  : title === "Quiz"
+                    ? quizGrading
+                    : title === "Project"
+                      ? projectGrading
+                      : examGrading
+              }
+            />
+          </ModalPortal>
         )}
 
       </div>
