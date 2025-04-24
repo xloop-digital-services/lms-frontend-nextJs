@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { IoClose } from 'react-icons/io5';
 import { toast } from 'react-toastify';
 
-export default function HideGradingConfimationModal({ onClose, sessionId, selected, assessments, title }) {
+export default function HideGradingConfimationModal({ onClose, sessionId, selected, assessments, title, flag }) {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [hideGrading, setHideGrading] = useState();
     const [loading, setLoading] = useState(false);
@@ -24,7 +24,7 @@ export default function HideGradingConfimationModal({ onClose, sessionId, select
 
     async function hideGradeofAssessment() {
         setLoading(true);
-        const updatedFlag = !hideGrading;
+        const updatedFlag = !flag; 
 
         let response;
 
@@ -48,12 +48,12 @@ export default function HideGradingConfimationModal({ onClose, sessionId, select
             }
 
             if (response && response.status === 200) {
-                setHideGrading(updatedFlag);
-                onClose()
-                toast.success(`Grading ${updatedFlag ? "shown" : "hidden"} successfully!`);
+                setHideGrading(updatedFlag); 
+                onClose();
+                toast.success(`Grading ${updatedFlag === true ? "shown" : "hidden"} successfully!`);
             } else {
                 toast.error("Failed to update grading status.");
-                onClose()
+                onClose();
             }
         } catch (error) {
             toast.error("Error updating grading status.");
