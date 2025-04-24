@@ -254,9 +254,9 @@ const UploadingFile = ({
                   Browse
                 </span>
               </p>
-              <p className="text-[#92A7BE] text-[12px]">
+              {/* <p className="text-[#92A7BE] text-[12px]">
                 Supported formats: pdf, doc, docx, ppt, pptx, txt, zip
-              </p>
+              </p> */}
               {fileUploaded && (
                 <p
                   className={`${

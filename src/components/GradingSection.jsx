@@ -6,24 +6,28 @@ import {
   getAssignmentsByCourseId,
   getExamByCourseId,
   getExamGrading,
-  getInstructorSessions,
-  getInstructorSessionsbyCourseId,
+  getHideGradingfromStudentsPerAssignment,
+  getHideGradingfromStudentsPerExam,
+  getHideGradingfromStudentsPerProject,
+  getHideGradingfromStudentsPerQuiz,
   getProjectByCourseId,
   getProjectGrading,
   getQuizByCourseId,
   getQuizGrading,
-  getSessionInstructor,
-  listAllSessions,
-  listSessionByCourseId,
+  hideGradingfromStudentsPerAssignment,
 } from "@/api/route";
 import AdminMarksTable from "./AdminMarksTable";
 import { useAuth } from "@/providers/AuthContext";
+import { PiEyeClosed } from "react-icons/pi";
+import { FaEye } from "react-icons/fa";
+import { toast } from "react-toastify";
+import HideGradingConfimationModal from "./HideGradingConfimationModal";
+import ModalPortal from "./ModalPortal";
 
 export const GradingSection = ({
   title,
   courseId,
   sessionId,
-  selectedSessionId,
 }) => {
   const { userData } = useAuth();
   const isAdmin = userData?.Group === "admin";
@@ -40,19 +44,22 @@ export const GradingSection = ({
   const [selectedDesc, setSelectedDesc] = useState(null);
   const [totalMarks, setTotalMarks] = useState(null);
   const [fetch, setFetch] = useState(false);
-  // const [selectedSessionId, setSelectedSessionId] = useState("");
-  // const [sessions, setSessions] = useState([]);
   const [loader, setLoader] = useState(false);
   const [adminUserId, setAdminUserId] = useState("");
   const group = userData?.Group;
   const [selectedSession, setSelectedSession] = useState();
-  // const [sessionId, setSessionId] = useState(null);
   const userId = group === "instructor" ? userData?.User?.id : adminUserId;
   const [quizzes, setQuizzes] = useState([]);
   const [assignments, setAssignments] = useState([]);
   const [exams, setExams] = useState([]);
   const [projects, setProjects] = useState([]);
   const [options, setOptions] = useState([]);
+  const [hideGrading, setHideGrading] = useState();
+  const [hideGradingAssessment, setHideGradingAssessment] = useState();
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [assessmentId, setAssessmentId] = useState(null);
+
+  // const [hideGradingAssessment, setHideGradingAssessment] = useState(false);
 
   async function fetchAssignments() {
     const response = await getAssignmentsByCourseId(courseId, sessionId);
@@ -61,12 +68,9 @@ export const GradingSection = ({
       if (response.status === 200) {
         setOptions(response?.data?.data);
         setLoader(false);
-        // //console.log(quizzes);
       } else {
-        //console.error("Failed to fetch user, status:", response.status);
       }
     } catch (error) {
-      //console.log("error", error);
     }
   }
   async function fetchQuizzes() {
@@ -76,12 +80,9 @@ export const GradingSection = ({
       if (response.status === 200) {
         setOptions(response?.data?.data);
         setLoader(false);
-        // //console.log(quizzes);
       } else {
-        //console.error("Failed to fetch user, status:", response.status);
       }
     } catch (error) {
-      //console.log("error", error);
     }
   }
 
@@ -92,12 +93,9 @@ export const GradingSection = ({
       if (response.status === 200) {
         setOptions(response?.data?.data);
         setLoader(false);
-        // //console.log(quizzes);
       } else {
-        //console.error("Failed to fetch user, status:", response.status);
       }
     } catch (error) {
-      //console.log("error", error);
     }
   }
 
@@ -108,17 +106,11 @@ export const GradingSection = ({
       if (response.status === 200) {
         setOptions(response?.data?.data);
         setLoader(false);
-        // //console.log(quizzes);
       } else {
-        //console.error("Failed to fetch user, status:", response.status);
       }
     } catch (error) {
-      //console.log("error", error);
     }
   }
-
-  // //console.log(sessionId);
-
   const toggleOpen = (e) => {
     e.stopPropagation();
     setIsOpen(!isOpen);
@@ -127,9 +119,11 @@ export const GradingSection = ({
   const handleSelect = (id) => {
     setSelected(id);
     setIsOpen(false);
-    // setSelectedDesc("")
-    // setTotalMarks("")
   };
+
+  const handleAssessmentId = (id) => {
+    setAssessmentId(id);
+  }
 
   useEffect(() => {
     if (!sessionId) return;
@@ -168,12 +162,9 @@ export const GradingSection = ({
       if (response.status === 200) {
         setLoading(false);
         setQuizGrading(response?.data?.data?.students);
-        //console.log(quizGrading);
       } else {
-        //console.error("Failed to fetch quizzes, status:", response.status);
       }
     } catch (error) {
-      //console.log("error", error);
     }
   }
 
@@ -184,12 +175,9 @@ export const GradingSection = ({
       if (response.status === 200) {
         setLoading(false);
         setAssignmentGrading(response?.data?.data?.students);
-        //console.log(assignmentGrading);
       } else {
-        //console.error("Failed to fetch assignments, status:", response.status);
       }
     } catch (error) {
-      //console.log("error", error);
     }
   }
 
@@ -202,12 +190,9 @@ export const GradingSection = ({
         setLoading(false);
         setExamGrading(examData?.students);
         setTotalMarks(examData?.total_grade || 0);
-        //console.log("Exam Grading Data: ", examData);
       } else {
-        //console.error("Failed to fetch exams, status:", response.status);
       }
     } catch (error) {
-      //console.error("Error fetching exam grading:", error);
     }
   }
 
@@ -218,14 +203,14 @@ export const GradingSection = ({
       if (response.status === 200) {
         setLoading(false);
         setProjectGrading(response?.data?.data?.students);
-        //console.log(projectGrading);
       } else {
-        //console.error("Failed to fetch projects, status:", response.status);
       }
     } catch (error) {
-      //console.log("error", error);
     }
   }
+
+
+
   useEffect(() => {
     if (!selected) return;
     if (title === "Assignment") {
@@ -240,9 +225,44 @@ export const GradingSection = ({
     setFetch(false);
   }, [selected, fetch, title, isAdmin, isInstructor]);
 
-  // //console.log(selected);
-  // //console.log(selectedValue);
+  useEffect(() => {
+    if (!selected) return;
+    fetchStudentsGradingperAssessment();
+  }, [selected, title])
 
+  const handleHideGrading = () => {
+    setShowConfirmation(true);
+  };
+
+  const fetchStudentsGradingperAssessment = async () => {
+    // console.log("Hifsjkfn");
+    if (!sessionId) {
+      toast.error("Session ID is required.");
+      return;
+    }
+    try {
+      let currentFlagResponse;
+
+      if (title === "Assignment") {
+        currentFlagResponse = await getHideGradingfromStudentsPerAssignment(sessionId, selected);
+      } else if (title === "Quiz") {
+        currentFlagResponse = await getHideGradingfromStudentsPerQuiz(sessionId, selected);
+      } else if (title === "Exam") {
+        currentFlagResponse = await getHideGradingfromStudentsPerExam(sessionId, selected);
+      } else if (title === "Project") {
+        currentFlagResponse = await getHideGradingfromStudentsPerProject(sessionId, selected);
+      }
+      if (!currentFlagResponse || currentFlagResponse.status !== 200) {
+        toast.error("Failed to fetch current grading status.");
+        return;
+      }
+      const currentFlag = currentFlagResponse.data.grading_flag;
+      setHideGradingAssessment(currentFlag);
+    } catch (error) {
+      // toast.error("Error fetching grading status.");
+
+    };
+  }
   return (
     <div className="border my-3 border-dark-300 w-full p-4 rounded-lg cursor-pointer flex flex-col ">
       <div
@@ -261,17 +281,25 @@ export const GradingSection = ({
               <p className="font-semibold text-sm text-blue-300">
                 Total Marks: {totalMarks ? totalMarks : 0}
               </p>
+              <div className="flex items-center gap-2 text-sm ">
+                Grading shown to students: {hideGradingAssessment === true ? "Shown" : "Hidden"}
+                <button className="cursor-pointer rounded-md py-1 px-2 bg-blue-300 text-surface-100  hover:bg-[#2670be]" onClick={handleHideGrading}>
+                  {hideGradingAssessment === true ? (
+                    <div className="flex items-center gap-2 ">
+                      Hide now
+                      <PiEyeClosed title="Hide now" />
+                    </div>)
+                    :
+                    <div className="flex items-center gap-2 "> Show now <FaEye title="Show now" />
+                    </div>}
+                </button>
+              </div>
             </div>
           )}
         </div>
 
         <div className="flex gap-2 items-center">
           {sessionId &&
-            // <div
-            //   className={`transition-container ${
-            //     openSection === title ? "max-height-full" : "max-height-0"
-            //   }`}
-            // >
             openSection === title && (
               <div className="">
                 <button
@@ -281,9 +309,8 @@ export const GradingSection = ({
                   {selectedValue ? selectedValue : `Select ${title}`}
 
                   <span
-                    className={`${
-                      !isOpen ? "rotate-180 duration-300" : "duration-300"
-                    }`}
+                    className={`${!isOpen ? "rotate-180 duration-300" : "duration-300"
+                      }`}
                   >
                     <IoIosArrowDown />
                   </span>
@@ -297,12 +324,14 @@ export const GradingSection = ({
                       options.map((option) => (
                         <div
                           key={option.id}
-                          onClick={() => {
+                          onClick={(e) => {
                             handleSelect(option.id);
+                            handleAssessmentId(option.id)
                             setSelectedValue(option.question || option.title);
                             setSelectedDesc(option.description);
                             setTotalMarks(option.total_grade || 0);
                           }}
+
                           className="p-2 cursor-pointer"
                         >
                           <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
@@ -318,20 +347,41 @@ export const GradingSection = ({
                   </div>
                 )}
               </div>
-              // )}
-              // </div>
             )}
 
           <span
-            className={`${
-              openSection ? "rotate-180 duration-300" : "duration-300"
-            }`}
+            className={`${openSection ? "rotate-180 duration-300" : "duration-300"
+              }`}
           >
             <IoIosArrowDown />
           </span>
         </div>
       </div>
 
+      <div className="">
+        {showConfirmation && (
+          <ModalPortal >
+            <HideGradingConfimationModal
+              selected={assessmentId}
+              sessionId={sessionId}
+              
+              onClose={() => setShowConfirmation(false)}
+              title={title}
+              flag={hideGradingAssessment}
+              assessments={
+                title === "Assignment"
+                  ? assignmentGrading
+                  : title === "Quiz"
+                    ? quizGrading
+                    : title === "Project"
+                      ? projectGrading
+                      : examGrading
+              }
+            />
+          </ModalPortal>
+        )}
+
+      </div>
       {selected && openSection === title && (
         <div className="mt-3">
           <AdminMarksTable
@@ -341,10 +391,10 @@ export const GradingSection = ({
               title === "Assignment"
                 ? assignmentGrading
                 : title === "Quiz"
-                ? quizGrading
-                : title === "Project"
-                ? projectGrading
-                : examGrading
+                  ? quizGrading
+                  : title === "Project"
+                    ? projectGrading
+                    : examGrading
             }
             assessmentId={selected}
           />

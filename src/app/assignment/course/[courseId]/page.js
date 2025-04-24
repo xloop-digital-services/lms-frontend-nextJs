@@ -20,6 +20,7 @@ import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 import AdminDataStructure from "@/components/AdminDataStructure";
 import { handleFileUploadToS3 } from "@/components/ApplicationForm";
+import { getDefaultDateTime } from "@/app/quiz/course/[courseId]/page";
 
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
@@ -33,11 +34,11 @@ export default function Page({ params }) {
   const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(false);
   const [description, setDescription] = useState("");
-  const [dueDate, setDueDate] = useState("");
+  const [dueDate, setDueDate] = useState(getDefaultDateTime());
   const [quiz, setQuiz] = useState("");
   const [file, setFile] = useState(null);
   // const [courses, setCourses] = useState(null);
-  const [resubmission, setResubmission] = useState("");
+  const [resubmission, setResubmission] = useState(0);
   const [updateStatus, setUpdateStatus] = useState(false);
   const [assignmentStatus, setAssignmentStatus] = useState(0);
   const [totalGrade, setTotalGrade] = useState("");
@@ -385,11 +386,10 @@ export default function Page({ params }) {
 
   return (
     <div
-      className={`flex-1 transition-transform pt-[90px] space-y-4 max-md:pt-32 font-inter ${
-        isSidebarOpen
+      className={`flex-1 transition-transform pt-[90px] space-y-4 max-md:pt-32 font-inter ${isSidebarOpen
           ? "translate-x-64 ml-20 "
           : "translate-x-0 pl-10 pr-10 max-md:pl-2 max-md:pr-2"
-      }`}
+        }`}
       style={{ width: isSidebarOpen ? "81%" : "100%" }}
     >
       <div className="bg-surface-100 mx-4 my-3 px-6 py-8 rounded-xl p-4">
@@ -415,9 +415,8 @@ export default function Page({ params }) {
                 <button
                   ref={sessionButton}
                   onClick={toggleSessionOpen}
-                  className={`${
-                    !selectedSession ? "text-[#92A7BE]" : "text-[#424B55]"
-                  } flex justify-between items-center w-full hover:text-[#0E1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#ACC5E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                  className={`${!selectedSession ? "text-[#92A7BE]" : "text-[#424B55]"
+                    } flex justify-between items-center w-full hover:text-[#0E1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#ACC5E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
                   {selectedSession || "Select a session"}
                   <span
@@ -460,9 +459,8 @@ export default function Page({ params }) {
                 <button
                   ref={sessionButton}
                   onClick={toggleSessionOpen}
-                  className={`${
-                    !selectedSession ? "text-[#92A7BE]" : "text-[#424B55]"
-                  } flex justify-between items-center w-full hover:text-[#0E1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#ACC5E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
+                  className={`${!selectedSession ? "text-[#92A7BE]" : "text-[#424B55]"
+                    } flex justify-between items-center w-full hover:text-[#0E1721] px-4 py-3 text-sm text-left bg-surface-100 border border-[#ACC5E0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
                 >
                   {selectedSession || "Select a session"}
                   <span
@@ -527,11 +525,10 @@ export default function Page({ params }) {
                         />
                         <div className="w-11 h-6 bg-blue-600 rounded-full"></div>
                         <div
-                          className={`absolute w-4 h-4 bg-blue-300 rounded-full shadow-md transform transition-transform ${
-                            assignmentStatus === 1
+                          className={`absolute w-4 h-4 bg-blue-300 rounded-full shadow-md transform transition-transform ${assignmentStatus === 1
                               ? "translate-x-5"
                               : "translate-x-1"
-                          }`}
+                            }`}
                         ></div>
                       </label>
                       <span className="ml-4 text-md">
@@ -627,13 +624,12 @@ export default function Page({ params }) {
                       !question
                     }
                     className={`w-44 my-4 max-sm:w-full flex justify-center py-3 px-4 text-sm font-medium disabled:bg-blue-200 disabled:cursor-not-allowed rounded-lg text-surface-100 
-    ${
-      loading
-        ? "bg-blue-300 text-surface-100"
-        : currentAssignment
-        ? "bg-blue-300 hover:bg-blue-700"
-        : "bg-blue-300 hover:bg-blue-700"
-    } 
+    ${loading
+                        ? "bg-blue-300 text-surface-100"
+                        : currentAssignment
+                          ? "bg-blue-300 hover:bg-blue-700"
+                          : "bg-blue-300 hover:bg-blue-700"
+                      } 
     focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 
     transition duration-150 ease-in-out`}
                   >

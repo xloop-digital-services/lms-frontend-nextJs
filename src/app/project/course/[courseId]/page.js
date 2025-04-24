@@ -20,6 +20,7 @@ import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 import AdminDataStructure from "@/components/AdminDataStructure";
 import { handleFileUploadToS3 } from "@/components/ApplicationForm";
+import { getDefaultDateTime } from "@/app/quiz/course/[courseId]/page";
 
 export default function Page({ params }) {
   const { isSidebarOpen } = useSidebar();
@@ -32,10 +33,10 @@ export default function Page({ params }) {
   const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(false);
   const [description, setDescription] = useState("");
-  const [dueDate, setDueDate] = useState("");
+   const [dueDate, setDueDate] = useState(getDefaultDateTime());
   const [quiz, setQuiz] = useState("");
   const [file, setFile] = useState(null);
-  const [resubmission, setResubmission] = useState("0");
+  const [resubmission, setResubmission] = useState(0);
   const [updateStatus, setUpdateStatus] = useState(false);
   const [assignmentStatus, setAssignmentStatus] = useState(0);
   const [totalGrade, setTotalGrade] = useState("");
