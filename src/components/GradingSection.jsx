@@ -19,6 +19,7 @@ import { PiEyeClosed } from "react-icons/pi";
 import { FaEye } from "react-icons/fa";
 import { toast } from "react-toastify";
 import HideGradingConfimationModal from "./HideGradingConfimationModal";
+import ModalPortal from "./ModalPortal";
 
 export const GradingSection = ({
   title,
@@ -336,6 +337,7 @@ export const GradingSection = ({
 
       <div className="">
         {showConfirmation && (
+          <ModalPortal >
           <HideGradingConfimationModal
             selected={assessmentId}
             sessionId={sessionId}
@@ -351,6 +353,7 @@ export const GradingSection = ({
                     : examGrading
             }
           />
+          </ModalPortal>
         )}
 
       </div>
