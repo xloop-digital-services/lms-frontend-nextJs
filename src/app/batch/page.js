@@ -205,60 +205,6 @@ export default function Page() {
                   </div>
                 )}
               </div>
-              {/* <div>
-              <button
-                onClick={toggleLocationOpen}
-                className="flex justify-between items-center md:w-[200px] text-dark-500 group-hover:text-[#0e1721] px-4 py-4 text-sm text-left bg-surface-100 border  border-dark-500 rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
-              >
-                {selectedLocation || location0ptions[0]}
-                <span className="">
-                  <IoIosArrowDown />
-                </span>
-              </button>
-  
-              {isLocationOpen && (
-                <div className="absolute z-10 w-[200px] mt-1 bg-surface-100 border rounded-lg shadow-lg transition-opacity duration-300 ease-in-out">
-                  {location0ptions.map((option, index) => (
-                    <div
-                      key={index}
-                      onClick={() => handleLocationSelect(option)}
-                      className="p-2 cursor-pointer "
-                    >
-                      <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
-                        {option}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div> */}
-              {/* <div>
-              <button
-                onClick={toggleBatchOpen}
-                className="flex justify-between items-center md:w-[200px] text-dark-500 group-hover:text-[#0e1721] px-4 py-4 text-sm text-left bg-surface-100 border  border-dark-500 rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out"
-              >
-                {selectedBatch || batch0ptions[0]}
-                <span className="">
-                  <IoIosArrowDown />
-                </span>
-              </button>
-  
-              {isBatchOpen && (
-                <div className="absolute z-10 w-[200px] mt-1 bg-surface-100 border rounded-lg shadow-lg transition-opacity duration-300 ease-in-out">
-                  {batch0ptions.map((option, index) => (
-                    <div
-                      key={index}
-                      onClick={() => handleBatchSelect(option)}
-                      className="p-2 cursor-pointer "
-                    >
-                      <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
-                        {option}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div> */}
               <div>
                 <button
                   className="text-[#fff] bg-blue-300 hover:bg-[#3272b6] text-sm sm:p-4 px-3 py-3 md:px-6 rounded-lg hover:cursor-pointer"

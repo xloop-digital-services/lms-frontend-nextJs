@@ -11,7 +11,7 @@ import {
   getExamProgress,
   gethideGradingforStudents,
   getHideGradingfromStudentsPerAssignment,
-  getOverallProgress,
+  getOverallProgressStudent,
   getProjectProgress,
   getQuizProgress,
   getUserSessions,
@@ -86,7 +86,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
   };
 
   async function fetchOverallProgress() {
-    const response = await getOverallProgress(courseId, sessionId, regId);
+    const response = await getOverallProgressStudent(courseId, sessionId, regId);
     try {
       if (response.status === 200) {
         setProgress(response.data);
@@ -140,12 +140,12 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
   useEffect(() => {
 
     if (!regId || !sessionId) return;
+    fetchStudentsGrading()
     fetchOverallProgress();
     fetchAssignmentProgress();
     fetchQuizProgress();
     fetchProjectProgress();
     fetchExamProgress();
-    fetchStudentsGrading()
     // fetchStudentsGradingperAssessment()
   }, [regId, sessionId]);
 
