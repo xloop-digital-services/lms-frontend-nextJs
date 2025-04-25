@@ -63,7 +63,7 @@ const StudentMarksTable = ({ field, assessments }) => {
                               </td>
 
                               {
-                                assessment?.grading_flag ?
+                                assessment?.grading_flag === false ?
                                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
                                     {assessment?.marks_obtain
                                       ? assessment.marks_obtain
@@ -74,7 +74,7 @@ const StudentMarksTable = ({ field, assessments }) => {
                                   </td>
                               }
                               {
-                                assessment?.grading_flag ?
+                                assessment?.grading_flag === false ?
                                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
                                     {assessment?.remarks ? assessment.remarks : "-"}
                                   </td>
