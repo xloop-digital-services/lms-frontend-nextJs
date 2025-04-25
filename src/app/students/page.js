@@ -13,12 +13,6 @@ export default function Page() {
   const isInstructor = userData?.Group === "instructor";
 
   return (
-    // <>
-    //   {loader ? (
-    //     <div className="flex h-screen justify-center items-center">
-    //       <CircularProgress />
-    //     </div>
-    //   ) : (
     <>
       {isStudent ? (
         <CoursePage path="students" heading="Students" />
@@ -34,7 +28,5 @@ export default function Page() {
         <div>No data found </div>
       )}
     </>
-    // )}
-    // </>
   );
 }

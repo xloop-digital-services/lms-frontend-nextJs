@@ -101,15 +101,11 @@ export default function ApplicationForm() {
 
   const handleFirstName = (e) => {
     const name = e.target.value;
-
-    // Regular expression to allow only alphabets (a-z, A-Z)
     const alphabetPattern = /^[a-zA-Z\s]*$/;
 
-    // Trim leading and trailing spaces
-    setFirstName(name); // Set the trimmed name
+    setFirstName(name);
     const trimmedName = name.trim();
 
-    // Check if the trimmed name contains only alphabets
     if (!alphabetPattern.test(trimmedName)) {
       setNameError("Name can only contain alphabets.");
     } else {
@@ -119,11 +115,7 @@ export default function ApplicationForm() {
 
   const handleLastName = (e) => {
     const name = e.target.value;
-
-    // Regular expression to allow only alphabets (a-z, A-Z)
     const alphabetPattern = /^[a-zA-Z\s]*$/;
-
-    // Trim leading and trailing spaces
     setLastName(name); // Set the trimmed name
     const trimmedName = name.trim();
     // console.log(trimmedName,'name')
@@ -132,11 +124,10 @@ export default function ApplicationForm() {
     if (!alphabetPattern.test(trimmedName)) {
       setNameError("Name can only contain alphabets.");
     } else {
-      setNameError(""); // Clear the error if the input is valid
+      setNameError(""); 
     }
   };
 
-  // console.log( firstName.trim(), lastName.trim())
 
   const formatContactInput = (value, caretPos) => {
     const numericValue = value.replace(/[^0-9]/g, ""); // Remove non-numeric characters
@@ -169,11 +160,10 @@ export default function ApplicationForm() {
       // No need to check startsWith here; the regex handles the format
       setErrorMessage("Please enter a valid contact number.");
     } else {
-      setErrorMessage(""); // Clear error if the input is valid
+      setErrorMessage(""); 
     }
   };
 
-  // Handle input change and validation
   const handleInputChange = (e) => {
     const input = e.target;
     const caretPos = input.selectionStart; // Get current caret position
@@ -306,9 +296,6 @@ export default function ApplicationForm() {
       );
       setLocationId(locationId.filter((selected) => selected !== program.id));
     }
-
-    // setLocationCode(program.shortName); // Uncomment if needed
-    // setIsLocationOpen(false); // Uncomment if needed
     setIsLocationSelected(true);
   };
 

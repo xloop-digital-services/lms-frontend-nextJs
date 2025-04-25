@@ -16,10 +16,7 @@ export default function DashboardLayout({ children }) {
           userData?.session === true ? (
           <SideBar />
         ) : null}
-        {/* <div> */}
         <Navbar />
-        {/* </div> */}
-
         {children}
       </SidebarProvider>
     </>
