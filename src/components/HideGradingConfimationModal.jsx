@@ -50,7 +50,7 @@ export default function HideGradingConfimationModal({ onClose, sessionId, select
             if (response && response.status === 200) {
                 setHideGrading(updatedFlag); 
                 onClose();
-                toast.success(`Grading ${updatedFlag === true ? "shown" : "hidden"} successfully!`);
+                toast.success(`Grading ${updatedFlag === false ? "shown" : "hidden"} successfully!`);
             } else {
                 toast.error("Failed to update grading status.");
                 onClose();

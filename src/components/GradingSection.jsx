@@ -282,9 +282,9 @@ export const GradingSection = ({
                 Total Marks: {totalMarks ? totalMarks : 0}
               </p>
               <div className="flex items-center gap-2 text-sm ">
-                Grading shown to students: {hideGradingAssessment === true ? "Shown" : "Hidden"}
+                Grading shown to students: {hideGradingAssessment === false ? "Shown" : "Hidden"}
                 <button className="cursor-pointer rounded-md py-1 px-2 bg-blue-300 text-surface-100  hover:bg-[#2670be]" onClick={handleHideGrading}>
-                  {hideGradingAssessment === true ? (
+                  {hideGradingAssessment === false ? (
                     <div className="flex items-center gap-2 ">
                       Hide now
                       <PiEyeClosed title="Hide now" />
