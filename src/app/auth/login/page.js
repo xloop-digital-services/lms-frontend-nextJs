@@ -101,7 +101,7 @@ export default function Page() {
                   title="Password (at least 8 characters, with letters, numbers, and special characters)"
                   required
                   value={password.trim()}
-                  autocomplete="current-password"
+                  autoComplete="current-password"
                   onChange={(e) => setPassword(e.target.value)}
                   className="appearance-none block w-full p-3 pr-9 border border-dark-300 rounded-lg placeholder-dark-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                 />

@@ -37,7 +37,6 @@ function Profile() {
   const [loaderEdit, setLoaderEdit] = useState(false);
   const formRef = useRef(null);
   const [errorMessage, setErrorMessage] = useState("");
-  // const registrationID = user?.registration_id
   const { userData } = useAuth();
   const isStudent = userData?.Group === "student";
   const isAdmin = userData?.Group === "admin";
@@ -107,8 +106,8 @@ function Profile() {
     event.preventDefault();
     if (errorMessage !== "") {
       toast.error("Please enter a valid contact number.");
-      setLoaderEdit(false); // Set loader to false
-      return; // Prevent form submission
+      setLoaderEdit(false); 
+      return;
     } else {
       setLoaderEdit(true);
       setFirstName(editFirstName);
@@ -217,51 +216,33 @@ function Profile() {
       setLoader(false);
     }
   };
-  // if (loader) {
-  //   return <CircularProgress />;
-  // }
-
   const getFirstWord = (name) => (name ? name[0] : "");
-
-  // const validatePassword = (password) => {
-  //   const passwordRegex = /^[a-zA-Z0-9!@#$%^&*()_+=-]*$/;
-  //   return passwordRegex.test(password);
-  // };
 
   const handleConfirmChange = (e) => {
     const { value } = e.target;
     setConfirmPassword(value);
-    // if (validatePassword(value)) {
-    // } else {
-    //   //console.log("Invalid characters in password");
-    // }
   };
 
   const handleChange = (e) => {
     const { value } = e.target;
     setPassword(value);
-    // if (validatePassword(value)) {
-    // } else {
-    //   //console.log("Invalid characters in password");
-    // }
   };
 
   const formatContactInput = (value, caretPos) => {
-    const numericValue = value.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+    const numericValue = value.replace(/[^0-9]/g, ""); 
     let formattedValue = numericValue
       .slice(0, 11)
-      .replace(/(\d{4})(\d{1,7})?/, "$1-$2"); // Format as XXXX-XXXXXXX
+      .replace(/(\d{4})(\d{1,7})?/, "$1-$2");
     if (numericValue.length <= 4) {
-      formattedValue = numericValue; // Don't add hyphen if there are less than 5 digits
+      formattedValue = numericValue; 
     }
 
     return { formattedValue, caretPos };
   };
 
-  // Validate the contact number input
   const validateContactNumber = (value) => {
-    const contactPattern = /^[0-9]{4}-[0-9]{7}$/; // Ensure valid format (XXXX-XXXXXXX)
-    const invalidPrefix = /^0000-/; // Prevent numbers starting with 0000
+    const contactPattern = /^[0-9]{4}-[0-9]{7}$/; 
+    const invalidPrefix = /^0000-/; 
 
     if (invalidPrefix.test(value)) {
       setErrorMessage("Contact number cannot start with 0000.");
@@ -299,11 +280,6 @@ function Profile() {
 
   return (
     <>
-      {/* {loader ? (
-        <div className="flex h-screen justify-center items-center">
-          <CircularProgress />
-        </div>
-      ) : ( */}
       <div
         className={`flex-1 transition-transform pt-[90px] space-y-4 max-md:pt-32 font-inter ${
           isSidebarOpen

@@ -11,7 +11,7 @@ export default function DashboardLayout({ children }) {
   return (
     <>
       <AuthProvider>
-        <SidebarProvider>
+        {/* <SidebarProvider>
           {userData?.Group === "admin" ? (
             <SideBar />
           ) : ["instructor", "student"].includes(userData?.Group) &&
@@ -19,11 +19,11 @@ export default function DashboardLayout({ children }) {
             <SideBar />
           ) : null}
           {/* <div> */}
-          <Navbar />
-          {/* </div> */}
+        {/* <Navbar /> */}
+        {/* </div> */} 
 
-          {children}
-        </SidebarProvider>
+        {children}
+        {/* </SidebarProvider> */}
       </AuthProvider>
     </>
   );
