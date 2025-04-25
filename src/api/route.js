@@ -262,7 +262,7 @@ export const getExamProgress = async (courseId, sessionId, regId) => {
   }
 };
 
-//get progress by courseId (grading)
+//get progress by courseId (grading) for admin
 export const getOverallProgress = async (courseId, sessionId, regId) => {
   try {
     const response = await axiosInstance.get(
@@ -273,6 +273,19 @@ export const getOverallProgress = async (courseId, sessionId, regId) => {
     throw error;
   }
 };
+
+//get progress by courseId (grading) for student
+export const getOverallProgressStudent = async (courseId, sessionId, regId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/api/course/assessment/${courseId}/course/session/${sessionId}/${regId}/total_score_grading_flag/`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 
 //get quizzes Grading (admin)
 export const getQuizGrading = async (courseId, quizId, sessionId) => {

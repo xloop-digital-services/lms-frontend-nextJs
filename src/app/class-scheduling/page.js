@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   IoIosArrowDown,
   IoIosCloseCircleOutline,
-  IoMdClose,
 } from "react-icons/io";
 import SessionsTable from "@/components/SessionsTable";
 import SessionCreationModal from "@/components/Modal/SessionCreationModal";
@@ -25,7 +24,6 @@ import { useRouter } from "next/navigation";
 export default function Page() {
   const { isSidebarOpen } = useSidebar();
   const [selectedLocationId, setSelectedLocationId] = useState(null);
-  // const [isMobile, setIsMobile] = useState(window.innerWidth <= 845);
   const [selectedCity, setSelectedCity] = useState("select city");
   const [selectedLocation, setSelectedLocation] = useState("Select location");
   const [selectedBatch, setSelectedBatch] = useState("Select batch");
@@ -86,7 +84,6 @@ export default function Page() {
   useEffect(() => {
     let filteredList = sessions;
 
-    // Case 1: Only location is selected
     if (selectedLocation && !isBatchSelected) {
       filteredList = sessions.filter((session) =>
         session.location_name
@@ -94,15 +91,12 @@ export default function Page() {
           .includes(selectedLocation.toLowerCase())
       );
     }
-
-    // Case 2: Only batch is selected
     if (selectedBatch && !isLocationSelected) {
       filteredList = sessions.filter((session) =>
         session.batch.toLowerCase().includes(selectedBatch.toLowerCase())
       );
     }
 
-    // Case 3: Both location and batch are selected
     if (
       selectedBatch &&
       isBatchSelected &&
@@ -186,7 +180,7 @@ export default function Page() {
 
   const handleLocationSelect = (location) => {
     setSelectedLocation(location.location_name);
-    setSelectedLocationId(location.id); // Store the ID for later use
+    setSelectedLocationId(location.id); 
     setIsLocationOpen(false);
     setIsLocationSelected(true);
   };
@@ -221,7 +215,6 @@ export default function Page() {
       setConfirmDelete(false);
       setLoading(false);
     } catch (error) {
-      // console.log("error while deleting the lcoation", error);
     } finally {
       setLoading(false);
     }
@@ -245,7 +238,6 @@ export default function Page() {
                 onClick={goBack}
               >
                 <FaArrowLeft size={20} />
-                {/* <p>Back</p> */}
               </div>
               <p className="font-bold text-xl text-blue-500 font-exo">
                 Class Details
@@ -253,53 +245,6 @@ export default function Page() {
             </div>
             <div className="flex gap-3">
               <div className=" flex gap-3 ">
-                {/* City Dropdown */}
-                {/* <div>
-                <button
-                  onClick={toggleCityOpen}
-                  className={`${
-                    !isCitySelected ? " text-dark-500" : "text-[#424b55]"
-                  } flex justify-between items-center md:w-[200px] w-[80%] hover:text-[#0e1721] p-4 text-sm text-left bg-surface-100 border border-[#acc5e0] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out`}
-                >
-                  {selectedCity}
-                  {isCitySelected && (
-                    <span
-                      onClick={clearCityFilter}
-                      className="ml-2 text-red-500 cursor-pointer"
-                    >
-                      <IoMdClose />
-                    </span>
-                  )}
-                  <span
-                    className={`ml-auto ${
-                      isCityOpen ? "rotate-180 duration-300" : "duration-300"
-                    }`}
-                  >
-                    <IoIosArrowDown />
-                  </span>
-                </button>
-
-                {isCityOpen && (
-                  <div
-                    ref={cityDown}
-                    className="absolute z-10 w-[200px] mt-1 bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
-                  >
-                    {cityOptions.map((option, index) => (
-                      <div
-                        key={index}
-                        onClick={() => handleCitySelect(option)}
-                        className="p-2 cursor-pointer"
-                      >
-                        <div className="px-4 py-2 hover:bg-[#03a3d838] hover:text-blue-300 hover:font-semibold rounded-lg">
-                          {option.name}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div> */}
-
-                {/* Location Dropdown  */}
                 <div className="relative">
                   <button
                     ref={dropButton}
@@ -333,7 +278,6 @@ export default function Page() {
                       className="absolute z-50 w-full max-h-[250px] overflow-auto scrollbar-webkit mt-1 bg-surface-100 border border-dark-300 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out"
                     >
                       {sessions && sessions.length > 0 ? (
-                        // Filter duplicates based on both name and city
                         [
                           ...new Map(
                             sessions.map((item) => [

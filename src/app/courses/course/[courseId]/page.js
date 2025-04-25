@@ -37,7 +37,6 @@ import { formatDateTime } from "@/components/AdminDataStructure";
 import Link from "next/link";
 
 export const downloadFile = async (filePath) => {
-  //console.log("ye raha", filePath);
   if (!filePath) return;
   const link = document.createElement("a");
   link.href = filePath;
@@ -167,10 +166,6 @@ export default function Page({ params }) {
           );
         }
       } else {
-        //console.error(
-        //   "Failed to fetch user sessions, status:",
-        //   response.status
-        // );
       }
     } catch (error) {
       //console.log("Error:", error);
@@ -323,11 +318,6 @@ export default function Page({ params }) {
         setLoaderModule(false);
         return;
       }
-      // if (!file) {
-      //   toast.error("Add a file to create the module.");
-      //   setLoaderModule(false);
-      //   return;
-      // }
       const formData = new FormData();
       formData.append("name", moduleData.name);
       formData.append("description", moduleData.description);
