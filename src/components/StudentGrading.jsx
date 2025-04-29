@@ -1,6 +1,6 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react"; 
-import { IoIosArrowDown } from "react-icons/io"; 
+import React, { useState, useRef, useEffect } from "react";
+import { IoIosArrowDown } from "react-icons/io";
 import PerformanceTable from "@/components/PerformanceTable";
 import { useSidebar } from "@/providers/useSidebar";
 import { useWindowSize } from "@/providers/useWindowSize";
@@ -20,6 +20,7 @@ import { useAuth } from "@/providers/AuthContext";
 import Lottie from "lottie-react";
 import bouncing from "../../public/data/bouncing.json";
 import { toast } from "react-toastify";
+import { CircularProgress } from "@mui/material";
 
 export default function StudentGrading({ courseId, regId: propRegId }) {
   const { width } = useWindowSize();
@@ -203,6 +204,15 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
   }
 
   if (!regId) return;
+  if (loader) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[550px]">
+        <div className="w-full flex items-center justify-center font-semibold text-blue-500 ">
+          <CircularProgress />
+        </div>
+      </div>
+    );
+  }
   async function fetchExamProgress() {
     const response = await getExamProgress(courseId, sessionId, regId);
     setLoader(true);

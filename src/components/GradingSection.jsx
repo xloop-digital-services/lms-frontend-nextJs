@@ -378,7 +378,7 @@ export const GradingSection = ({
                       : examGrading
               }
             />
-          {/* </ModalPortal> */}
+          </ModalPortal>
         )}
 
       </div>
