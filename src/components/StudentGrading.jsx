@@ -1,6 +1,6 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react"; 
-import { IoIosArrowDown } from "react-icons/io"; 
+import React, { useState, useRef, useEffect } from "react";
+import { IoIosArrowDown } from "react-icons/io";
 import PerformanceTable from "@/components/PerformanceTable";
 import { useSidebar } from "@/providers/useSidebar";
 import { useWindowSize } from "@/providers/useWindowSize";
@@ -10,7 +10,6 @@ import {
   getAssignmentProgress,
   getExamProgress,
   gethideGradingforStudents,
-  getHideGradingfromStudentsPerAssignment,
   getOverallProgressStudent,
   getProjectProgress,
   getQuizProgress,
@@ -20,6 +19,7 @@ import { useAuth } from "@/providers/AuthContext";
 import Lottie from "lottie-react";
 import bouncing from "../../public/data/bouncing.json";
 import { toast } from "react-toastify";
+import { CircularProgress } from "@mui/material";
 
 export default function StudentGrading({ courseId, regId: propRegId }) {
   const { width } = useWindowSize();
@@ -114,31 +114,13 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
     }
   };
 
-  // const fetchStudentsGradingperAssessment = async () => {
-  //   if (!sessionId) {
-  //     toast.error("Session ID is required.");
-  //     return;
-  //   }
-  //   try {
-  //     const currentFlagResponse = await getHideGradingfromStudentsPerAssignment(sessionId);
-
-  //     if (currentFlagResponse.status !== 200) {
-  //       toast.error("Failed to fetch current grading status.");
-  //       return;
-  //     }
-  //     const currentFlag = currentFlagResponse.data.grading_flag;
-  //     setHideGradingAssessment(currentFlag);
-  //   } catch (error) {
-  //     toast.error("Error fetching grading status.");
-  //   }
-  // };
-
   useEffect(() => {
+    if (hideGrading === true) return
     if (!regId || !sessionId) return;
     fetchOverallProgress();
-  }, []);
+  }, [hideGrading]);
   useEffect(() => {
-
+    if (hideGrading === true) return
     if (!regId || !sessionId) return;
     fetchStudentsGrading()
     fetchOverallProgress();
@@ -146,8 +128,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
     fetchQuizProgress();
     fetchProjectProgress();
     fetchExamProgress();
-    // fetchStudentsGradingperAssessment()
-  }, [regId, sessionId]);
+  }, [regId, sessionId, hideGrading]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -203,6 +184,15 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
   }
 
   if (!regId) return;
+  if (loader) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[550px]">
+        <div className="w-full flex items-center justify-center font-semibold text-blue-500 ">
+          <CircularProgress />
+        </div>
+      </div>
+    );
+  }
   async function fetchExamProgress() {
     const response = await getExamProgress(courseId, sessionId, regId);
     setLoader(true);
@@ -231,7 +221,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
         instructorName={studentInstructorName || ""}
       />
 
-      {hideGrading ? (
+      {hideGrading === true ? (
         <div className="flex flex-col items-center justify-center h-[550px]">
           <div className="w-full flex items-center justify-center font-semibold text-blue-500 ">
             This section is unavailable for a while.

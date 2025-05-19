@@ -1,6 +1,6 @@
  
 import * as XLSX from 'xlsx'; 
-export const generateExcel = () => {
+export const generateExcel = ({ assignment, quiz, project, exam, attendanceStudent, progress, regId }) => {
     const sections = [
       { title: "Assignment", data: assignment?.data, columns: ["assignment_name", "total_marks", "marks_obtain", "remarks", "status"] },
       { title: "Quiz", data: quiz?.data, columns: ["quiz_name", "total_marks", "marks_obtain", "remarks", "status"] },
