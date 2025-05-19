@@ -10,7 +10,6 @@ import {
   getAssignmentProgress,
   getExamProgress,
   gethideGradingforStudents,
-  getHideGradingfromStudentsPerAssignment,
   getOverallProgressStudent,
   getProjectProgress,
   getQuizProgress,
@@ -115,31 +114,13 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
     }
   };
 
-  // const fetchStudentsGradingperAssessment = async () => {
-  //   if (!sessionId) {
-  //     toast.error("Session ID is required.");
-  //     return;
-  //   }
-  //   try {
-  //     const currentFlagResponse = await getHideGradingfromStudentsPerAssignment(sessionId);
-
-  //     if (currentFlagResponse.status !== 200) {
-  //       toast.error("Failed to fetch current grading status.");
-  //       return;
-  //     }
-  //     const currentFlag = currentFlagResponse.data.grading_flag;
-  //     setHideGradingAssessment(currentFlag);
-  //   } catch (error) {
-  //     toast.error("Error fetching grading status.");
-  //   }
-  // };
-
   useEffect(() => {
+    if (hideGrading === true) return
     if (!regId || !sessionId) return;
     fetchOverallProgress();
-  }, []);
+  }, [hideGrading]);
   useEffect(() => {
-
+    if (hideGrading === true) return
     if (!regId || !sessionId) return;
     fetchStudentsGrading()
     fetchOverallProgress();
@@ -147,8 +128,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
     fetchQuizProgress();
     fetchProjectProgress();
     fetchExamProgress();
-    // fetchStudentsGradingperAssessment()
-  }, [regId, sessionId]);
+  }, [regId, sessionId, hideGrading]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -241,7 +221,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
         instructorName={studentInstructorName || ""}
       />
 
-      {hideGrading ? (
+      {hideGrading === true ? (
         <div className="flex flex-col items-center justify-center h-[550px]">
           <div className="w-full flex items-center justify-center font-semibold text-blue-500 ">
             This section is unavailable for a while.

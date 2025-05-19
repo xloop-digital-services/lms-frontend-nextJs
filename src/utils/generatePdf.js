@@ -1,6 +1,7 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-export const generatePDF = () => {
+
+export const generatePDF = (regId, assignment, quiz, project, exam, attendanceStudent, progress) => {
     const doc = new jsPDF();
     doc.setFontSize(16);
     doc.text(`Student Performance Report ${regId}`, 14, 15);
@@ -47,6 +48,11 @@ export const generatePDF = () => {
                 body: rows,
                 theme: "grid",
                 styles: { fontSize: 8 },
+                headStyles: {
+                    fillColor: ["#0A316E"],
+                    textColor: 255,
+                    fontStyle: 'bold',
+                },
                 didDrawPage: (data) => {
                     startY = data.cursor.y + 10;
                 },
@@ -110,7 +116,13 @@ export const generatePDF = () => {
         ]),
         theme: "grid",
         styles: { fontSize: 8 },
+        headStyles: {
+            fillColor: ["#0A316E"],
+            textColor: 255,
+            fontStyle: 'bold',
+        },
     });
 
     doc.save(`Student performance report of ${regId}.pdf`);
+
 };

@@ -58,9 +58,17 @@ export default function StudentGradingAdmin({
   const handleExport = (type) => {
     setShowMenu(false);
     if (type === 'excel') {
-      generateExcel();
+      generateExcel({
+        assignment,
+        quiz,
+        project,
+        exam,
+        attendanceStudent,
+        progress,
+        regId
+      });
     } else {
-      generatePDF();
+      generatePDF(regId, assignment, quiz, project, exam, attendanceStudent, progress);
     }
   };
 
@@ -208,7 +216,7 @@ export default function StudentGradingAdmin({
   const handleToggleSection = (section) => {
     setOpenSection(openSection === section ? null : section);
   };
- 
+
   return (
     <>
       <div className="flex justify-between ">
