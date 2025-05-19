@@ -237,7 +237,7 @@ export default function StudentGradingAdmin({
           </button>
 
           {showMenu && (
-            <div className="absolute left-[-5rem] mt-2 w-40 bg-surface-100 border border-dark-300 rounded shadow-md z-10">
+            <div className="absolute left-[-5rem] mt-2 w-40 bg-surface-100 border border-dark-300 rounded shadow-md z-50">
 
               <button
                 onClick={() => handleExport('excel')}
