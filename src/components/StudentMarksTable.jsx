@@ -1,5 +1,7 @@
 import React from "react";
-const StudentMarksTable = ({ field, assessments }) => {
+
+
+const StudentMarksTable = ({ field, assessments, role }) => {
   //console.log(assessments);
   return (
     <div className="flex flex-col cursor-default">
@@ -61,29 +63,55 @@ const StudentMarksTable = ({ field, assessments }) => {
                                   ? assessment.total_marks
                                   : 0}
                               </td>
-
                               {
-                                assessment?.grading_flag === false ?
-                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
-                                    {assessment?.marks_obtain
-                                      ? assessment.marks_obtain
-                                      : 0}
-                                  </td>
-                                  : <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
-                                    Not graded yet
-                                  </td>
-                              }
-                              {
-                                assessment?.grading_flag === false ?
-                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
-                                    {assessment?.remarks ? assessment.remarks : "-"}
-                                  </td>
-                                  : <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
-                                    Not graded yet
-                                  </td>
-                              }
+                                role === "student" ? (
+                                  <>
+                                    {assessment?.grading_flag === false ? (
+                                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
+                                        {assessment?.marks_obtain ? assessment?.marks_obtain : 0}
+                                      </td>
+                                    ) : (
+                                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
+                                        Not graded yet
+                                      </td>
+                                    )}
 
-
+                                    {assessment?.grading_flag === false ? (
+                                      <td
+                                        className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center"
+                                        style={{
+                                          wordBreak: "break-word",
+                                          overflowWrap: "break-word",
+                                          whiteSpace: "normal",
+                                        }}
+                                      >
+                                        {assessment?.remarks ? assessment.remarks : "-"}
+                                      </td>
+                                    ) : (
+                                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
+                                        Not graded yet
+                                      </td>
+                                    )}
+                                  </>
+                                ) : (
+                                  <>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center">
+                                      {assessment?.marks_obtain ? assessment?.marks_obtain : 0}
+                                    </td>
+                                    <td
+                                      className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center"
+                                      style={{
+                                        wordBreak: "break-word",
+                                        overflowWrap: "break-word",
+                                        whiteSpace: "normal",
+                                      }}
+                                    >
+                                      {assessment?.remarks ? assessment.remarks : "-"}
+                                    </td>
+                                  </>
+                                )
+                              }
+                              
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 text-center text-surface-100">
                                 <p
                                   className={`w-[120px] text-center px-4 py-2 text-[12px] rounded-lg ${assessment?.status === "Submitted"

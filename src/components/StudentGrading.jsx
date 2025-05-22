@@ -35,6 +35,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
   const dropdownRef = useRef(null);
   const { userData } = useAuth();
   const isStudent = userData?.Group === "student";
+  const role = userData?.Group;
   const [sessions, setSessions] = useState([]);
   const [sessionId, setSessionId] = useState(null);
   const [studentInstructorName, setStudentInstructorName] = useState(null);
@@ -262,6 +263,7 @@ export default function StudentGrading({ courseId, regId: propRegId }) {
                         key={data?.id}
                         field={openSection}
                         assessments={data?.data}
+                        role={role}
                       />
                     </div>
                   )}
