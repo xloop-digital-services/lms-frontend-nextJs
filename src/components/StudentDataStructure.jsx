@@ -34,6 +34,7 @@ const StudentDataStructure = ({
   const [loading, setLoading] = useState(false);
   const { userData } = useAuth();
   const isAdmin = userData?.Group === "admin";
+  const regId = userData?.user_data?.registration_id;
 
   const handleOpenModal = (quiz) => {
     setSelectedQuiz(quiz);
@@ -288,8 +289,8 @@ const StudentDataStructure = ({
                                   {quiz.status === 0
                                     ? "Inactive"
                                     : quiz.status === 1
-                                    ? "active"
-                                    : "-"}
+                                      ? "active"
+                                      : "-"}
                                 </th>
                               ) : isAdmin && edit ? (
                                 <>
@@ -306,16 +307,15 @@ const StudentDataStructure = ({
                               ) : null}
                               <td className=" py-2  whitespace-nowrap text-sm text-surface-100">
                                 <p
-                                  className={`w-[120px] text-center px-4 py-2 text-[12px] rounded-lg ${
-                                    quiz?.submission_status === "Submitted"
+                                  className={`w-[120px] text-center px-4 py-2 text-[12px] rounded-lg ${quiz?.submission_status === "Submitted"
                                       ? "bg-mix-300 w-[120px]"
                                       : quiz?.submission_status === "Pending"
-                                      ? "bg-mix-500 text-[#fff] w-[120px]"
-                                      : quiz?.submission_status ===
-                                        "Late Submission"
-                                      ? "bg-mix-600 text-[#fff] w-[110px]"
-                                      : "bg-mix-200 w-[120px]"
-                                  }`}
+                                        ? "bg-mix-500 text-[#fff] w-[120px]"
+                                        : quiz?.submission_status ===
+                                          "Late Submission"
+                                          ? "bg-mix-600 text-[#fff] w-[110px]"
+                                          : "bg-mix-200 w-[120px]"
+                                    }`}
                                 >
                                   {quiz?.submission_status}
                                 </p>
@@ -323,9 +323,9 @@ const StudentDataStructure = ({
                               <td className="px-12 py-3 whitespace-nowrap text-blue-300  ">
                                 <div className="flex items-center justify-center gap-4 ">
                                   {quiz.submitted_file &&
-                                  quiz.submitted_file !==
+                                    quiz.submitted_file !==
                                     "undefined/undefined" &&
-                                  quiz.submitted_file !== "undefined" ? (
+                                    quiz.submitted_file !== "undefined" ? (
                                     <a
                                       href={quiz.submitted_file}
                                       target="_blank"
@@ -375,35 +375,35 @@ const StudentDataStructure = ({
                                         onClick={
                                           quiz?.id
                                             ? // quiz?.submission_status ===
-                                              //   "Submitted" ||
-                                              // quiz?.submission_status ===
-                                              //   "Late Submission"
-                                              () => {
-                                                if (
-                                                  quiz?.submission_id &&
-                                                  quiz?.remaining_resubmissions >
-                                                    0
-                                                ) {
-                                                  handleFileResubmit(
-                                                    quiz?.id,
-                                                    quiz?.submission_id
-                                                  );
-                                                }
-                                                if (
-                                                  quiz?.submission_status !==
-                                                  "Submitted"
-                                                ) {
-                                                  handleFileUpload(quiz?.id);
-                                                }
-                                                if (
-                                                  quiz?.submission_status ===
-                                                    "Submitted" &&
-                                                  quiz?.remaining_resubmissions ===
-                                                    0
-                                                ) {
-                                                  null;
-                                                }
+                                            //   "Submitted" ||
+                                            // quiz?.submission_status ===
+                                            //   "Late Submission"
+                                            () => {
+                                              if (
+                                                quiz?.submission_id &&
+                                                quiz?.remaining_resubmissions >
+                                                0
+                                              ) {
+                                                handleFileResubmit(
+                                                  quiz?.id,
+                                                  quiz?.submission_id
+                                                );
                                               }
+                                              if (
+                                                quiz?.submission_status !==
+                                                "Submitted"
+                                              ) {
+                                                handleFileUpload(quiz?.id);
+                                              }
+                                              if (
+                                                quiz?.submission_status ===
+                                                "Submitted" &&
+                                                quiz?.remaining_resubmissions ===
+                                                0
+                                              ) {
+                                                null;
+                                              }
+                                            }
                                             : null
                                         }
                                         disabled={
@@ -411,29 +411,26 @@ const StudentDataStructure = ({
                                           (quiz?.submission_status ===
                                             "Submitted" ||
                                             quiz?.submission_status ===
-                                              "Late Submission")
+                                            "Late Submission")
                                         }
                                         // className={`px-4 py-2 rounded-lg ${
                                         //   quiz?.remaining_resubmissions > 0
                                         //     ? "bg-blue-500 text-white"
                                         //     : "bg-gray-300 cursor-not-allowed"
                                         // }`}
-                                        className={`${
-                                          quiz?.submission_status ===
+                                        className={`${quiz?.submission_status ===
                                             "Submitted" ||
-                                          quiz?.submission_status ===
+                                            quiz?.submission_status ===
                                             "Late Submission"
                                             ? "cursor-not-allowed opacity-50"
                                             : "cursor-pointer hover:opacity-80"
-                                        } rounded-lg ${
-                                          quiz?.remaining_resubmissions > 0
+                                          } rounded-lg ${quiz?.remaining_resubmissions > 0
                                             ? "cursor-pointer hover:opacity-80 "
                                             : "text-gray-300 "
-                                        }  ${
-                                          quiz?.submission_status ===
-                                            "Submitted" &&
+                                          }  ${quiz?.submission_status ===
+                                          "Submitted" &&
                                           quiz?.remaining_resubmissions === 0
-                                        } ?  ? "cursor-pointer hover:opacity-80 "
+                                          } ?  ? "cursor-pointer hover:opacity-80 "
                                             : "text-gray-300 "`}
                                         title="Upload"
                                       />
