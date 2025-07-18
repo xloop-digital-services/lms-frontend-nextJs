@@ -1,10 +1,7 @@
 "use client";
-import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import userIcon from "../../public/assets/img/images.png";
-import logo from "../../public/assets/img/xCelerate-Logo.png";
 import {
   FaBell,
   FaBullhorn,
@@ -20,6 +17,7 @@ import useClickOutside from "@/providers/useClickOutside";
 import useWebSocket from "@/providers/useWebSockets";
 import { useFetchNotifications } from "@/providers/useFetchNotifications";
 import { useFetchAnnouncement } from "@/providers/useFetchAnnouncement";
+import Announcements from "./Announcements";
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
@@ -27,6 +25,7 @@ export default function Navbar() {
   const [showMenu, setShowMenu] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showNotification, setShowNotifications] = useState(false);
+  const [showAnnouncement, setShowAnnouncement] = useState(false);
   const dropdownRef = useRef(null);
   const dropbutton = useRef(null);
   const [user, setUser] = useState({});
@@ -57,16 +56,16 @@ export default function Navbar() {
   const urn = (messages || []).filter(
     (message) => message.status === "unread"
   ).length;
-  const reads = ra + rn;
-  const unreads = ura + urn;
-
-  // console.log(ura, urn);
-
-  // console.log("unread", unreads);
-  // console.log("reads", reads);
+  // const reads = ra + rn;
+  // const unreads = ura + urn;
 
   useClickOutside(dropdownRef, dropbutton, () => {
     setShowNotifications(false);
+    setShowDropdown(false);
+  });
+
+  useClickOutside(dropdownRef, dropbutton, () => {
+    setShowAnnouncement(false);
     setShowDropdown(false);
   });
 
@@ -76,17 +75,11 @@ export default function Navbar() {
         const response = await getUserProfile();
         setLoader(true);
         if (response.status === 200) {
-          // console.log("Fetched user data:", response.data);
           setLoader(false);
           setUser(response.data.response);
-          // console.log(response.data.response);
-          // console.log(user, "user");
-          // console.log(response.data.response.city, "city")
         } else {
-          // console.error("Failed to fetch user, status:", response.status);
         }
       } catch (error) {
-        // console.error("Error fetching user data:", error);
       }
     }
     fetchUser();
@@ -115,6 +108,15 @@ export default function Navbar() {
   const closeNotifications = () => {
     setShowNotifications(false);
   };
+
+  const toggleAnnouncements = () => {
+    setShowAnnouncement(!showAnnouncement);
+  };
+
+  const closeAnnouncements = () => {
+    setShowAnnouncement(false);
+  };
+
 
   const toggleDropdownLogout = () => {
     setShowDropdown(!showDropdown);
@@ -170,25 +172,42 @@ export default function Navbar() {
                           </button>
                         </div>
                       ) : (
-                        <button
-                          type="button"
-                          className="relative max-sm:mr-3 flex text-sm text-blue-500 focus:outline-none hover:text-blue-400 "
-                          id="user-menu-button"
-                          aria-expanded="false"
-                          aria-haspopup="true"
-                          title="announcements"
-                          onClick={toggleNotifications}
-                        >
-                          <FaBell size={24} />
-                          {unreads > 0 && (
-                            <span
-                              className="absolute -top-1 -right-1 inline-block w-[10px] h-[11px] bg-mix-200 rounded-xl text-surface-100"
-                              //  className="absolute -top-3 text-center -right-5 inline-block w-[30px] h-[21px] bg-mix-200 rounded-xl text-surface-100"
-                            >
-                              {/* {unreads}+ */}
-                            </span>
-                          )}
-                        </button>
+                        <div className="flex gap-3">
+                          <button
+                            type="button"
+                            className="relative max-sm:mr-3 flex text-sm text-blue-500 focus:outline-none hover:text-blue-400 "
+                            id="user-menu-button"
+                            aria-expanded="false"
+                            aria-haspopup="true"
+                            title="Notifications"
+                            onClick={toggleNotifications}
+                          >
+                            <FaBell size={24} />
+                            {urn > 0 && (
+                              <span
+                                className="absolute -top-1 -right-1 inline-block w-[10px] h-[11px] bg-mix-200 rounded-xl text-surface-100"
+                              >
+                              </span>
+                            )}
+                          </button>
+                          <button
+                            type="button"
+                            className="relative max-sm:mr-3 flex text-sm text-blue-500 focus:outline-none hover:text-blue-400 "
+                            id="user-menu-button"
+                            aria-expanded="false"
+                            aria-haspopup="true"
+                            title="Announcements"
+                            onClick={toggleAnnouncements}
+                          >
+                            <FaBullhorn size={24} />
+                            {ura > 0 && (
+                              <span
+                                className="absolute -top-1 -right-1 inline-block w-[10px] h-[11px] bg-mix-200 rounded-xl text-surface-100"
+                              >
+                              </span>
+                            )}
+                          </button>
+                        </div>
                       )}
                     </div>
                   </div>
@@ -202,6 +221,19 @@ export default function Navbar() {
                       tabIndex="-1"
                     >
                       <Notifications />
+                    </div>
+                  )}
+
+                  {showAnnouncement && (
+                    <div
+                      ref={dropdownRef}
+                      className="absolute border border-dark-100 right-0 mx-16 max-sm:mx-4 mt-[490px] z-10 w-96 max-sm:w-72 origin-top-right rounded-md bg-surface-100 py-1 shadow-lg ring-opacity-5 focus:outline-none"
+                      role="menu"
+                      aria-orientation="vertical"
+                      aria-labelledby="user-menu-button"
+                      tabIndex="-1"
+                    >
+                      <Announcements />
                     </div>
                   )}
 
@@ -228,9 +260,8 @@ export default function Navbar() {
                           </p>
                         </div>
                         <div
-                          className={`ml-1 transition-transform ${
-                            showDropdown ? "rotate-180" : ""
-                          }`}
+                          className={`ml-1 transition-transform ${showDropdown ? "rotate-180" : ""
+                            }`}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"

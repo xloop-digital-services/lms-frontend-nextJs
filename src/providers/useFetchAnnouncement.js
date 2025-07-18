@@ -35,7 +35,7 @@ export const useFetchAnnouncement = (userID, role) => {
     // if (!userID || (role !== "student" && role !== "instructor")) return;
     const interval = setInterval(() => {
       fetchAnnouncements();
-    }, 10000);
+    }, 180000);
     fetchAnnouncements();
     return () => clearInterval(interval);
   }, [userID]);
