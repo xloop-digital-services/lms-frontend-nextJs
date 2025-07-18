@@ -9,7 +9,7 @@ import { useFetchAnnouncement } from "@/providers/useFetchAnnouncement";
 import { useFetchNotifications } from "@/providers/useFetchNotifications";
 import { useAuth } from "@/providers/AuthContext";
 
-export default function Notifications() {
+export default function Announcements() {
   const { userData } = useAuth();
   const userID = userData?.User?.id;
 
@@ -33,11 +33,16 @@ export default function Notifications() {
     router.push("/announcement/new-announcement");
   };
 
-  const handleNoti = async (id, type, notiId) => {
-    router.push(`/${type}/course/${id}`);
-    setCurrentNotiId(notiId);
+  const handleAnnounce = async (id) => {
+    router.push(`/announcement/view-announcement/${id}`);
+    setCurrentNotiId(id);
+    // console.log(id);
     try {
-      const response = await readNotification(userID, notiId);
+      const data = {
+        user_id: userID,
+        announcement_id: id,
+      };
+      const response = await readAnnouncement(data);
     } catch (error) {
     }
   };
@@ -51,52 +56,54 @@ export default function Notifications() {
   return (
     <div className="flex flex-col p-1 h-96 overflow-y-scroll scrollbar-webkit font-inter">
       <div className="fixed">
-        <h3 className="font-bold p-2 fixed font-exo  text-blue-500 ">
-          Notifications
+        <h3 className="font-bold p-2 fixed font-exo text-blue-500">
+          Announcements
         </h3>
       </div>
-      <div className="overflow-y-scroll mt-12 h-full scrollbar-webkit">
-        {notificationsLoading ? (
+      <div className="overflow-y-scroll mt-8 h-full scrollbar-webkit">
+        {announcementsLoading ? (
           renderLoader()
-        ) : messages?.length > 0 ? (
-          messages
+        ) : announcements?.length > 0 ? (
+          announcements
             .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-            .map((msg) => (
-              <div key={msg.notification_id}>
+            .map((announcement) => (
+              <>
                 <div
-                  className={`flex mx-2 my-2 justify-center items-center py-1 line-clamp-2 cursor-pointer ${
-                    msg.status === "unread"
-                      ? "bg-blue-600 rounded-xl"
-                      : "bg-surface-100"
+                  key={announcement.id}
+                  className={`flex mx-2 justify-center my-2 items-center py-1 line-clamp-2 cursor-pointer ${
+                    announcement.read_status
+                      ? "bg-surface-100"
+                      : "bg-blue-600 rounded-xl"
                   }`}
-                  onClick={() =>
-                    handleNoti(
-                      msg.course_id,
-                      msg.assesment_type,
-                      msg.notification_id
-                    )
-                  }
+                  onClick={() => handleAnnounce(announcement.id)}
                 >
                   <div className="flex justify-center items-center w-8 p-1 rounded-full border border-blue-300 bg-blue-600 mx-4">
                     <FaBell size={20} fill="#03A1D8" />
                   </div>
                   <div className="flex flex-col w-64">
-                    <p className="font-md">{msg.message}</p>
+                    <p className="font-md">
+                      {announcement.message}
+                      <br />
+                      <p className="italic text-sm text-dark-400">
+                        Please ignore any contradictory scheduling in the
+                        calendar.
+                      </p>
+                    </p>
                     <p className="text-dark-400 text-sm mt-1">
-                      {formatDateTime(msg.created_at)}
+                      {formatDateTime(announcement.created_at)}
                     </p>
                   </div>
-                  <hr className="text-dark-200 my-2"></hr>
                 </div>
                 <hr className="text-dark-200 m-2"></hr>
-              </div>
+              </>
             ))
         ) : (
           <p className="text-blue-300 flex items-center justify-center">
-            No notifications found.
+            No announcements found.
           </p>
         )}
       </div>
+     
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { downloadFile } from "@/app/courses/course/[courseId]/page";
 import CircularProgress from "@mui/material/CircularProgress";
 import { IoClose } from "react-icons/io5";
 
-function convertTextToLinks(text) {
+export function convertTextToLinks(text) {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
   return text.split(urlRegex).map((part, index) => {
     if (urlRegex.test(part)) {

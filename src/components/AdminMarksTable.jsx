@@ -16,6 +16,7 @@ import { FaCheck, FaCheckCircle, FaCross, FaEdit } from "react-icons/fa";
 import { FaX } from "react-icons/fa6";
 import { IoMdCloseCircle } from "react-icons/io";
 import { IoCheckmark, IoClose } from "react-icons/io5";
+import { convertTextToLinks } from "./Modal/AssessmentDescModal";
 
 const AdminMarksTable = ({
   assessments,
@@ -174,8 +175,7 @@ const AdminMarksTable = ({
       }
     } catch (error) {
       toast.error(
-        `Failed to grade the assessment: ${
-          error?.response?.data?.message || "Unknown error"
+        `Failed to grade the assessment: ${error?.response?.data?.message || "Unknown error"
         }`
       );
     }
@@ -202,16 +202,16 @@ const AdminMarksTable = ({
                         Student Name
                       </th>
                       <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
+                        Submitted file
+                      </th>
+                      <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
+                        Student Comments
+                      </th>
+                      <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
                         Obtained Marks
                       </th>
                       <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
                         Remarks
-                      </th>
-                      <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
-                        Submitted file
-                      </th>
-                      <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
-                        Comments
                       </th>
                       <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase w-[12%]">
                         Status
@@ -237,13 +237,59 @@ const AdminMarksTable = ({
                             <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
                               {assessment?.student_name}
                             </td>
+
+                            <td
+                              className="px-6 py-4 text-center break-words text-sm font-medium text-gray-800"
+                              style={{
+                                wordBreak: "break-word",
+                                overflowWrap: "break-word",
+                                whiteSpace: "normal",
+                              }}
+                            >
+                              {assessment.submitted_file === null ||
+                                assessment.submitted_file === "undefined" ||
+                                assessment.submitted_file ===
+                                "undefined/undefined" ? (
+                                "-"
+                              ) : (
+                                <>
+                                  <a
+                                    href="#"
+                                    style={{
+                                      wordBreak: "break-word",
+                                      overflowWrap: "break-word",
+                                      whiteSpace: "normal",
+                                    }}
+                                    className="cursor-pointer text-black hover:text-[#2563eb] hover:underline"
+                                    title="download"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      downloadFile(assessment.submitted_file);
+                                    }}
+                                  >
+                                    {assessment.submitted_file.split("/").pop()}
+                                  </a>
+                                  <p className="text-dark-400">{assessment.submitted_at.split('T').slice(0, 1)}</p>
+                                  <p className="text-dark-400"> at {new Date(assessment.submitted_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}</p>
+
+                                </>
+                              )}
+                            </td>
+                            <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
+                              <p
+                                style={{
+                                  wordBreak: "break-word",
+                                  overflowWrap: "break-word",
+                                  whiteSpace: "normal",
+                                }}>{convertTextToLinks(assessment?.comments || "-")}</p>
+                            </td>
                             <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
                               {(isEditing === assessment.submission_id ||
                                 (updatingGrade &&
                                   assessment.grading_id === isUpdatingId)) &&
-                              assessment?.status === "Submitted" &&
-                              (!assessment?.marks_obtain ||
-                                assessment?.marks_obtain === 0) ? (
+                                assessment?.status === "Submitted" &&
+                                (!assessment?.marks_obtain ||
+                                  assessment?.marks_obtain === 0) ? (
                                 <input
                                   type="number"
                                   min={0}
@@ -260,9 +306,9 @@ const AdminMarksTable = ({
                               {(isEditing === assessment.submission_id ||
                                 (updatingGrade &&
                                   assessment.grading_id === isUpdatingId)) &&
-                              assessment?.status === "Submitted" &&
-                              (!assessment?.marks_obtain ||
-                                assessment?.marks_obtain === 0) ? (
+                                assessment?.status === "Submitted" &&
+                                (!assessment?.marks_obtain ||
+                                  assessment?.marks_obtain === 0) ? (
                                 <input
                                   type="text"
                                   name="remarks"
@@ -274,52 +320,16 @@ const AdminMarksTable = ({
                                 assessment?.remarks || "-"
                               )}
                             </td>
-                            <td
-                              className="px-6 py-4 text-center break-words text-sm font-medium text-gray-800"
-                              style={{
-                                wordBreak: "break-word",
-                                overflowWrap: "break-word",
-                                whiteSpace: "normal",
-                              }}
-                            >
-                              {assessment.submitted_file === null ||
-                              assessment.submitted_file === "undefined" ||
-                              assessment.submitted_file ===
-                                "undefined/undefined" ? (
-                                "-"
-                              ) : (
-                                <>
-                                <a
-                                  href="#"
-                                  className="cursor-pointer text-black hover:text-[#2563eb] hover:underline"
-                                  title="download"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    downloadFile(assessment.submitted_file);
-                                  }}
-                                >
-                                  {assessment.submitted_file.split("/").pop()}
-                                </a>
-                                <p className="text-dark-400">{assessment.submitted_at.split('T').slice(0,1)}</p>
-                                <p className="text-dark-400"> at {new Date(assessment.submitted_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}</p>
-                                
-                                </>
-                              )}
-                            </td>
-                            <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
-                              <p>{assessment.comments || "-"}</p>
-                            </td>
                             <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
                               <p
-                                className={`w-[130px] text-surface-100 text-center px-4 py-2 text-[12px] rounded-lg ${
-                                  assessment?.status === "Submitted"
-                                    ? "bg-mix-300 "
-                                    : assessment?.status === "Pending"
+                                className={`w-[130px] text-surface-100 text-center px-4 py-2 text-[12px] rounded-lg ${assessment?.status === "Submitted"
+                                  ? "bg-mix-300 "
+                                  : assessment?.status === "Pending"
                                     ? "bg-mix-500 "
                                     : assessment?.status === "Late Submission"
-                                    ? "bg-mix-600 "
-                                    : "bg-mix-200 "
-                                }`}
+                                      ? "bg-mix-600 "
+                                      : "bg-mix-200 "
+                                  }`}
                               >
                                 {assessment?.status}
                               </p>
@@ -328,8 +338,8 @@ const AdminMarksTable = ({
                             <td className="px-6 py-4 text-wrap text-center whitespace-nowrap text-sm font-medium text-gray-800">
                               <div className="flex">
                                 {assessment.submitted_file &&
-                                assessment.grading_id !== null &&
-                                assessment.grading_id > 0 ? (
+                                  assessment.grading_id !== null &&
+                                  assessment.grading_id > 0 ? (
                                   <button className="w-[110px] text-center px-4 py-2 text-[12px] rounded-lg text-sm bg-mix-300 text-surface-200">
                                     Graded
                                   </button>
