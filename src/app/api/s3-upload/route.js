@@ -1,24 +1,18 @@
 import { NextResponse } from "next/server";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
-// const bucketName = process.env.S3_BUCKET_NAME;
-// const bucketRegion = process.env.S3_REGION;
+const bucketName = process.env.S3_BUCKET_NAME;
+const bucketRegion = process.env.S3_REGION;
 
-const bucketName = "lms-xd-bucket";
-const bucketRegion = "ap-south-1";
 const s3Client = new S3Client({
   region: bucketRegion,
   credentials: {
-    accessKeyId: "AKIA2IFXYGKMJFEIXSVK",
-    secretAccessKey: "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",
-    // accessKeyId: process.env.S3_ACCESS_KEY_ID,
-    // secretAccessKey: process.env.S3_SECRET_KEY,
+    accessKeyId: process.env.S3_ACCESS_KEY_ID,
+    secretAccessKey: process.env.S3_SECRET_KEY,
   },
 });
 
 const uploadToS3 = async (file, fileName, category) => {
-  // console.log("access key:", process.env.S3_ACCESS_KEY_ID);
-  // console.log("secret key:", process.env.S3_SECRET_KEY);
   const params = {
     Bucket: bucketName,
     Key: `assets/${category}/${fileName}`,
@@ -27,10 +21,8 @@ const uploadToS3 = async (file, fileName, category) => {
 
   try {
     const data = await s3Client.send(new PutObjectCommand(params));
-    // console.log("File uploaded successfully", data);
     return fileName;
   } catch (error) {
-    // console.error("Error uploading file", error);
     throw error;
   }
 };
