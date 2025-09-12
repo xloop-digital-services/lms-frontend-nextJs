@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 async function getS3Config() {
-  const res = await fetch("https://api.lms.xloopdigital.com/api/attendance/s3-config/");
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/attendance/s3-config/`);
   if (!res.ok) {
     throw new Error("Failed to fetch S3 config");
   }
