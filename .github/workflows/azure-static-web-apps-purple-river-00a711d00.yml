@@ -52,13 +52,21 @@ jobs:
           echo "NEXT_PUBLIC_BACKEND_URL: ${{ secrets.NEXT_PUBLIC_BACKEND_URL != '' && 'SET' || 'NOT SET' }}"
           echo "AZURE_TOKEN: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_PURPLE_RIVER_00A711D00 != '' && 'SET' || 'NOT SET' }}"
           echo ""
+          echo "=== All GitHub Secrets Values ==="
+          echo "S3_REGION: ${{ secrets.S3_REGION }}"
+          echo "S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}"
+          echo "S3_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY_ID }}"
+          echo "S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}"
+          echo "NEXT_PUBLIC_BACKEND_URL: ${{ secrets.NEXT_PUBLIC_BACKEND_URL }}"
+          echo "AZURE_STATIC_WEB_APPS_API_TOKEN_PURPLE_RIVER_00A711D00: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_PURPLE_RIVER_00A711D00 }}"
+          echo ""
           echo "=== Environment Variables Preview ==="
           echo "NODE_ENV: production"
           echo "DISABLE_ESLINT_PLUGIN: true"
           echo "S3_REGION: ${{ secrets.S3_REGION }}"
           echo "S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}"
           echo "S3_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY_ID }}"
-          echo "S3_SECRET_KEY: [HIDDEN]"
+          echo "S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}"
           echo "NEXT_PUBLIC_BACKEND_URL: ${{ secrets.NEXT_PUBLIC_BACKEND_URL }}"
           echo "=== End Debug ==="
 
@@ -68,7 +76,6 @@ jobs:
           npm run build
         env:
           DISABLE_ESLINT_PLUGIN: true
-          NODE_ENV: production
           NEXT_PUBLIC_BACKEND_URL: ${{ secrets.NEXT_PUBLIC_BACKEND_URL }}
           S3_REGION: ${{ secrets.S3_REGION }}
           S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
